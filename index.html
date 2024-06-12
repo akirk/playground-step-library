@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>BluePrint Preprocessor</title>
+<style>
+	textarea, div#jsonInput, div#jsonOutput {
+		font-family: monospace;
+		font-size: 14px;
+		white-space: pre-wrap;
+	}
+	#jsonHolder, #input {
+		display: flex;
+		padding-bottom: 2em;
+		border-bottom: 1px solid #ccc;
+	}
+	#jsonHolder > div, #input > div {
+		flex: 1;
+		margin-top: 2em;
+	}
+	#jsonInput::before, #jsonOutput::before {
+		content: attr(id);
+		font-weight: bold;
+	}
+
+</style>
+<script>
+const transformers = [
+{
+	name: 'sampleContent',
+	description: 'Add sample content to the site',
+	transform: [
+		{
+            "step": "runPHP",
+            "code": "<?php require_once 'wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Hello Sample Content', 'post_status' => 'publish')); ?>"
+        },
+        {
+            "step": "runPHP",
+            "code": "<?php require_once 'wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Second Sample Content', 'post_status' => 'publish')); ?>"
+        },
+        {
+            "step": "runPHP",
+            "code": "<?php require_once 'wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Third Sample Content', 'post_status' => 'publish')); ?>"
+        },
+        {
+            "step": "runPHP",
+            "code": "<?php require_once 'wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Fourth Sample Content', 'post_status' => 'publish')); ?>"
+        },
+        {
+            "step": "runPHP",
+            "code": "<?php require_once 'wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Fifth Sample Content', 'post_status' => 'publish')); ?>"
+        }
+    ]
+},
+{
+	name:'customPostType',
+	description: 'Add a custom post type to the site',
+	transform: [
+		{
+			"step": "mkdir",
+			"path": "wordpress/wp-content/mu-plugins",
+		},
+		{
+			"step": "writeFile",
+			"path": "wordpress/wp-content/mu-plugins/${step}-mu.php",
+			"data": "<?php add_action( 'init', function() { register_post_type('${slug}', array('public' => true, 'label' => '${name}')); } ); ?>"
+		}
+	]
+}
+
+];
+
+const examples = {
+	'Login': {
+		landingPage: '/wp-admin/?welcome=0',
+		"steps": [
+		{
+			"step": "login",
+			"username": "admin",
+			"password": "password"
+		}
+		]
+	},
+	'Sample Content': {
+		"steps": [
+		{
+			"step": "sampleContent",
+			"count": 2,
+		}
+		]
+	},
+	'Custom Post Type': {
+		"steps": [
+		{
+			"step": "customPostType",
+			vars: {
+				slug: 'book',
+				name: 'Book'
+			}
+		}
+		]
+	}
+};
+
+function loadExampleJson(example) {
+	document.getElementById('jsonText').value = JSON.stringify(examples[example], null, 2);
+}
+
+function transformJson() {
+	let jsonInput = document.getElementById('jsonText').value;
+	let inputData = JSON.parse(jsonInput);
+	document.getElementById('jsonInput').innerText = JSON.stringify(inputData, null, 2);
+	const outputData = JSON.parse(jsonInput);
+	outputData.steps = [];
+	inputData.steps.forEach(function(step, index) {
+		let outSteps = [];
+		if ( transformers.find(t => t.name === step.step) ) {
+			outSteps = transformers.find(t => t.name === step.step).transform;
+			if ( step.count ) {
+				outSteps = outSteps.slice(0, step.count);
+			}
+		} else {
+			outSteps.push(step);
+		}
+		const vars = step.vars || {};
+		vars.step = index;
+		delete step.vars;
+
+		for (let i = 0; i < outSteps.length; i++) {
+			console.log( i );
+			Object.keys(vars).forEach(function(key) {
+				for ( j in outSteps[i] ) {
+					console.log( j );
+					outSteps[i][j] = outSteps[i][j].replace('${' + key + '}', vars[key]);
+				}
+			});
+		}
+
+		outputData.steps = outputData.steps.concat(outSteps);
+
+	});
+
+	document.getElementById('jsonOutput').innerText = JSON.stringify(outputData, null, 2);
+
+
+	const a = document.getElementById('playgroundLink');
+	a.style.display = 'block';
+	a.target = '_blank';
+	a.href = 'https://playground.wordpress.net/#' + (JSON.stringify(outputData));
+}
+
+function loadCombinedExamples() {
+	let combinedExamples = {
+		"landingPage": "/",
+		"steps": []
+	};
+	Object.keys(examples).forEach(function(example) {
+		const checkbox = document.getElementById(example);
+		if ( ! checkbox.checked ) {
+			return;
+		}
+		if ( examples[example].landingPage ) {
+			combinedExamples.landingPage = examples[example].landingPage;
+		}
+		combinedExamples.steps = combinedExamples.steps.concat(examples[example].steps);
+	});
+	document.getElementById('jsonText').value = JSON.stringify(combinedExamples, null, 2);
+}
+document.addEventListener('DOMContentLoaded', function() {
+	const transformerList = document.getElementById('transformerList');
+	transformers.forEach(function(transformer) {
+		const li = document.createElement('li');
+		li.innerText = transformer.name + ' - ' + transformer.description;
+		transformerList.querySelector('ul').appendChild(li);
+	});
+	const examplesList = document.getElementById('examples');
+	Object.keys(examples).forEach(function(example) {
+		const li = document.createElement('li');
+		const checkbox = document.createElement('input');
+		checkbox.type = 'checkbox';
+		checkbox.id = example;
+		li.prepend(checkbox);
+		const label = document.createElement('label');
+		label.innerText = example;
+		label.htmlFor = example;
+		li.appendChild(label);
+
+		examplesList.appendChild(li);
+	});
+
+});
+
+
+</script>
+</head>
+<body>
+	<h1>BluePrint Preprocessor</h1>
+	<div id="input">
+		<div>
+			<ul id="examples"></ul>
+			<button onclick="loadCombinedExamples()">Load Combined</button>
+			<br>
+			<br>
+
+			<textarea id="jsonText" rows="10" cols="50"></textarea>
+			<br>
+			<button onclick="transformJson()">Transform JSON</button>
+			<br>
+
+		</div>
+		<div id="transformerList">
+			<h2>Transformers</h2>
+			<ul>
+
+			</ul>
+
+		</div>
+	</div>
+	<div id="jsonHolder">
+		<div id="jsonInput"></div>
+		<div id="jsonOutput"></div>
+	</div>
+	<a href="" id="playgroundLink" style="display: none;">Open transformed Blueprint in Playground</a>
+
+
+
+	</body>
+</html>
