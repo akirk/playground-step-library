@@ -10,15 +10,12 @@
 	}
 	#jsonHolder, #input {
 		display: flex;
-		padding-bottom: 2em;
-		border-bottom: 1px solid #ccc;
 	}
 	#jsonHolder > div, #input > div {
 		flex: 1;
-		margin-top: 2em;
 	}
 	#jsonInput::before, #jsonOutput::before {
-		content: attr(id);
+		content: attr(title);
 		font-weight: bold;
 	}
 
@@ -126,7 +123,6 @@ function transformJson() {
 		delete step.vars;
 
 		for (let i = 0; i < outSteps.length; i++) {
-			console.log( i );
 			Object.keys(vars).forEach(function(key) {
 				for ( j in outSteps[i] ) {
 					console.log( j );
@@ -196,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	<h1>BluePrint Preprocessor</h1>
 	<div id="input">
 		<div>
+			<h2>Examples</h2>
 			<ul id="examples"></ul>
 			<button onclick="loadCombinedExamples()">Load Combined</button>
 			<br>
@@ -205,10 +202,11 @@ document.addEventListener('DOMContentLoaded', function() {
 			<br>
 			<button onclick="transformJson()">Transform JSON</button>
 			<br>
+			<br>
 
 		</div>
 		<div id="transformerList">
-			<h2>Transformers</h2>
+			<h2>Available Transformers</h2>
 			<ul>
 
 			</ul>
@@ -216,8 +214,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		</div>
 	</div>
 	<div id="jsonHolder">
-		<div id="jsonInput"></div>
-		<div id="jsonOutput"></div>
+		<div id="jsonInput" title="Enhanced Blueprint (invalid steps)"></div>
+		<div id="jsonOutput" title="Valid Playground Blueprint"></div>
 	</div>
 	<a href="" id="playgroundLink" style="display: none;">Open transformed Blueprint in Playground</a>
 
