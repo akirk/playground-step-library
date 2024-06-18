@@ -87,6 +87,13 @@ addEventListener('DOMContentLoaded', function() {
 			event.target.select();
 			return;
 		}
+		if ( event.target.classList.contains('step') && event.target.parentNode === stepList ) {
+			const stepClone = event.target.cloneNode(true);
+			blueprintSteps.appendChild(stepClone);
+			stepClone.classList.remove('dragging');
+
+			return;
+		}
 		const dialog = document.getElementById('view-source');
 		if (event.target.classList.contains('view-source')) {
 			dialog.querySelector('h2').innerText = event.target.href.split('/').slice(-2).join('/');
