@@ -1,0 +1,79 @@
+body {
+	font-family: Arial, sans-serif;
+
+}
+#blueprint-builder {
+	display: flex;
+}
+.arrow {
+
+	height: 480px;
+	padding: 20px;
+}
+#step-list {
+	width: 200px;
+	height: 500px;
+	border: 1px solid black;
+}
+
+#blueprint-steps {
+	width: 500px;
+	height: 500px;
+	border: 1px solid black;
+}
+
+textarea {
+	height: 490px;
+	width: 250px;
+	border: 1px solid black;
+	margin: 0;
+	padding: 5px;
+	font-family: monospace;
+	font-size: 14px;
+	white-space: pre-wrap;
+}
+
+.step {
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid black;
+  background-color: lightblue;
+  cursor: pointer;
+}
+
+.step .vars {
+	display: none;
+}
+
+#blueprint-steps .step .vars {
+	display: block;
+}
+
+a.view-source {
+	display: none;
+	float: right;
+}
+
+#blueprint-steps .step a.view-source {
+	display: block;
+}
+
+table.vars tr td:first-child {
+	font-weight: bold;
+	width: 5em;
+}
+
+#playground-link {
+	border: 1px solid black;
+	border-radius: 5px;
+	padding: 5px;
+	background-color: lightblue;
+	text-decoration: none;
+	display: inline-block;
+}
+#view-source iframe {
+	width: 800px;
+	height: 600px;
+}
+
+
