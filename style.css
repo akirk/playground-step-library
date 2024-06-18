@@ -20,6 +20,7 @@ body {
 	width: 500px;
 	height: 500px;
 	border: 1px solid black;
+	border-left: 0;
 }
 
 textarea {
@@ -39,6 +40,7 @@ textarea {
   border: 1px solid black;
   background-color: lightblue;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .step .vars {
@@ -70,7 +72,16 @@ table.vars tr td:first-child {
 	background-color: lightblue;
 	text-decoration: none;
 	display: inline-block;
+	box-shadow: 2px 2px 2px #888888;
 }
+#playground-link:any-link {
+	color: black;
+}
+
+#playground-link:hover, .step:hover {
+	background-color: #ADDFFF;
+}
+
 #view-source iframe {
 	width: 800px;
 	height: 600px;
