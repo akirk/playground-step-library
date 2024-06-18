@@ -80,6 +80,10 @@ addEventListener('DOMContentLoaded', function() {
 		}
 	});
 	document.addEventListener('keyup', (event) => {
+		if ( event.target.id === 'blueprint' ) {
+			transformJson();
+			return;
+		}
 		loadCombinedExamples();
 	});
 	document.addEventListener('click', (event) => {
@@ -130,6 +134,7 @@ addEventListener('DOMContentLoaded', function() {
 		} else {
 			blueprintSteps.insertBefore(draggable, afterElement);
 		}
+		loadCombinedExamples();
 	});
 
 	// Remove block when dragged out
@@ -144,6 +149,7 @@ addEventListener('DOMContentLoaded', function() {
 				removedBlock.remove();
 			}
 		}
+		loadCombinedExamples();
 	});
 
 	function getDragAfterElement(container, y) {
@@ -211,7 +217,6 @@ addEventListener('DOMContentLoaded', function() {
 			for (let i = 0; i < outSteps.length; i++) {
 				Object.keys(vars).forEach(function(key) {
 					for ( j in outSteps[i] ) {
-						console.log( j );
 						outSteps[i][j] = outSteps[i][j].replace('${' + key + '}', vars[key]);
 					}
 				});
