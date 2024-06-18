@@ -83,6 +83,10 @@ addEventListener('DOMContentLoaded', function() {
 		loadCombinedExamples();
 	});
 	document.addEventListener('click', (event) => {
+		if ( event.target.tagName === 'INPUT' ) {
+			event.target.select();
+			return;
+		}
 		const dialog = document.getElementById('view-source');
 		if (event.target.classList.contains('view-source')) {
 			dialog.querySelector('h2').innerText = event.target.href.split('/').slice(-2).join('/');
@@ -123,6 +127,10 @@ addEventListener('DOMContentLoaded', function() {
 
 	// Remove block when dragged out
 	blueprintSteps.addEventListener('dragleave', (event) => {
+		const draggable = document.querySelector('.dragging');
+		if (!draggable || draggable.parentNode === stepList) {
+			return;
+		}
 		if (event.relatedTarget === null || !blueprintSteps.contains(event.relatedTarget)) {
 			const removedBlock = document.querySelector('.dragging');
 			if (removedBlock) {
