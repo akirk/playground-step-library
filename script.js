@@ -179,9 +179,48 @@ addEventListener('DOMContentLoaded', function() {
 
 	window.addEventListener('hashchange', function(event) {
 		if ( location.hash ) {
-			restoreState( JSON.parse( unescape(location.hash.slice(1)) ) );
+			restoreState( uncompressState( location.hash.slice(1) ) );
 		}
 	});
+
+	function compressState( state ) {
+		return state.map( function( step ) {
+			if ( step.count ) {
+				if ( step.vars ) {
+					step.vars.count = step.count;
+				} else {
+					step.vars = { count: step.count };
+				}
+			}
+			if ( ! step.vars ) {
+				return step.step;
+			}
+			return step.step + '__' + Object.keys( step.vars ).map(function(key) {
+				return key + '|' + step.vars[key];
+			} ).join('__');
+		} ).join('&&');
+	}
+
+	function uncompressState( state ) {
+		return state.split('&&').map( function( step ) {
+			const parts = step.split('__');
+			const stepData = {
+				"step": parts.shift(),
+				"vars": {}
+			};
+			parts.forEach( function( part ) {
+				const kv = part.split('|');
+				if ( kv[0] === 'count' ) {
+					stepData.count = parseInt(kv[1]);
+					return;
+				}
+				stepData.vars[kv[0]] = kv[1];
+			} );
+			console.log( stepData );
+			return stepData;
+		} );
+	}
+
 
 
 	function loadCombinedExamples() {
@@ -210,7 +249,7 @@ addEventListener('DOMContentLoaded', function() {
 			combinedExamples.steps = combinedExamples.steps.concat(step);
 		});
 		document.getElementById('blueprint').value = JSON.stringify(combinedExamples, null, 2);
-		history.pushState( state , '', '#'+ JSON.stringify( state ));
+		history.pushState( state , '', '#' + compressState( state ) );
 		transformJson();
 	}
 
@@ -252,7 +291,7 @@ addEventListener('DOMContentLoaded', function() {
 
 
 		const a = document.getElementById('playground-link');
-		a.href = 'https://playground.wordpress.net/#' + (JSON.stringify(outputData));
+		a.href = 'https://playground.wordpress.net/#' + ( JSON.stringify( outputData ) );
 	}
 
 	function restoreState( state ) {
@@ -262,13 +301,15 @@ addEventListener('DOMContentLoaded', function() {
 		blueprintSteps.innerHTML = '';
 		state.forEach(function(step) {
 			const block = stepList.querySelector('[data-step="' + step.step + '"]');
-			console.log( '[data-step="' + step.step + '"]' );
 			if ( ! block ) {
 				return;
 			}
 			const stepBlock = block.cloneNode(true);
 			stepBlock.classList.remove('dragging');
 			blueprintSteps.appendChild(stepBlock);
+			if ( step.count ) {
+				stepBlock.querySelector('[name="count"]').value = step.count;
+			}
 			Object.keys(step.vars).forEach(function(key) {
 				if ( key === 'step' ) {
 					return;
@@ -279,6 +320,6 @@ addEventListener('DOMContentLoaded', function() {
 		loadCombinedExamples();
 	}
 	if ( location.hash ) {
-		restoreState( JSON.parse( unescape(location.hash.slice(1)) ) );
+		restoreState( uncompressState( location.hash.slice(1) ) );
 	}
 } );
