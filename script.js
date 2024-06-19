@@ -179,7 +179,7 @@ addEventListener('DOMContentLoaded', function() {
 
 	window.addEventListener('hashchange', function(event) {
 		if ( location.hash ) {
-			restoreState( uncompressState( location.hash.slice(1) ) );
+			restoreState( uncompressState( unescape( location.hash.slice(1) ) ) );
 		}
 	});
 
@@ -320,6 +320,6 @@ addEventListener('DOMContentLoaded', function() {
 		loadCombinedExamples();
 	}
 	if ( location.hash ) {
-		restoreState( uncompressState( location.hash.slice(1) ) );
+		restoreState( uncompressState( unescape( location.hash.slice(1) ) ) );
 	}
 } );
