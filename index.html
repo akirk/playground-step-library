@@ -4,16 +4,19 @@
 	<title>Playground Step Library</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="script.js"></script>
+	<script src="steps/builtin/login.js"></script>
+	<script src="steps/builtin/installPlugin.js"></script>
+	<script src="steps/builtin/installTheme.js"></script>
 	<script src="steps/customPostType.js"></script>
 	<script src="steps/sampleContent.js"></script>
 	<script src="steps/deleteAllPosts.js"></script>
-	<script src="steps/login.js"></script>
 	<script src="steps/createUser.js"></script>
 	<script src="steps/showNotice.js"></script>
 </head>
 <body>
 	<h1>Playground Step Library</h1>
 	<p>Drag or click the steps to create a blueprint: <button id="clear">Clear Steps</button></p>
+	<p><label><input type="checkbox" id="show-builtin" checked> Show builtin steps</label></p>
 	<div id="blueprint-builder">
 		<div id="step-list"></div>
 		<div id="blueprint-steps"></div>

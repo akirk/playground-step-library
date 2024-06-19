@@ -10,6 +10,7 @@ customSteps.login = function() {
 	return steps;
 }
 customSteps.login.description = "Login to the site";
+customSteps.login.builtin = true;
 customSteps.login.vars = [
 	{
 		"name": "username",

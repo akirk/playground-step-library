@@ -17,6 +17,15 @@ body {
 	border-right: 0;
 }
 
+#step-list .step.builtin {
+	display: none;
+	background-color: lightgreen;
+}
+
+#step-list.show-builtin .step.builtin {
+	display: block;
+}
+
 #blueprint-steps {
 	width: 500px;
 	min-height: 500px;

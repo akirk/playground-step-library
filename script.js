@@ -9,6 +9,10 @@ addEventListener('DOMContentLoaded', function() {
 		step.dataset.step = i;
 		step.innerText = i;
 		step.title = customSteps[i].description;
+		if ( customSteps[i].builtin ) {
+			step.classList.add( 'builtin' );
+		}
+
 		const viewSource = document.createElement('a');
 		viewSource.className = 'view-source';
 		viewSource.href = 'steps/' + i + '.js';
@@ -183,6 +187,21 @@ addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
+	document.getElementById('show-builtin').addEventListener('change', function() {
+		if ( this.checked ) {
+			stepList.classList.add('show-builtin');
+		} else {
+			stepList.classList.remove('show-builtin');
+		}
+	} );
+	if (document.getElementById('show-builtin').checked) {
+		stepList.classList.add('show-builtin');
+	} else {
+		stepList.classList.remove('show-builtin');
+	}
+
+
+
 	function compressState( state ) {
 		return state.map( function( step ) {
 			if ( step.count ) {
@@ -216,12 +235,9 @@ addEventListener('DOMContentLoaded', function() {
 				}
 				stepData.vars[kv[0]] = kv[1];
 			} );
-			console.log( stepData );
 			return stepData;
 		} );
 	}
-
-
 
 	function loadCombinedExamples() {
 		const combinedExamples = {
@@ -278,7 +294,15 @@ addEventListener('DOMContentLoaded', function() {
 			for (let i = 0; i < outSteps.length; i++) {
 				Object.keys(vars).forEach(function(key) {
 					for ( j in outSteps[i] ) {
-						outSteps[i][j] = outSteps[i][j].replace('${' + key + '}', vars[key]);
+						if ( typeof outSteps[i][j] === 'object' ) {
+							Object.keys(outSteps[i][j]).forEach(function( k ) {
+								if ( typeof outSteps[i][j][k] === 'string' && outSteps[i][j][k].includes('${' + key + '}') ) {
+									outSteps[i][j][k] = outSteps[i][j][k].replace('${' + key + '}', vars[key]);
+								}
+							});
+						} else if ( typeof outSteps[i][j] === 'string' && outSteps[i][j].includes('${' + key + '}') ) {
+							outSteps[i][j] = outSteps[i][j].replace('${' + key + '}', vars[key]);
+						}
 					}
 				});
 			}
