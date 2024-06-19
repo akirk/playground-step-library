@@ -17,9 +17,12 @@ body {
 	border-right: 0;
 }
 
+.step.builtin {
+	background-color: lightgreen;
+}
+
 #step-list .step.builtin {
 	display: none;
-	background-color: lightgreen;
 }
 
 #step-list.show-builtin .step.builtin {
