@@ -95,7 +95,7 @@ addEventListener('DOMContentLoaded', function() {
 			const stepClone = event.target.cloneNode(true);
 			blueprintSteps.appendChild(stepClone);
 			stepClone.classList.remove('dragging');
-			transformJson();
+			loadCombinedExamples();
 			return;
 		}
 		const dialog = document.getElementById('view-source');
