@@ -187,6 +187,13 @@ addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
+	document.getElementById('filter').addEventListener('keyup', function() {
+		const filter = this.value.toLowerCase();
+		stepList.querySelectorAll('.step').forEach(function(step) {
+			step.style.display = step.dataset.id.toLowerCase().includes(filter) ? 'block' : 'none';
+		});
+	});
+
 	document.getElementById('show-builtin').addEventListener('change', function() {
 		if ( this.checked ) {
 			stepList.classList.add('show-builtin');
@@ -194,6 +201,7 @@ addEventListener('DOMContentLoaded', function() {
 			stepList.classList.remove('show-builtin');
 		}
 	} );
+
 	if (document.getElementById('show-builtin').checked) {
 		stepList.classList.add('show-builtin');
 	} else {
