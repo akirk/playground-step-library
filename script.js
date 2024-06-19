@@ -166,11 +166,31 @@ addEventListener('DOMContentLoaded', function() {
 	  }, { offset: Number.NEGATIVE_INFINITY }).element;
 	}
 
+	document.getElementById( 'clear' ).addEventListener( 'click', function() {
+		blueprintSteps.innerHTML = '';
+		loadCombinedExamples();
+	} );
+
+	window.addEventListener('popstate', function(event) {
+		if ( event.state ) {
+			restoreState( event.state );
+		}
+	});
+
+	window.addEventListener('hashchange', function(event) {
+		if ( location.hash ) {
+			restoreState( JSON.parse( unescape(location.hash.slice(1)) ) );
+		}
+	});
+
+
 	function loadCombinedExamples() {
-		let combinedExamples = {
+		const combinedExamples = {
 			"landingPage": "/",
 			"steps": []
 		};
+		const state = [];
+
 		blueprintSteps.querySelectorAll('.step').forEach(function(stepBlock) {
 			const step = {
 				"step": stepBlock.dataset.step,
@@ -186,9 +206,11 @@ addEventListener('DOMContentLoaded', function() {
 			if (!Object.keys(step.vars).length) {
 				delete step.vars;
 			}
+			state.push(step);
 			combinedExamples.steps = combinedExamples.steps.concat(step);
 		});
 		document.getElementById('blueprint').value = JSON.stringify(combinedExamples, null, 2);
+		history.pushState( state , '', '#'+ JSON.stringify( state ));
 		transformJson();
 	}
 
@@ -231,5 +253,32 @@ addEventListener('DOMContentLoaded', function() {
 
 		const a = document.getElementById('playground-link');
 		a.href = 'https://playground.wordpress.net/#' + (JSON.stringify(outputData));
+	}
+
+	function restoreState( state ) {
+		if ( ! state || ! state.length ) {
+			return;
+		}
+		blueprintSteps.innerHTML = '';
+		state.forEach(function(step) {
+			const block = stepList.querySelector('[data-step="' + step.step + '"]');
+			console.log( '[data-step="' + step.step + '"]' );
+			if ( ! block ) {
+				return;
+			}
+			const stepBlock = block.cloneNode(true);
+			stepBlock.classList.remove('dragging');
+			blueprintSteps.appendChild(stepBlock);
+			Object.keys(step.vars).forEach(function(key) {
+				if ( key === 'step' ) {
+					return;
+				}
+				stepBlock.querySelector('[name="' + key + '"]').value = step.vars[key];
+			});
+		});
+		loadCombinedExamples();
+	}
+	if ( location.hash ) {
+		restoreState( JSON.parse( unescape(location.hash.slice(1)) ) );
 	}
 } );

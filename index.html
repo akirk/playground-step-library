@@ -13,19 +13,22 @@
 </head>
 <body>
 	<h1>Playground Step Library</h1>
-	<p>Drag the steps to create a blueprint:</p>
+	<p>Drag or click the steps to create a blueprint: <button id="clear">Clear Steps</button></p>
 	<div id="blueprint-builder">
 		<div id="step-list"></div>
 		<div id="blueprint-steps"></div>
 		<div class="arrow">→</div>
 		<textarea id="blueprint"></textarea>
 		<div class="arrow">→</div>
-		<textarea id="blueprint-compiled"></textarea>
+		<div id="blueprint-compiled-holder">
+			<textarea id="blueprint-compiled"></textarea>
+			<a href="#" id="playground-link" target="_blank">Launch in Playground</a>
+		</div>
 	</div>
 	<dialog id="view-source">
 		<h2></h2>
 		<iframe src="" frameborder="0" name="source-iframe"></iframe>
 	</dialog>
-	<a href="#" id="playground-link" target="_blank">Launch in Playground</a>
+
 	</body>
 </html>

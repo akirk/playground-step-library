@@ -12,15 +12,15 @@ body {
 }
 #step-list {
 	width: 200px;
-	height: 500px;
+	min-height: 500px;
 	border: 1px solid black;
+	border-right: 0;
 }
 
 #blueprint-steps {
 	width: 500px;
-	height: 500px;
+	min-height: 500px;
 	border: 1px solid black;
-	border-left: 0;
 }
 
 textarea {
@@ -65,15 +65,20 @@ table.vars tr td:first-child {
 	width: 5em;
 }
 
-#playground-link {
+button, #playground-link {
 	border: 1px solid black;
 	border-radius: 5px;
 	padding: 5px;
-	background-color: lightblue;
 	text-decoration: none;
 	display: inline-block;
-	box-shadow: 2px 2px 2px #888888;
+	box-shadow: 1px 1px 1px #888888;
 }
+
+#playground-link {
+	background-color: lightblue;
+	border: 1px solid black;
+}
+
 #playground-link:any-link {
 	color: black;
 }
@@ -87,4 +92,6 @@ table.vars tr td:first-child {
 	height: 600px;
 }
 
-
+#blueprint-compiled {
+	margin-bottom: 1em;
+}
