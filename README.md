@@ -2,7 +2,7 @@
 
 In this Github repository we collect custom [steps](https://wordpress.github.io/wordpress-playground/blueprints-api/index/) for blueprints of [WordPress Playground](https://wordpress.github.io/wordpress-playground/).
 
-[Try it here!](https://akirk.github.io/playground-step-library/)
+You can then use those custom steps [in our Step Builder](https://akirk.github.io/playground-step-library/) to create more complex WordPress Playground setups more easily.
 
 ## What does it mean?
 
