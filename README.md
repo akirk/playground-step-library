@@ -29,7 +29,18 @@ You can also share the Playground URL which contains the final blueprint.
 
 ## Contributing
 
-You can submit your own steps! Take a look at the steps directory and submit a PR for a new step.
+You can submit your own steps! Typically, you'll want to clone the repo to a local directory and create a new file in the `steps` directory (see below) to try it before you [submit a PR](https://github.com/akirk/playground-step-library/compare).
+```
+git clone git@github.com:akirk/playground-step-library.git
+cd playground-step-library
+touch steps/newStep.js
+command $EDITOR steps/newStep.js
+```
+When you're finished, [create that new file in the steps directory](https://github.com/akirk/playground-step-library/new/main/steps).
+
+Alternatively, you could also [fork this repository](https://github.com/akirk/playground-step-library/fork) and [submit a PR](https://github.com/akirk/playground-step-library/compare) from your fork.
+
+### Implementation of a Step
 
 Here is an example how to implement a step. We'll create a step that will output a custom message to the PHP error log. We'll call it `helloWorldLogger`. You can pass the text that it should log. The step will look like this:
 
