@@ -15,6 +15,10 @@ body {
 	min-height: 500px;
 	border: 1px solid black;
 	border-right: 0;
+	box-shadow: 1px 1px 1px #888888;
+	border-radius: 5px;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
 }
 
 .step.builtin {
@@ -33,6 +37,10 @@ body {
 	width: 500px;
 	min-height: 500px;
 	border: 1px solid black;
+	box-shadow: 1px 1px 1px #888888;
+	border-radius: 5px;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
 }
 
 textarea {
@@ -44,6 +52,8 @@ textarea {
 	font-family: monospace;
 	font-size: 14px;
 	white-space: pre-wrap;
+	box-shadow: 1px 1px 1px #888888;
+	border-radius: 5px;
 }
 
 .step {
@@ -84,6 +94,7 @@ button, #playground-link {
 	text-decoration: none;
 	display: inline-block;
 	box-shadow: 1px 1px 1px #888888;
+	cursor: pointer;
 }
 
 #playground-link {
