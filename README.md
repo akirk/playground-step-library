@@ -89,7 +89,7 @@ customSteps.helloWorldLogger.vars = [
 ];
 ```
 
-Then, we need to include the file in `index.html`. This can either be done manually, or, preferrably, by executing a small script:
+Then, we need to include the file in [`index.html`](https://github.com/akirk/playground-step-library/blob/main/index.html#L10). This can either be done manually, or, preferrably, by executing a small script:
 ```
 node bin/update-load-steps.js
 ```
