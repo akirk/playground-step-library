@@ -1,4 +1,4 @@
-customSteps.showNotice = function() {
+customSteps.showAdminNotice = function() {
     var steps = [
         {
             "step": "mkdir",
@@ -12,8 +12,8 @@ customSteps.showNotice = function() {
     ];
     return steps;
 }
-customSteps.showNotice.description = "Add a custom post type to the site";
-customSteps.showNotice.vars = [
+customSteps.showAdminNotice.description = "Show a notice in wp-admin";
+customSteps.showAdminNotice.vars = [
     {
         "name": "text",
         "description": "The notice to be displayed",
