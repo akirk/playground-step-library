@@ -24,6 +24,6 @@ customSteps.installPlugin.vars = [
 		"name": "plugin",
 		"description": "Plugin slug",
 		"required": true,
-		"sample": "hello-dolly"
+		"samples": [ "hello-dolly", 'friends', 'woocommerce' ]
 	}
 ];

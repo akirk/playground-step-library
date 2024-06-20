@@ -18,6 +18,6 @@ customSteps.showNotice.vars = [
         "name": "text",
         "description": "The notice to be displayed",
         "required": true,
-        "sample": "Welcome to WordPress Playground!"
+        "samples": [ "Welcome to WordPress Playground!", "This is a demo of the Step Library" ]
     }
 ];

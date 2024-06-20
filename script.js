@@ -62,8 +62,24 @@ addEventListener('DOMContentLoaded', function() {
 					input.pattern = v.regex;
 				}
 				td.appendChild(input);
-				if ( v.sample ) {
-					input.value = v.sample;
+				if ( 'samples' in v ) {
+					input.value = v.samples[0];
+					if ( v.samples.length > 1 ) {
+						const examples = document.createElement('details');
+						const summary = document.createElement('summary');
+						summary.innerText = 'Examples';
+						examples.appendChild(summary);
+						const ul = document.createElement('ul');
+						examples.appendChild(ul);
+						for ( let j = 0; j < v.samples.length; j++ ) {
+							const sample = document.createElement('li');
+							sample.className = 'sample';
+							sample.innerText = v.samples[j];
+							ul.appendChild(sample);
+						}
+						examples.className = 'examples';
+						td.appendChild(examples);
+					}
 				}
 
 				tr.appendChild(td);
@@ -120,6 +136,11 @@ addEventListener('DOMContentLoaded', function() {
 			loadCombinedExamples();
 			event.preventDefault();
 			return false;
+		}
+		if (event.target.classList.contains('sample') ) {
+			event.target.closest('td').querySelector('input').value = event.target.innerText;
+			loadCombinedExamples();
+			return;
 		}
 		const dialog = document.getElementById('view-source');
 		if (event.target.classList.contains('view-source')) {

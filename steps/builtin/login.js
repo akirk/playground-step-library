@@ -16,12 +16,12 @@ customSteps.login.vars = [
 		"name": "username",
 		"description": "Username",
 		"required": true,
-		"sample": "admin"
+		"samples": [ "admin" ]
 	},
 	{
 		"name": "password",
 		"description": "Password",
 		"required": true,
-		"sample": "password"
+		"samples": [ "password" ]
 	}
 ];

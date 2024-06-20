@@ -13,18 +13,18 @@ customSteps.createUser.vars = [
 		"name": "username",
 		"description": "Username",
 		"required": true,
-		"sample": "akirk"
+		"samples": [ "akirk" ]
 	},
 	{
 		"name": "password",
 		"description": "Password",
 		"required": true,
-		"sample": "password"
+		"samples": [ "password" ]
 	},
 	{
 		"name": "role",
 		"description": "Role",
 		"required": true,
-		"sample": "administrator"
+		"samples": [ "administrator" ]
 	}
 ];

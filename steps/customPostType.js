@@ -19,12 +19,12 @@ customSteps.customPostType.vars = [
 		"description": "Post type key",
 		"regex": "^[a-z_]{0,20}$",
 		"required": true,
-		"sample": "book"
+		"samples": [ "book", 'music', 'story' ]
 	},
 	{
 		"name": "name",
 		"description": "The user visible label",
 		"required": true,
-		"sample": "Book"
+		"samples": [ "Books", 'Music', 'Stories' ]
 	}
 ];

@@ -24,6 +24,6 @@ customSteps.installTheme.vars = [
 		"name": "theme",
 		"description": "Theme slug",
 		"required": true,
-		"sample": "pendant"
+		"samples": [ "pendant", "slightly", "link-folio" ]
 	}
 ];
