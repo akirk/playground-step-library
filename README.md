@@ -23,7 +23,7 @@ To make it easy to share what you are building, the URL of the page is updated w
 You can also share the Playground URL which contains the final blueprint.
 
 ## Screenshot
-
+![step-library](https://github.com/akirk/playground-step-library/assets/203408/c536785b-2c6b-44bd-b1cd-4f1b72c074d1)
 
 [Try it now!](https://akirk.github.io/playground-step-library/)
 
