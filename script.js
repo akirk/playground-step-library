@@ -7,14 +7,17 @@ addEventListener('DOMContentLoaded', function() {
 		const step = document.createElement('div');
 		step.dataset.step = i;
 		step.className = 'step';
-		const stepTitle = document.createElement('span');
-		stepTitle.className = 'title';
-		stepTitle.innerText = i;
-		step.appendChild(stepTitle);
+		step.innerText = i;
 		step.title = customSteps[i].description;
 		if ( customSteps[i].builtin ) {
 			step.classList.add( 'builtin' );
 		}
+
+		const remove = document.createElement('a');
+		remove.className = 'remove';
+		remove.href = '';
+		remove.innerText = '✕';
+		step.appendChild(remove);
 
 		const viewSource = document.createElement('a');
 		viewSource.className = 'view-source';
@@ -86,6 +89,13 @@ addEventListener('DOMContentLoaded', function() {
 			loadCombinedExamples();
 		}
 	});
+
+	document.addEventListener('keydown', (event) => {
+		if (event.key === 'Escape') {
+			document.getElementById('view-source').close();
+		}
+	});
+
 	document.addEventListener('keyup', (event) => {
 		if ( event.target.id === 'blueprint' ) {
 			transformJson();
@@ -104,6 +114,12 @@ addEventListener('DOMContentLoaded', function() {
 			stepClone.classList.remove('dragging');
 			loadCombinedExamples();
 			return;
+		}
+		if (event.target.classList.contains('remove') ) {
+			event.target.parentNode.remove();
+			loadCombinedExamples();
+			event.preventDefault();
+			return false;
 		}
 		const dialog = document.getElementById('view-source');
 		if (event.target.classList.contains('view-source')) {

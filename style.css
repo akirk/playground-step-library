@@ -82,11 +82,22 @@ textarea {
   border-radius: 5px;
 }
 
-.step .title {
+.step .vars {
+	display: none;
 }
 
+.step .remove {
+	float: right;
+	margin-left: 2em;
+}
 
-.step .vars {
+.step .remove:any-link {
+	color: #1a1919;
+	text-decoration: none;
+	margin-top: -8px;
+}
+
+#step-list .step .remove {
 	display: none;
 }
 
