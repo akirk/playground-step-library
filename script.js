@@ -5,9 +5,12 @@ addEventListener('DOMContentLoaded', function() {
 
 	for ( const i in customSteps ) {
 		const step = document.createElement('div');
-		step.className = 'step';
 		step.dataset.step = i;
-		step.innerText = i;
+		step.className = 'step';
+		const stepTitle = document.createElement('span');
+		stepTitle.className = 'title';
+		stepTitle.innerText = i;
+		step.appendChild(stepTitle);
 		step.title = customSteps[i].description;
 		if ( customSteps[i].builtin ) {
 			step.classList.add( 'builtin' );

@@ -1,7 +1,24 @@
 body {
-	font-family: Arial, sans-serif;
-
+	font-family: Inter, sans-serif;
+	color: #1a1919;
+	font-size: 16px;
+	line-height: 30px;
 }
+h1 {
+	font-family: "EB Garamond", serif;
+	font-weight: 400;
+	font-size: 50px;
+	margin: 0;
+	line-height: 60px;
+}
+a:any-link {
+	color: #0000EE;
+	text-decoration: underline;
+}
+a:any-link:hover {
+	text-decoration: none;
+}
+
 #blueprint-builder {
 	display: flex;
 }
@@ -13,7 +30,7 @@ body {
 #step-list {
 	width: 200px;
 	min-height: 500px;
-	border: 1px solid black;
+	border: 1px solid #1a1919;
 	border-right: 0;
 	box-shadow: 1px 1px 1px #888888;
 	border-radius: 5px;
@@ -36,7 +53,7 @@ body {
 #blueprint-steps {
 	width: 500px;
 	min-height: 500px;
-	border: 1px solid black;
+	border: 1px solid #1a1919;
 	box-shadow: 1px 1px 1px #888888;
 	border-radius: 5px;
 	border-top-left-radius: 0;
@@ -46,9 +63,9 @@ body {
 textarea {
 	height: 490px;
 	width: 250px;
-	border: 1px solid black;
+	border: 1px solid #1a1919;
 	margin: 0;
-	padding: 5px;
+	padding: 8px;
 	font-family: monospace;
 	font-size: 14px;
 	white-space: pre-wrap;
@@ -59,11 +76,15 @@ textarea {
 .step {
   padding: 10px;
   margin: 5px;
-  border: 1px solid black;
+  border: 1px solid #1a1919;
   background-color: lightblue;
   cursor: pointer;
   border-radius: 5px;
 }
+
+.step .title {
+}
+
 
 .step .vars {
 	display: none;
@@ -88,7 +109,7 @@ table.vars tr td:first-child {
 }
 
 button, #playground-link {
-	border: 1px solid black;
+	border: 1px solid #1a1919;
 	border-radius: 5px;
 	padding: 5px;
 	text-decoration: none;
@@ -99,15 +120,19 @@ button, #playground-link {
 
 #playground-link {
 	background-color: lightblue;
-	border: 1px solid black;
+	border: 1px solid #1a1919;
 }
 
 #playground-link:any-link {
-	color: black;
+	color: #1a1919;
 }
 
 #playground-link:hover, .step:hover {
 	background-color: #ADDFFF;
+}
+
+.step.builtin:hover {
+	background-color: #9DFF9D;
 }
 
 #view-source iframe {
