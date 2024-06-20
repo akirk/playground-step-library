@@ -28,10 +28,10 @@ a:any-link:hover {
 	display: flex;
 }
 .arrow {
-
 	height: 480px;
 	padding: 20px;
 }
+
 #step-list {
 	width: 200px;
 	min-height: 500px;
@@ -162,6 +162,8 @@ button, #playground-link {
 #playground-link {
 	background-color: lightblue;
 	border: 1px solid #1a1919;
+	line-height: .6;
+	padding: 10px;
 }
 
 #playground-link:any-link {
