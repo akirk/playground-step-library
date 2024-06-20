@@ -1,12 +1,12 @@
 # WordPress Playground Step Library
 
-In this Github repository we collect custom [steps](https://wordpress.github.io/wordpress-playground/blueprints-api/index/) for blueprints of [WordPress Playground](https://wordpress.github.io/wordpress-playground/).
+In this Github repository we collect custom [blueprint steps](https://wordpress.github.io/wordpress-playground/blueprints-api/steps/) for [WordPress Playground](https://wordpress.github.io/wordpress-playground/).
 
 You can then use those custom steps [in our Step Builder](https://akirk.github.io/playground-step-library/) to create more complex WordPress Playground setups more easily.
 
 ## What does it mean?
 
-You can tell WordPress Playground what to do before it loads using a Blueprint JSON file. There are [a number of builtin steps provided](https://wordpress.github.io/wordpress-playground/blueprints-api/index/) that in combination can make it do powerful things.
+You can tell WordPress Playground what to do before it loads using a [Blueprint JSON](https://wordpress.github.io/wordpress-playground/blueprints-api/index/) file. There are [a number of builtin steps provided](https://wordpress.github.io/wordpress-playground/blueprints-api/index/) that in combination can make it do powerful things.
 
 Now, this tool collects custom steps that make it easier to specify more complex tasks. The steps get transformed into builtin steps to form a valid, final blueprint that can be executed by WordPress Playground.
 
