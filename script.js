@@ -8,7 +8,13 @@ addEventListener('DOMContentLoaded', function() {
 		step.dataset.step = i;
 		step.className = 'step';
 		step.innerText = i;
-		step.title = customSteps[i].description;
+		if ( customSteps[i].info ) {
+			const info = document.createElement('span');
+			info.className = 'info';
+			info.innerText = customSteps[i].info;
+			step.appendChild(info);
+			step.title = customSteps[i].info;
+		}
 		if ( customSteps[i].builtin ) {
 			step.classList.add( 'builtin' );
 		}

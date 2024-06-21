@@ -12,7 +12,7 @@ customSteps.changeAdminColorScheme = function( step ) {
 	];
 	return steps;
 };
-customSteps.changeAdminColorScheme.description = "Describe the step here.";
+customSteps.changeAdminColorScheme.info = "Useful to combine with a login step.";
 customSteps.changeAdminColorScheme.vars = [
 	{
 		"name": "colorScheme",

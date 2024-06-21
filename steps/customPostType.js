@@ -12,7 +12,6 @@ customSteps.customPostType = function() {
 	];
 	return steps;
 }
-customSteps.customPostType.description = "Add a custom post type to the site";
 customSteps.customPostType.vars = [
 	{
 		"name": "slug",

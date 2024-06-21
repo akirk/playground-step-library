@@ -7,4 +7,3 @@ customSteps.deleteAllPosts = function() {
     ];
     return steps;
 };
-customSteps.deleteAllPosts.description = "Delete all posts";

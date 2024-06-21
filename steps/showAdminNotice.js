@@ -12,7 +12,6 @@ customSteps.showAdminNotice = function() {
     ];
     return steps;
 }
-customSteps.showAdminNotice.description = "Show a notice in wp-admin";
 customSteps.showAdminNotice.vars = [
     {
         "name": "text",

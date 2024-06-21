@@ -23,5 +23,4 @@ customSteps.sampleContent = function() {
     ];
     return steps;
 };
-customSteps.sampleContent.description = "Create Sample Content";
 customSteps.sampleContent.count = 5;
