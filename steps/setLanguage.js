@@ -1,4 +1,4 @@
-customSteps.setBlogLanguage = async function( step, blueprint ) {
+customSteps.setLanguage = async function( step, blueprint ) {
 	const lang = step?.vars?.language;
 	if ( ! lang ) {
 		return [];
@@ -92,7 +92,7 @@ customSteps.setBlogLanguage = async function( step, blueprint ) {
 	} );
 	return steps;
 };
-customSteps.setBlogLanguage.vars = [
+customSteps.setLanguage.vars = [
 	{
 		"name": "language",
 		"description": "A valid WordPress language slug",
