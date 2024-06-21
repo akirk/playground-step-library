@@ -55,3 +55,7 @@ fs.writeFile(stepsDir + '/' + stepName + '.js', content, (err) => {
 	}
 	console.log(`${stepName} created successfully.`);
 });
+
+// Update the index.html file with the new step by calling the update-load-steps.js script
+require('./update-load-steps');
+
