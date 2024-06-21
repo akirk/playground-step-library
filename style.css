@@ -97,8 +97,14 @@ textarea {
 	margin-left: .5em;
 }
 
-.step input {
+.step td > input,
+.step td > label {
 	vertical-align: top;
+}
+
+.step td > label {
+	display: inline-block;
+  margin-top: -5px;
 }
 
 .step .examples {
