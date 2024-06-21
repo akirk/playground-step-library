@@ -1,16 +1,13 @@
 customSteps.changeAdminColorScheme = function( step ) {
-	var steps = [
+	return [
 		{
-			"step": "mkdir",
-			"path": "wordpress/wp-content/mu-plugins",
-		},
-		{
-			"step": "writeFile",
-			"path": "wordpress/wp-content/mu-plugins/${step}-mu.php",
-			"data": "<?php add_filter( 'get_user_option_admin_color', function() { return '${colorScheme}'; } ); ?>"
+			"step": "updateUserMeta",
+			"meta": {
+				"admin_color": "${colorScheme}"
+			},
+			"userId": 1
 		}
 	];
-	return steps;
 };
 customSteps.changeAdminColorScheme.info = "Useful to combine with a login step.";
 customSteps.changeAdminColorScheme.vars = [
