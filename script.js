@@ -276,8 +276,6 @@ addEventListener('DOMContentLoaded', function() {
 		stepList.classList.remove('show-builtin');
 	}
 
-
-
 	function compressState( state ) {
 		return state.map( function( step ) {
 			if ( step.count ) {
@@ -344,6 +342,13 @@ addEventListener('DOMContentLoaded', function() {
 			state.push(step);
 			combinedExamples.steps = combinedExamples.steps.concat(step);
 		});
+		if ( combinedExamples.steps.length > 0 ) {
+			const draghint = document.getElementById('draghint');
+			if (draghint) {
+				draghint.remove();
+			}
+		}
+
 		document.getElementById('blueprint').value = JSON.stringify(combinedExamples, null, 2);
 		document.getElementById('landing-page').placeholder = combinedExamples.landingPage;
 		history.pushState( state , '', '#' + compressState( state ) );
@@ -445,5 +450,7 @@ addEventListener('DOMContentLoaded', function() {
 	}
 	if ( location.hash ) {
 		restoreState( uncompressState( unescape( location.hash.slice(1) ) ) );
+	} else {
+		loadCombinedExamples();
 	}
 } );

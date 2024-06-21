@@ -55,8 +55,14 @@ a:any-link:hover {
 	border-radius: 5px;
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
+	z-index: 1;
+	background-color: white;
 }
 
+div.explanation {
+	position: absolute;
+	margin-top: -2em;
+}
 textarea {
 	height: 490px;
 	width: 250px;
@@ -77,6 +83,7 @@ textarea {
 	background-color: lightblue;
 	cursor: pointer;
 	border-radius: 5px;
+	z-index: 3;
 }
 
 .step.builtin {
@@ -234,4 +241,8 @@ button, #playground-link {
 
 #further-options label {
 	display: block;
+}
+#draghint {
+	margin-top: 1em;
+	margin-left: 1em;
 }
