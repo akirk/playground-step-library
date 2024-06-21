@@ -15,6 +15,14 @@ customSteps.installPlugin = function( step ) {
             }
 		}
 	];
+	if ( step?.vars?.permalink ) {
+		steps.unshift({
+			"step": "setSiteOption",
+			"options": {
+				"permalink_structure": "/%postname%/"
+			}
+		});
+	}
 	return steps;
 }
 customSteps.installPlugin.description = "Install a plugin";
@@ -25,5 +33,10 @@ customSteps.installPlugin.vars = [
 		"description": "Plugin slug",
 		"required": true,
 		"samples": [ "hello-dolly", 'friends', 'woocommerce' ]
+	},
+	{
+		"name": "permalink",
+		"description": "Requires a permalink structure",
+		"type": "boolean"
 	}
 ];

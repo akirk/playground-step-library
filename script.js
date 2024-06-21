@@ -52,36 +52,44 @@ addEventListener('DOMContentLoaded', function() {
 				tr.appendChild(td);
 				td = document.createElement('td');
 				const input = document.createElement('input');
-				input.type = 'text';
 				input.name = v.name;
-				input.placeholder = v.description;
-				if ( v.required ) {
-					input.required = true;
-				}
-				if ( v.regex ) {
-					input.pattern = v.regex;
-				}
-				td.appendChild(input);
-				if ( 'samples' in v ) {
-					input.value = v.samples[0];
-					if ( v.samples.length > 1 ) {
-						const examples = document.createElement('details');
-						const summary = document.createElement('summary');
-						summary.innerText = 'Examples';
-						examples.appendChild(summary);
-						const ul = document.createElement('ul');
-						examples.appendChild(ul);
-						for ( let j = 0; j < v.samples.length; j++ ) {
-							const sample = document.createElement('li');
-							sample.className = 'sample';
-							sample.innerText = v.samples[j];
-							ul.appendChild(sample);
+				if ( v.type === 'boolean' ) {
+					input.type = 'checkbox';
+					input.checked = false;
+					const label = document.createElement('label');
+					label.appendChild(input);
+					label.appendChild(document.createTextNode(v.description));
+					td.appendChild(label);
+				} else {
+					input.type = 'text';
+					input.placeholder = v.description;
+					if ( v.required ) {
+						input.required = true;
+					}
+					if ( v.regex ) {
+						input.pattern = v.regex;
+					}
+					td.appendChild(input);
+					if ( 'samples' in v ) {
+						input.value = v.samples[0];
+						if ( v.samples.length > 1 ) {
+							const examples = document.createElement('details');
+							const summary = document.createElement('summary');
+							summary.innerText = 'Examples';
+							examples.appendChild(summary);
+							const ul = document.createElement('ul');
+							examples.appendChild(ul);
+							for ( let j = 0; j < v.samples.length; j++ ) {
+								const sample = document.createElement('li');
+								sample.className = 'sample';
+								sample.innerText = v.samples[j];
+								ul.appendChild(sample);
+							}
+							examples.className = 'examples';
+							td.appendChild(examples);
 						}
-						examples.className = 'examples';
-						td.appendChild(examples);
 					}
 				}
-
 				tr.appendChild(td);
 				vars.appendChild(tr);
 			});
@@ -121,7 +129,11 @@ addEventListener('DOMContentLoaded', function() {
 	});
 	document.addEventListener('click', (event) => {
 		if ( event.target.tagName === 'INPUT' ) {
-			event.target.select();
+			if ( event.target.type === 'checkbox' ) {
+				loadCombinedExamples();
+			} else {
+				event.target.select();
+			}
 			return;
 		}
 		if ( event.target.classList.contains('step') && event.target.parentNode === stepList ) {
@@ -304,7 +316,11 @@ addEventListener('DOMContentLoaded', function() {
 					step.count = parseInt(input.value);
 					return;
 				}
-				step.vars[input.name] = input.value;
+				if ( input.type === 'checkbox' ) {
+					step.vars[input.name] = input.checked;
+				} else {
+					step.vars[input.name] = input.value;
+				}
 			});
 			if (!Object.keys(step.vars).length) {
 				delete step.vars;
