@@ -8,6 +8,10 @@ body {
 	font-size: 16px;
 	line-height: 30px;
 }
+summary {
+	cursor: pointer;
+}
+
 h1 {
 	font-family: "EB Garamond", serif;
 	font-weight: 400;

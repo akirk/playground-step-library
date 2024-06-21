@@ -133,8 +133,18 @@ addEventListener('DOMContentLoaded', function() {
 		}
 		loadCombinedExamples();
 	});
+	document.addEventListener('change', (event) => {
+		if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' ) {
+			loadCombinedExamples();
+			return;
+		}
+	});
 	document.addEventListener('click', (event) => {
-		if ( event.target.tagName === 'INPUT' ) {
+		if ( event.target.tagName === 'SELECT' ) {
+			loadCombinedExamples();
+			return;
+		}
+		if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' ) {
 			if ( event.target.type === 'checkbox' ) {
 				loadCombinedExamples();
 			} else {
@@ -335,6 +345,7 @@ addEventListener('DOMContentLoaded', function() {
 			combinedExamples.steps = combinedExamples.steps.concat(step);
 		});
 		document.getElementById('blueprint').value = JSON.stringify(combinedExamples, null, 2);
+		document.getElementById('landing-page').placeholder = combinedExamples.landingPage;
 		history.pushState( state , '', '#' + compressState( state ) );
 		transformJson();
 	}
@@ -342,7 +353,19 @@ addEventListener('DOMContentLoaded', function() {
 	function transformJson() {
 		let jsonInput = document.getElementById('blueprint').value;
 		let inputData = JSON.parse(jsonInput);
-		const outputData = JSON.parse(jsonInput);
+		const userDefined = {
+			"landingPage": "/"
+		};
+		if ( document.getElementById('phpExtensionBundles').checked ) {
+			userDefined.phpExtensionBundles = [ 'kitchen-sink' ];
+		}
+		if ( 'latest' !== document.getElementById('wp-version').value || 'latest' !== document.getElementById('php-version').value ) {
+			userDefined.preferredVersions = {
+				wp: document.getElementById('wp-version').value,
+				php: document.getElementById('php-version').value
+			};
+		}
+		const outputData = Object.assign( userDefined, JSON.parse(jsonInput) );
 		outputData.steps = [];
 		inputData.steps.forEach(function(step, index) {
 			let outSteps = [];
@@ -380,9 +403,11 @@ addEventListener('DOMContentLoaded', function() {
 			outputData.steps = outputData.steps.concat(outSteps);
 
 		});
+		if ( document.getElementById('landing-page').value ) {
+			outputData.landingPage = document.getElementById('landing-page').value;
+		}
 
 		document.getElementById('blueprint-compiled').value = JSON.stringify(outputData, null, 2);
-
 
 		const a = document.getElementById('playground-link');
 		a.href = 'https://playground.wordpress.net/#' + ( JSON.stringify( outputData ).replace( /%/g, '%25' ) );
