@@ -17,7 +17,7 @@ customSteps.installPlugin = function( step ) {
 	];
 	if ( step?.vars?.permalink ) {
 		steps.unshift({
-			"step": "setSiteOption",
+			"step": "setSiteOptions",
 			"options": {
 				"permalink_structure": "/%postname%/"
 			}
