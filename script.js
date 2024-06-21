@@ -408,7 +408,12 @@ addEventListener('DOMContentLoaded', function() {
 				if ( key === 'step' ) {
 					return;
 				}
-				stepBlock.querySelector('[name="' + key + '"]').value = step.vars[key];
+				const input = stepBlock.querySelector('[name="' + key + '"]');
+				if ( 'checkbox' === input.type ) {
+					input.checked = 'false' !== step.vars[key];
+				} else {
+					input.value = step.vars[key];
+				}
 			});
 		});
 		loadCombinedExamples();
