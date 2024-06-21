@@ -218,3 +218,13 @@ button, #playground-link {
 #blueprint-compiled {
 	margin-bottom: 1em;
 }
+
+#further-options div {
+	display: flex;
+	flex-direction: row;
+	gap: 2em;
+}
+
+#further-options label {
+	display: block;
+}

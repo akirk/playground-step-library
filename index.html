@@ -35,8 +35,9 @@
 		</div>
 	</div>
 	<details id="further-options"><summary>Further Options</summary>
-		<label>Landing Page <input type="text" id="landing-page" placeholder="/"></label><br>
-		<label><input type="checkbox" id="phpExtensionBundles" value="kitchen-sink">Enable all <a href="https://wordpress.github.io/wordpress-playground/blueprints-api/data-format#php-extensions" target="_blank">available PHP extensions</a></label><br>
+		<div>
+		<label>Landing Page <input type="text" id="landing-page" placeholder="/"></label>
+		<label><input type="checkbox" id="phpExtensionBundles" value="kitchen-sink">Enable all <a href="https://wordpress.github.io/wordpress-playground/blueprints-api/data-format#php-extensions" target="_blank">available PHP extensions</a></label>
 		<label>WordPress version <select id="wp-version">
 			<option value="latest">latest</option>
 			<option value="6.3">6.3</option>
@@ -44,7 +45,7 @@
 			<option value="6.5">6.5</option>
 			<option value="beta">beta</option>
 			<option value="nightly">nightly</option>
-		</select></label><br>
+		</select></label>
 		<label>PHP version <select id="php-version">
 			<option value="latest">latest</option>
 			<option value="7.4">7.4</option>
@@ -53,6 +54,7 @@
 			<option value="8.2">8.2</option>
 			<option value="8.3">8.3</option>
 		</select></label>
+		</div>
 	</details>
 	<dialog id="view-source">
 		<h2></h2>

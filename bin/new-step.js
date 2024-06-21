@@ -30,11 +30,11 @@ const content = `customSteps.${stepName} = function( step ) {
 		// Your steps here. Example:
 		// {
 		// 	"step": "runPHP",
-		// 	"code": "<?php require_once 'wordpress/wp-load.php'; error_log( 'Hello \   ${variableName}') ?>"
+		// 	"code": "<?php require_once 'wordpress/wp-load.php'; error_log( 'Hello \${variableName}') ?>"
 		// }
 	];
 };
-customSteps.${stepName}.description = "Describe the step here.";
+customSteps.${stepName}.info = "Provide useful additional info.";
 customSteps.${stepName}.vars = [
 	// Your variables here. Example:
 	// {
