@@ -1,8 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-// Specify the directory containing the JS files
-const jsDir = "steps";
+// Specify the directory containing the steps
+const stepsDir = "steps";
+
+// chdir into the directory where this script lives
+process.chdir(__dirname + '/..');
 
 // Specify the HTML file and the delimiters
 const htmlFile = "index.html";
@@ -24,10 +27,10 @@ function getAllJsFiles(dir, filesList = []) {
 }
 
 // Get a list of all JS files in the specified directory and subdirectories
-const jsFiles = getAllJsFiles(jsDir).map(file => path.relative(jsDir, file)).sort();
+const jsFiles = getAllJsFiles(stepsDir).map(file => path.relative(stepsDir, file)).sort();
 
 // Construct the sorted script tags for each JS file
-const scriptTags = jsFiles.map(jsFile => `\t<script src="${path.join(jsDir, jsFile)}"></script>`).join('\n');
+const scriptTags = jsFiles.map(jsFile => `\t<script src="${path.join(stepsDir, jsFile)}"></script>`).join('\n');
 
 // Read the contents of the HTML file
 let htmlContent = fs.readFileSync(htmlFile, 'utf8');

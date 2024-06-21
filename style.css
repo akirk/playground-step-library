@@ -43,18 +43,6 @@ a:any-link:hover {
 	border-bottom-right-radius: 0;
 }
 
-.step.builtin {
-	background-color: lightgreen;
-}
-
-#step-list .step.builtin {
-	display: none;
-}
-
-#step-list.show-builtin .step.builtin {
-	display: block;
-}
-
 #blueprint-steps {
 	width: 500px;
 	min-height: 500px;
@@ -85,6 +73,23 @@ textarea {
 	background-color: lightblue;
 	cursor: pointer;
 	border-radius: 5px;
+}
+
+.step.builtin {
+	background-color: lightgreen;
+}
+
+#step-list .step.builtin {
+	display: none;
+}
+
+#step-list.show-builtin .step.builtin {
+	display: block;
+}
+
+#step-list .step {
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 .step .vars {
@@ -122,14 +127,16 @@ textarea {
 	list-style-type: none;
 	color: #0000EE;
 	text-decoration: underline;
-	display: inline;
+	display: inline-block;
 	margin-right: .5em;
 	white-space: nowrap;
 }
+
 .examples ul {
 	margin: 0;
 	padding: 0;
 }
+
 .examples ul li:hover {
 	text-decoration: none;
 }
