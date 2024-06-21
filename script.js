@@ -385,7 +385,7 @@ addEventListener('DOMContentLoaded', function() {
 
 
 		const a = document.getElementById('playground-link');
-		a.href = 'https://playground.wordpress.net/#' + ( JSON.stringify( outputData ) );
+		a.href = 'https://playground.wordpress.net/#' + ( JSON.stringify( outputData ).replace( /%/g, '%25' ) );
 	}
 
 	function restoreState( state ) {
