@@ -370,7 +370,7 @@ addEventListener('DOMContentLoaded', function() {
 		inputData.steps.forEach(function(step, index) {
 			let outSteps = [];
 			if ( customSteps[step.step] ) {
-				outSteps = customSteps[step.step]( step );
+				outSteps = customSteps[step.step]( step, inputData );
 				if ( outSteps.landingPage ) {
 					outputData.landingPage = outSteps.landingPage;
 				}
