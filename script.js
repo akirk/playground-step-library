@@ -352,7 +352,6 @@ addEventListener('DOMContentLoaded', function() {
 
 	function transformJson() {
 		let jsonInput = document.getElementById('blueprint').value;
-		let inputData = JSON.parse(jsonInput);
 		const userDefined = {
 			"landingPage": "/"
 		};
@@ -365,7 +364,8 @@ addEventListener('DOMContentLoaded', function() {
 				php: document.getElementById('php-version').value
 			};
 		}
-		const outputData = Object.assign( userDefined, JSON.parse(jsonInput) );
+		let inputData = Object.assign( userDefined, JSON.parse(jsonInput) );
+		const outputData = Object.assign( {}, inputData );
 		outputData.steps = [];
 		inputData.steps.forEach(function(step, index) {
 			let outSteps = [];
@@ -380,9 +380,9 @@ addEventListener('DOMContentLoaded', function() {
 			} else {
 				outSteps.push(step);
 			}
+			console.log( outSteps );
 			const vars = step.vars || {};
 			vars.step = index;
-			delete step.vars;
 
 			for (let i = 0; i < outSteps.length; i++) {
 				Object.keys(vars).forEach(function(key) {
@@ -399,9 +399,9 @@ addEventListener('DOMContentLoaded', function() {
 					}
 				});
 			}
-
-			outputData.steps = outputData.steps.concat(outSteps);
-
+			if ( outSteps ) {
+				outputData.steps = outputData.steps.concat(outSteps);
+			}
 		});
 		if ( document.getElementById('landing-page').value ) {
 			outputData.landingPage = document.getElementById('landing-page').value;

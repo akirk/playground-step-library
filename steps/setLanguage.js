@@ -1,4 +1,4 @@
-customSteps.setLanguage = async function( step, blueprint ) {
+customSteps.setLanguage = function( step, blueprint ) {
 	const lang = step?.vars?.language;
 	if ( ! lang ) {
 		return [];
@@ -41,9 +41,10 @@ customSteps.setLanguage = async function( step, blueprint ) {
 	const plugins = [];
 	const themes = [];
 	for ( let = i = 0; i < blueprint.steps.length; i++ ) {
-		if ( blueprint.steps[i].step === 'installPlugin' ) {
+		console.log( blueprint.steps[i] );
+		if ( blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.plugin) {
 			plugins.push( blueprint.steps[i].vars.plugin );
-		} else if ( blueprint.steps[i].step === 'installTheme' ) {
+		} else if ( blueprint.steps[i].step === 'installTheme' && blueprint.steps[i]?.vars?.theme ) {
 			themes.push( blueprint.steps[i].vars.theme );
 		}
 	}
