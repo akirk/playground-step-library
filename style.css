@@ -31,14 +31,16 @@ a:any-link:hover {
 #blueprint-builder {
 	display: flex;
 }
+
 .arrow {
 	height: 480px;
 	padding: 20px;
 }
 
-#step-list {
+#step-library {
 	width: 200px;
-	min-height: 500px;
+	height:550px;
+	overflow: auto;
 	border: 1px solid #1a1919;
 	border-right: 0;
 	box-shadow: 1px 1px 1px #888888;
@@ -49,7 +51,8 @@ a:any-link:hover {
 
 #blueprint-steps {
 	width: 500px;
-	min-height: 500px;
+	height:550px;
+	overflow: auto;
 	border: 1px solid #1a1919;
 	box-shadow: 1px 1px 1px #888888;
 	border-radius: 5px;
@@ -90,15 +93,15 @@ textarea {
 	background-color: lightgreen;
 }
 
-#step-list .step.builtin {
+#step-library .step.builtin {
 	display: none;
 }
 
-#step-list.show-builtin .step.builtin {
+#step-library.show-builtin .step.builtin {
 	display: block;
 }
 
-#step-list .step {
+#step-library .step {
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
@@ -119,14 +122,12 @@ textarea {
 }
 
 .step .examples {
-	position: absolute;
 	margin-left: 15em;
 	margin-top: -2.7em;
 	font-size: 13px;
 }
 
 .step .examples[open] {
-	position: static;
 	margin-left: 0;
 	margin-top: 0;
 }
@@ -142,10 +143,10 @@ textarea {
 	margin-top: -8px;
 }
 
-#step-list .step .examples,
-#step-list .step .info,
-#step-list .step .vars,
-#step-list .step .remove {
+#step-library .step .examples,
+#step-library .step .info,
+#step-library .step .vars,
+#step-library .step .remove {
 	display: none;
 }
 
@@ -153,7 +154,7 @@ textarea {
 	display: block;
 }
 
-#step-list .step .examples {
+#step-library .step .examples {
 	display: none;
 }
 

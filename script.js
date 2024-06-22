@@ -1,6 +1,6 @@
 const customSteps = {};
 addEventListener('DOMContentLoaded', function() {
-	const stepList = document.getElementById('step-list');
+	const stepList = document.getElementById('step-library');
 	const blueprintSteps = document.getElementById('blueprint-steps');
 
 	for ( const i in customSteps ) {
