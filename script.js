@@ -88,7 +88,7 @@ addEventListener('DOMContentLoaded', function() {
 							for ( let j = 0; j < v.samples.length; j++ ) {
 								const sample = document.createElement('li');
 								sample.className = 'sample';
-								sample.innerText = v.samples[j];
+								sample.innerText = '' === v.samples[j] ? '<empty>' : v.samples[j];
 								ul.appendChild(sample);
 							}
 							examples.className = 'examples';
@@ -166,7 +166,7 @@ addEventListener('DOMContentLoaded', function() {
 			return false;
 		}
 		if (event.target.classList.contains('sample') ) {
-			event.target.closest('td').querySelector('input').value = event.target.innerText;
+			event.target.closest('td').querySelector('input').value = event.target.innerText === '<empty>' ? '' : event.target.innerText;
 			loadCombinedExamples();
 			return;
 		}

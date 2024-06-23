@@ -4,12 +4,17 @@ customSteps.createUser = function( step ) {
 	let password = step?.vars?.password;
 	let role = step?.vars?.role;
 	let display_name = step?.vars?.display_name;
+	let email = step?.vars?.email;
 	if ( ! username || ! password || ! role ) {
 		return [];
 	}
 	code += ` $data = array( 'user_login' => '${username}', 'user_pass' => '${password}', 'role' => '${role}',`
 	if ( display_name ) {
 		code += ` 'display_name' => '${display_name}',`;
+	}
+
+	if ( email ) {
+		code += ` 'user_email' => '${email}',`;
 	}
 
 	code += "); wp_insert_user( $data ); ?>";
@@ -44,5 +49,10 @@ customSteps.createUser.vars = [
 		"name": "display_name",
 		"description": "Display Name",
 		"samples": [ "Matt" ]
+	},
+	{
+		"name": "email",
+		"description": "E-Mail",
+		"samples": [ '', "m@mullenweg.com" ]
 	}
 ];
