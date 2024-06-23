@@ -418,7 +418,25 @@ addEventListener('DOMContentLoaded', function() {
 		document.getElementById('blueprint-compiled').value = JSON.stringify(outputData, null, 2);
 
 		const a = document.getElementById('playground-link');
-		a.href = 'https://playground.wordpress.net/#' + ( JSON.stringify( outputData ).replace( /%/g, '%25' ) );
+		const queries = [];
+		switch ( document.getElementById('mode').value ) {
+			case 'browser':
+				queries.push( 'mode=browser' );
+				break;
+			case 'seamless':
+				queries.push( 'mode=seamless' );
+				break;
+		}
+		switch ( document.getElementById('storage').value ) {
+			case 'browser':
+				queries.push( 'storage=browser' );
+				break;
+			case 'device':
+				queries.push( 'storage=device' );
+				break;
+		}
+		const query = (queries.length ? '?' + queries.join('&') : '') + '#';
+		a.href = 'https://playground.wordpress.net/' + query + ( JSON.stringify( outputData ).replace( /%/g, '%25' ) );
 	}
 
 	function restoreState( state ) {
