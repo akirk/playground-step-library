@@ -27,7 +27,16 @@ function getAllJsFiles(dir, filesList = []) {
 }
 
 // Get a list of all JS files in the specified directory and subdirectories
-const jsFiles = getAllJsFiles(stepsDir).map(file => path.relative(stepsDir, file)).sort();
+const jsFiles = getAllJsFiles(stepsDir).map(file => path.relative(stepsDir, file)).sort( function( a, b ) {
+    // sort steps/builtin/enableMultisite.js tp the bottom.
+    if ( a === 'builtin/enableMultisite.js' ) {
+        return 1;
+    }
+    if ( b === 'builtin/enableMultisite.js' ) {
+        return -1;
+    }
+    return a.localeCompare(b);
+});
 
 // Construct the sorted script tags for each JS file
 const scriptTags = jsFiles.map(jsFile => `\t<script src="${path.join(stepsDir, jsFile)}"></script>`).join('\n');
