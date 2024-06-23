@@ -388,7 +388,6 @@ addEventListener('DOMContentLoaded', function() {
 			} else {
 				outSteps.push(step);
 			}
-			console.log( outSteps );
 			const vars = step.vars || {};
 			vars.step = index;
 
