@@ -1,8 +1,12 @@
+:root {
+  color-scheme: light dark;
+}
+
 body {
-	background-color: #fff;
+	background-color: light-dark( #fff, #000 );
 	font-family: Inter, sans-serif;
 	font-optical-sizing: auto;
-	color: #1a1919;
+	color: light-dark( #1a1919, #fff );
 	font-size: 16px;
 	line-height: 30px;
 	-moz-osx-font-smoothing: grayscale;
@@ -28,7 +32,7 @@ h1 {
 }
 
 a:any-link {
-	color: #0000EE;
+	color: light-dark( #0000EE, lightblue );
 	text-decoration: underline;
 }
 
@@ -49,9 +53,9 @@ a:any-link:hover {
 	width: 200px;
 	height:550px;
 	overflow: auto;
-	border: 1px solid #1a1919;
+	border: 1px solid light-dark( #1a1919, #fff );
 	border-right: 0;
-	box-shadow: 1px 1px 1px #888;
+	box-shadow: light-dark( 1px 1px 1px #888, none );
 	border-radius: 5px;
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
@@ -61,13 +65,13 @@ a:any-link:hover {
 	width: 500px;
 	height:550px;
 	overflow: auto;
-	border: 1px solid #1a1919;
-	box-shadow: 1px 1px 1px #888;
+	border: 1px solid light-dark( #1a1919, #fff );
+	box-shadow: light-dark( 1px 1px 1px #888, none );
 	border-radius: 5px;
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
 	z-index: 1;
-	background-color: #fff;
+	background-color: light-dark( #fff, #000 );
 }
 
 div.explanation {
@@ -77,7 +81,7 @@ div.explanation {
 textarea {
 	height: 490px;
 	width: 250px;
-	border: 1px solid #1a1919;
+	border: 1px solid light-dark( #1a1919, #fff );
 	margin: 0;
 	padding: 8px;
 	font-family: monospace;
@@ -90,15 +94,15 @@ textarea {
 .step {
 	padding: 10px;
 	margin: 5px;
-	border: 1px solid #1a1919;
-	background-color: lightblue;
+	border: 1px solid light-dark( #1a1919, #fff );
+	background-color: light-dark( lightblue, #003eaa );
 	cursor: pointer;
 	border-radius: 5px;
 	z-index: 3;
 }
 
 .step.builtin {
-	background-color: lightgreen;
+	background-color: light-dark( lightgreen, #027102 );
 }
 
 #step-library .step.builtin {
@@ -145,7 +149,7 @@ textarea {
 }
 
 .step .remove:any-link {
-	color: #1a1919;
+	color: light-dark( light-dark( #1a1919, #fff ), #fff );
 	text-decoration: none;
 	margin-top: -8px;
 }
@@ -205,7 +209,7 @@ table.vars tr td:first-child {
 }
 
 button, #playground-link {
-	border: 1px solid #1a1919;
+	border: 1px solid light-dark( #1a1919, #fff );
 	border-radius: 5px;
 	padding: 5px;
 	text-decoration: none;
@@ -213,24 +217,23 @@ button, #playground-link {
 	box-shadow: 1px 1px 1px #888;
 	cursor: pointer;
 }
-
 #playground-link {
-	background-color: lightblue;
-	border: 1px solid #1a1919;
+	background-color: light-dark( lightblue, #003eaa );
+	border: 1px solid light-dark( #1a1919, #fff );
 	line-height: .6;
 	padding: 10px;
 }
 
 #playground-link:any-link {
-	color: #1a1919;
+	color: light-dark( #1a1919, #fff );
 }
 
 #playground-link:hover, .step:hover {
-	background-color: #ADDFFF;
+	background-color: light-dark( #ADDFFF, #0060df );
 }
 
 .step.builtin:hover {
-	background-color: #9DFF9D;
+	background-color: light-dark( #9DFF9D, #00883e );
 }
 
 #view-source iframe {
@@ -257,58 +260,6 @@ button, #playground-link {
 }
 
 
-@media (prefers-color-scheme: dark) {
-	body, textarea, input, #step-library, #blueprint-steps {
-		background-color: #000;
-		color: #fff;
-		border-color: #fff;
-	}
-
-	a:any-link {
-		color: lightblue;
-	}
-
-	#step-library, #blueprint-steps, textarea {
-		box-shadow: none;
-	}
-
-	.step {
-		border-color: #fff;
-		background-color: #003eaa;
-	}
-
-	.step.builtin {
-		background-color: #027102;
-	}
-
-	.step.builtin:hover {
-		background-color: #00883e;
-	}
-
-	#playground-link:any-link, button#clear {
-		color: #fff;
-	}
-
-	#playground-link:any-link {
-		background-color: #003eaa;
-	}
-
-	button#clear {
-		background-color: #333;
-	}
-
-	button#clear:hover {
-		background-color: #666;
-	}
-
-	#playground-link:hover, .step:hover {
-		background-color: #0060df;
-	}
-
-	.step .remove:any-link {
-		color: #fff;
-	}
-}
 
 @media (max-width: 1000px) {
 	#blueprint-builder {
