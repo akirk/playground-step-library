@@ -2,7 +2,7 @@
   color-scheme: light dark;
 }
 
-body {
+html {
 	background-color: light-dark( #fff, #000 );
 	font-family: Inter, sans-serif;
 	font-optical-sizing: auto;
