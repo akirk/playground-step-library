@@ -1,4 +1,5 @@
 body {
+	background-color: #fff;
 	font-family: Inter, sans-serif;
 	font-optical-sizing: auto;
 	color: #1a1919;
@@ -6,9 +7,14 @@ body {
 	line-height: 30px;
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-font-smoothing: antialiased;
+	padding: 0 .5em;
 }
 summary {
 	cursor: pointer;
+}
+
+input {
+	padding: .5em;
 }
 
 h1 {
@@ -59,7 +65,7 @@ a:any-link:hover {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
 	z-index: 1;
-	background-color: white;
+	background-color: #fff;
 }
 
 div.explanation {
@@ -247,3 +253,62 @@ button, #playground-link {
 	margin-top: 1em;
 	margin-left: 1em;
 }
+
+
+@media (prefers-color-scheme: dark) {
+	body, textarea, input {
+		background-color: #000;
+		color: #fff;
+		border-color: #fff;
+	}
+
+	a:any-link {
+		color: lightblue;
+	}
+
+	#blueprint-steps {
+		background-color: #000;
+		border-color: #fff;
+		box-shadow: 1px 1px 1px #888888;
+	}
+
+	#step-library {
+		border-color: #fff;
+		box-shadow: 1px 1px 1px #888888;
+	}
+
+	.step {
+		border-color: #fff;
+		background-color: darkblue;
+	}
+
+	.step.builtin {
+		background-color: darkgreen;
+	}
+
+	.step.builtin:hover {
+		background-color: #027102;
+	}
+
+	#playground-link:any-link, button#clear {
+		color: #fff;
+	}
+
+	#playground-link:any-link {
+		background-color: darkblue;
+	}
+
+	button#clear {
+		background-color: #333;
+	}
+
+	button#clear:hover {
+		background-color: #666;
+	}
+
+	#playground-link:hover, .step:hover {
+		background-color: #2b45aa;
+	}
+
+}
+
