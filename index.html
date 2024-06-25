@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
 	<title>WordPress Playground Step Library</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,17 +25,17 @@
 </head>
 <body>
 	<h1>WordPress Playground Step Library</h1>
-	<p>Drag or click the steps to create a <a href="https://wordpress.github.io/wordpress-playground/blueprints-api/index/" target="_blank">blueprint</a> for <a href="https://wordpress.github.io/wordpress-playground/" target="_blank">WordPress Playground</a>. <button id="clear">Clear Steps</button></p>
+	<p>Drag or click the steps to create a <a href="https://wordpress.github.io/wordpress-playground/blueprints-api/index/" target="_blank">blueprint</a> for <a href="https://wordpress.github.io/wordpress-playground/" target="_blank">WordPress Playground</a>. <button id="clear">Clear Steps</button> <a href="#" id="playground-link-top" target="_blank">Launch in Playground</a></p>
 	<p><input type="text" id="filter" placeholder="Filter"> <label><input type="checkbox" id="show-builtin" checked> Show builtin steps.</label> <a href="https://github.com/akirk/playground-step-library/#contributing">Create your own steps!</a></p>
 	<div id="blueprint-builder">
-		<div id="step-library"></div>
-		<div id="blueprint-steps"><div id="draghint">Click or drag the steps to add them here.</div></div>
-		<div class="arrow">→</div>
+		<div id="step-group">
+			<div id="step-library"></div>
+			<div id="blueprint-steps"><div id="draghint">Click or drag the steps to add them here.</div></div>
+		</div>
 		<div id="blueprint-holder">
 			<div class="explanation">Blueprint with custom steps</div>
 			<textarea id="blueprint"></textarea>
 		</div>
-		<div class="arrow">→</div>
 		<div id="blueprint-compiled-holder">
 			<div class="explanation">Transformed Blueprint</div>
 			<textarea id="blueprint-compiled"></textarea><br>

@@ -13,6 +13,9 @@ body {
 	-webkit-font-smoothing: antialiased;
 	padding: 0 .5em;
 }
+textarea::before {
+	content: " → ";
+}
 summary {
 	cursor: pointer;
 }
@@ -42,11 +45,13 @@ a:any-link:hover {
 
 #blueprint-builder {
 	display: flex;
+	gap: 2em;
+
 }
 
-.arrow {
-	height: 480px;
-	padding: 20px;
+#step-group {
+	display: flex;
+	flex: 2;
 }
 
 #step-library {
@@ -54,11 +59,12 @@ a:any-link:hover {
 	height:550px;
 	overflow: auto;
 	border: 1px solid light-dark( #1a1919, #fff );
-	border-right: 0;
+	border-right-width: 0;
 	box-shadow: light-dark( 1px 1px 1px #888, none );
 	border-radius: 5px;
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
+	flex: 1;
 }
 
 #blueprint-steps {
@@ -72,11 +78,13 @@ a:any-link:hover {
 	border-bottom-left-radius: 0;
 	z-index: 1;
 	background-color: light-dark( #fff, #000 );
+	flex: 1;
 }
 
 div.explanation {
 	position: absolute;
 	margin-top: -2em;
+	white-space: nowrap;
 }
 textarea {
 	height: 490px;
@@ -208,7 +216,7 @@ table.vars tr td:first-child {
 	padding: .5em .5em .5em 0;
 }
 
-button, #playground-link {
+button, #playground-link, #playground-link-top {
 	border: 1px solid light-dark( #1a1919, #fff );
 	border-radius: 5px;
 	padding: 5px;
@@ -217,18 +225,25 @@ button, #playground-link {
 	box-shadow: 1px 1px 1px #888;
 	cursor: pointer;
 }
-#playground-link {
+
+#playground-link,
+#playground-link-top {
 	background-color: light-dark( lightblue, #003eaa );
-	border: 1px solid light-dark( #1a1919, #fff );
 	line-height: .6;
 	padding: 10px;
 }
+#playground-link-top {
+	display: none;
+}
 
-#playground-link:any-link {
+#playground-link:any-link,
+#playground-link-top:any-link {
 	color: light-dark( #1a1919, #fff );
 }
 
-#playground-link:hover, .step:hover {
+#playground-link:hover,
+#playground-link-top:hover,
+.step:hover {
 	background-color: light-dark( #ADDFFF, #0060df );
 }
 
@@ -261,10 +276,33 @@ button, #playground-link {
 
 
 
+@media (max-width: 734px) {
+	#step-group {
+/*		flex-direction: column;*/
+		width: 100%;
+	}
+
+	#playground-link-top {
+		display: inline-block;
+	}
+
+	#step-library, #blueprint-steps {
+		border-right-width: 1px;
+		border-top-right-radius: 5px;
+		border-bottom-right-radius: 5px;
+		border-top-left-radius: 5px;
+		border-bottom-left-radius: 5px;
+	}
+
+	#blueprint-steps .step a.view-source {
+		display: none;
+	}
+}
+
 @media (max-width: 1000px) {
 	#blueprint-builder {
 		flex-wrap: wrap;
-		gap: 4em 0;
+		gap: 4em 2em;
 	}
 
 	#further-options div {
