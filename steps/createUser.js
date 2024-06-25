@@ -24,6 +24,14 @@ customSteps.createUser = function( step ) {
             code
 		}
 	];
+	if ( step?.vars?.login ) {
+		steps.push( {
+			"step": "login",
+			"username": username,
+			"password": password
+
+		} );
+	}
 	return steps;
 }
 customSteps.createUser.vars = [
@@ -54,5 +62,10 @@ customSteps.createUser.vars = [
 		"name": "email",
 		"description": "E-Mail",
 		"samples": [ '', "m@mullenweg.com" ]
+	},
+	{
+		"name": "login",
+		"description": "Immediately log the user in",
+		'type': 'boolean'
 	}
 ];
