@@ -51,7 +51,7 @@ a:any-link:hover {
 	overflow: auto;
 	border: 1px solid #1a1919;
 	border-right: 0;
-	box-shadow: 1px 1px 1px #888888;
+	box-shadow: 1px 1px 1px #888;
 	border-radius: 5px;
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
@@ -62,7 +62,7 @@ a:any-link:hover {
 	height:550px;
 	overflow: auto;
 	border: 1px solid #1a1919;
-	box-shadow: 1px 1px 1px #888888;
+	box-shadow: 1px 1px 1px #888;
 	border-radius: 5px;
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
@@ -83,7 +83,7 @@ textarea {
 	font-family: monospace;
 	font-size: 14px;
 	white-space: pre-wrap;
-	box-shadow: 1px 1px 1px #888888;
+	box-shadow: 1px 1px 1px #888;
 	border-radius: 5px;
 }
 
@@ -210,7 +210,7 @@ button, #playground-link {
 	padding: 5px;
 	text-decoration: none;
 	display: inline-block;
-	box-shadow: 1px 1px 1px #888888;
+	box-shadow: 1px 1px 1px #888;
 	cursor: pointer;
 }
 
@@ -258,7 +258,7 @@ button, #playground-link {
 
 
 @media (prefers-color-scheme: dark) {
-	body, textarea, input {
+	body, textarea, input, #step-library, #blueprint-steps {
 		background-color: #000;
 		color: #fff;
 		border-color: #fff;
@@ -268,15 +268,8 @@ button, #playground-link {
 		color: lightblue;
 	}
 
-	#blueprint-steps {
-		background-color: #000;
-		border-color: #fff;
-		box-shadow: 1px 1px 1px #888888;
-	}
-
-	#step-library {
-		border-color: #fff;
-		box-shadow: 1px 1px 1px #888888;
+	#step-library, #blueprint-steps, textarea {
+		box-shadow: none;
 	}
 
 	.step {
