@@ -176,7 +176,7 @@ addEventListener('DOMContentLoaded', function() {
 		}
 		const dialog = document.getElementById('view-source');
 		if (event.target.classList.contains('view-source')) {
-			dialog.querySelector('h2').innerText = event.target.href.split('/').slice(-2).join('/');
+			dialog.querySelector('h2').innerText = event.target.href.split('/').slice( event.target.href.includes( 'builtin' ) ? -3 : -2).join('/');
 			dialog.showModal();
 		} else {
 			dialog.close();
