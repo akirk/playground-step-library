@@ -27,7 +27,11 @@ addEventListener('DOMContentLoaded', function() {
 
 		const viewSource = document.createElement('a');
 		viewSource.className = 'view-source';
-		viewSource.href = 'steps/' + i + '.js';
+		if ( customSteps[i].builtin ) {
+			viewSource.href = 'steps/builtin/' + i + '.js';
+		} else {
+			viewSource.href = 'steps/' + i + '.js';
+		}
 		viewSource.innerText = 'View Source';
 		viewSource.target = 'source-iframe';
 		step.appendChild(viewSource);
@@ -435,7 +439,9 @@ addEventListener('DOMContentLoaded', function() {
 				break;
 		}
 		const query = (queries.length ? '?' + queries.join('&') : '') + '#';
-		a.href = 'https://playground.wordpress.net/' + query + ( JSON.stringify( outputData ).replace( /%/g, '%25' ) );
+		const href = 'https://playground.wordpress.net/' + query + ( JSON.stringify( outputData ).replace( /%/g, '%25' ) );
+		document.getElementById('playground-link').href = href;
+		document.getElementById('playground-link-top').href = href;
 	}
 
 	function restoreState( state ) {

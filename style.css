@@ -78,7 +78,7 @@ a:any-link:hover {
 	border-bottom-left-radius: 0;
 	z-index: 1;
 	background-color: light-dark( #fff, #000 );
-	flex: 1;
+	flex: 2;
 }
 
 div.explanation {
@@ -169,6 +169,10 @@ textarea {
 	display: none;
 }
 
+#blueprint-steps .step {
+	overflow: clip;
+}
+
 #blueprint-steps .step .vars {
 	display: block;
 }
@@ -234,6 +238,7 @@ button, #playground-link, #playground-link-top {
 }
 #playground-link-top {
 	display: none;
+	font-size: 13.3px;
 }
 
 #playground-link:any-link,
@@ -274,7 +279,10 @@ button, #playground-link, #playground-link-top {
 	margin-left: 1em;
 }
 
-
+#top-buttons {
+	white-space: nowrap;
+	display: inline-block;
+}
 
 @media (max-width: 734px) {
 	#step-group {
@@ -284,14 +292,6 @@ button, #playground-link, #playground-link-top {
 
 	#playground-link-top {
 		display: inline-block;
-	}
-
-	#step-library, #blueprint-steps {
-		border-right-width: 1px;
-		border-top-right-radius: 5px;
-		border-bottom-right-radius: 5px;
-		border-top-left-radius: 5px;
-		border-bottom-left-radius: 5px;
 	}
 
 	#blueprint-steps .step a.view-source {
