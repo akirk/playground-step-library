@@ -40,17 +40,17 @@ function writeJSFiles(sourceDir, targetDir, phpFiles) {
                 "path": "wordpress/wp-content/mu-plugins",
             },
             {
-                "step": "writeFile",
-                "path": `wordpress/wp-content/mu-plugins/${pluginName}.php`,
-                "data": phpContent.replace(/`/g, '\\`'),
-            },
-            {
                 "step": "unzip",
                 "zipFile": {
 	                "resource": "url",
     	            "url": "https://raw.githubusercontent.com/akirk/playground-step-library/main/felixarntz-mu-plugins-shared.zip",
     	        },
 	            "extractToPath": "/wordpress/mu-plugins",
+            },
+            {
+                "step": "writeFile",
+                "path": `wordpress/wp-content/mu-plugins/${pluginName}.php`,
+                "data": phpContent.replace(/`/g, '\\`'),
             },
         ];
 
