@@ -29,8 +29,6 @@ addEventListener('DOMContentLoaded', function() {
 		viewSource.className = 'view-source';
 		if ( customSteps[i].builtin ) {
 			viewSource.href = 'steps/builtin/' + i + '.js';
-		} else if ( customSteps[i].felixArntzMuPlugins ) {
-			viewSource.href = 'steps/felixarntz-mu-plugins/' + i + '.js';
 		} else {
 			viewSource.href = 'steps/' + i + '.js';
 		}
