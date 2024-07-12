@@ -37,7 +37,8 @@ function writeJSFiles(sourceDir, targetDir, phpFiles) {
         const steps = [
             {
                 "step": "mkdir",
-                "path": "wordpress/wp-content/mu-plugins",
+                "path": "wordpress/wp-content/mu-plugins/felixarntz-mu-plugins",
+	            "dedup": true,
             },
             {
                 "step": "unzip",
@@ -46,10 +47,11 @@ function writeJSFiles(sourceDir, targetDir, phpFiles) {
     	            "url": "https://raw.githubusercontent.com/akirk/playground-step-library/main/felixarntz-mu-plugins-shared.zip",
     	        },
 	            "extractToPath": "/wordpress/wp-content/mu-plugins",
+	            "dedup": true,
             },
             {
                 "step": "writeFile",
-                "path": `wordpress/wp-content/mu-plugins/${pluginName}.php`,
+                "path": `wordpress/wp-content/mu-plugins/felixarntz-mu-plugins/${pluginName}.php`,
                 "data": phpContent.replace(/`/g, '\\`'),
             },
         ];
@@ -58,6 +60,7 @@ function writeJSFiles(sourceDir, targetDir, phpFiles) {
     var steps = ${JSON.stringify(steps, null, 4)};
     return steps;
 }
+customSteps.${camelCaseFileName}.felixArntzMuPlugins = true;
 customSteps.${camelCaseFileName}.info = "${pluginDescription}";
 `;
 

@@ -412,8 +412,20 @@ addEventListener('DOMContentLoaded', function() {
 					}
 				});
 			}
+
 			if ( outSteps ) {
-				outputData.steps = outputData.steps.concat(outSteps);
+				for (let i = 0; i < outSteps.length; i++) {
+					if ( outSteps[i].dedup ) {
+						const dedupStep = outputData.steps.find( function( step ) {
+							return step.step === outSteps[i].step;
+						} );
+						if ( dedupStep ) {
+							continue;
+						}
+						delete outSteps[i].dedup;
+					}
+					outputData.steps.push(outSteps[i]);
+				}
 			}
 		});
 		if ( document.getElementById('landing-page').value ) {
