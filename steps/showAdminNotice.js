@@ -1,4 +1,4 @@
-customSteps.showAdminNotice = function() {
+customSteps.showAdminNotice = function( step ) {
     var steps = [
         {
             "step": "mkdir",
@@ -6,10 +6,19 @@ customSteps.showAdminNotice = function() {
         },
         {
             "step": "writeFile",
-            "path": "wordpress/wp-content/mu-plugins/${step}-mu.php",
-            "data": "<?php add_action( 'admin_notices', function() { echo '<div class=\"notice notice-success is-dismissible\"><p>${text}</p></div>'; } ); ?>"
+            "path": "wordpress/wp-content/mu-plugins/show-admin-notice.php",
+            "data": `<?php
+add_action(
+    'admin_notices',
+    function() {
+        echo '<div class="notice notice-success is-dismissible"><p>${step?.vars?.text}</p></div>';
+    }
+);
+`
         }
     ];
+    steps.landingPage = '/wp-admin/';
+    steps.login = true;
     return steps;
 }
 customSteps.showAdminNotice.vars = [

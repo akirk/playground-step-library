@@ -386,6 +386,9 @@ addEventListener('DOMContentLoaded', function() {
 				if ( outSteps.landingPage ) {
 					outputData.landingPage = outSteps.landingPage;
 				}
+				if ( outSteps.login ) {
+					outputData.login = outSteps.login;
+				}
 				if ( step.count ) {
 					outSteps = outSteps.slice(0, step.count);
 				}
