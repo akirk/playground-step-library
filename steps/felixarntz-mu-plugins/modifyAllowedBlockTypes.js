@@ -13,7 +13,7 @@ customSteps.modifyAllowedBlockTypes = function() {
         "step": "unzip",
         "zipFile": {
             "resource": "url",
-            "url": "http://localhost:8089/felixarntz-mu-plugins-shared.zip"
+            "url": "https://raw.githubusercontent.com/akirk/playground-step-library/main/felixarntz-mu-plugins-shared.zip"
         },
         "extractToPath": "/wordpress/mu-plugins"
     }
