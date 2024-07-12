@@ -10,7 +10,7 @@ customSteps.fixToolsMenuCapability = function() {
             "resource": "url",
             "url": "https://raw.githubusercontent.com/akirk/playground-step-library/main/felixarntz-mu-plugins-shared.zip"
         },
-        "extractToPath": "/wordpress/mu-plugins"
+        "extractToPath": "/wordpress/wp-content/mu-plugins"
     },
     {
         "step": "writeFile",
