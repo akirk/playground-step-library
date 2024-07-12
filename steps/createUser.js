@@ -53,7 +53,7 @@ customSteps.createUser.vars = [
 		"description": "Role",
 		"required": true,
 		"type": "select",
-		"options": [ "administrator", "editor", "author", "contributor", "subscriber" ],
+		"options": [ "administrator", "editor", "author", "contributor", "subscriber", "read", "client" ],
 		"samples": [ "editor" ]
 	},
 	{
