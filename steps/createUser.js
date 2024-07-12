@@ -31,6 +31,7 @@ customSteps.createUser = function( step ) {
 			"password": password
 
 		} );
+		steps.landingPage = '/wp-admin/';
 	}
 	return steps;
 }
@@ -39,7 +40,7 @@ customSteps.createUser.vars = [
 		"name": "username",
 		"description": "Username",
 		"required": true,
-		"samples": [ "matt" ]
+		"samples": [ "user" ]
 	},
 	{
 		"name": "password",
@@ -51,21 +52,24 @@ customSteps.createUser.vars = [
 		"name": "role",
 		"description": "Role",
 		"required": true,
-		"samples": [ "administrator" ]
+		"type": "select",
+		"options": [ "administrator", "editor", "author", "contributor", "subscriber" ],
+		"samples": [ "editor" ]
 	},
 	{
 		"name": "display_name",
 		"description": "Display Name",
-		"samples": [ "Matt" ]
+		"samples": [ "User" ]
 	},
 	{
 		"name": "email",
 		"description": "E-Mail",
-		"samples": [ '', "m@mullenweg.com" ]
+		"samples": [ '', "wordpress@example.org" ]
 	},
 	{
 		"name": "login",
 		"description": "Immediately log the user in",
-		'type': 'boolean'
+		'type': 'boolean',
+		'samples': [ true ]
 	}
 ];

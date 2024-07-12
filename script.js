@@ -61,16 +61,28 @@ addEventListener('DOMContentLoaded', function() {
 				td.innerText = v.name;
 				tr.appendChild(td);
 				td = document.createElement('td');
-				const input = document.createElement('input');
-				input.name = v.name;
 				if ( v.type === 'boolean' ) {
+					const input = document.createElement('input');
+					input.name = v.name;
 					input.type = 'checkbox';
-					input.checked = false;
+					input.checked = v?.samples?.[0];
 					const label = document.createElement('label');
 					label.appendChild(input);
 					label.appendChild(document.createTextNode(v.description));
 					td.appendChild(label);
+				} else if ( v.type === 'select' ) {
+					const select = document.createElement('select');
+					select.name = v.name;
+					if ( 'options' in v ) {
+						v.options.forEach(function( option ) {
+							const optionElement = new Option( option, option, v.samples?.[0] === option, v.samples?.[0] === option );
+							select.appendChild(optionElement);
+						});
+					}
+					td.appendChild(select);
 				} else {
+					const input = document.createElement('input');
+					input.name = v.name;
 					input.type = 'text';
 					input.placeholder = v.description;
 					if ( v.required ) {
@@ -329,7 +341,7 @@ addEventListener('DOMContentLoaded', function() {
 				"step": stepBlock.dataset.step,
 				"vars": {}
 			};
-			stepBlock.querySelectorAll('input').forEach(function(input) {
+			stepBlock.querySelectorAll('input,select').forEach(function(input) {
 				if ( input.name === 'count' ) {
 					step.count = parseInt(input.value);
 					return;
@@ -480,7 +492,9 @@ addEventListener('DOMContentLoaded', function() {
 					return;
 				}
 				const input = stepBlock.querySelector('[name="' + key + '"]');
-				if ( 'checkbox' === input.type ) {
+				if ( 'SELECT' === input.tagName ) {
+					input.value = step.vars[key];
+				} else if ( 'checkbox' === input.type ) {
 					input.checked = 'false' !== step.vars[key];
 				} else {
 					input.value = step.vars[key];

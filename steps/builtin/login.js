@@ -6,7 +6,7 @@ customSteps.login = function() {
 			"password": "${password}"
 		}
 	];
-	steps.landingPage ='/wp-admin/?welcome=0';
+	steps.landingPage ='/wp-admin/';
 	return steps;
 }
 customSteps.login.description = "Login to the site";
