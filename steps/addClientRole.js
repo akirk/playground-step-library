@@ -7,7 +7,7 @@ customSteps.addClientRole = function( step ) {
         {
             "step": "writeFile",
             // Adapted from https://github.com/felixarntz/felixarntz-mu-plugins/blob/main/felixarntz-mu-plugins/add-client-role.php
-            "path": "wordpress/wp-content/mu-plugins/add-client-role.php",
+            "path": "wordpress/wp-content/mu-plugins/add-client-role-${stepIndex}.php",
             "data": `<?php
 add_action(
 	'init',

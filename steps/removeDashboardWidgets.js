@@ -59,7 +59,7 @@ add_action(
 	];
 	return steps;
 };
-customSteps.removeDashboardWidgets.info = "Remove any dashboard widgets.";
+customSteps.removeDashboardWidgets.info = "Remove widgets from the wp-admin dashboard.";
 customSteps.removeDashboardWidgets.vars = [
 	{
 		"name": "welcome",

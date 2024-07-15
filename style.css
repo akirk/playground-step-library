@@ -165,7 +165,11 @@ textarea {
 #step-library .step .examples,
 #step-library .step .info,
 #step-library .step .vars,
-#step-library .step .remove {
+#step-library .step .remove,
+#blueprint-steps .step.collapsed .examples,
+#blueprint-steps .step.collapsed .vars,
+#blueprint-steps .step.collapsed .vars,
+#blueprint-steps .step.collapsed .remove {
 	display: none;
 }
 
@@ -203,7 +207,7 @@ textarea {
 	text-decoration: none;
 }
 
-a.view-source {
+a.view-source, #blueprint-steps .step.collapsed a.view-source {
 	display: none;
 	float: right;
 }

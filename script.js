@@ -7,7 +7,10 @@ addEventListener('DOMContentLoaded', function() {
 		const step = document.createElement('div');
 		step.dataset.step = i;
 		step.className = 'step';
-		step.innerText = i;
+		const span = document.createElement('span');
+		span.className = 'stepname';
+		span.innerText = i;
+		step.appendChild(span);
 		if ( customSteps[i].info ) {
 			const info = document.createElement('span');
 			info.className = 'info';
@@ -146,6 +149,8 @@ addEventListener('DOMContentLoaded', function() {
 		if ( event.target.id === 'blueprint' ) {
 			transformJson();
 			return;
+		} else if ( event.target.id === 'blueprint-compiled' ) {
+			return;
 		}
 		loadCombinedExamples();
 	});
@@ -153,6 +158,15 @@ addEventListener('DOMContentLoaded', function() {
 		if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' ) {
 			loadCombinedExamples();
 			return;
+		}
+	});
+	document.addEventListener('dblclick', (event) => {
+		if (event.target.classList.contains('stepname') ) {
+			const step = event.target.closest('.step');
+			step.parentNode.childNodes.forEach(function(s) {
+				s.classList.toggle('collapsed');
+			});
+			return false;
 		}
 	});
 	document.addEventListener('click', (event) => {
@@ -174,6 +188,10 @@ addEventListener('DOMContentLoaded', function() {
 			stepClone.classList.remove('dragging');
 			loadCombinedExamples();
 			return;
+		}
+		if (event.target.classList.contains('stepname') ) {
+			event.target.closest('.step').classList.toggle('collapsed');
+			return false;
 		}
 		if (event.target.classList.contains('remove') ) {
 			event.target.parentNode.remove();
@@ -372,7 +390,7 @@ addEventListener('DOMContentLoaded', function() {
 	}
 
 	function transformJson() {
-		let jsonInput = document.getElementById('blueprint').value;
+		let j, jsonInput = document.getElementById('blueprint').value;
 		const userDefined = {
 			"landingPage": "/"
 		};
@@ -393,6 +411,10 @@ addEventListener('DOMContentLoaded', function() {
 		outputData.steps = [];
 		inputData.steps.forEach(function(step, index) {
 			let outSteps = [];
+			if ( ! step.vars ) {
+				step.vars = {};
+			}
+			step.vars.stepIndex = index;
 			if ( customSteps[step.step] ) {
 				outSteps = customSteps[step.step]( step, inputData );
 				if ( outSteps.landingPage ) {
@@ -407,30 +429,52 @@ addEventListener('DOMContentLoaded', function() {
 			} else {
 				outSteps.push(step);
 			}
-			const vars = step.vars || {};
-			vars.step = index;
-
 			for (let i = 0; i < outSteps.length; i++) {
-				Object.keys(vars).forEach(function(key) {
+				Object.keys(step.vars).forEach(function(key) {
 					for ( j in outSteps[i] ) {
 						if ( typeof outSteps[i][j] === 'object' ) {
 							Object.keys(outSteps[i][j]).forEach(function( k ) {
 								if ( typeof outSteps[i][j][k] === 'string' && outSteps[i][j][k].includes('${' + key + '}') ) {
-									outSteps[i][j][k] = outSteps[i][j][k].replace('${' + key + '}', vars[key]);
+									outSteps[i][j][k] = outSteps[i][j][k].replace('${' + key + '}', step.vars[key]);
 								}
 							});
 						} else if ( typeof outSteps[i][j] === 'string' && outSteps[i][j].includes('${' + key + '}') ) {
-							outSteps[i][j] = outSteps[i][j].replace('${' + key + '}', vars[key]);
+							outSteps[i][j] = outSteps[i][j].replace('${' + key + '}', step.vars[key]);
 						}
 					}
 				});
+				// remove unnecessary whitespace
+				for ( j in outSteps[i] ) {
+					if ( typeof outSteps[i][j] === 'string' ) {
+						outSteps[i][j] = outSteps[i][j].replace(/^\s+/g, '').replace(/\s+$/g, '').replace(/\n\s+/g, '\n')
+					} else if ( typeof outSteps[i][j] === 'object' ) {
+						Object.keys(outSteps[i][j]).forEach(function( k ) {
+							if ( typeof outSteps[i][j][k] === 'string' ) {
+								outSteps[i][j][k] = outSteps[i][j][k].replace(/^\s+/g, '').replace(/\s+$/g, '').replace(/\n\s+/g, '\n');
+							}
+						});
+					}
+				}
 			}
 
 			if ( outSteps ) {
 				for (let i = 0; i < outSteps.length; i++) {
-					if ( outSteps[i].dedup ) {
+					// Dedup by default. Prevent by specifying dedup: false as a step parameter.
+					if ( outSteps[i].dedup === undefined || outSteps[i].dedup ) {
 						const dedupStep = outputData.steps.find( function( step ) {
-							return step.step === outSteps[i].step;
+							for ( j in step ) {
+								if ( outSteps[i][j] === undefined ) {
+									return false;
+								}
+								if ( typeof step[j] === 'object' ) {
+									if ( JSON.stringify(step[j]) !== JSON.stringify(outSteps[i][j]) ) {
+										return false;
+									}
+								} else if ( step[j] !== outSteps[i][j] ) {
+									return false;
+								}
+							}
+							return true;
 						} );
 						if ( dedupStep ) {
 							continue;

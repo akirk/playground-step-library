@@ -6,7 +6,7 @@ customSteps.customPostType = function() {
 		},
 		{
 			"step": "writeFile",
-			"path": "wordpress/wp-content/mu-plugins/${step}-mu.php",
+			"path": "wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
 			"data": "<?php add_action( 'init', function() { register_post_type('${slug}', array('public' => true, 'label' => '${name}')); } ); ?>"
 		}
 	];
