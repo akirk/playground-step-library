@@ -182,16 +182,17 @@ addEventListener('DOMContentLoaded', function() {
 			}
 			return;
 		}
-		if ( event.target.classList.contains('step') && event.target.parentNode === stepList ) {
-			const stepClone = event.target.cloneNode(true);
+		if (event.target.classList.contains('stepname') && event.target.closest('#blueprint-steps') ) {
+			event.target.closest('.step').classList.toggle('collapsed');
+			return false;
+		}
+
+		if ( event.target.closest('.step') && event.target.closest('#step-library') ) {
+			const stepClone = event.target.closest('.step').cloneNode(true);
 			blueprintSteps.appendChild(stepClone);
 			stepClone.classList.remove('dragging');
 			loadCombinedExamples();
 			return;
-		}
-		if (event.target.classList.contains('stepname') ) {
-			event.target.closest('.step').classList.toggle('collapsed');
-			return false;
 		}
 		if (event.target.classList.contains('remove') ) {
 			event.target.parentNode.remove();
