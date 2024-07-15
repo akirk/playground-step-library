@@ -513,6 +513,7 @@ addEventListener('DOMContentLoaded', function() {
 		const href = 'https://playground.wordpress.net/' + query + ( JSON.stringify( outputData ).replace( /%/g, '%25' ) );
 		document.getElementById('playground-link').href = href;
 		document.getElementById('playground-link-top').href = href;
+		document.getElementById('download-blueprint').href = 'data:text/json;charset=utf-8,' + encodeURIComponent( document.getElementById('blueprint-compiled').value );
 	}
 
 	function restoreState( state ) {

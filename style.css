@@ -13,6 +13,15 @@ html {
 	-webkit-font-smoothing: antialiased;
 	padding: 0 .5em;
 }
+header {
+	display: flex;
+	justify-content: space-between;
+	gap: 1em;
+}
+header > p {
+	line-height: 1.3;
+}
+
 textarea::before {
 	content: " → ";
 }
@@ -45,19 +54,18 @@ a:any-link:hover {
 
 #blueprint-builder {
 	display: flex;
-	gap: 2em;
-
+	margin-top: 2em;
+	flex-wrap: wrap;
+	gap: 4em 2em;
 }
 
-#step-group {
+#steps-group {
 	display: flex;
-	flex: 2;
 }
 
-#step-library {
+#step-library-holder {
 	width: 200px;
-	height:550px;
-	overflow: auto;
+	height: 550px;
 	border: 1px solid light-dark( #1a1919, #fff );
 	border-right-width: 0;
 	box-shadow: light-dark( 1px 1px 1px #888, none );
@@ -65,6 +73,24 @@ a:any-link:hover {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 	flex: 1;
+	overflow: hidden;
+}
+
+#filter-holder {
+	display: flex;
+	flex-direction: row;
+	height: 30px;
+	padding: .5em;
+	gap: .5em;
+}
+
+#filter-holder label {
+	white-space: nowrap;
+}
+
+#step-library {
+	overflow: auto;
+	height: 520px;
 }
 
 #blueprint-steps {
@@ -81,14 +107,40 @@ a:any-link:hover {
 	flex: 2;
 }
 
+#blueprint-builder > div {
+	display: flex;
+	flex-direction: column;
+}
+
+#steps-holder {
+	flex: 3 1 0;
+}
+
+#blueprint-holder,
+#blueprint-compiled-holder {
+	flex: 1 1 0;
+}
+
+#blueprint-holder > div,
+#blueprint-compiled-holder > div {
+	height: 2em;
+}
+
+#title-holder {
+	height: 3em;
+	margin-top: -1em;
+}
+#title-holder input {
+	width: 40vw;
+}
+
 div.explanation {
-	position: absolute;
-	margin-top: -2em;
 	white-space: nowrap;
 }
+
 textarea {
 	height: 490px;
-	width: 250px;
+	width: inherit;
 	border: 1px solid light-dark( #1a1919, #fff );
 	margin: 0;
 	padding: 8px;
@@ -162,10 +214,10 @@ textarea {
 	margin-top: -8px;
 }
 
-#step-library .step .examples,
-#step-library .step .info,
-#step-library .step .vars,
-#step-library .step .remove,
+#step-library-holder .step .examples,
+#step-library-holder .step .info,
+#step-library-holder .step .vars,
+#step-library-holder .step .remove,
 #blueprint-steps .step.collapsed .examples,
 #blueprint-steps .step.collapsed .vars,
 #blueprint-steps .step.collapsed .vars,
@@ -181,7 +233,7 @@ textarea {
 	display: block;
 }
 
-#step-library .step .examples {
+#step-library-holder .step .examples {
 	display: none;
 }
 
@@ -224,10 +276,16 @@ table.vars tr td:first-child {
 	padding: .5em .5em .5em 0;
 }
 
-button, #playground-link, #playground-link-top {
+button,
+#playground-link,
+#playground-link-top,
+#download-blueprint {
 	border: 1px solid light-dark( #1a1919, #fff );
+	color: #000;
+	background-color: #e9e9ed;
 	border-radius: 5px;
 	padding: 5px;
+	text-align: center;
 	text-decoration: none;
 	display: inline-block;
 	box-shadow: 1px 1px 1px #888;
@@ -256,6 +314,19 @@ button, #playground-link, #playground-link-top {
 	background-color: light-dark( #ADDFFF, #0060df );
 }
 
+#download-blueprint:any-link {
+	color: light-dark( #000, #fff );
+	margin-top: .5em;
+	line-height: .6;
+	padding: 10px;
+	background-color: light-dark( #e9e9ed, #46734e );
+}
+
+/*button:hover,*/
+#download-blueprint:hover {
+	background-color: light-dark( #d0d0d7, #479154);
+}
+
 .step.builtin:hover {
 	background-color: light-dark( #9DFF9D, #00883e );
 }
@@ -271,8 +342,8 @@ button, #playground-link, #playground-link-top {
 
 #further-options div {
 	display: flex;
-	flex-direction: row;
-	gap: 2em;
+	flex-flow: row wrap;
+	gap: .5em 2em;
 }
 
 #further-options label {
@@ -289,8 +360,8 @@ button, #playground-link, #playground-link-top {
 }
 
 @media (max-width: 734px) {
-	#step-group {
-/*		flex-direction: column;*/
+	#steps-group > div {
+		flex-direction: column;
 		width: 100%;
 	}
 
@@ -303,16 +374,17 @@ button, #playground-link, #playground-link-top {
 	}
 }
 
-@media (max-width: 1000px) {
-	#blueprint-builder {
-		flex-wrap: wrap;
-		gap: 4em 2em;
+@media (max-width: 1200px) {
+	header {
+		flex-direction: column;
+	}
+	#filter-holder {
+		flex-direction: column;
+		height: auto;
 	}
 
-	#further-options div {
-		flex-direction: column;
-		gap: 1em;
-		margin-left: 2em;
-		margin-bottom: 2em;
+	#filter-holder label {
+		display: none;
 	}
+
 }

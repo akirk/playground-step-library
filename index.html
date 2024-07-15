@@ -26,66 +26,73 @@
 <!-- End Load Steps -->
 </head>
 <body>
-	<h1>WordPress Playground Step Library</h1>
-	<p>Drag or click the steps to create a <a href="https://wordpress.github.io/wordpress-playground/blueprints-api/index/" target="_blank">blueprint</a> for <a href="https://wordpress.github.io/wordpress-playground/" target="_blank">WordPress Playground</a>.
+	<header>
+		<h1>WordPress Playground Step Library</h1>
+		<p>Drag or click the steps to create a <a href="https://wordpress.github.io/wordpress-playground/blueprints-api/index/" target="_blank">blueprint</a> for <a href="https://wordpress.github.io/wordpress-playground/" target="_blank">WordPress Playground</a>.<br><a href="https://github.com/akirk/playground-step-library/#contributing">Create your own steps!</a></p>
 		<span id="top-buttons">
 			<button id="clear">Clear Steps</button>
 			<a href="#" id="playground-link-top" target="_blank">Launch in Playground</a>
 		</span>
-	</p>
-	<p><input type="text" id="filter" placeholder="Filter"> <label><input type="checkbox" id="show-builtin" checked> Show builtin steps.</label> <a href="https://github.com/akirk/playground-step-library/#contributing">Create your own steps!</a></p>
+	</header>
 	<div id="blueprint-builder">
-		<div id="step-group">
-			<div id="step-library"></div>
-			<div id="blueprint-steps"><div id="draghint">Click or drag the steps to add them here.</div></div>
+		<div id="steps-holder">
+			<div id="title-holder"><label>Give it a title: <input type="text" id="title" placeholder="Title"></label></div>
+			<div id="steps-group">
+				<div id="step-library-holder">
+					<div id="filter-holder"><input type="text" id="filter" placeholder="Filter"> <label><input type="checkbox" id="show-builtin" checked> Builtin</label></div>
+				<div id="step-library"></div>
+				</div>
+				<div id="blueprint-steps"><div id="draghint">Click or drag the steps to add them here.</div></div>
+			</div>
+			<details id="further-options">
+				<summary>Further Options</summary>
+				<div>
+				<label>Landing Page <input type="text" id="landing-page" placeholder="/"></label>
+				<label><input type="checkbox" id="phpExtensionBundles" value="kitchen-sink">Use all <a href="https://wordpress.github.io/wordpress-playground/blueprints-api/data-format#php-extensions" target="_blank">available PHP extensions</a></label>
+				<label>WordPress <select id="wp-version">
+					<option value="latest">latest</option>
+					<option value="6.3">6.3</option>
+					<option value="6.4">6.4</option>
+					<option value="6.5">6.5</option>
+					<option value="beta">beta</option>
+					<option value="nightly">nightly</option>
+				</select></label>
+				<label>PHP <select id="php-version">
+					<option value="latest">latest</option>
+					<option value="7.4">7.4</option>
+					<option value="8.0">8.0</option>
+					<option value="8.1">8.1</option>
+					<option value="8.2">8.2</option>
+					<option value="8.3">8.3</option>
+				</select></label>
+				<label><input type="checkbox" id="networking" value="true">Networking (<a href="https://github.com/WordPress/wordpress-playground/issues/85">experimental</a>)</label>
+					<a href="https://wordpress.github.io/wordpress-playground/query-api" target="_blank">Environment:</a>
+					<label>Mode <select id="mode">
+						<option value="browser-full-screen">Fake Browser (full screen)</option>
+						<option value="browser">Fake Browser</option>
+						<option value="seamless">Seamless</option>
+					</select></label>
+					<label>Storage <select id="storage">
+						<option value="none">None (Changes get lost)</option>
+						<option value="browser">Browser</option>
+						<option value="device">Device</option>
+					</select></label>
+				</div>
+			</details>
+
 		</div>
 		<div id="blueprint-holder">
-			<div class="explanation">Blueprint with custom steps</div>
+			<div class="explanxation">Blueprint with custom steps</div>
 			<textarea id="blueprint"></textarea>
 		</div>
 		<div id="blueprint-compiled-holder">
-			<div class="explanation">Transformed Blueprint</div>
+			<div class="explanaxtion">Transformed Blueprint</div>
 			<textarea id="blueprint-compiled"></textarea><br>
-			<a href="#" id="playground-link" target="_blank">Launch in Playground</a>
+			<a href="#" id="playground-link" target="_blank">Launch in Playground</a><br>
+			<a href="#" id="download-blueprint" download="blueprint.json" target="_blank">Download Blueprint</a>
 		</div>
 	</div>
 
-	<details id="further-options"><summary>Further Options</summary>
-		<div>
-		<label>Landing Page <input type="text" id="landing-page" placeholder="/"></label>
-		<label><input type="checkbox" id="phpExtensionBundles" value="kitchen-sink">Use all <a href="https://wordpress.github.io/wordpress-playground/blueprints-api/data-format#php-extensions" target="_blank">available PHP extensions</a></label>
-		<label>WordPress <select id="wp-version">
-			<option value="latest">latest</option>
-			<option value="6.3">6.3</option>
-			<option value="6.4">6.4</option>
-			<option value="6.5">6.5</option>
-			<option value="beta">beta</option>
-			<option value="nightly">nightly</option>
-		</select></label>
-		<label>PHP <select id="php-version">
-			<option value="latest">latest</option>
-			<option value="7.4">7.4</option>
-			<option value="8.0">8.0</option>
-			<option value="8.1">8.1</option>
-			<option value="8.2">8.2</option>
-			<option value="8.3">8.3</option>
-		</select></label>
-		<label><input type="checkbox" id="networking" value="true">Networking (<a href="https://github.com/WordPress/wordpress-playground/issues/85">experimental</a>)</label>
-		</div>
-		<div>
-			<a href="https://wordpress.github.io/wordpress-playground/query-api" target="_blank">Environment:</a>
-			<label>Mode <select id="mode">
-				<option value="browser-full-screen">Fake Browser (full screen)</option>
-				<option value="browser">Fake Browser</option>
-				<option value="seamless">Seamless</option>
-			</select></label>
-			<label>Storage <select id="storage">
-				<option value="none">None (Changes get lost)</option>
-				<option value="browser">Browser</option>
-				<option value="device">Device</option>
-			</select></label>
-		</div>
-	</details>
 	<dialog id="view-source">
 		<h2></h2>
 		<iframe src="" frameborder="0" name="source-iframe"></iframe>
