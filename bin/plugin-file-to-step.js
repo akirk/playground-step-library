@@ -16,7 +16,7 @@ function toCamelCase(str) {
 const phpFilename = process.argv[2];
 
 // Read the contents of the PHP file
-const phpContents = fs.readFileSync(phpFilename, 'utf-8').replace( /`/g, '\\`' );
+const phpContents = fs.readFileSync(phpFilename, 'utf-8').replace( /`/g, '\\`' ).replace( /\\/g, '\\\\' )
 
 // Derive the JS filename
 const baseName = path.basename(phpFilename, '.php');
@@ -25,15 +25,23 @@ const camelCaseName = toCamelCase(baseName);
 // Create the JavaScript content
 const jsContent = `
 customSteps.${camelCaseName} = function() {
-return [{
-    "step": "runPHP",
-    "code": \`${phpContents}\`
-}];
+	var steps = [
+		{
+			"step": "mkdir",
+			"path": "wordpress/wp-content/mu-plugins",
+		},
+		{
+			"step": "writeFile",
+			"path": "wordpress/wp-content/mu-plugins/${baseName}.php",
+			"data": \`${phpContents}\`
+		}
+	];
+	return steps;
 };
 `;
 
 // Write the JavaScript content to a file
-const jsFilename = path.dirname( phpFilename ) + `/${camelCaseName}.js`;
+const jsFilename = `steps/local/${camelCaseName}.js`;
 fs.writeFileSync(jsFilename, jsContent);
 
 console.log(`JavaScript file created: ${jsFilename}`);
