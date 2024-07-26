@@ -11,7 +11,6 @@ if ( ! $term) {
 	    'wp_theme'
 	);
 }
-error_log(var_export($term, true));
 $post_id = wp_insert_post(array(
 	'post_title' => 'Home',
 	'post_name' => 'home',
@@ -49,9 +48,6 @@ $post_id = wp_insert_post(array(
 <!-- wp:template-part {"slug":"footer","theme":"twentytwentyfour","tagName":"footer","area":"footer"} /-->',
 ));
 wp_set_object_terms($post_id, $term['term_id'], 'wp_theme');
-error_log(print_r($post_id, true));
-error_log(var_export(taxonomy_exists('wp_theme'), true));
-error_log(var_export(get_the_terms($id, 'wp_theme'), true));
 `
         }
     ];
