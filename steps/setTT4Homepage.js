@@ -10,6 +10,9 @@ if ( ! $term) {
 	    'twentytwentyfour',
 	    'wp_theme'
 	);
+	$term_id = $term['term_id'];
+} else {
+	$term_id = $term->term_id;
 }
 $post_id = wp_insert_post(array(
 	'post_title' => 'Home',
@@ -17,7 +20,7 @@ $post_id = wp_insert_post(array(
 	'post_type' => 'wp_template',
 	'post_status' => 'publish',
 	'tax_input' => array(
-		'wp_theme' => array( $term['term_id'] )
+		'wp_theme' => array( $term_id )
 	),
 	'post_content' => '<!-- wp:template-part {"slug":"header","theme":"twentytwentyfour","tagName":"header","area":"header"} /-->
 
@@ -47,7 +50,7 @@ $post_id = wp_insert_post(array(
 
 <!-- wp:template-part {"slug":"footer","theme":"twentytwentyfour","tagName":"footer","area":"footer"} /-->',
 ));
-wp_set_object_terms($post_id, $term['term_id'], 'wp_theme');
+wp_set_object_terms($post_id, $term_id, 'wp_theme');
 `
         }
     ];
