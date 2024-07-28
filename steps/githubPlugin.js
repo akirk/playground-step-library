@@ -10,8 +10,8 @@ customSteps.githubPlugin = function( step ) {
 	};
 
 	const outStep = {
-		"step": "installTheme",
-		"themeZipFile": {
+		"step": "installPlugin",
+		"PluginZipFile": {
 			"resource": "url",
 			"url": `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`
 		},
@@ -22,8 +22,8 @@ customSteps.githubPlugin = function( step ) {
 			'gh-ensure-auth': 'yes',
 			'ghexport-repo-url': 'https://github.com/' + repo,
 			'ghexport-content-type': 'plugin',
-			'ghexport-theme': repoTest[2],
-			'ghexport-playground-root': '/wordpress/wp-content/themes/' + repoTest[2],
+			'ghexport-plugin': repoTest[2],
+			'ghexport-playground-root': '/wordpress/wp-content/plugins/' + repoTest[2],
 			'ghexport-pr-action': 'create',
 			'ghexport-allow-include-zip': 'no',
 		};
