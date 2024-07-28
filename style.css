@@ -299,17 +299,20 @@ button,
 	padding: 10px;
 }
 #playground-link {
-	width: 80%;
+	width: 84%;
 }
 #copy-playground-link {
 	background: none;
+	font-size: 1.3em;
+	line-height: .9;
 	border: none;
 	box-shadow: none;
-	padding-left: 1em;
-	padding-right: 1em;
+	padding-left: .5em;
+	padding-right: .5em;
+	color: light-dark( #0000EE, lightblue );
 }
 #copy-playground-link:hover {
-	background-color: #ccc;
+	background-color: light-dark( #ccc, #333 );
 }
 
 #playground-link-top {
@@ -374,7 +377,7 @@ button,
 }
 
 @media (max-width: 734px) {
-	#steps-group > div {
+	#blueprint-builder {
 		flex-direction: column;
 		width: 100%;
 	}
