@@ -1,9 +1,9 @@
 customSteps.githubPlugin = function( step ) {
-	const repoTest = /(?:https:\/\/github.com\/)?((?:[^\/]+)\/([^\/]+))/.exec( step.vars.repo );
+	const repoTest = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/.exec( step.vars.repo );
 	if ( ! repoTest ) {
 		return [];
 	}
-	const repo = repoTest[1];
+	const repo = repoTest[1] + "/" + repoTest[2];
 	const branch = step.vars.branch || "main";
 	const options = {
 		activate: true,
