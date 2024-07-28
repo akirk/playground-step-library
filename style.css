@@ -298,6 +298,20 @@ button,
 	line-height: .6;
 	padding: 10px;
 }
+#playground-link {
+	width: 80%;
+}
+#copy-playground-link {
+	background: none;
+	border: none;
+	box-shadow: none;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+#copy-playground-link:hover {
+	background-color: #ccc;
+}
+
 #playground-link-top {
 	display: none;
 	font-size: 13.3px;

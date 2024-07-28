@@ -205,6 +205,14 @@ addEventListener('DOMContentLoaded', function() {
 			loadCombinedExamples();
 			return;
 		}
+		if ( event.target.id === 'copy-playground-link' ) {
+			navigator.clipboard.writeText( document.getElementById('playground-link').href );
+			event.target.innerText = 'Copied!';
+			setTimeout( function() {
+				event.target.innerText = '⧉';
+			}, 2000 );
+			return false;
+		}
 		const dialog = document.getElementById('view-source');
 		if (event.target.classList.contains('view-source')) {
 			dialog.querySelector('h2').innerText = event.target.href.split('/').slice( event.target.href.includes( 'builtin' ) ? -3 : -2).join('/');
