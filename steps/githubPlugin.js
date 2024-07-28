@@ -19,7 +19,7 @@ customSteps.githubPlugin = function( step ) {
 		}
 	];
 };
-customSteps.githubTheme.info = "Install a plugin from a Githun repository.";
+customSteps.githubPlugin.info = "Install a plugin from a Githun repository.";
 customSteps.githubPlugin.vars = [
 	{
 		"name": "repo",
