@@ -298,17 +298,22 @@ button,
 	line-height: .6;
 	padding: 10px;
 }
+#playground-link-holder {
+	display: flex;
+	width: 100%;
+	gap: .5em;
+}
 #playground-link {
-	width: 84%;
+	flex-grow: 1;
 }
 #copy-playground-link {
 	background: none;
 	font-size: 1.3em;
-	line-height: .9;
+	line-height: 1;
 	border: none;
 	box-shadow: none;
-	padding-left: .5em;
-	padding-right: .5em;
+	padding-left: .4em;
+	padding-right: .4em;
 	color: light-dark( #0000EE, lightblue );
 }
 #copy-playground-link:hover {
