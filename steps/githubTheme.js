@@ -24,7 +24,7 @@ customSteps.githubTheme.vars = [
 	{
 		"name": "repo",
 		"description": "The theme resides in this GitHub repository.",
-		"samples": [ "richtabor/kanso" ]
+		"samples": [ "richtabor/kanso", "ndiego/nautilus" ]
 	},
 	{
 		"name": "branch",
