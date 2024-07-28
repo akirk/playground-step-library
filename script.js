@@ -334,18 +334,27 @@ addEventListener('DOMContentLoaded', function() {
 			return step.step + '__' + Object.keys( step.vars ).map(function(key) {
 				return key + '--' + step.vars[key];
 			} ).join('__');
-		} ).join('&&');
+		} ).concat( [ 'title__' +escape( document.getElementById('title').value ) ] ).join('&&');
 	}
 
 	function uncompressState( state ) {
 		return state.split('&&').map( function( step ) {
 			const parts = step.split('__');
+			if ( parts[0] === 'title' ) {
+				return {
+					"title": parts[1]
+				};
+			}
 			const stepData = {
 				"step": parts.shift(),
 				"vars": {}
 			};
 			parts.forEach( function( part ) {
 				const kv = part.split('--');
+				if ( kv[0] === 'title' ) {
+					document.getElementById('title').value = kv[1];
+					return;
+				}
 				if ( kv[0] === 'count' ) {
 					stepData.count = parseInt(kv[1]);
 					return;
@@ -357,10 +366,12 @@ addEventListener('DOMContentLoaded', function() {
 	}
 
 	function loadCombinedExamples() {
-		const combinedExamples = {
-			"landingPage": "/",
-			"steps": []
-		};
+		const combinedExamples = {};
+		if ( document.getElementById('title').value ) {
+			combinedExamples.title = document.getElementById('title').value;
+		}
+		combinedExamples.landingPage = '/',
+		combinedExamples.steps = [];
 		const state = [];
 
 		blueprintSteps.querySelectorAll('.step').forEach(function(stepBlock) {
@@ -419,6 +430,9 @@ addEventListener('DOMContentLoaded', function() {
 		}
 		let inputData = Object.assign( userDefined, JSON.parse(jsonInput) );
 		const outputData = Object.assign( {}, inputData );
+		if ( outputData.title ) {
+			delete outputData.title;
+		}
 		outputData.steps = [];
 		inputData.steps.forEach(function(step, index) {
 			let outSteps = [];
@@ -549,6 +563,12 @@ addEventListener('DOMContentLoaded', function() {
 		}
 		blueprintSteps.innerHTML = '';
 		state.forEach(function(step) {
+			if ( typeof step.step === 'undefined' ) {
+				if ( typeof step.title === 'string' ) {
+					document.getElementById('title').value = step.title;
+				}
+				return;
+			}
 			const block = stepList.querySelector('[data-step="' + step.step + '"]');
 			if ( ! block ) {
 				return;
