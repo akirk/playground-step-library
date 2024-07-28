@@ -8,16 +8,28 @@ customSteps.githubPlugin = function( step ) {
 	const options = {
 		activate: true,
 	};
-	return [
-		{
-			"step": "installPlugin",
-			"pluginZipFile": {
-				"resource": "url",
-				"url": `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`
-			},
-			options
-		}
-	];
+
+	const outStep = {
+		"step": "installTheme",
+		"themeZipFile": {
+			"resource": "url",
+			"url": `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`
+		},
+		options
+	};
+	if ( step.vars.prs ) {
+		outStep.queryParams = {
+			'gh-ensure-auth': 'yes',
+			'ghexport-repo-url': 'https://github.com/' + repo,
+			'ghexport-content-type': 'plugin',
+			'ghexport-theme': repoTest[2],
+			'ghexport-playground-root': '/wordpress/wp-content/themes/' + repoTest[2],
+			'ghexport-pr-action': 'create',
+			'ghexport-allow-include-zip': 'no',
+		};
+	}
+
+	return [ outStep ];
 };
 customSteps.githubPlugin.info = "Install a plugin from a Githun repository.";
 customSteps.githubPlugin.vars = [
@@ -30,5 +42,11 @@ customSteps.githubPlugin.vars = [
 		"name": "branch",
 		"description": "Which branch to use.",
 		"samples": [ "main" ]
+	},
+	{
+		"name": "prs",
+		"description": "Add support for submitting Github Requests.",
+		"type": "boolean",
+		"samples": [ "false", "true" ]
 	}
 ];

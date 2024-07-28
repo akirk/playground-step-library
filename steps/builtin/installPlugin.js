@@ -32,7 +32,7 @@ customSteps.installPlugin.vars = [
 		"name": "plugin",
 		"description": "Plugin slug",
 		"required": true,
-		"samples": [ "hello-dolly", 'friends', 'woocommerce' ]
+		"samples": [ "hello-dolly", 'friends', 'woocommerce', 'create-block-theme' ]
 	},
 	{
 		"name": "permalink",

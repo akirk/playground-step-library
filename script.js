@@ -68,7 +68,7 @@ addEventListener('DOMContentLoaded', function() {
 					const input = document.createElement('input');
 					input.name = v.name;
 					input.type = 'checkbox';
-					input.checked = v?.samples?.[0];
+					input.checked = v?.samples?.[0] === 'true' || v?.samples?.[0] === true;
 					const label = document.createElement('label');
 					label.appendChild(input);
 					label.appendChild(document.createTextNode(v.description));
@@ -392,6 +392,8 @@ addEventListener('DOMContentLoaded', function() {
 
 	function transformJson() {
 		let j, jsonInput = document.getElementById('blueprint').value;
+		const queries = [];
+		let useBlueprintURLParam = false;
 		const userDefined = {
 			"landingPage": "/"
 		};
@@ -431,6 +433,18 @@ addEventListener('DOMContentLoaded', function() {
 				outSteps.push(step);
 			}
 			for (let i = 0; i < outSteps.length; i++) {
+				if ( typeof outSteps[i] !== 'object' ) {
+					continue;
+				}
+				if ( typeof outSteps[i].queryParams === 'object' ) {
+					for ( j in outSteps[i].queryParams ) {
+						if ( 'gh-ensure-auth' === j ) {
+							useBlueprintURLParam = true;
+						}
+						queries.push( j + '=' + encodeURIComponent( outSteps[i].queryParams[j] ) );
+					}
+					delete outSteps[i].queryParams;
+				}
 				Object.keys(step.vars).forEach(function(key) {
 					for ( j in outSteps[i] ) {
 						if ( typeof outSteps[i][j] === 'object' ) {
@@ -493,7 +507,6 @@ addEventListener('DOMContentLoaded', function() {
 		document.getElementById('blueprint-compiled').value = JSON.stringify(outputData, null, 2);
 
 		const a = document.getElementById('playground-link');
-		const queries = [];
 		switch ( document.getElementById('mode').value ) {
 			case 'browser':
 				queries.push( 'mode=browser' );
@@ -510,8 +523,13 @@ addEventListener('DOMContentLoaded', function() {
 				queries.push( 'storage=device' );
 				break;
 		}
-		const query = (queries.length ? '?' + queries.join('&') : '') + '#';
-		const href = 'https://playground.wordpress.net/' + query + ( JSON.stringify( outputData ).replace( /%/g, '%25' ) );
+		let hash = '#' + ( JSON.stringify( outputData ).replace( /%/g, '%25' ) );
+		if ( useBlueprintURLParam ) {
+			queries.push( 'blueprint-url=data:application/json;charset=utf-8,' + encodeURIComponent( document.getElementById('blueprint-compiled').value ) );
+			hash ='';
+		}
+		const query = (queries.length ? '?' + queries.join('&') : '');
+		const href = 'https://playground.wordpress.net/' + query + hash;
 		document.getElementById('playground-link').href = href;
 		document.getElementById('playground-link-top').href = href;
 		document.getElementById('download-blueprint').href = 'data:text/json;charset=utf-8,' + encodeURIComponent( document.getElementById('blueprint-compiled').value );
