@@ -533,7 +533,7 @@ addEventListener('DOMContentLoaded', function() {
 		}
 		let hash = '#' + ( JSON.stringify( outputData ).replace( /%/g, '%25' ) );
 		if ( useBlueprintURLParam ) {
-			queries.push( 'blueprint-url=data:application/json;charset=utf-8,' + encodeURIComponent( document.getElementById('blueprint-compiled').value ) );
+			queries.push( 'blueprint-url=data:application/json;base64,' + btoa( JSON.stringify( outputData ) ) );
 			hash ='';
 		}
 		const query = (queries.length ? '?' + queries.join('&') : '');
