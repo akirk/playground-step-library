@@ -5,6 +5,9 @@ customSteps.githubPlugin = function( step ) {
 	}
 	const repo = repoTest[1] + "/" + repoTest[2];
 	const branch = step.vars.branch || "main";
+	if ( ! /^[a-z0-9-]+$/.test( branch ) ) {
+		return [];
+	}
 	const options = {
 		activate: true,
 	};
@@ -23,7 +26,7 @@ customSteps.githubPlugin = function( step ) {
 			'ghexport-repo-url': 'https://github.com/' + repo,
 			'ghexport-content-type': 'plugin',
 			'ghexport-plugin': repoTest[2],
-			'ghexport-playground-root': '/wordpress/wp-content/plugins/' + repoTest[2],
+			'ghexport-playground-root': '/wordpress/wp-content/plugins/' + repoTest[2] + '-' + branch,
 			'ghexport-pr-action': 'create',
 			'ghexport-allow-include-zip': 'no',
 		};
