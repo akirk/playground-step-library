@@ -12,7 +12,7 @@ customSteps.githubImportExportWxr = function( step ) {
 	}
 	const filename = step.vars.filename || "export.xml";
 
-	const steps = customSteps.deleteAllPosts();
+	let steps = [];
 	const siteOptions = {
 		"wordpress_export_to_server__file": filename,
 		"wordpress_export_to_server__owner_repo_branch": repo + "/" + branch,
@@ -20,40 +20,42 @@ customSteps.githubImportExportWxr = function( step ) {
 	if ( step.vars.targetUrl ) {
 		siteOptions["wordpress_export_to_server__export_home"] = step.vars.targetUrl;
 	}
-	steps.push({
+	steps = steps.concat(customSteps.deleteAllPosts());
+	steps = steps.concat([
+	{
 		"step": "setSiteOptions",
 		"options": siteOptions
-	});
-	steps.push({
+	},
+	{
 		"step": "defineWpConfigConsts",
 		"consts": {
 			"UPLOADS": "wp-content/" + repo + "-" + branch
 		}
-	});
-	steps.push({
+	},
+	{
 		"step": "unzip",
 		"zipFile": {
 			"resource": "url",
 			"url": `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`,
 		},
 		"extractToPath": "/wordpress/wp-content"
-	});
-	steps.push({
+	},
+	{
 		"step": "writeFile",
 		"path": "/wordpress/wp-content/mu-plugins/wordpress-export-to-server.php",
 		"data": {
 			"resource": "url",
 			"url": "https://raw.githubusercontent.com/carstingaxion/wordpress-export-to-server/main/wordpress-export-to-server.php"
 		}
-	});
-	steps.push({
+	},
+	{
 		"step": "installPlugin",
 		"pluginZipFile": {
 			"resource": "url",
 			"url": "https://github-proxy.com/proxy/?repo=humanmade/WordPress-Importer"
 		}
-	});
-	steps.push({
+	},
+	{
 		"step": "runPHP",
 		"code": `
 		<?php require '/wordpress/wp-load.php';
@@ -65,7 +67,8 @@ customSteps.githubImportExportWxr = function( step ) {
 		$importer->set_logger( $logger );
 		$result = $importer->import( $path );
 		`
-	});
+	}
+	]);
 	steps[0].queryParams = {
 		'gh-ensure-auth': 'yes',
 		'ghexport-repo-url': 'https://github.com/' + repo,
