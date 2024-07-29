@@ -25,7 +25,7 @@ customSteps.githubTheme = function( step ) {
 			'gh-ensure-auth': 'yes',
 			'ghexport-repo-url': 'https://github.com/' + repo,
 			'ghexport-content-type': 'theme',
-			'ghexport-theme': repoTest[2],
+			'ghexport-theme': repoTest[2] + '-' + branch,
 			'ghexport-playground-root': '/wordpress/wp-content/themes/' + repoTest[2] + '-' + branch,
 			'ghexport-pr-action': 'create',
 			'ghexport-allow-include-zip': 'no',

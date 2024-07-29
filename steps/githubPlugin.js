@@ -25,7 +25,7 @@ customSteps.githubPlugin = function( step ) {
 			'gh-ensure-auth': 'yes',
 			'ghexport-repo-url': 'https://github.com/' + repo,
 			'ghexport-content-type': 'plugin',
-			'ghexport-plugin': repoTest[2],
+			'ghexport-plugin': repoTest[2] + '-' + branch,
 			'ghexport-playground-root': '/wordpress/wp-content/plugins/' + repoTest[2] + '-' + branch,
 			'ghexport-pr-action': 'create',
 			'ghexport-allow-include-zip': 'no',

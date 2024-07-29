@@ -334,7 +334,7 @@ addEventListener('DOMContentLoaded', function() {
 			return step.step + '__' + Object.keys( step.vars ).map(function(key) {
 				return key + '--' + step.vars[key];
 			} ).join('__');
-		} ).concat( [ 'title__' +escape( document.getElementById('title').value ) ] ).join('&&');
+		} ).concat( document.getElementById('title').value ? [ 'title__' +escape( document.getElementById('title').value ) ] : [] ).join('&&');
 	}
 
 	function uncompressState( state ) {
@@ -547,7 +547,8 @@ addEventListener('DOMContentLoaded', function() {
 		}
 		let hash = '#' + ( JSON.stringify( outputData ).replace( /%/g, '%25' ) );
 		if ( useBlueprintURLParam ) {
-			queries.push( 'blueprint-url=data:application/json;base64,' + btoa( JSON.stringify( outputData ) ) );
+			// queries.push( 'blueprint-url=data:application/json;charset=utf-8,' + encodeURIComponent( JSON.stringify( outputData ) ) );
+			queries.push( 'blueprint-url=data:application/json;base64,' + encodeURIComponent( btoa( JSON.stringify( outputData ) ) ) );
 			hash ='';
 		}
 		const query = (queries.length ? '?' + queries.join('&') : '');
