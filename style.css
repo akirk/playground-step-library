@@ -365,7 +365,8 @@ button,
 #further-options div {
 	display: flex;
 	flex-flow: row wrap;
-	gap: .5em 2em;
+	gap: .5em 0;
+	justify-content: space-between;
 }
 
 #further-options label {
