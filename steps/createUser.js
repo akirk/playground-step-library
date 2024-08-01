@@ -24,7 +24,7 @@ customSteps.createUser = function( step ) {
             code
 		}
 	];
-	if ( step?.vars?.doLogin ) {
+	if ( step?.vars?.login ) {
 		steps.push( {
 			"step": "login",
 			"username": username,
@@ -67,7 +67,7 @@ customSteps.createUser.vars = [
 		"samples": [ '', "wordpress@example.org" ]
 	},
 	{
-		"name": "doLogin",
+		"name": "login",
 		"description": "Immediately log the user in",
 		'type': 'boolean',
 		'samples': [ true ]
