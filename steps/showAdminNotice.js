@@ -67,7 +67,6 @@ add_action('admin_footer', function() {
 		}
 	];
 	steps.landingPage = '/wp-admin/';
-	steps.login = true;
 	return steps;
 }
 customSteps.showAdminNotice.vars = [
