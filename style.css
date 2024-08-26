@@ -25,9 +25,6 @@ header > p {
 	line-height: 1.3;
 }
 
-textarea::before {
-	content: " → ";
-}
 summary {
 	cursor: pointer;
 }
@@ -59,7 +56,11 @@ a:any-link:hover {
 	display: flex;
 	margin-top: 2em;
 	flex-wrap: wrap;
-	gap: 4em 2em;
+	gap: 4em .5em;
+}
+
+.arrow {
+	align-self: center;
 }
 
 #steps-group {
@@ -138,11 +139,10 @@ a:any-link:hover {
 	width: 40vw;
 }
 
-textarea {
+textarea#blueprint, textarea#blueprint-compiled {
 	height: 490px;
 	width: inherit;
 	border: 1px solid light-dark( #1a1919, #fff );
-	margin: 0;
 	padding: 8px;
 	font-family: monospace;
 	font-size: 14px;
@@ -186,6 +186,11 @@ textarea {
 .step td > input,
 .step td > label {
 	vertical-align: top;
+}
+.step td > textarea {
+	vertical-align: top;
+	width: 27em;
+	height: 3em;
 }
 
 .step td > label {

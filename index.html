@@ -72,25 +72,29 @@
 					<option value="8.3">8.3</option>
 				</select></label>
 				<label><input type="checkbox" id="networking" value="true">Networking (<a href="https://github.com/WordPress/wordpress-playground/issues/85">experimental</a>)</label>
-					<label><a href="https://wordpress.github.io/wordpress-playground/query-api" target="_blank">Environment Mode:</a>
-					<select id="mode">
-						<option value="browser-full-screen">Fake Browser (full screen)</option>
-						<option value="browser">Fake Browser</option>
-						<option value="seamless">Seamless</option>
-					</select></label>
-					<label>Storage <select id="storage">
-						<option value="none">None (Changes get lost)</option>
-						<option value="browser">Browser</option>
-						<option value="device">Device</option>
-					</select></label>
+				<label><a href="https://wordpress.github.io/wordpress-playground/query-api" target="_blank">Environment Mode:</a>
+				<select id="mode">
+					<option value="browser-full-screen">Fake Browser (full screen)</option>
+					<option value="browser">Fake Browser</option>
+					<option value="seamless">Seamless</option>
+				</select></label>
+				<label>Storage <select id="storage">
+					<option value="none">None (Changes get lost)</option>
+					<option value="browser">Browser</option>
+					<option value="device">Device</option>
+				</select></label>
+				<label><input type="checkbox" id="base64" value="true">base64 encode blueprint</label>
+
 				</div>
 			</details>
 
 		</div>
+		<div class="arrow">→</div>
 		<div id="blueprint-holder">
 			<div>Blueprint with custom steps</div>
 			<textarea id="blueprint"></textarea>
 		</div>
+		<div class="arrow">→</div>
 		<div id="blueprint-compiled-holder">
 			<div>Transformed Blueprint</div>
 			<textarea id="blueprint-compiled"></textarea><br>

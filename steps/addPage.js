@@ -33,6 +33,7 @@ customSteps.addPage.vars = [
 	{
 		"name": "postContent",
 		"description": "The HTML of the post",
+		"type": "textarea",
 		"required": true,
 		"samples": [ "<p>Hello World</p>" ]
 	},

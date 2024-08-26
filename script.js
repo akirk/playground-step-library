@@ -83,6 +83,13 @@ addEventListener('DOMContentLoaded', function() {
 						});
 					}
 					td.appendChild(select);
+				} else if ( v.type === 'textarea' ) {
+					const textarea = document.createElement('textarea');
+					textarea.name = v.name;
+					if ( v.required ) {
+						textarea.required = true;
+					}
+					td.appendChild(textarea);
 				} else {
 					const input = document.createElement('input');
 					input.name = v.name;
@@ -155,7 +162,10 @@ addEventListener('DOMContentLoaded', function() {
 		loadCombinedExamples();
 	});
 	document.addEventListener('change', (event) => {
-		if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' ) {
+		if ( event.target.id !== 'blueprint' ) {
+			return;
+		}
+		if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'TEXTAREA' ) {
 			loadCombinedExamples();
 			return;
 		}
@@ -170,6 +180,9 @@ addEventListener('DOMContentLoaded', function() {
 		}
 	});
 	document.addEventListener('click', (event) => {
+		if ( event.target.id !== 'blueprint' ) {
+			return;
+		}
 		if ( event.target.tagName === 'SELECT' ) {
 			loadCombinedExamples();
 			return;
@@ -379,7 +392,7 @@ addEventListener('DOMContentLoaded', function() {
 				"step": stepBlock.dataset.step,
 				"vars": {}
 			};
-			stepBlock.querySelectorAll('input,select').forEach(function(input) {
+			stepBlock.querySelectorAll('input,select,textarea').forEach(function(input) {
 				if ( input.name === 'count' ) {
 					step.count = parseInt(input.value);
 					return;
@@ -546,7 +559,10 @@ addEventListener('DOMContentLoaded', function() {
 				break;
 		}
 		let hash = '#' + ( JSON.stringify( outputData ).replace( /%/g, '%25' ) );
-		if ( useBlueprintURLParam ) {
+		if ( hash.includes( ' ' ) || hash.includes( '<' ) || hash.includes( '>' ) ) {
+			useBlueprintURLParam = true;
+		}
+		if ( useBlueprintURLParam || document.getElementById('base64').checked ) {
 			// queries.push( 'blueprint-url=data:application/json;charset=utf-8,' + encodeURIComponent( JSON.stringify( outputData ) ) );
 			queries.push( 'blueprint-url=data:application/json;base64,' + encodeURIComponent( btoa( JSON.stringify( outputData ) ) ) );
 			hash ='';
