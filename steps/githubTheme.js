@@ -44,7 +44,7 @@ customSteps.githubTheme.vars = [
 	{
 		"name": "branch",
 		"description": "Which branch to use.",
-		"samples": [ "main" ]
+		"samples": [ "main", "trunk" ]
 	},
 	{
 		"name": "prs",

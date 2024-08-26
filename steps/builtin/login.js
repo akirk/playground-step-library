@@ -1,4 +1,4 @@
-customSteps.login = function() {
+customSteps.login = function( step ) {
 	var steps = [
 		{
 			"step": "login",
@@ -6,7 +6,9 @@ customSteps.login = function() {
 			"password": "${password}"
 		}
 	];
-	steps.landingPage ='/wp-admin/';
+	if ( step.vars.landingPage ) {
+		steps.landingPage ='/wp-admin/';
+	}
 	return steps;
 }
 customSteps.login.description = "Login to the site";
@@ -23,5 +25,11 @@ customSteps.login.vars = [
 		"description": "Password",
 		"required": true,
 		"samples": [ "password" ]
+	},
+	{
+		"name": "landingPage",
+		"description": "Change landing page to wp-admin",
+		"type": "boolean",
+		"samples": [ "true", "false" ]
 	}
 ];

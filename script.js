@@ -332,7 +332,7 @@ addEventListener('DOMContentLoaded', function() {
 				return step.step;
 			}
 			return step.step + '__' + Object.keys( step.vars ).map(function(key) {
-				return key + '--' + step.vars[key];
+				return key + '-.-' + step.vars[key];
 			} ).join('__');
 		} ).concat( document.getElementById('title').value ? [ 'title__' +escape( document.getElementById('title').value ) ] : [] ).join('&&');
 	}
@@ -350,7 +350,7 @@ addEventListener('DOMContentLoaded', function() {
 				"vars": {}
 			};
 			parts.forEach( function( part ) {
-				const kv = part.split('--');
+				const kv = part.split('-.-');
 				if ( kv[0] === 'title' ) {
 					document.getElementById('title').value = kv[1];
 					return;

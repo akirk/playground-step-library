@@ -38,7 +38,7 @@ customSteps.addPage.vars = [
 	},
 	{
 		"name": "homepage",
-		"description": "Set it as the Homepage?",
+		"description": "Set it as the Homepage",
 		"type": "boolean",
 		"samples": [ "true", "false" ]
 	}
