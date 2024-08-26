@@ -86,6 +86,7 @@ addEventListener('DOMContentLoaded', function() {
 				} else if ( v.type === 'textarea' ) {
 					const textarea = document.createElement('textarea');
 					textarea.name = v.name;
+					textarea.placeholder = v.description;
 					if ( v.required ) {
 						textarea.required = true;
 					}
