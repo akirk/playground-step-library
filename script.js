@@ -163,7 +163,7 @@ addEventListener('DOMContentLoaded', function() {
 		loadCombinedExamples();
 	});
 	document.addEventListener('change', (event) => {
-		if ( event.target.id !== 'blueprint' ) {
+		if ( ! event.target.closest( '#blueprint' ) ) {
 			return;
 		}
 		if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'TEXTAREA' ) {
@@ -181,24 +181,23 @@ addEventListener('DOMContentLoaded', function() {
 		}
 	});
 	document.addEventListener('click', (event) => {
-		if ( event.target.id !== 'blueprint' ) {
-			return;
-		}
-		if ( event.target.tagName === 'SELECT' ) {
-			loadCombinedExamples();
-			return;
-		}
-		if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' ) {
-			if ( event.target.type === 'checkbox' ) {
+		if ( event.target.closest( '#blueprint' ) ) {
+			if ( event.target.tagName === 'SELECT' ) {
 				loadCombinedExamples();
-			} else {
-				event.target.select();
+				return;
 			}
-			return;
-		}
-		if (event.target.classList.contains('stepname') && event.target.closest('#blueprint-steps') ) {
-			event.target.closest('.step').classList.toggle('collapsed');
-			return false;
+			if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' ) {
+				if ( event.target.type === 'checkbox' ) {
+					loadCombinedExamples();
+				} else {
+					event.target.select();
+				}
+				return;
+			}
+			if (event.target.classList.contains('stepname') && event.target.closest('#blueprint-steps') ) {
+				event.target.closest('.step').classList.toggle('collapsed');
+				return false;
+			}
 		}
 
 		if ( event.target.closest('.step') && event.target.closest('#step-library') ) {
@@ -418,7 +417,7 @@ addEventListener('DOMContentLoaded', function() {
 		}
 
 		document.getElementById('blueprint').value = JSON.stringify(combinedExamples, null, 2);
-		document.getElementById('landing-page').placeholder = combinedExamples.landingPage;
+		console.log( state );
 		history.pushState( state , '', '#' + compressState( state ) );
 		transformJson();
 	}
@@ -536,9 +535,6 @@ addEventListener('DOMContentLoaded', function() {
 				}
 			}
 		});
-		if ( document.getElementById('landing-page').value ) {
-			outputData.landingPage = document.getElementById('landing-page').value;
-		}
 
 		document.getElementById('blueprint-compiled').value = JSON.stringify(outputData, null, 2);
 
@@ -618,4 +614,82 @@ addEventListener('DOMContentLoaded', function() {
 	} else {
 		loadCombinedExamples();
 	}
+	const examples = {
+		'Interactivity API Todo list MVC': [
+		{
+			"step": "addPage",
+			"vars": {
+				"postTitle": "",
+				"postContent": "<!-- wp:to-do-mvc/to-do-mvc /-->",
+				"homepage": true
+			}
+		},
+		{
+			"step": "githubPluginRelease",
+			"vars": {
+				"repo": "ryanwelcher/interactivity-api-todomvc",
+				"release": "v0.1.3",
+				"filename": "to-do-mvc.zip "
+			}
+		},
+		{
+			"step": "login",
+			"vars": {
+				"username": "admin",
+				"password": "password",
+				"landingPage": false
+			}
+		}
+		],
+		'ActivityPub plugin preview': [
+		{
+			"step": "installPlugin",
+			"vars": {
+				"plugin": "activitypub",
+				"permalink": true
+			}
+		},
+		{
+			"step": "showAdminNotice",
+			"vars": {
+				"text": "Welcome to this demo of the ActivityPub plugin",
+				"type": "info",
+				"dismissible": false
+			}
+		},
+		{
+			"step": "setSiteName",
+			"vars": {
+				"sitename": "ActivityPub Demo",
+				"tagline": "Trying out WordPress Playground."
+			}
+		},
+		{
+			"step": "createUser",
+			"vars": {
+				"username": "matthias",
+				"password": "password",
+				"role": "editor",
+				"display_name": "Matthias",
+				"email": "matthias@pfefferle.org",
+				"login": true
+			}
+		}
+		]
+	};
+
+	Object.keys( examples ).forEach( function( example ) {
+		const option = document.createElement('option');
+		option.value = example;
+		option.innerText = example;
+		document.getElementById('examples').appendChild(option);
+	} );
+	document.getElementById('examples').addEventListener('change', function() {
+		if ( 'Examples' === this.value ) {
+			return;
+		}
+		document.getElementById('title').value = this.value;
+		restoreState( examples[this.value]);
+		loadCombinedExamples();
+	});
 } );

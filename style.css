@@ -284,7 +284,8 @@ table.vars tr td:first-child {
 button,
 #playground-link,
 #playground-link-top,
-#download-blueprint {
+#download-blueprint,
+#examples {
 	border: 1px solid light-dark( #1a1919, #fff );
 	color: #000;
 	background-color: #e9e9ed;
@@ -295,6 +296,10 @@ button,
 	display: inline-block;
 	box-shadow: 1px 1px 1px #888;
 	cursor: pointer;
+}
+
+#examples {
+	width: 8em;
 }
 
 #playground-link,

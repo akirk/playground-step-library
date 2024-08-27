@@ -1,5 +1,5 @@
 customSteps.login = function( step ) {
-	var steps = [
+	const steps = [
 		{
 			"step": "login",
 			"username": "${username}",

@@ -24,6 +24,7 @@
 	<script src="steps/githubTheme.js"></script>
 	<script src="steps/removeDashboardWidgets.js"></script>
 	<script src="steps/sampleContent.js"></script>
+	<script src="steps/setLandingPage.js"></script>
 	<script src="steps/setLanguage.js"></script>
 	<script src="steps/setSiteName.js"></script>
 	<script src="steps/setTT4Homepage.js"></script>
@@ -34,9 +35,10 @@
 <body>
 	<header>
 		<h1>WordPress Playground Step Library</h1>
-		<p>Drag or click the steps to create a <a href="https://wordpress.github.io/wordpress-playground/blueprints-api/index/" target="_blank">blueprint</a> for <a href="https://wordpress.github.io/wordpress-playground/" target="_blank">WordPress Playground</a>.<br><a href="https://github.com/akirk/playground-step-library/#contributing">Create your own steps!</a></p>
+		<p>Drag or click the steps to create a <a href="https://wordpress.github.io/wordpress-playground/blueprints-api/index/" target="_blank">blueprint</a> for <a href="https://wordpress.github.io/wordpress-playground/" target="_blank">WordPress Playground</a>.<br><a href="https://github.com/akirk/playground-step-library/#contributing">Create your own steps!</a> </p>
 		<span id="top-buttons">
-			<button id="clear">Clear Steps</button>
+			<button id="clear">Clear Steps</button><br/>
+			<select id="examples"><option>Examples</option></select>
 			<a href="#" id="playground-link-top" target="_blank">Launch in Playground</a>
 		</span>
 	</header>
@@ -53,7 +55,6 @@
 			<details id="further-options">
 				<summary>Further Options</summary>
 				<div>
-				<label>Landing Page <input type="text" id="landing-page" placeholder="/"></label>
 				<label><input type="checkbox" id="phpExtensionBundles" value="kitchen-sink">Use all <a href="https://wordpress.github.io/wordpress-playground/blueprints-api/data-format#php-extensions" target="_blank">available PHP extensions</a></label>
 				<label>WordPress <select id="wp-version">
 					<option value="latest">latest</option>
