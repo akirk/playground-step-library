@@ -683,7 +683,7 @@ addEventListener('DOMContentLoaded', function() {
 				"password": "password",
 				"role": "editor",
 				"display_name": "Matthias",
-				"email": "matthias@pfefferle.org",
+				"email": "",
 				"login": true
 			}
 		}
