@@ -679,10 +679,10 @@ addEventListener('DOMContentLoaded', function() {
 		{
 			"step": "createUser",
 			"vars": {
-				"username": "matthias",
+				"username": "demo",
 				"password": "password",
 				"role": "editor",
-				"display_name": "Matthias",
+				"display_name": "Demo User",
 				"email": "",
 				"login": true
 			}
