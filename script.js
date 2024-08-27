@@ -181,9 +181,19 @@ addEventListener('DOMContentLoaded', function() {
 		}
 	});
 	document.addEventListener('click', (event) => {
-		if ( event.target.closest( '#blueprint' ) ) {
+		if ( event.target.closest( '#blueprint-steps' ) ) {
 			if ( event.target.tagName === 'SELECT' ) {
 				loadCombinedExamples();
+				return;
+			}
+			if ( event.target.tagName === 'LABEL' ) {
+				console.log( event.target );
+				const input = event.target.querySelector('input, select');
+				if ( input.type === 'checkbox' ) {
+					loadCombinedExamples();
+				} else {
+					input.select();
+				}
 				return;
 			}
 			if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' ) {
@@ -295,7 +305,9 @@ addEventListener('DOMContentLoaded', function() {
 	}
 
 	document.getElementById( 'clear' ).addEventListener( 'click', function() {
+		document.getElementById('title').value = '';
 		blueprintSteps.innerHTML = '';
+		document.getElementById('examples').value = 'Examples';
 		loadCombinedExamples();
 	} );
 
@@ -601,7 +613,7 @@ addEventListener('DOMContentLoaded', function() {
 				if ( 'SELECT' === input.tagName ) {
 					input.value = step.vars[key];
 				} else if ( 'checkbox' === input.type ) {
-					input.checked = 'false' !== step.vars[key];
+					input.checked = step.vars[key] === 'true' || step.vars[key] === true;
 				} else {
 					input.value = step.vars[key];
 				}
