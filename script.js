@@ -703,10 +703,16 @@ addEventListener('DOMContentLoaded', function() {
 			"vars": {
 				"username": "demo",
 				"password": "password",
-				"role": "editor",
+				"role": "administrator",
 				"display_name": "Demo User",
 				"email": "",
 				"login": true
+			}
+		},
+		{
+			"step": "setLandingPage",
+			"vars": {
+				"landingPage": "/wp-admin/admin.php?page=activitypub"
 			}
 		}
 		]
