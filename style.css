@@ -297,7 +297,13 @@ button,
 	box-shadow: 1px 1px 1px #888;
 	cursor: pointer;
 }
-
+button:hover,
+#playground-link:hover,
+#playground-link-top:hover,
+#download-blueprint:hover,
+#examples:hover {
+	background-color: light-dark( #d0d0d7, #479154 );
+}
 #examples {
 	width: 8em;
 }

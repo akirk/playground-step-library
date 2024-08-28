@@ -58,11 +58,12 @@ addEventListener('DOMContentLoaded', function() {
 		}
 
 		if ( customSteps[i].vars ) {
-			customSteps[i].vars.forEach(function( v ) {
+			customSteps[i].vars.forEach(function( v, k ) {
 				const tr = document.createElement('tr');
 				let td = document.createElement('td');
-				td.innerText = v.name;
+				td.innerText = v.name || '';
 				tr.appendChild(td);
+
 				td = document.createElement('td');
 				if ( v.type === 'boolean' ) {
 					const input = document.createElement('input');
@@ -90,7 +91,14 @@ addEventListener('DOMContentLoaded', function() {
 					if ( v.required ) {
 						textarea.required = true;
 					}
+					textarea.setAttribute('draggable', true);
 					td.appendChild(textarea);
+				} else if ( v.type === 'button' ) {
+					const button = document.createElement('button');
+					button.textContent = v.label;
+					td.appendChild(button);
+					button.dataset.stepName = k;
+					button.dataset.stepVar = i;
 				} else {
 					const input = document.createElement('input');
 					input.name = v.name;
@@ -102,6 +110,7 @@ addEventListener('DOMContentLoaded', function() {
 					if ( v.regex ) {
 						input.pattern = v.regex;
 					}
+					input.setAttribute('draggable', true);
 					td.appendChild(input);
 					if ( 'samples' in v ) {
 						input.value = v.samples[0];
@@ -128,6 +137,7 @@ addEventListener('DOMContentLoaded', function() {
 			});
 		}
 		step.appendChild(vars);
+		step.setAttribute('id', 'step-' + i);
 		step.setAttribute('data-id', i);
 		step.setAttribute('draggable', true);
 
@@ -135,6 +145,12 @@ addEventListener('DOMContentLoaded', function() {
 	}
 
 	document.addEventListener('dragstart', (event) => {
+		console.log( event.target );
+		if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'TEXTAREA') {
+			event.preventDefault();
+			event.stopPropagation();
+			return;
+		}
 		if (event.target.classList.contains('step')) {
 			event.target.classList.add('dragging');
 		}
@@ -182,12 +198,17 @@ addEventListener('DOMContentLoaded', function() {
 	});
 	document.addEventListener('click', (event) => {
 		if ( event.target.closest( '#blueprint-steps' ) ) {
+			if ( event.target.tagName === 'BUTTON' ) {
+				if ( typeof customSteps[event.target.dataset.stepVar]?.vars[event.target.dataset.stepName]?.onclick === 'function' ) {
+					return customSteps[event.target.dataset.stepVar].vars[event.target.dataset.stepName].onclick( event, loadCombinedExamples );
+				}
+				return;
+			}
 			if ( event.target.tagName === 'SELECT' ) {
 				loadCombinedExamples();
 				return;
 			}
 			if ( event.target.tagName === 'LABEL' ) {
-				console.log( event.target );
 				const input = event.target.querySelector('input, select');
 				if ( input.type === 'checkbox' ) {
 					loadCombinedExamples();
@@ -212,6 +233,7 @@ addEventListener('DOMContentLoaded', function() {
 
 		if ( event.target.closest('.step') && event.target.closest('#step-library') ) {
 			const stepClone = event.target.closest('.step').cloneNode(true);
+			stepClone.removeAttribute('id');
 			blueprintSteps.appendChild(stepClone);
 			stepClone.classList.remove('dragging');
 			loadCombinedExamples();
@@ -429,7 +451,7 @@ addEventListener('DOMContentLoaded', function() {
 		}
 
 		document.getElementById('blueprint').value = JSON.stringify(combinedExamples, null, 2);
-		console.log( state );
+// 		console.log( state );
 		history.pushState( state , '', '#' + compressState( state ) );
 		transformJson();
 	}
