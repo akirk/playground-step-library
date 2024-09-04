@@ -23,12 +23,9 @@ customSteps.fakeHttpResponse = function( step, blueprint ) {
 add_filter(
 	'pre_http_request',
 	function ( $preempt, $request, $url ) {
-		error_log( $url );
 		$filename = __DIR__ . '/fake-http-response/' . preg_replace( '/[^a-z0-9-_]+/i', '-', $url ) . '.txt';
-		error_log( $filename );
 		if ( file_exists( $filename ) ) {
 			$content = file_get_contents( $filename );
-		error_log( $content );
 			$content_type = substr( $content, 0, 1 ) === '<' ? 'text/html' : 'application/json';
 			return array(
 				'headers'  => array(

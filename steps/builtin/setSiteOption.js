@@ -19,5 +19,4 @@ customSteps.setSiteOption.vars = [
 		"description": "Option value",
 		"samples": [ "world" ]
 	}
-
 ];
