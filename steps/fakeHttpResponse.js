@@ -37,6 +37,7 @@ add_filter(
 				),
 			);
 		}
+		error_log( 'Not faked: ' . $url );
 		return $preempt;
 	},
 	10,
