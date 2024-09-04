@@ -193,6 +193,10 @@ textarea#blueprint, textarea#blueprint-compiled {
 	height: 3em;
 }
 
+.step td > input[type=text] {
+	width: 27em;
+}
+
 .step td > label {
 	display: inline-block;
 }
