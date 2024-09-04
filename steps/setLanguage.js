@@ -1,4 +1,4 @@
-customSteps.setLanguage = function( step, blueprint ) {
+customSteps.setLanguage = function( step ) {
 	const lang = step?.vars?.language;
 	if ( ! lang ) {
 		return [];
