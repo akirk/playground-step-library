@@ -2,7 +2,7 @@ customSteps.fakeHttpResponse = function( step, blueprint ) {
 	const steps = [];
 
 	if ( step.vars.url ) {
-		const url = step.vars.url.toLowerCase().replace( /[^a-z0-9-_]+/gi, '-' );
+		const url = step.vars.url.toLowerCase().replace( /[^a-z0-9-_]+/gi, '-' ).replace( /-+$/g, '' );
 		steps.push( {
 			"step": "writeFile",
 			"path": `wordpress/wp-content/mu-plugins/fake-http-response/${url}.txt`,
@@ -25,7 +25,7 @@ customSteps.fakeHttpResponse = function( step, blueprint ) {
 add_filter(
 	'pre_http_request',
 	function ( $preempt, $request, $url ) {
-		$filename = __DIR__ . '/fake-http-response/' . preg_replace( '/[^a-z0-9-_]+/i', '-', $url ) . '.txt';
+		$filename = __DIR__ . '/fake-http-response/' . rtrim( preg_replace( '/[^a-z0-9-_]+/i', '-', $url ), '-' ) . '.txt';
 		if ( file_exists( $filename ) ) {
 			$content = file_get_contents( $filename );
 			$content_type = substr( $content, 0, 1 ) === '<' ? 'text/html' : 'application/json';

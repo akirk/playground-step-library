@@ -2,6 +2,7 @@ const customSteps = {};
 addEventListener('DOMContentLoaded', function() {
 	const stepList = document.getElementById('step-library');
 	const blueprintSteps = document.getElementById('blueprint-steps');
+	let blueprint = '';
 
 	for ( const i in customSteps ) {
 		const step = document.createElement('div');
@@ -188,10 +189,7 @@ addEventListener('DOMContentLoaded', function() {
 	});
 
 	document.addEventListener('keyup', (event) => {
-		if ( event.target.id === 'blueprint' ) {
-			transformJson();
-			return;
-		} else if ( event.target.id === 'blueprint-compiled' ) {
+		if ( event.target.id === 'blueprint-compiled' ) {
 			return;
 		}
 		loadCombinedExamples();
@@ -473,14 +471,14 @@ addEventListener('DOMContentLoaded', function() {
 			}
 		}
 
-		document.getElementById('blueprint').value = JSON.stringify(combinedExamples, null, 2);
+		blueprint = JSON.stringify(combinedExamples, null, 2);
 // 		console.log( state );
 		history.pushState( state , '', '#' + compressState( state ) );
 		transformJson();
 	}
 
 	function transformJson() {
-		let j, jsonInput = document.getElementById('blueprint').value;
+		let j, jsonInput = blueprint;
 		const queries = [];
 		let useBlueprintURLParam = false;
 		const userDefined = {

@@ -60,7 +60,7 @@ a:any-link:hover {
 }
 
 .arrow {
-	align-self: center;
+	margin-top: 20em;
 }
 
 #steps-group {
@@ -69,7 +69,7 @@ a:any-link:hover {
 
 #step-library-holder {
 	width: 200px;
-	height: 550px;
+	min-height: 550px;
 	border: 1px solid light-dark( #1a1919, #fff );
 	border-right-width: 0;
 	box-shadow: light-dark( 1px 1px 1px #888, none );
@@ -94,12 +94,12 @@ a:any-link:hover {
 
 #step-library {
 	overflow: auto;
-	height: 520px;
+	min-height: 520px;
 }
 
 #blueprint-steps {
 	width: 450px;
-	height:550px;
+	min-height:550px;
 	overflow: auto;
 	border: 1px solid light-dark( #1a1919, #fff );
 	box-shadow: light-dark( 1px 1px 1px #888, none );
