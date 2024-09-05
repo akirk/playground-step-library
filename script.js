@@ -404,11 +404,11 @@ addEventListener('DOMContentLoaded', function() {
 			return step.step + '_._' + Object.keys( step.vars ).map(function(key) {
 				return key + '-.-' + step.vars[key];
 			} ).join('_._');
-		} ).concat( document.getElementById('title').value ? [ 'title__' +escape( document.getElementById('title').value ) ] : [] ).join('&&');
+		} ).concat( document.getElementById('title').value ? [ 'title__' +escape( document.getElementById('title').value ) ] : [] ).join('&.&');
 	}
 
 	function uncompressState( state ) {
-		return state.split('&&').map( function( step ) {
+		return state.split('&.&').map( function( step ) {
 			const parts = step.split('_._');
 			if ( parts[0] === 'title' ) {
 				return {
