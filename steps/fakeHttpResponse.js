@@ -1,12 +1,14 @@
 customSteps.fakeHttpResponse = function( step, blueprint ) {
-	const url = step.vars.url.toLowerCase().replace( /[^a-z0-9-_]+/gi, '-' );
-	const steps = [
-		{
+	const steps = [];
+
+	if ( step.vars.url ) {
+		const url = step.vars.url.toLowerCase().replace( /[^a-z0-9-_]+/gi, '-' );
+		steps.push( {
 			"step": "writeFile",
 			"path": `wordpress/wp-content/mu-plugins/fake-http-response/${url}.txt`,
 			"data": step.vars.response
-		}
-	];
+		} );
+	}
 	let hasFakeHttpResponsePlugin = false;
 	const fakeHttpResponsePluginPath = 'wordpress/wp-content/mu-plugins/fake-http-response.php';
 	for ( const i in blueprint.steps ) {
@@ -56,8 +58,9 @@ customSteps.fakeHttpResponse.info = "Fake a wp_remote_request() response.";
 customSteps.fakeHttpResponse.vars = [
 	{
 		"name": "url",
-		"description": "Variable description",
-		"samples": [ "https://wordpress.org/" ]
+		"description": "URL like https://wordpress.org/",
+		"type": "url",
+		"samples": [ "" ]
 	},
 	{
 		"name": "response",

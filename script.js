@@ -93,6 +93,25 @@ addEventListener('DOMContentLoaded', function() {
 					}
 					textarea.setAttribute('draggable', true);
 					td.appendChild(textarea);
+					if ( 'samples' in v ) {
+						textarea.value = v.samples[0];
+						if ( v.samples.length > 1 ) {
+							const examples = document.createElement('details');
+							const summary = document.createElement('summary');
+							summary.innerText = 'Examples';
+							examples.appendChild(summary);
+							const ul = document.createElement('ul');
+							examples.appendChild(ul);
+							for ( let j = 0; j < v.samples.length; j++ ) {
+								const sample = document.createElement('li');
+								sample.className = 'sample';
+								sample.innerText = '' === v.samples[j] ? '<empty>' : v.samples[j];
+								ul.appendChild(sample);
+							}
+							examples.className = 'examples for-textarea';
+							td.appendChild(examples);
+						}
+					}
 				} else if ( v.type === 'button' ) {
 					const button = document.createElement('button');
 					button.textContent = v.label;
@@ -102,7 +121,7 @@ addEventListener('DOMContentLoaded', function() {
 				} else {
 					const input = document.createElement('input');
 					input.name = v.name;
-					input.type = 'text';
+					input.type = v.type ?? 'text';
 					input.placeholder = v.description;
 					if ( v.required ) {
 						input.required = true;
@@ -145,7 +164,6 @@ addEventListener('DOMContentLoaded', function() {
 	}
 
 	document.addEventListener('dragstart', (event) => {
-		console.log( event.target );
 		if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'TEXTAREA') {
 			event.preventDefault();
 			event.stopPropagation();
@@ -196,6 +214,11 @@ addEventListener('DOMContentLoaded', function() {
 			return false;
 		}
 	});
+	document.addEventListener('selectstart', (event) => {
+		if ( event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' ) {
+			return true;
+		}
+	} );
 	document.addEventListener('click', (event) => {
 		if ( event.target.closest( '#blueprint-steps' ) ) {
 			if ( event.target.tagName === 'BUTTON' ) {
@@ -246,7 +269,7 @@ addEventListener('DOMContentLoaded', function() {
 			return false;
 		}
 		if (event.target.classList.contains('sample') ) {
-			event.target.closest('td').querySelector('input').value = event.target.innerText === '<empty>' ? '' : event.target.innerText;
+			event.target.closest('td').querySelector('input,textarea').value = event.target.innerText === '<empty>' ? '' : event.target.innerText;
 			loadCombinedExamples();
 			return;
 		}
@@ -378,15 +401,15 @@ addEventListener('DOMContentLoaded', function() {
 			if ( ! step.vars ) {
 				return step.step;
 			}
-			return step.step + '__' + Object.keys( step.vars ).map(function(key) {
+			return step.step + '_._' + Object.keys( step.vars ).map(function(key) {
 				return key + '-.-' + step.vars[key];
-			} ).join('__');
+			} ).join('_._');
 		} ).concat( document.getElementById('title').value ? [ 'title__' +escape( document.getElementById('title').value ) ] : [] ).join('&&');
 	}
 
 	function uncompressState( state ) {
 		return state.split('&&').map( function( step ) {
-			const parts = step.split('__');
+			const parts = step.split('_._');
 			if ( parts[0] === 'title' ) {
 				return {
 					"title": parts[1]
