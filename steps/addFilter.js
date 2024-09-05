@@ -24,7 +24,7 @@ customSteps.addFilter = function( step ) {
 		}
 	];
 };
-customSteps.addFilter.info = "Provide useful additional info.";
+customSteps.addFilter.info = "Easily add a filtered value.";
 customSteps.addFilter.vars = [
 	{
 		"name": "filter",
@@ -37,7 +37,7 @@ customSteps.addFilter.vars = [
 		"description": "Code for the filter",
 		"type": "textarea",
 		"required": true,
-		"samples": [ "'__return_false'", "function ( $a, $b ) {\nreturn $a;\n}" ]
+		"samples": [ "'__return_false'", "'__return_true'", "function ( $a, $b ) {\nreturn $a;\n}" ]
 	},
 	{
 		"name": "priority",
