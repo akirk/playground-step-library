@@ -29,6 +29,11 @@ You can also share the Playground URL which contains the final blueprint.
 
 ## Contributing
 
+To run locally, all you need is to have your browser server `index.html`.
+
+You can use `http-server` utility to serve a directory contents on a port (requires installing `npm install -g http-server`). 
+Afterward, just run `http-server -p 9999` and navigate to `http://localhost:9999`
+
 You can submit your own steps! Typically, you'll want to clone the repo to a local directory and create a new file in the `steps` directory (see below) to try it before you [submit a PR](https://github.com/akirk/playground-step-library/compare).
 ```
 git clone git@github.com:akirk/playground-step-library.git
