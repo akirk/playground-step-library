@@ -4,24 +4,47 @@ addEventListener('DOMContentLoaded', function() {
 	const blueprintSteps = document.getElementById('blueprint-steps');
 	let blueprint = '';
 
-	for ( const i in customSteps ) {
+	function createStep( name, data ) {
 		const step = document.createElement('div');
-		step.dataset.step = i;
+		step.dataset.step = data.step;
 		step.className = 'step';
 		const span = document.createElement('span');
 		span.className = 'stepname';
-		span.innerText = i;
+		span.innerText = name;
 		step.appendChild(span);
-		if ( customSteps[i].info ) {
+		if ( data.info ) {
 			const info = document.createElement('span');
 			info.className = 'info';
-			info.innerText = customSteps[i].info;
+			info.innerText = data.info;
 			step.appendChild(info);
-			step.title = customSteps[i].info;
+			step.title = data.info;
 		}
-		if ( customSteps[i].builtin ) {
+		if ( data.mine ) {
+			step.classList.add( 'mine' );
+			const options = document.createElement('details');
+			options.appendChild(document.createElement('summary'));
+			options.className = 'options';
+			const del = document.createElement('button');
+			del.innerText = 'Delete';
+			del.href = '';
+			del.className = 'delete';
+			options.appendChild(del);
+			const rename = document.createElement('button');
+			rename.innerText = 'Rename';
+			rename.href = '';
+			rename.className = 'rename';
+			options.appendChild(rename);
+			const gh = document.createElement('button');
+			gh.innerText = 'Submit to Github';
+			gh.href = '';
+			gh.className = 'submit-to-gh';
+			// options.appendChild(gh);
+			step.appendChild(options);
+
+		} else if ( data.builtin ) {
 			step.classList.add( 'builtin' );
 		}
+
 
 		const remove = document.createElement('a');
 		remove.className = 'remove';
@@ -31,18 +54,23 @@ addEventListener('DOMContentLoaded', function() {
 
 		const viewSource = document.createElement('a');
 		viewSource.className = 'view-source';
-		if ( customSteps[i].builtin ) {
-			viewSource.href = 'steps/builtin/' + i + '.js';
+		if ( data.builtin ) {
+			viewSource.href = 'steps/builtin/' + name + '.js';
 		} else {
-			viewSource.href = 'steps/' + i + '.js';
+			viewSource.href = 'steps/' + name + '.js';
 		}
 		viewSource.innerText = 'View Source';
 		viewSource.target = 'source-iframe';
 		step.appendChild(viewSource);
 
+		const saveStep = document.createElement('button');
+		saveStep.className = 'save-step';
+		saveStep.innerText = 'Save';
+		step.appendChild(saveStep);
+
 		const vars = document.createElement('table');
 		vars.className = 'vars';
-		if ( customSteps[i].count ) {
+		if ( data.count ) {
 			const tr = document.createElement('tr');
 			let td = document.createElement('td');
 			td.innerText = 'count';
@@ -52,14 +80,14 @@ addEventListener('DOMContentLoaded', function() {
 			input.type = 'text';
 			input.name = 'count';
 			input.pattern = "^\\d+$";
-			input.value = customSteps[i].count;
+			input.value = data.count;
 			td.appendChild(input);
 			tr.appendChild(td);
 			vars.appendChild(tr);
 		}
 
-		if ( customSteps[i].vars ) {
-			customSteps[i].vars.forEach(function( v, k ) {
+		if ( data.vars ) {
+			data.vars.forEach(function( v, k ) {
 				const tr = document.createElement('tr');
 				let td = document.createElement('td');
 				td.innerText = v.name || '';
@@ -118,7 +146,7 @@ addEventListener('DOMContentLoaded', function() {
 					button.textContent = v.label;
 					td.appendChild(button);
 					button.dataset.stepName = k;
-					button.dataset.stepVar = i;
+					button.dataset.stepVar = name;
 				} else {
 					const input = document.createElement('input');
 					input.name = v.name;
@@ -157,11 +185,48 @@ addEventListener('DOMContentLoaded', function() {
 			});
 		}
 		step.appendChild(vars);
-		step.setAttribute('id', 'step-' + i);
-		step.setAttribute('data-id', i);
+		step.setAttribute('id', 'step-' + name);
+		step.setAttribute('data-id', name);
 		step.setAttribute('draggable', true);
 
-		stepList.appendChild(step);
+		return step;
+	}
+
+	function saveMyStep() {
+		const myStepName = document.getElementById('my-step-name').value;
+		const myStep = JSON.parse( document.getElementById('save-step').dataset.step );
+		insertMyStep( myStepName, myStep );
+		mySteps[myStepName] = myStep;
+		localStorage.setItem('mySteps', JSON.stringify(mySteps));
+		document.getElementById('save-step').close();
+	}
+
+	function insertMyStep( name, data ) {
+		data.mine = true;
+		let beforeStep = null;
+
+		for ( const j in stepList.children ) {
+			if ( stepList.children[j].dataset.id > name ) {
+				beforeStep = stepList.children[j];
+				break;
+			}
+			if ( ! stepList.children[j].classList.contains('mine') ) {
+				beforeStep = stepList.querySelector( '.step.builtin' );
+				break;
+			}
+		}
+		stepList.insertBefore( createStep( name, data ), beforeStep );
+	}
+
+	for ( const name in customSteps ) {
+		const data = customSteps[name];
+		data.step = name;
+		stepList.appendChild( createStep( name, data ) );
+	}
+	const mySteps = JSON.parse( localStorage.getItem('mySteps') || '{}' );
+	for ( const name in mySteps ) {
+		const data = mySteps[name];
+		insertMyStep( name, data );
 	}
 
 	document.addEventListener('dragstart', (event) => {
@@ -192,6 +257,10 @@ addEventListener('DOMContentLoaded', function() {
 		if ( event.target.id === 'blueprint-compiled' ) {
 			return;
 		}
+		if ( event.key === 'Enter' && event.target.closest('#save-step') ) {
+			return saveMyStep();
+		}
+
 		loadCombinedExamples();
 	});
 	document.addEventListener('change', (event) => {
@@ -218,8 +287,24 @@ addEventListener('DOMContentLoaded', function() {
 		}
 	} );
 	document.addEventListener('click', (event) => {
+		let dialog;
 		if ( event.target.closest( '#blueprint-steps' ) ) {
 			if ( event.target.tagName === 'BUTTON' ) {
+				if ( event.target.classList.contains('save-step') ) {
+					dialog = document.getElementById('save-step');
+					const stepData = getStepData( event.target.closest('.step') );
+					const myStep = Object.assign({}, customSteps[stepData.step] );
+					for ( let i = 0; i < myStep.vars.length; i++ ) {
+						if ( myStep.vars[i].name in stepData.vars ) {
+							myStep.vars[i].samples = [ stepData.vars[myStep.vars[i].name] ];
+						}
+					}
+
+					dialog.dataset.step = JSON.stringify( myStep );
+					dialog.showModal();
+					return;
+				}
+
 				if ( typeof customSteps[event.target.dataset.stepVar]?.vars[event.target.dataset.stepName]?.onclick === 'function' ) {
 					return customSteps[event.target.dataset.stepVar].vars[event.target.dataset.stepName].onclick( event, loadCombinedExamples );
 				}
@@ -246,13 +331,40 @@ addEventListener('DOMContentLoaded', function() {
 				}
 				return;
 			}
-			if (event.target.classList.contains('stepname') && event.target.closest('#blueprint-steps') ) {
+
+			if (event.target.classList.contains('stepname') ) {
 				event.target.closest('.step').classList.toggle('collapsed');
 				return false;
 			}
 		}
+		if ( event.target.closest( '#step-library' ) && event.target.closest('.step').classList.contains('mine') ) {
+			if ( event.target.classList.contains('delete') ) {
+				const name = event.target.closest('.step').dataset.id;
+				if ( confirm('Are you sure you want to delete the step ' + name + '?') ) {
+					event.target.closest('.step').remove();
+					mySteps[name] = undefined;
+					localStorage.setItem('mySteps', JSON.stringify(mySteps));
+					loadCombinedExamples();
+				}
+				return false;
+			}
+			if ( event.target.classList.contains('rename') ) {
+				const name = event.target.closest('.step').dataset.id;
+				const newName = prompt('Enter a new name for the step:', name);
+				if ( newName ) {
+					const data = mySteps[name];
+					mySteps[newName] = data;
+					mySteps[name] = undefined;
+					localStorage.setItem('mySteps', JSON.stringify(mySteps));
+					event.target.closest('.step').dataset.id = newName;
+					event.target.closest('.step').querySelector('.stepname').innerText = newName;
+					loadCombinedExamples();
+				}
+				return false;
+			}
+		}
 
-		if ( event.target.closest('.step') && event.target.closest('#step-library') ) {
+		if ( event.target.closest('.step') && event.target.closest('#step-library') && ! event.target.closest('details') ) {
 			const stepClone = event.target.closest('.step').cloneNode(true);
 			stepClone.removeAttribute('id');
 			blueprintSteps.appendChild(stepClone);
@@ -279,12 +391,16 @@ addEventListener('DOMContentLoaded', function() {
 			}, 2000 );
 			return false;
 		}
-		const dialog = document.getElementById('view-source');
+		dialog = document.getElementById('view-source');
 		if (event.target.classList.contains('view-source')) {
 			dialog.querySelector('h2').innerText = event.target.href.split('/').slice( event.target.href.includes( 'builtin' ) ? -3 : -2).join('/');
 			dialog.showModal();
 		} else {
 			dialog.close();
+		}
+
+		if ( event.target.tagName === 'BUTTON' && event.target.closest('#save-step') ) {
+			return saveMyStep();
 		}
 	});
 	blueprintSteps.addEventListener('dragover', (event) => {
@@ -433,6 +549,28 @@ addEventListener('DOMContentLoaded', function() {
 		} );
 	}
 
+	function getStepData( stepBlock ) {
+		const step = {
+			"step": stepBlock.dataset.step,
+			"vars": {}
+		};
+		stepBlock.querySelectorAll('input,select,textarea').forEach(function(input) {
+			if ( input.name === 'count' ) {
+				step.count = parseInt(input.value);
+				return;
+			}
+			if ( input.type === 'checkbox' ) {
+				step.vars[input.name] = input.checked;
+			} else {
+				step.vars[input.name] = input.value;
+			}
+		});
+		if (!Object.keys(step.vars).length) {
+			delete step.vars;
+		}
+		return step;
+	}
+
 	function loadCombinedExamples() {
 		const combinedExamples = {};
 		if ( document.getElementById('title').value ) {
@@ -443,24 +581,7 @@ addEventListener('DOMContentLoaded', function() {
 		const state = [];
 
 		blueprintSteps.querySelectorAll('.step').forEach(function(stepBlock) {
-			const step = {
-				"step": stepBlock.dataset.step,
-				"vars": {}
-			};
-			stepBlock.querySelectorAll('input,select,textarea').forEach(function(input) {
-				if ( input.name === 'count' ) {
-					step.count = parseInt(input.value);
-					return;
-				}
-				if ( input.type === 'checkbox' ) {
-					step.vars[input.name] = input.checked;
-				} else {
-					step.vars[input.name] = input.value;
-				}
-			});
-			if (!Object.keys(step.vars).length) {
-				delete step.vars;
-			}
+			const step = getStepData(stepBlock);
 			state.push(step);
 			combinedExamples.steps = combinedExamples.steps.concat(step);
 		});

@@ -1,226 +1,339 @@
 :root {
   color-scheme: light dark;
+
+  /* WordPress Color Palette */
+  --blue-0: #f0f6fc;
+  --blue-5: #c5d9ed;
+  --blue-10: #9ec2e6;
+  --blue-20: #72aee6;
+  --blue-30: #4f94d4;
+  --blue-40: #3582c4;
+  --blue-50: #2271b1;
+  --blue-60: #135e96;
+  --blue-70: #0a4b78;
+  --blue-80: #043959;
+  --blue-90: #01263a;
+  --blue-100: #00131c;
+
+  --gray-0: #f6f7f7;
+  --gray-2: #f0f0f1;
+  --gray-5: #dcdcde;
+  --gray-10: #c3c4c7;
+  --gray-20: #a7aaad;
+  --gray-30: #8c8f94;
+  --gray-40: #787c82;
+  --gray-50: #646970;
+  --gray-60: #50575e;
+  --gray-70: #3c434a;
+  --gray-80: #2c3338;
+  --gray-90: #1d2327;
+  --gray-100: #101517;
+
+  --red-0: #fcf0f1;
+  --red-5: #facfd2;
+  --red-10: #ffabaf;
+  --red-20: #ff8085;
+  --red-30: #f86368;
+  --red-40: #e65054;
+  --red-50: #d63638;
+  --red-60: #b32d2e;
+  --red-70: #8a2424;
+  --red-80: #691c1c;
+  --red-90: #451313;
+  --red-100: #240a0a;
+
+  --yellow-0: #fcf9e8;
+  --yellow-5: #f5e6ab;
+  --yellow-10: #f2d675;
+  --yellow-20: #f0c33c;
+  --yellow-30: #dba617;
+  --yellow-40: #bd8600;
+  --yellow-50: #996800;
+  --yellow-60: #755100;
+  --yellow-70: #614200;
+  --yellow-80: #4a3200;
+  --yellow-90: #362400;
+  --yellow-100: #211600;
+
+  --green-0: #edfaef;
+  --green-5: #b8e6bf;
+  --green-10: #68de7c;
+  --green-20: #1ed14b;
+  --green-30: #00ba37;
+  --green-40: #00a32a;
+  --green-50: #008a20;
+  --green-60: #007017;
+  --green-70: #005c12;
+  --green-80: #00450c;
+  --green-90: #003008;
+  --green-100: #001c05;
+
+  --background-color: light-dark( #fff, #000);
+  --text-color: light-dark( #000, var( --gray-0));
+
+  --link-color: var(--blue-40);
+  --border-color: var(--gray-20);
+  --shadow-color: light-dark(1px 1px 1px #888, none);
+  --step-background: var(--blue-10);
+  --step-hover-background: var(--blue-5);
+  --builtin-step-background: var(--green-10);
+  --builtin-step-hover-background: var(--green-5);
+  --mine-step-background: var(--yellow-10);
+  --mine-step-hover-background: var(--yellow-5);
+  --button-border-color: var(--gray-30);
+  --button-background-color: var(--gray-0);
+  --button-hover-background: var(--gray-5);
+  --download-button-background: var(--blue-5);
+  --copy-link-color: var(--blue-40);
+  --remove-link-color: var(--gray-90);
 }
 
 html {
-	background-color: light-dark( #fff, #000 );
-	font-family: Inter, sans-serif;
-	font-optical-sizing: auto;
-	color: light-dark( #1a1919, #fff );
-	font-size: 16px;
-	line-height: 30px;
-	-moz-osx-font-smoothing: grayscale;
-	-webkit-font-smoothing: antialiased;
-	padding: 0 .5em;
+  background-color: var(--background-color);
+  font-family: Inter, sans-serif;
+  font-optical-sizing: auto;
+  color: var(--text-color);
+  font-size: 16px;
+  line-height: 30px;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  padding: 0 .5em;
 }
+
 header {
-	display: flex;
-	justify-content: space-between;
-	gap: 1em;
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
 }
+
 header h1 {
-	text-wrap-style: balance;
+  text-wrap-style: balance;
 }
+
+dialog h2 {
+  margin-top: 0;
+}
+
 header > p {
-	line-height: 1.3;
+  line-height: 1.3;
 }
 
 summary {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 input {
-	padding: .5em;
+  padding: .5em;
 }
 
 h1 {
-	font-family: "EB Garamond", serif;
-	font-optical-sizing: auto;
-	font-weight: 400;
-	font-style: normal;
-	font-size: 50px;
-	margin: 0;
-	line-height: 60px;
+  font-family: "EB Garamond", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 50px;
+  margin: 0;
+  line-height: 60px;
 }
 
 a:any-link {
-	color: light-dark( #0000EE, lightblue );
-	text-decoration: underline;
+  color: var(--link-color);
+  text-decoration: underline;
 }
 
 a:any-link:hover {
-	text-decoration: none;
+  text-decoration: none;
 }
 
 #blueprint-builder {
-	display: flex;
-	margin-top: 2em;
-	flex-wrap: wrap;
-	gap: 4em .5em;
+  display: flex;
+  margin-top: 2em;
+  flex-wrap: wrap;
+  gap: 4em .5em;
 }
 
 .arrow {
-	margin-top: 20em;
+  margin-top: 20em;
 }
 
 #steps-group {
-	display: flex;
+  display: flex;
 }
 
 #step-library-holder {
-	width: 200px;
-	min-height: 550px;
-	border: 1px solid light-dark( #1a1919, #fff );
-	border-right-width: 0;
-	box-shadow: light-dark( 1px 1px 1px #888, none );
-	border-radius: 5px;
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
-	flex: 1;
-	overflow: hidden;
+  width: 200px;
+  min-height: 550px;
+  border: 1px solid var(--border-color);
+  border-right-width: 0;
+  box-shadow: var(--shadow-color);
+  border-radius: 5px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  flex: 1;
+  overflow: hidden;
 }
 
 #filter-holder {
-	display: flex;
-	flex-direction: row;
-	height: 30px;
-	padding: .5em;
-	gap: .5em;
+  display: flex;
+  flex-direction: row;
+  height: 30px;
+  padding: .5em;
+  gap: .5em;
 }
 
 #filter-holder label {
-	white-space: nowrap;
+  white-space: nowrap;
 }
 
 #step-library {
-	overflow: auto;
-	min-height: 520px;
+  overflow: auto;
+  min-height: 520px;
 }
 
 #blueprint-steps {
-	width: 450px;
-	min-height:550px;
-	overflow: auto;
-	border: 1px solid light-dark( #1a1919, #fff );
-	box-shadow: light-dark( 1px 1px 1px #888, none );
-	border-radius: 5px;
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-	z-index: 1;
-	background-color: light-dark( #fff, #000 );
-	flex: 2;
+  width: 450px;
+  min-height: 550px;
+  overflow: auto;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-color);
+  border-radius: 5px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  z-index: 1;
+  background-color: var(--background-color);
+  flex: 2;
 }
 
 #blueprint-builder > div {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 #steps-holder {
-	flex: 3 1 0;
+  flex: 3 1 0;
 }
 
 #blueprint-holder,
 #blueprint-compiled-holder {
-	flex: 1 1 0;
+  flex: 1 1 0;
 }
 
 #blueprint-holder > div,
 #blueprint-compiled-holder > div {
-	height: 2em;
-	white-space: nowrap;
+  height: 2em;
+  white-space: nowrap;
 }
 
 #title-holder {
-	height: 3em;
-	margin-top: -1em;
+  height: 3em;
+  margin-top: -1em;
 }
+
 #title-holder input {
-	width: 40vw;
+  width: 40vw;
 }
 
 textarea#blueprint, textarea#blueprint-compiled {
-	height: 490px;
-	width: inherit;
-	border: 1px solid light-dark( #1a1919, #fff );
-	padding: 8px;
-	font-family: monospace;
-	font-size: 14px;
-	white-space: pre-wrap;
-	box-shadow: 1px 1px 1px #888;
-	border-radius: 5px;
+  height: 490px;
+  width: inherit;
+  border: 1px solid var(--border-color);
+  padding: 8px;
+  font-family: monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+  box-shadow: 1px 1px 1px #888;
+  border-radius: 5px;
 }
 
 .step {
-	padding: 10px;
-	margin: 5px;
-	border: 1px solid light-dark( #1a1919, #fff );
-	background-color: light-dark( lightblue, #003eaa );
-	cursor: pointer;
-	border-radius: 5px;
-	z-index: 3;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--step-background);
+  cursor: pointer;
+  border-radius: 5px;
+  z-index: 3;
 }
 
 .step.builtin {
-	background-color: light-dark( lightgreen, #027102 );
+  background-color: var(--builtin-step-background);
 }
 
 #step-library .step.builtin {
-	display: none;
+  display: none;
+}
+
+.step.mine {
+  background-color: var(--mine-step-background);
 }
 
 #step-library.show-builtin .step.builtin {
-	display: block;
+  display: block;
 }
 
 #step-library .step {
-	text-overflow: ellipsis;
-	overflow: hidden;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
+.step .options {
+	display: none;
+}
+
+#step-library .step .options {
+	display: block;
+	float: right;
+}
+.step .options button {
+	display: block;
+	margin-bottom: .5em;
+}
+
+
 .step .info {
-	font-size: 12px;
-	margin-left: .5em;
+  font-size: 12px;
+  margin-left: .5em;
 }
 
 .step td > input,
 .step td > label {
-	vertical-align: top;
+  vertical-align: top;
 }
+
 .step td > textarea {
-	vertical-align: top;
-	width: 27em;
-	height: 3em;
+  vertical-align: top;
+  width: 27em;
+  height: 3em;
 }
 
 .step td > input[type=text] {
-	width: 27em;
+  width: 27em;
 }
 
 .step td > label {
-	display: inline-block;
+  display: inline-block;
 }
 
 .step .examples {
-	margin-left: 30em;
-	margin-top: -2.7em;
-	font-size: 13px;
+  margin-left: 30em;
+  margin-top: -2.7em;
+  font-size: 13px;
 }
 
 .step .examples[open] {
-	margin-left: 0;
-	margin-top: 0;
+  margin-left: 0;
+  margin-top: 0;
 }
 
 .step .remove {
-	float: right;
-	margin-left: 2em;
+  float: right;
+  margin-left: 2em;
 }
 
 .step .remove:any-link {
-	color: light-dark( light-dark( #1a1919, #fff ), #fff );
-	text-decoration: none;
-	margin-top: -8px;
+  color: var(--remove-link-color);
+  text-decoration: none;
+  margin-top: -8px;
 }
 
 #step-library-holder .step .examples,
@@ -229,73 +342,77 @@ textarea#blueprint, textarea#blueprint-compiled {
 #step-library-holder .step .remove,
 #blueprint-steps .step.collapsed .examples,
 #blueprint-steps .step.collapsed .vars,
-#blueprint-steps .step.collapsed .vars,
 #blueprint-steps .step.collapsed .remove {
-	display: none;
+  display: none;
 }
 
 #blueprint-steps .step {
-	overflow: clip;
+  overflow: clip;
 }
 
 #blueprint-steps .step .vars {
-	display: block;
+  display: block;
 }
 
 #step-library-holder .step .examples {
-	display: none;
+  display: none;
 }
 
 #blueprint-steps .step .examples {
-	display: block;
+  display: block;
 }
 
 .examples ul li {
-	list-style-type: none;
-	color: #0000EE;
-	text-decoration: underline;
-	display: inline-block;
-	margin-right: .5em;
-	white-space: nowrap;
+  list-style-type: none;
+  color: var(--link-color);
+  text-decoration: underline;
+  display: inline-block;
+  margin-right: .5em;
+  white-space: nowrap;
 }
+
 .examples.for-textarea ul li {
-	list-style-type: none;
-	color: #333;
-	text-decoration: none;
-	display: inline-block;
-	white-space: nowrap;
-	font-family: monospace;
-	line-height: 1.3;
-	vertical-align: top;
-	margin-left: .5em;
-	padding-left: .5em;
-	border-left: 2px solid #959;
+  list-style-type: none;
+  color: var(--example-text-color);
+  text-decoration: none;
+  display: inline-block;
+  white-space: nowrap;
+  font-family: monospace;
+  line-height: 1.3;
+  vertical-align: top;
+  margin-left: .5em;
+  padding-left: .5em;
+  border-left: 2px solid var(--example-border-color);
 }
 
 .examples ul {
-	margin: 0;
-	padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .examples ul li:hover {
-	text-decoration: none;
+  text-decoration: none;
 }
 
-a.view-source, #blueprint-steps .step.collapsed a.view-source {
-	display: none;
-	float: right;
+a.view-source,
+#blueprint-steps .step.collapsed a.view-source,
+button.save-step,
+#blueprint-steps .step.collapsed button.save-step {
+  display: none;
+  float: right;
+  margin-left: .5em;
 }
 
-#blueprint-steps .step a.view-source {
-	display: block;
+#blueprint-steps .step a.view-source, #blueprint-steps .step button.save-step {
+  display: block;
 }
 
 table.vars tr td:first-child {
-	font-weight: bold;
-	width: 5em;
-	vertical-align: top;
-	line-height: 1.3;
-	padding: .5em .5em .5em 0;
+  font-weight: bold;
+  width: 5em;
+  vertical-align: top;
+  line-height: 1.3;
+  padding: .5em .5em .5em 0;
 }
 
 button,
@@ -303,144 +420,153 @@ button,
 #playground-link-top,
 #download-blueprint,
 #examples {
-	border: 1px solid light-dark( #1a1919, #fff );
-	color: #000;
-	background-color: #e9e9ed;
-	border-radius: 5px;
-	padding: 5px;
-	text-align: center;
-	text-decoration: none;
-	display: inline-block;
-	box-shadow: 1px 1px 1px #888;
-	cursor: pointer;
+  border: 1px solid var(--button-border-color);
+  color: #000;
+  background-color: var(--button-background-color);
+  border-radius: 5px;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 1px 1px 1px #888;
+  cursor: pointer;
 }
+
 button:hover,
 #playground-link:hover,
 #playground-link-top:hover,
 #download-blueprint:hover,
 #examples:hover {
-	background-color: light-dark( #d0d0d7, #479154 );
+  background-color: var(--button-hover-background);
 }
+
 #examples {
-	width: 8em;
+  width: 8em;
 }
 
 #playground-link,
 #playground-link-top {
-	background-color: light-dark( lightblue, #003eaa );
-	line-height: .6;
-	padding: 10px;
+  background-color: var(--blue-20);
+  line-height: .6;
+  padding: 10px;
 }
+
 #playground-link-holder {
-	display: flex;
-	width: 100%;
-	gap: .5em;
+  display: flex;
+  width: 100%;
+  gap: .5em;
 }
+
 #playground-link {
-	flex-grow: 1;
+  flex-grow: 1;
 }
+
 #copy-playground-link {
-	background: none;
-	font-size: 1.3em;
-	line-height: 1;
-	border: none;
-	box-shadow: none;
-	padding-left: .4em;
-	padding-right: .4em;
-	color: light-dark( #0000EE, lightblue );
+  background: none;
+  font-size: 1.3em;
+  line-height: 1;
+  border: none;
+  box-shadow: none;
+  padding-left: .4em;
+  padding-right: .4em;
+  color: var(--link-color);
 }
+
 #copy-playground-link:hover {
-	background-color: light-dark( #ccc, #333 );
+  background-color: light-dark(#ccc, #333);
 }
 
 #playground-link-top {
-	display: none;
-	font-size: 13.3px;
+  display: none;
+  font-size: 13.3px;
 }
 
 #playground-link:any-link,
 #playground-link-top:any-link {
-	color: light-dark( #1a1919, #fff );
+  color: var(--text-color);
 }
 
 #playground-link:hover,
 #playground-link-top:hover,
 .step:hover {
-	background-color: light-dark( #ADDFFF, #0060df );
+  background-color: var(--step-hover-background);
 }
 
 #download-blueprint:any-link {
-	color: light-dark( #000, #fff );
-	margin-top: .5em;
-	line-height: .6;
-	padding: 10px;
-	background-color: light-dark( #e9e9ed, #46734e );
+  color: var(--text-color);
+  margin-top: .5em;
+  line-height: .6;
+  padding: 10px;
+  background-color: var(--download-button-background);
 }
 
-/*button:hover,*/
 #download-blueprint:hover {
-	background-color: light-dark( #d0d0d7, #479154);
+  background-color: var(--button-hover-background);
 }
 
 .step.builtin:hover {
-	background-color: light-dark( #9DFF9D, #00883e );
+  background-color: var(--builtin-step-hover-background);
+}
+.step.mine:hover {
+  background-color: var(--mine-step-hover-background);
 }
 
 #view-source iframe {
-	width: 800px;
-	height: 600px;
+  width: 800px;
+  height: 600px;
 }
 
 #blueprint-compiled {
-	margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 
 #further-options div {
-	display: flex;
-	flex-flow: row wrap;
-	gap: .5em 0;
-	justify-content: space-between;
+  display: flex;
+  flex-flow: row wrap;
+  gap: .5em 0;
+  justify-content: space-between;
 }
 
 #further-options label {
-	display: block;
+  display: block;
 }
+
 #draghint {
-	margin-top: 1em;
-	margin-left: 1em;
+  margin-top: 1em;
+  margin-left: 1em;
 }
 
 #top-buttons {
-	white-space: nowrap;
-	display: inline-block;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 @media (max-width: 734px) {
-	#blueprint-builder {
-		flex-direction: column;
-		width: 100%;
-	}
+  #blueprint-builder {
+    flex-direction: column;
+    width: 100%;
+  }
 
-	#playground-link-top {
-		display: inline-block;
-	}
+  #playground-link-top {
+    display: inline-block;
+  }
 
-	#blueprint-steps .step a.view-source {
-		display: none;
-	}
+  #blueprint-steps .step a.view-source {
+    display: none;
+  }
 }
 
 @media (max-width: 1100px) {
-	header {
-		flex-direction: column;
-	}
-	#filter-holder {
-		flex-direction: column;
-		height: auto;
-	}
+  header {
+    flex-direction: column;
+  }
 
-	#filter-holder label {
-		display: none;
-	}
+  #filter-holder {
+    flex-direction: column;
+    height: auto;
+  }
 
+  #filter-holder label {
+    display: none;
+  }
 }
