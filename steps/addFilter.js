@@ -1,5 +1,5 @@
 customSteps.addFilter = function( step ) {
-	let code = "<?php require_once 'wordpress/wp-load.php'; add_filter( '" + step.vars.filter + "', " + step.vars.code;
+	let code = "<?php add_filter( '" + step.vars.filter + "', " + step.vars.code;
 	// if the step.vars.code is a php function get the number of arguments
 	// and add them to the add_filter call
 	if ( step.vars.code.match( /function\s*\(/i ) ) {
