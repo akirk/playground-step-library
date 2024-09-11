@@ -308,6 +308,12 @@ addEventListener('DOMContentLoaded', function() {
 					const dialog = document.getElementById('code-editor');
 					linkedTextarea = event.target.closest('.step').querySelector('textarea');
 					dialog.querySelector('textarea').value = linkedTextarea.value;
+					const codeMirrorInstance = CodeMirror.fromTextArea(dialog.querySelector('textarea'), {
+						lineNumbers: true,
+						mode: 'php',
+						theme: 'default',
+					});
+
 					dialog.showModal();
 					return;
 				}
@@ -905,4 +911,5 @@ addEventListener('DOMContentLoaded', function() {
 		restoreState( examples[this.value]);
 		loadCombinedExamples();
 	});
+
 } );
