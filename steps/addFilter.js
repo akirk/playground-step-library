@@ -4,12 +4,12 @@ customSteps.addFilter = function( step ) {
 	// and add them to the add_filter call
 	if ( step.vars.code.match( /function\s*\(/i ) ) {
 		let args = step.vars.code.match( /function\s*\((.*?)\)/i )[1].split( ',' ).length;
-		code += ", " + args;
 		if ( step.vars.priority != 10 ) {
 			code += ", " + step.vars.priority;
 		}
+		code += ", " + args;
 	} else if ( step.vars.priority != 10 ) {
-		code += ", 1, " + step.vars.priority;
+		code += ", " + step.vars.priority + ", 1";
 	}
 	code += " ); ?>";
 	return [
