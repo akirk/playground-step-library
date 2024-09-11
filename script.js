@@ -547,7 +547,7 @@ addEventListener('DOMContentLoaded', function() {
 				return step.step;
 			}
 			return step.step + '_._' + Object.keys( step.vars ).map(function(key) {
-				return key + '-.-' + step.vars[key].replace( /\n/g, '\\n' );
+				return key + '-.-' + ( typeof step.vars[key] === 'string'  ? step.vars[key].replace( /\n/g, '\\n' ) : step.vars[key] );
 			} ).join('_._');
 		} ).concat( document.getElementById('title').value ? [ 'title__' +escape( document.getElementById('title').value ) ] : [] ).join('&.&');
 	}
