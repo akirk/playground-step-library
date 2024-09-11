@@ -3,6 +3,7 @@ addEventListener('DOMContentLoaded', function() {
 	const stepList = document.getElementById('step-library');
 	const blueprintSteps = document.getElementById('blueprint-steps');
 	let blueprint = '';
+	let linkedTextarea = null;
 
 	function createStep( name, data ) {
 		const step = document.createElement('div');
@@ -34,6 +35,11 @@ addEventListener('DOMContentLoaded', function() {
 			rename.href = '';
 			rename.className = 'rename';
 			options.appendChild(rename);
+			const share = document.createElement('button');
+			share.innerText = 'Share';
+			share.href = '';
+			share.className = 'share';
+			options.appendChild(share);
 			const gh = document.createElement('button');
 			gh.innerText = 'Submit to Github';
 			gh.href = '';
@@ -141,6 +147,10 @@ addEventListener('DOMContentLoaded', function() {
 							td.appendChild(examples);
 						}
 					}
+					const codeEditorButton = document.createElement('button');
+					codeEditorButton.innerText = 'Code Editor';
+					codeEditorButton.className = 'code-editor';
+					td.appendChild(codeEditorButton);
 				} else if ( v.type === 'button' ) {
 					const button = document.createElement('button');
 					button.textContent = v.label;
@@ -257,6 +267,10 @@ addEventListener('DOMContentLoaded', function() {
 		if ( event.target.id === 'blueprint-compiled' ) {
 			return;
 		}
+		if ( event.target.id === 'linked-textarea' ) {
+			linkedTextarea.value = event.target.value;
+			return;
+		}
 		if ( event.key === 'Enter' && event.target.closest('#save-step') ) {
 			return saveMyStep();
 		}
@@ -290,6 +304,14 @@ addEventListener('DOMContentLoaded', function() {
 		let dialog;
 		if ( event.target.closest( '#blueprint-steps' ) ) {
 			if ( event.target.tagName === 'BUTTON' ) {
+				if ( event.target.classList.contains('code-editor') ) {
+					const dialog = document.getElementById('code-editor');
+					linkedTextarea = event.target.closest('.step').querySelector('textarea');
+					dialog.querySelector('textarea').value = linkedTextarea.value;
+					dialog.showModal();
+					return;
+				}
+
 				if ( event.target.classList.contains('save-step') ) {
 					dialog = document.getElementById('save-step');
 					const stepData = getStepData( event.target.closest('.step') );
@@ -360,6 +382,15 @@ addEventListener('DOMContentLoaded', function() {
 					event.target.closest('.step').querySelector('.stepname').innerText = newName;
 					loadCombinedExamples();
 				}
+				return false;
+			}
+			if ( event.target.classList.contains('share') ) {
+				const data = JSON.stringify( mySteps[event.target.closest('.step').dataset.id] );
+				navigator.clipboard.writeText( data );
+				event.target.innerText = 'Copied!';
+				setTimeout( function() {
+					event.target.innerText = 'Share';
+				}, 2000 );
 				return false;
 			}
 		}
@@ -516,7 +547,7 @@ addEventListener('DOMContentLoaded', function() {
 				return step.step;
 			}
 			return step.step + '_._' + Object.keys( step.vars ).map(function(key) {
-				return key + '-.-' + step.vars[key];
+				return key + '-.-' + step.vars[key].replace( /\n/g, '\\n' );
 			} ).join('_._');
 		} ).concat( document.getElementById('title').value ? [ 'title__' +escape( document.getElementById('title').value ) ] : [] ).join('&.&');
 	}
@@ -543,7 +574,7 @@ addEventListener('DOMContentLoaded', function() {
 					stepData.count = parseInt(kv[1]);
 					return;
 				}
-				stepData.vars[kv[0]] = kv[1];
+				stepData.vars[kv[0]] = kv[1].replace( /\\n/g, '\n' );
 			} );
 			return stepData;
 		} );

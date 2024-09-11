@@ -541,6 +541,12 @@ button:hover,
   display: inline-block;
 }
 
+#linked-textarea {
+	width: 60vw;
+	height: 30vw;
+}
+
+
 @media (max-width: 734px) {
   #blueprint-builder {
     flex-direction: column;
