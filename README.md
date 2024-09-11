@@ -65,7 +65,7 @@ which we then want to transforme to this:
 }
 ```
 
-To achieve this, we add a file `steps/helloWorldLogger.js` with the following content (executing `node bin/new-step helloWorldLogger` will give you a template):
+To achieve this, we add a file `steps/helloWorldLogger.js` with the following content (executing `node bin/new-step.js helloWorldLogger` will give you a template):
 
 
 ```js
