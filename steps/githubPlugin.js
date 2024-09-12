@@ -8,15 +8,21 @@ customSteps.githubPlugin = function( step ) {
 	if ( ! /^[a-z0-9-]+$/.test( branch ) ) {
 		return [];
 	}
+	const directory = step.vars.directory || "";
 	const options = {
 		activate: true,
 	};
+	let url = `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`;
+	if ( directory ) {
+		url += `&directory=${directory}`;
+		options.activate = false;
+	}
 
 	const outStep = {
 		"step": "installPlugin",
 		"pluginZipFile": {
 			"resource": "url",
-			"url": `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`
+			url
 		},
 		options
 	};
@@ -32,7 +38,23 @@ customSteps.githubPlugin = function( step ) {
 		};
 	}
 
-	return [ outStep ];
+	const outSteps = [ outStep ];
+	if ( directory ) {
+		// if its a subsub directory, move the lowest directory into wp-content/plugins
+		const dirBasename = directory.split( '/' ).pop();
+		outSteps.push({
+			"step": "mv",
+			"fromPath": "/wordpress/wp-content/plugins/" + directory,
+			"toPath": "/wordpress/wp-content/plugins/" + dirBasename
+		});
+		outSteps.push({
+			"step": "activatePlugin",
+			"pluginPath": "/wordpress/wp-content/plugins/" + dirBasename
+		});
+	}
+
+
+	return outSteps;
 };
 customSteps.githubPlugin.info = "Install a plugin from a Github repository.";
 customSteps.githubPlugin.vars = [
@@ -45,6 +67,11 @@ customSteps.githubPlugin.vars = [
 		"name": "branch",
 		"description": "Which branch to use.",
 		"samples": [ "main", "trunk" ]
+	},
+	{
+		"name": "directory",
+		"description": "Which subdirectory to use.",
+		"samples": [ "" ]
 	},
 	{
 		"name": "prs",
