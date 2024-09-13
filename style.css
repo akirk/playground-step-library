@@ -284,9 +284,24 @@ textarea#blueprint, textarea#blueprint-compiled {
 	display: block;
 	float: right;
 }
+#step-library .step .options summary::marker {
+  content: none;
+}
+
+#step-library .step .options summary::after {
+  content: " +";
+  float: right;
+  text-align: right;
+}
+
+#step-library .step .options[open] summary::after {
+  content: " -"
+}
+#step-library .step .options[open]  {
+  width: 100%;
+}
 .step .options button {
-	display: block;
-	margin-bottom: .5em;
+	margin-right: .5em;
 }
 
 
@@ -419,7 +434,10 @@ button,
 #playground-link,
 #playground-link-top,
 #download-blueprint,
+a.submit-to-gh,
 #examples {
+  font-size: .8em;
+  line-height: 1em;
   border: 1px solid var(--button-border-color);
   color: #000;
   background-color: var(--button-background-color);
@@ -546,6 +564,9 @@ button:hover,
 	height: 30vw;
 }
 
+button.code-editor {
+  margin-left: 1em;
+}
 
 @media (max-width: 734px) {
   #blueprint-builder {

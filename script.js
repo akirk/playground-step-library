@@ -27,24 +27,35 @@ addEventListener('DOMContentLoaded', function() {
 			options.className = 'options';
 			const del = document.createElement('button');
 			del.innerText = 'Delete';
+			del.title = 'Delete this step';
 			del.href = '';
 			del.className = 'delete';
 			options.appendChild(del);
 			const rename = document.createElement('button');
 			rename.innerText = 'Rename';
+			rename.title = 'Rename this step';
 			rename.href = '';
 			rename.className = 'rename';
 			options.appendChild(rename);
 			const share = document.createElement('button');
 			share.innerText = 'Share';
+			share.title = 'Copy a shareable link to this step';
 			share.href = '';
 			share.className = 'share';
 			options.appendChild(share);
-			const gh = document.createElement('button');
+			const gh = document.createElement('a');
 			gh.innerText = 'Submit to Github';
-			gh.href = '';
+			let shareBody = "I'd like to submit a step to the WordPress Playground: \n\n";
+			shareBody += 'Name: **' + name + '.js**\n\n';
+			shareBody += "I'd like to submit a step to the WordPress Playground: \n\n```js\n";
+			shareBody += 'customSteps.' + name + ' = customSteps.' + data.step + ";\n";
+			shareBody += 'customSteps.' + name + '.info = ' + JSON.stringify( data.info, null, 2) + ";\n";
+			shareBody += 'customSteps.' + name + '.vars = ' + JSON.stringify( data.vars, null, 2).replace( /\\n/g, "\\n\" + \n\"" ) + ";\n";
+			shareBody += "\n```";
+			gh.href = 'https://github.com/akirk/playground-step-library/issues/new?body=' + encodeURIComponent( shareBody ) + '&title=Add+a+' + encodeURIComponent( name ) + '+step';
 			gh.className = 'submit-to-gh';
-			// options.appendChild(gh);
+			gh.title = 'Submit this step to GitHub';
+			options.appendChild(gh);
 			step.appendChild(options);
 
 		} else if ( data.builtin ) {
@@ -209,6 +220,7 @@ addEventListener('DOMContentLoaded', function() {
 		mySteps[myStepName] = myStep;
 		localStorage.setItem('mySteps', JSON.stringify(mySteps));
 		document.getElementById('save-step').close();
+		document.getElementById('my-step-name').value = '';
 	}
 
 	function insertMyStep( name, data ) {
@@ -305,7 +317,7 @@ addEventListener('DOMContentLoaded', function() {
 		if ( event.target.closest( '#blueprint-steps' ) ) {
 			if ( event.target.tagName === 'BUTTON' ) {
 				if ( event.target.classList.contains('code-editor') ) {
-					const dialog = document.getElementById('code-editor');
+					dialog = document.getElementById('code-editor');
 					linkedTextarea = event.target.closest('.step').querySelector('textarea');
 					dialog.querySelector('textarea').value = linkedTextarea.value;
 					dialog.showModal();
@@ -321,7 +333,14 @@ addEventListener('DOMContentLoaded', function() {
 							myStep.vars[i].samples = [ stepData.vars[myStep.vars[i].name] ];
 						}
 					}
-
+					dialog.querySelector('input').value = stepData.step + Object.values( stepData.vars ).map( function( value ) {
+						if ( typeof value !== 'string' ) {
+							return '';
+						}
+						return value.split( /[^a-z0-9]/i ).map( function( word ) {
+							return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+						}).join( '' );
+					}).join( '' );
 					dialog.dataset.step = JSON.stringify( myStep );
 					dialog.showModal();
 					return;
@@ -385,7 +404,8 @@ addEventListener('DOMContentLoaded', function() {
 				return false;
 			}
 			if ( event.target.classList.contains('share') ) {
-				const data = JSON.stringify( mySteps[event.target.closest('.step').dataset.id] );
+				const data = location.href.replace(/#.*$/, '' ) + '#' + compressState( [ getStepData( event.target.closest('.step') ) ] );
+				console.log( data );
 				navigator.clipboard.writeText( data );
 				event.target.innerText = 'Copied!';
 				setTimeout( function() {
@@ -428,10 +448,16 @@ addEventListener('DOMContentLoaded', function() {
 			dialog.showModal();
 		} else {
 			dialog.close();
+			if ( ! event.target.closest('#code-editor') ) {
+				document.getElementById('code-editor').close()
+			}
 		}
 
 		if ( event.target.tagName === 'BUTTON' && event.target.closest('#save-step') ) {
 			return saveMyStep();
+		}
+		if ( event.target.tagName === 'BUTTON' && event.target.closest('#code-editor') ) {
+			return document.getElementById('code-editor').close();
 		}
 	});
 	blueprintSteps.addEventListener('dragover', (event) => {
