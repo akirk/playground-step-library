@@ -9,6 +9,7 @@ addEventListener('DOMContentLoaded', function() {
 		const step = document.createElement('div');
 		step.dataset.step = data.step;
 		step.className = 'step';
+		step.tabIndex = 0;
 		const span = document.createElement('span');
 		span.className = 'stepname';
 		span.innerText = name;
@@ -275,6 +276,16 @@ addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
+	function insertStep( step ) {
+		const stepClone = step.closest('.step').cloneNode(true);
+		stepClone.removeAttribute('id');
+		blueprintSteps.appendChild(stepClone);
+		stepClone.classList.remove('dragging');
+		stepClone.classList.remove('hidden');
+		loadCombinedExamples();
+		stepClone.querySelector('input,textarea').focus();
+	}
+
 	document.addEventListener('keyup', (event) => {
 		if ( event.target.id === 'blueprint-compiled' ) {
 			return;
@@ -283,17 +294,74 @@ addEventListener('DOMContentLoaded', function() {
 			linkedTextarea.value = event.target.value;
 			return;
 		}
-		if ( event.key === 'Enter' && event.target.closest('#save-step') ) {
-			return saveMyStep();
+		if ( event.key === 'Enter' ) {
+			if ( event.target.closest('#save-step') ) {
+				return saveMyStep();
+			}
+			if ( event.target.closest('#step-library .step') ) {
+				insertStep( event.target );
+				return false;
+			}
+			if ( document.getElementById('step-library').querySelectorAll('.step:not(.hidden)').length === 1 ) {
+				insertStep( document.getElementById('step-library').querySelector('.step:not(.hidden)') );
+				return false;
+			}
+
+			if ( event.target.closest('input') ) {
+				loadCombinedExamples();
+				document.getElementById('playground-link').click();
+				return false;
+			}
+		}
+		if ( event.key == 'Escape' ) {
+			if ( event.target.closest('input,textarea') ) {
+				event.target.blur();
+				return false;
+			}
+		}
+		if ( event.target.closest('#step-library .step') ) {
+			if ( event.key === 'Escape' ) {
+				event.target.closest('.step').blur();
+			} else if ( event.key === 'ArrowDown' ) {
+				let nextStep = stepList.querySelector('.step:focus').nextElementSibling;
+				while ( nextStep && nextStep.classList.contains('hidden') ) {
+					if ( ! nextStep ) {
+						break;
+					}
+					nextStep = nextStep.nextElementSibling;
+				}
+				if ( nextStep ) {
+					nextStep.focus();
+				}
+				return false;
+			} else if ( event.key === 'ArrowUp' ) {
+				let prevStep = stepList.querySelector('.step:focus').previousElementSibling;
+				while ( prevStep && prevStep.classList.contains('hidden') ) {
+					if ( ! prevStep ) {
+						break;
+					}
+					prevStep = prevStep.previousElementSibling;
+				}
+				if ( prevStep ) {
+					prevStep.focus();
+				}
+				return false;
+			}
 		}
 
-		if ( ! event.target.closest( 'input,textarea' ) && event.key.match( /[a-z0-9]/i ) && ! event.ctrlKey && ! event.altKey && ! event.metaKey ) {
-			document.getElementById('filter').value = event.key;
-			document.getElementById('filter').focus();
-			// trigger the keyup even there
-			document.getElementById('filter').dispatchEvent( new Event('keyup') );
-
-			return;
+		if ( ! event.target.closest( 'input,textarea' ) ) {
+			if ( event.key.match( /^[a-z0-9]$/i ) && ! event.ctrlKey && ! event.altKey && ! event.metaKey ) {
+				document.getElementById('filter').value = event.key;
+				document.getElementById('filter').focus();
+				document.getElementById('filter').dispatchEvent( new Event('keyup') );
+				return;
+			} else if ( event.key === 'ArrowUp' ) {
+				stepList.querySelector('.step:last-child').focus();
+				return;
+			} else if ( event.key === 'ArrowDown' ) {
+				stepList.querySelector('.step').focus();
+				return;
+			}
 		}
 
 		loadCombinedExamples();
@@ -425,11 +493,7 @@ addEventListener('DOMContentLoaded', function() {
 		}
 
 		if ( event.target.closest('.step') && event.target.closest('#step-library') && ! event.target.closest('details') ) {
-			const stepClone = event.target.closest('.step').cloneNode(true);
-			stepClone.removeAttribute('id');
-			blueprintSteps.appendChild(stepClone);
-			stepClone.classList.remove('dragging');
-			loadCombinedExamples();
+			insertStep( event.target );
 			return;
 		}
 		if (event.target.classList.contains('remove') ) {
@@ -548,12 +612,26 @@ addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-	document.getElementById('filter').addEventListener('keyup', function() {
+	document.getElementById('filter').addEventListener('keyup', function( event ) {
 		// convert to a fuzzy search term by allowing any character to be followed by any number of any characters
 		const filter = new RegExp( this.value.replace(/(.)/g, '$1.*'), 'i' );
 		stepList.querySelectorAll('.step').forEach(function(step) {
-			step.style.display = step.dataset.id.toLowerCase().match(filter) ? 'block' : 'none';
+			if ( step.dataset.id.toLowerCase().match(filter) ) {
+				step.classList.remove('hidden');
+			} else {
+				step.classList.add('hidden');
+			}
 		});
+		if ( event.key === 'ArrowDown' ) {
+			const steps = stepList.querySelectorAll('.step');
+			for ( let i = 0; i < steps.length; i++ ) {
+				if ( ! steps[i].classList.contains('hidden') ) {
+					steps[i].focus();
+					break;
+				}
+			}
+			return false;
+		}
 	});
 
 	document.getElementById('show-builtin').addEventListener('change', function() {
@@ -941,4 +1019,5 @@ addEventListener('DOMContentLoaded', function() {
 		restoreState( examples[this.value]);
 		loadCombinedExamples();
 	});
+	document.getElementById('filter').value = '';
 } );

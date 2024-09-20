@@ -255,6 +255,10 @@ textarea#blueprint, textarea#blueprint-compiled {
   z-index: 3;
 }
 
+.step:focus {
+  outline: 2px dashed var(--link-color)
+}
+
 .step.builtin {
   background-color: var(--builtin-step-background);
 }
@@ -265,6 +269,12 @@ textarea#blueprint, textarea#blueprint-compiled {
 
 .step.mine {
   background-color: var(--mine-step-background);
+}
+
+#step-library .step.hidden,
+#step-library .step.mine.hidden,
+#step-library.show-builtin .step.builtin.hidden {
+  display: none;
 }
 
 #step-library.show-builtin .step.builtin {
@@ -506,7 +516,8 @@ button:hover,
 
 #playground-link:hover,
 #playground-link-top:hover,
-.step:hover {
+.step:hover,
+.step:focus {
   background-color: var(--step-hover-background);
 }
 
@@ -522,10 +533,10 @@ button:hover,
   background-color: var(--button-hover-background);
 }
 
-.step.builtin:hover {
+.step.builtin:hover,.step.builtin:focus {
   background-color: var(--builtin-step-hover-background);
 }
-.step.mine:hover {
+.step.mine:hover,.step.mine:focus {
   background-color: var(--mine-step-hover-background);
 }
 
