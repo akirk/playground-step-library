@@ -302,14 +302,13 @@ addEventListener('DOMContentLoaded', function() {
 				insertStep( event.target );
 				return false;
 			}
-			if ( document.getElementById('step-library').querySelectorAll('.step:not(.hidden)').length === 1 ) {
-				insertStep( document.getElementById('step-library').querySelector('.step:not(.hidden)') );
-				return false;
-			}
-
 			if ( event.target.closest('input') ) {
 				loadCombinedExamples();
 				document.getElementById('playground-link').click();
+				return false;
+			}
+			if ( document.getElementById('step-library').querySelectorAll('.step:not(.hidden)').length === 1 ) {
+				insertStep( document.getElementById('step-library').querySelector('.step:not(.hidden)') );
 				return false;
 			}
 		}
