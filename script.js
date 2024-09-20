@@ -287,6 +287,15 @@ addEventListener('DOMContentLoaded', function() {
 			return saveMyStep();
 		}
 
+		if ( ! event.target.closest( 'input,textarea' ) && event.key.match( /[a-z0-9]/i ) && ! event.ctrlKey && ! event.altKey && ! event.metaKey ) {
+			document.getElementById('filter').value = event.key;
+			document.getElementById('filter').focus();
+			// trigger the keyup even there
+			document.getElementById('filter').dispatchEvent( new Event('keyup') );
+
+			return;
+		}
+
 		loadCombinedExamples();
 	});
 	document.addEventListener('change', (event) => {
@@ -540,9 +549,10 @@ addEventListener('DOMContentLoaded', function() {
 	});
 
 	document.getElementById('filter').addEventListener('keyup', function() {
-		const filter = this.value.toLowerCase();
+		// convert to a fuzzy search term by allowing any character to be followed by any number of any characters
+		const filter = new RegExp( this.value.replace(/(.)/g, '$1.*'), 'i' );
 		stepList.querySelectorAll('.step').forEach(function(step) {
-			step.style.display = step.dataset.id.toLowerCase().includes(filter) ? 'block' : 'none';
+			step.style.display = step.dataset.id.toLowerCase().match(filter) ? 'block' : 'none';
 		});
 	});
 
