@@ -83,7 +83,7 @@ addEventListener('DOMContentLoaded', function() {
 
 		const saveStep = document.createElement('button');
 		saveStep.className = 'save-step';
-		saveStep.innerText = 'Save';
+		saveStep.innerText = 'Save Step';
 		step.appendChild(saveStep);
 
 		const vars = document.createElement('table');

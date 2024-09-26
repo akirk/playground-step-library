@@ -468,6 +468,22 @@ button:hover,
   background-color: var(--button-hover-background);
 }
 
+button.save-step {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  box-shadow: none;
+  font-size: 1em;
+  line-height: 30px;
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+button.save-step:hover {
+  background-color: transparent;
+  text-decoration: none;
+}
+
 #examples {
   width: 8em;
 }
