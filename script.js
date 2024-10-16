@@ -923,6 +923,9 @@ addEventListener('DOMContentLoaded', function() {
 				if ( typeof step.title === 'string' ) {
 					document.getElementById('title').value = step.title;
 				}
+				if ( typeof step.networking === 'boolean' ) {
+					document.getElementById('networking').checked = true;
+				}
 				return;
 			}
 			const block = stepList.querySelector('[data-step="' + step.step + '"]');
