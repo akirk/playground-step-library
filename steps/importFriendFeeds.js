@@ -5,11 +5,7 @@ customSteps.importFriendFeeds = function( step ) {
 			"code": `
 <?php require_once 'wordpress/wp-load.php';
 if ( class_exists('Friends\Import')) {
-Friends\Import::opml(
-<<<OPML
-${step.vars.opml}
-OPML
-);
+Friends\Import::opml("${step.vars.opml}");
 do_action( 'cron_friends_refresh_feeds' );
 }
 	`
