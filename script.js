@@ -699,9 +699,11 @@ addEventListener('DOMContentLoaded', function() {
 					stepData.count = parseInt(kv[1]);
 					return;
 				}
-				if ( decodeURIComponent( kv[1] ) ) {
-					kv[1] = decodeURIComponent( kv[1] );
-				}
+				try {
+					if ( decodeURIComponent( kv[1] ) ) {
+						kv[1] = decodeURIComponent( kv[1] );
+					}
+				} catch (e) {}
 				stepData.vars[kv[0]] = kv[1].replace( /\\n/g, '\n' );
 			} );
 			return stepData;
