@@ -12,11 +12,11 @@ customSteps.setSiteOption.vars = [
 	{
 		"name": "name",
 		"description": "Option name",
-		"samples": [ "hello" ]
+		"samples": [ "","permalink_structure" ]
 	},
 	{
 		"name": "value",
 		"description": "Option value",
-		"samples": [ "world" ]
+		"samples": [ "", "/%postname%/" ]
 	}
 ];
