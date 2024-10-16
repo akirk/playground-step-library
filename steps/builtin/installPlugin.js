@@ -6,7 +6,7 @@ customSteps.installPlugin = function( step ) {
 	var steps = [
 		{
 			"step": "installPlugin",
-			"pluginZipFile": {
+			"pluginData": {
                 "resource": "wordpress.org/plugins",
                 "slug": plugin
             },

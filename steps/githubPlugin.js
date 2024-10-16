@@ -20,7 +20,7 @@ customSteps.githubPlugin = function( step ) {
 
 	const outStep = {
 		"step": "installPlugin",
-		"pluginZipFile": {
+		"pluginData": {
 			"resource": "url",
 			url
 		},

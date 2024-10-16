@@ -292,6 +292,7 @@ addEventListener('DOMContentLoaded', function() {
 		}
 		if ( event.target.id === 'linked-textarea' ) {
 			linkedTextarea.value = event.target.value;
+			loadCombinedExamples();
 			return;
 		}
 		if ( event.key === 'Enter' ) {

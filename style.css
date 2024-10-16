@@ -69,7 +69,8 @@
   --green-100: #001c05;
 
   --background-color: light-dark( #fff, #000);
-  --text-color: light-dark( #000, var( --gray-0));
+  --text-color: light-dark( #000, var( --gray-0) );
+  --inverted-text-color: light-dark( var( --gray-0), #000);
 
   --link-color: var(--blue-40);
   --border-color: var(--gray-20);
@@ -250,6 +251,7 @@ textarea#blueprint, textarea#blueprint-compiled {
   margin: 5px;
   border: 1px solid var(--border-color);
   background-color: var(--step-background);
+  color: var(--inverted-text-color);
   cursor: pointer;
   border-radius: 5px;
   z-index: 3;
@@ -513,7 +515,6 @@ button.save-step:hover {
   box-shadow: none;
   padding-left: .4em;
   padding-right: .4em;
-  color: var(--link-color);
 }
 
 #copy-playground-link:hover {
@@ -527,7 +528,7 @@ button.save-step:hover {
 
 #playground-link:any-link,
 #playground-link-top:any-link {
-  color: var(--text-color);
+  color: light-dark( var(--link-color), var(--inverted-text-color) );
 }
 
 #playground-link:hover,
@@ -538,7 +539,7 @@ button.save-step:hover {
 }
 
 #download-blueprint:any-link {
-  color: var(--text-color);
+  color: light-dark( var(--link-color), var(--inverted-text-color) );
   margin-top: .5em;
   line-height: .6;
   padding: 10px;

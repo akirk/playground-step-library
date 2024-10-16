@@ -12,7 +12,7 @@ customSteps.githubPluginRelease = function( step ) {
 
 	const outStep = {
 		"step": "installPlugin",
-		"pluginZipFile": {
+		"pluginData": {
 			"resource": "url",
 			"url": `https://github-proxy.com/proxy/?repo=${repo}&release=${tag}&asset=${filename}`
 		},
