@@ -753,9 +753,6 @@ addEventListener('DOMContentLoaded', function() {
 		if ( document.getElementById('phpExtensionBundles').checked ) {
 			userDefined.phpExtensionBundles = [ 'kitchen-sink' ];
 		}
-		if ( document.getElementById('networking').checked ) {
-			userDefined.features = { 'networking': true };
-		}
 		if ( 'latest' !== document.getElementById('wp-version').value || 'latest' !== document.getElementById('php-version').value ) {
 			userDefined.preferredVersions = {
 				wp: document.getElementById('wp-version').value,
@@ -860,6 +857,9 @@ addEventListener('DOMContentLoaded', function() {
 		document.getElementById('blueprint-compiled').value = JSON.stringify(outputData, null, 2);
 
 		const a = document.getElementById('playground-link');
+		if ( document.getElementById('networking').checked ) {
+			queries.push( 'networking=yes' );
+		}
 		switch ( document.getElementById('mode').value ) {
 			case 'browser':
 				queries.push( 'mode=browser' );
