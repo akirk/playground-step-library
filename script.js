@@ -432,29 +432,31 @@ addEventListener('DOMContentLoaded', function() {
 				loadCombinedExamples();
 				return;
 			}
-			if ( event.target.tagName === 'LABEL' ) {
-				const input = event.target.querySelector('input, select');
-				if ( input.type === 'checkbox' ) {
-					loadCombinedExamples();
-				} else {
-					input.select();
-				}
-				return;
-			}
-			if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' ) {
-				if ( event.target.type === 'checkbox' ) {
-					loadCombinedExamples();
-				} else {
-					event.target.select();
-				}
-				return;
-			}
 
 			if (event.target.classList.contains('stepname') ) {
 				event.target.closest('.step').classList.toggle('collapsed');
 				return false;
 			}
 		}
+
+		if ( event.target.tagName === 'LABEL' ) {
+			const input = event.target.querySelector('input, select');
+			if ( input.type === 'checkbox' ) {
+				loadCombinedExamples();
+			} else {
+				input.select();
+			}
+			return;
+		}
+		if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' ) {
+			if ( event.target.type === 'checkbox' ) {
+				loadCombinedExamples();
+			} else {
+				event.target.select();
+			}
+			return;
+		}
+
 		if ( event.target.closest( '#step-library' ) && event.target.closest('.step').classList.contains('mine') ) {
 			if ( event.target.classList.contains('delete') ) {
 				const name = event.target.closest('.step').dataset.id;
@@ -649,6 +651,13 @@ addEventListener('DOMContentLoaded', function() {
 	}
 
 	function compressState( state ) {
+		const additional = [];
+		if ( document.getElementById('title').value ) {
+			additional.push( 'title_._' +escape( document.getElementById('title').value ) );
+		}
+		if ( document.getElementById('networking').checked ) {
+			additional.push( 'networking' );
+		}
 		return state.map( function( step ) {
 			if ( step.count ) {
 				if ( step.vars ) {
@@ -663,16 +672,18 @@ addEventListener('DOMContentLoaded', function() {
 			return step.step + '_._' + Object.keys( step.vars ).map(function(key) {
 				return key + '-.-' + ( typeof step.vars[key] === 'string'  ? step.vars[key].replace( /\n/g, '\\n' ) : step.vars[key] );
 			} ).join('_._');
-		} ).concat( document.getElementById('title').value ? [ 'title__' +escape( document.getElementById('title').value ) ] : [] ).join('&.&');
+		} ).concat( additional ).join('&.&');
 	}
 
 	function uncompressState( state ) {
 		return state.split('&.&').map( function( step ) {
 			const parts = step.split('_._');
-			if ( parts[0] === 'title' ) {
-				return {
-					"title": parts[1]
-				};
+			switch ( parts[0] ) {
+				case 'title':
+				case 'networking':
+					const ret = {};
+					ret[parts[0]] = parts[1] || true;
+					return ret;
 			}
 			const stepData = {
 				"step": parts.shift(),
@@ -692,6 +703,8 @@ addEventListener('DOMContentLoaded', function() {
 			} );
 			return stepData;
 		} );
+		console.log( x );
+		return x;
 	}
 
 	function getStepData( stepBlock ) {
@@ -752,6 +765,9 @@ addEventListener('DOMContentLoaded', function() {
 		};
 		if ( document.getElementById('phpExtensionBundles').checked ) {
 			userDefined.phpExtensionBundles = [ 'kitchen-sink' ];
+		}
+		if ( document.getElementById('networking').checked ) {
+			userDefined.features = { 'networking': true };
 		}
 		if ( 'latest' !== document.getElementById('wp-version').value || 'latest' !== document.getElementById('php-version').value ) {
 			userDefined.preferredVersions = {
