@@ -700,7 +700,7 @@ addEventListener('DOMContentLoaded', function() {
 					return;
 				}
 				if ( decodeURIComponent( kv[1] ) ) {
-					k[1] = decodeURIComponent( kv[1];
+					k[1] = decodeURIComponent( kv[1] );
 				}
 				stepData.vars[kv[0]] = kv[1].replace( /\\n/g, '\n' );
 			} );
