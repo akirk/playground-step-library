@@ -41,6 +41,6 @@ customSteps.importFriendFeeds.vars = [
 		"description": "An OPML file, or a list of RSS feed URLs, one per line.",
 		"type": "textarea",
 		"required": true,
-		"samples": [ "", 'https://alex.kirk.at Alex Kirk' ]
+		"samples": [ "", 'https://alex.kirk.at Alex Kirk', '<?xml version="1.0" encoding="utf-8"?><opml version="2.0"><head><title>Alex Kirk&#039; Subscriptions</title></head><body><outline text="Feeds"><outline text="Alex Kirk" htmlUrl="https://alex.kirk.at/" title="Alex Kirk" type="rss" xmlUrl="https://alex.kirk.at/feed/"/></outline></body></opml>' ]
 	}
 ];
