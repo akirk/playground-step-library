@@ -756,7 +756,7 @@ addEventListener('DOMContentLoaded', function() {
 		}
 
 		blueprint = JSON.stringify(combinedExamples, null, 2);
-// 		console.log( state );
+		// console.log( state );
 		history.pushState( state , '', '#' + compressState( state ) );
 		transformJson();
 	}
@@ -957,7 +957,7 @@ addEventListener('DOMContentLoaded', function() {
 			if ( step.count ) {
 				stepBlock.querySelector('[name="count"]').value = step.count;
 			}
-			Object.keys(step.vars).forEach(function(key) {
+			Object.keys(step.vars || {}).forEach(function(key) {
 				if ( key === 'step' ) {
 					return;
 				}
@@ -1043,6 +1043,30 @@ addEventListener('DOMContentLoaded', function() {
 			"step": "setLandingPage",
 			"vars": {
 				"landingPage": "/wp-admin/admin.php?page=activitypub"
+			}
+		}
+		],
+		'Load Feeds into the Friends plugin': [
+		{
+			"step": "installPlugin",
+			"vars": {
+				"plugin": "friends",
+				"permalink": true
+			}
+		},
+		{
+			"step": "addCorsProxy"
+		},
+		{
+			"step": "setLandingPage",
+			"vars": {
+				"landingPage": "/friends/"
+			}
+		},
+		{
+			"step": "importFriendFeeds",
+			"vars": {
+				"opml": "https://alex.kirk.at Alex Kirk\nhttps://adamadam.blog Adam Zielinski"
 			}
 		}
 		]

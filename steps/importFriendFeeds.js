@@ -1,5 +1,26 @@
 customSteps.importFriendFeeds = function( step ) {
-	const opml = step.vars.opml.replace(/\"/g, '\\"');
+	let opml = step.vars.opml;
+	// if it's a list of links, generate the opml file
+	// if it's an opml file, use it
+
+	if ( !opml.match(/<opml/) ) {
+		opml = `<?xml version="1.0" encoding="utf-8"?><opml version="2.0">
+	<head>
+		<title>Subscriptions</title>
+	</head>
+	<body>
+		<outline text="Subscriptions" title="Subscriptions">
+			${opml.split('\n').map( line => {
+				const parts = line.split(/\s+/);
+				const url = parts.shift();
+				const title = (parts.join( ' ' ) || url).replace(/https?:\/\//, '').replace(/\/$/, '');
+				return `<outline type="rss" text="${title}" title="${title}" xmlUrl="${url}" htmlUrl="${url}" />`;
+			} ).join('\n')}
+		</outline>
+	</body>
+</opml>`;
+	}
+	opml = opml.replace(/\"/g, '\\"');
 	return [
 		{
 			"step": "runPHP",
@@ -17,9 +38,9 @@ customSteps.importFriendFeeds.info = "Provide useful additional info.";
 customSteps.importFriendFeeds.vars = [
 	{
 		"name": "opml",
-		"description": "The OPML file",
+		"description": "An OPML file, or a list of RSS feed URLs, one per line.",
 		"type": "textarea",
 		"required": true,
-		"samples": [ "" ]
+		"samples": [ "", 'https://alex.kirk.at Alex Kirk' ]
 	}
 ];
