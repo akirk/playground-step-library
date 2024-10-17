@@ -1066,7 +1066,7 @@ addEventListener('DOMContentLoaded', function() {
 		{
 			"step": "importFriendFeeds",
 			"vars": {
-				"opml": "https://alex.kirk.at Alex Kirk\nhttps://adamadam.blog Adam Zielinski"
+				"opml": "https://alex.kirk.at Alex Kirk\nhttps://adamadam.blog Adam Zieliński"
 			}
 		}
 		]
