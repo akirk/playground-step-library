@@ -283,7 +283,7 @@ addEventListener('DOMContentLoaded', function() {
 		stepClone.classList.remove('dragging');
 		stepClone.classList.remove('hidden');
 		loadCombinedExamples();
-		stepClone.querySelector('input,textarea').focus();
+		stepClone.querySelector('input,textarea')?.focus();
 	}
 
 	document.addEventListener('keyup', (event) => {
@@ -303,13 +303,13 @@ addEventListener('DOMContentLoaded', function() {
 				insertStep( event.target );
 				return false;
 			}
+			if ( event.target.closest('#filter') && document.getElementById('step-library').querySelectorAll('.step:not(.hidden)').length === 1 ) {
+				insertStep( document.getElementById('step-library').querySelector('.step:not(.hidden)') );
+				return false;
+			}
 			if ( event.target.closest('input') ) {
 				loadCombinedExamples();
 				document.getElementById('playground-link').click();
-				return false;
-			}
-			if ( document.getElementById('step-library').querySelectorAll('.step:not(.hidden)').length === 1 ) {
-				insertStep( document.getElementById('step-library').querySelector('.step:not(.hidden)') );
 				return false;
 			}
 		}
@@ -766,7 +766,8 @@ addEventListener('DOMContentLoaded', function() {
 		const queries = [];
 		let useBlueprintURLParam = false;
 		const userDefined = {
-			"landingPage": "/"
+			"landingPage": "/",
+			"features": {}
 		};
 		if ( document.getElementById('phpExtensionBundles').checked ) {
 			userDefined.phpExtensionBundles = [ 'kitchen-sink' ];
@@ -780,6 +781,7 @@ addEventListener('DOMContentLoaded', function() {
 				php: document.getElementById('php-version').value
 			};
 		}
+
 		let inputData = Object.assign( userDefined, JSON.parse(jsonInput) );
 		const outputData = Object.assign( {}, inputData );
 		if ( outputData.title ) {
@@ -796,6 +798,9 @@ addEventListener('DOMContentLoaded', function() {
 				outSteps = customSteps[step.step]( step, inputData );
 				if ( outSteps.landingPage ) {
 					outputData.landingPage = outSteps.landingPage;
+				}
+				if ( outSteps.features ) {
+					outputData.features = outSteps.features;
 				}
 				if ( outSteps.login ) {
 					outputData.login = outSteps.login;
@@ -873,7 +878,21 @@ addEventListener('DOMContentLoaded', function() {
 					outputData.steps.push(outSteps[i]);
 				}
 			}
+
+
 		});
+
+		if (  outputData.landingPage === '/' ) {
+			delete outputData.landingPage;
+		}
+
+		if ( Object.keys( outputData.features ).length === 0 ) {
+			delete outputData.features;
+		}
+
+		if ( outputData.steps.length === 0 ) {
+			delete outputData.steps;
+		}
 
 		document.getElementById('blueprint-compiled').value = JSON.stringify(outputData, null, 2);
 
