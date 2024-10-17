@@ -677,7 +677,11 @@ addEventListener('DOMContentLoaded', function() {
 	}
 
 	function uncompressState( state ) {
-		return JSON.parse( decodeBase64ToString( state ) );
+		try {
+			return JSON.parse( decodeBase64ToString( state ) );
+		} catch( e ) {
+			return {};
+		}
 	}
 
 	function decodeBase64ToString(base64) {
