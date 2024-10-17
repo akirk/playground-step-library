@@ -513,10 +513,11 @@ button.save-step:hover {
   line-height: 1;
   border: none;
   box-shadow: none;
+  padding-top: 0;
   padding-left: .4em;
   padding-right: .4em;
+  color: light-dark( #333, #ccc );
 }
-
 #copy-playground-link:hover {
   background-color: light-dark(#ccc, #333);
 }

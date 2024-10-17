@@ -103,9 +103,11 @@ addEventListener('DOMContentLoaded', function() {
 			tr.appendChild(td);
 			vars.appendChild(tr);
 		}
+		step.appendChild(vars);
 
 		if ( data.vars ) {
 			data.vars.forEach(function( v, k ) {
+				let input;
 				const tr = document.createElement('tr');
 				let td = document.createElement('td');
 				td.innerText = v.name || '';
@@ -132,16 +134,15 @@ addEventListener('DOMContentLoaded', function() {
 					}
 					td.appendChild(select);
 				} else if ( v.type === 'textarea' ) {
-					const textarea = document.createElement('textarea');
-					textarea.name = v.name;
-					textarea.placeholder = v.description;
+					input = document.createElement('textarea');
+					input.name = v.name;
+					input.placeholder = v.description;
 					if ( v.required ) {
-						textarea.required = true;
+						input.required = true;
 					}
-					textarea.setAttribute('draggable', true);
-					td.appendChild(textarea);
+					td.appendChild(input);
 					if ( 'samples' in v ) {
-						textarea.value = v.samples[0];
+						input.value = v.samples[0];
 						if ( v.samples.length > 1 ) {
 							const examples = document.createElement('details');
 							const summary = document.createElement('summary');
@@ -150,9 +151,12 @@ addEventListener('DOMContentLoaded', function() {
 							const ul = document.createElement('ul');
 							examples.appendChild(ul);
 							for ( let j = 0; j < v.samples.length; j++ ) {
+								if ( '' === v.samples[j] ) {
+									continue;
+								}
 								const sample = document.createElement('li');
 								sample.className = 'sample';
-								sample.innerText = '' === v.samples[j] ? '<empty>' : v.samples[j];
+								sample.innerText = v.samples[j];
 								ul.appendChild(sample);
 							}
 							examples.className = 'examples for-textarea';
@@ -170,7 +174,7 @@ addEventListener('DOMContentLoaded', function() {
 					button.dataset.stepName = k;
 					button.dataset.stepVar = name;
 				} else {
-					const input = document.createElement('input');
+					input = document.createElement('input');
 					input.name = v.name;
 					input.type = v.type ?? 'text';
 					input.placeholder = v.description;
@@ -180,7 +184,6 @@ addEventListener('DOMContentLoaded', function() {
 					if ( v.regex ) {
 						input.pattern = v.regex;
 					}
-					input.setAttribute('draggable', true);
 					td.appendChild(input);
 					if ( 'samples' in v ) {
 						input.value = v.samples[0];
@@ -206,7 +209,6 @@ addEventListener('DOMContentLoaded', function() {
 				vars.appendChild(tr);
 			});
 		}
-		step.appendChild(vars);
 		step.setAttribute('id', 'step-' + name);
 		step.setAttribute('data-id', name);
 		step.setAttribute('draggable', true);
@@ -238,13 +240,18 @@ addEventListener('DOMContentLoaded', function() {
 				break;
 			}
 		}
-		stepList.insertBefore( createStep( name, data ), beforeStep );
+		const step = createStep( name, data );
+		stepList.insertBefore( step, beforeStep );
+		step.querySelectorAll('input,textarea').forEach( fixMouseCursor );
 	}
 
 	for ( const name in customSteps ) {
 		const data = customSteps[name];
 		data.step = name;
-		stepList.appendChild( createStep( name, data ) );
+		const step = createStep( name, data );
+		stepList.appendChild( step );
+		step.querySelectorAll('input,textarea').forEach( fixMouseCursor );
+
 	}
 	const mySteps = JSON.parse( localStorage.getItem('mySteps') || '{}' );
 	for ( const name in mySteps ) {
@@ -282,6 +289,7 @@ addEventListener('DOMContentLoaded', function() {
 		blueprintSteps.appendChild(stepClone);
 		stepClone.classList.remove('dragging');
 		stepClone.classList.remove('hidden');
+		stepClone.querySelectorAll('input,textarea').forEach( fixMouseCursor );
 		loadCombinedExamples();
 		stepClone.querySelector('input,textarea')?.focus();
 	}
@@ -384,11 +392,16 @@ addEventListener('DOMContentLoaded', function() {
 			return false;
 		}
 	});
-	document.addEventListener('selectstart', (event) => {
-		if ( event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA' ) {
-			return true;
-		}
-	} );
+	function makeParentStepDraggable( event ) {
+		event.target.closest( '.step' ).setAttribute('draggable', true);
+	}
+	function makeParentStepUnDraggable( event ) {
+		event.target.closest( '.step' ).setAttribute('draggable', false);
+	}
+	function fixMouseCursor( el ) {
+		el.addEventListener('mouseenter', makeParentStepUnDraggable );
+		el.addEventListener('mouseleave', makeParentStepDraggable );
+	}
 	document.addEventListener('click', (event) => {
 		let dialog;
 		if ( event.target.closest( '#blueprint-steps' ) ) {
@@ -443,16 +456,12 @@ addEventListener('DOMContentLoaded', function() {
 			const input = event.target.querySelector('input, select');
 			if ( input.type === 'checkbox' ) {
 				loadCombinedExamples();
-			} else {
-				input.select();
 			}
 			return;
 		}
 		if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' ) {
 			if ( event.target.type === 'checkbox' ) {
 				loadCombinedExamples();
-			} else {
-				event.target.select();
 			}
 			return;
 		}
@@ -484,7 +493,6 @@ addEventListener('DOMContentLoaded', function() {
 			}
 			if ( event.target.classList.contains('share') ) {
 				const data = location.href.replace(/#.*$/, '' ) + '#' + compressState( [ getStepData( event.target.closest('.step') ) ] );
-				console.log( data );
 				navigator.clipboard.writeText( data );
 				event.target.innerText = 'Copied!';
 				setTimeout( function() {
@@ -546,6 +554,7 @@ addEventListener('DOMContentLoaded', function() {
 		if (droppedStep && droppedStep.parentNode === stepList) {
 			const stepClone = droppedStep.cloneNode(true);
 			blueprintSteps.appendChild(stepClone);
+			stepClone.querySelectorAll('input,textarea').forEach( fixMouseCursor );
 			stepClone.classList.remove('dragging');
 		}
 	});
@@ -610,7 +619,7 @@ addEventListener('DOMContentLoaded', function() {
 
 	window.addEventListener('hashchange', function(event) {
 		if ( location.hash ) {
-			restoreState( uncompressState( unescape( location.hash.slice(1) ) ) );
+			restoreState( uncompressState( location.hash.slice(1) ) );
 		}
 	});
 
@@ -650,68 +659,49 @@ addEventListener('DOMContentLoaded', function() {
 		stepList.classList.remove('show-builtin');
 	}
 
-	function compressState( state ) {
-		const additional = [];
+	function compressState( steps ) {
+		const state = {
+			steps
+		};
 		if ( document.getElementById('title').value ) {
-			additional.push( 'title_._' +escape( document.getElementById('title').value ) );
+			state.title = document.getElementById('title').value;
 		}
 		if ( document.getElementById('networking').checked ) {
-			additional.push( 'networking' );
+			state.networking = true;
 		}
-		return state.map( function( step ) {
-			if ( step.count ) {
-				if ( step.vars ) {
-					step.vars.count = step.count;
-				} else {
-					step.vars = { count: step.count };
-				}
-			}
-			if ( ! step.vars ) {
-				return step.step;
-			}
-			return step.step + '_._' + Object.keys( step.vars ).map(function(key) {
-				return key + '-.-' + ( typeof step.vars[key] === 'string'  ? step.vars[key].replace( /\n/g, '\\n' ) : step.vars[key] );
-			} ).join('_._');
-		} ).concat( additional ).join('&.&');
+		const json = JSON.stringify( state );
+		if ( '{"steps":[]}' === json ) {
+			return '';
+		}
+		return encodeStringAsBase64( json );
 	}
 
 	function uncompressState( state ) {
-		return state.split('&.&').map( function( step ) {
-			const parts = step.split('_._');
-			switch ( parts[0] ) {
-				case 'title':
-				case 'networking':
-					const ret = {};
-					ret[parts[0]] = parts[1] || true;
-					return ret;
-			}
-			const stepData = {
-				"step": parts.shift(),
-				"vars": {}
-			};
-			parts.forEach( function( part ) {
-				const kv = part.split('-.-');
-				if ( kv[0] === 'title' ) {
-					document.getElementById('title').value = kv[1];
-					return;
-				}
-				if ( kv[0] === 'count' ) {
-					stepData.count = parseInt(kv[1]);
-					return;
-				}
-				try {
-					if ( decodeURIComponent( kv[1] ) ) {
-						kv[1] = decodeURIComponent( kv[1] );
-					}
-				} catch (e) {}
-				stepData.vars[kv[0]] = kv[1].replace( /\\n/g, '\n' );
-			} );
-			return stepData;
-		} );
-		console.log( x );
-		return x;
+		return JSON.parse( decodeBase64ToString( state ) );
 	}
 
+	function decodeBase64ToString(base64) {
+		return new TextDecoder().decode(decodeBase64ToUint8Array(base64));
+	}
+
+	function decodeBase64ToUint8Array(base64) {
+		const binaryString = window.atob(base64); // This will convert base64 to binary string
+		const len = binaryString.length;
+		const bytes = new Uint8Array(len);
+		for (let i = 0; i < len; i++) {
+			bytes[i] = binaryString.charCodeAt(i);
+		}
+		return bytes;
+	}
+
+	function encodeStringAsBase64(str) {
+		return encodeUint8ArrayAsBase64(new TextEncoder().encode(str));
+	}
+
+	function encodeUint8ArrayAsBase64(bytes) {
+		const binString = String.fromCodePoint(...bytes);
+		return btoa(binString);
+	}
 	function getStepData( stepBlock ) {
 		const step = {
 			"step": stepBlock.dataset.step,
@@ -922,7 +912,7 @@ addEventListener('DOMContentLoaded', function() {
 		}
 		if ( useBlueprintURLParam || document.getElementById('base64').checked ) {
 			// queries.push( 'blueprint-url=data:application/json;charset=utf-8,' + encodeURIComponent( JSON.stringify( outputData ) ) );
-			queries.push( 'blueprint-url=data:application/json;base64,' + encodeURIComponent( btoa( JSON.stringify( outputData ) ) ) );
+			queries.push( 'blueprint-url=data:application/json;base64,' + encodeStringAsBase64( JSON.stringify( outputData ) ) );
 			hash ='';
 		}
 		const query = (queries.length ? '?' + queries.join('&') : '');
@@ -933,11 +923,17 @@ addEventListener('DOMContentLoaded', function() {
 	}
 
 	function restoreState( state ) {
-		if ( ! state || ! state.length ) {
+		if ( ! state ) {
 			return;
 		}
+		if ( state.title ) {
+			document.getElementById('title').value = state.title;
+		}
+		if ( state.networking ) {
+			document.getElementById('networking').checked = true;
+		}
 		blueprintSteps.innerHTML = '';
-		state.forEach(function(step) {
+		( state.steps || [] ).forEach(function(step) {
 			if ( typeof step.step === 'undefined' ) {
 				if ( typeof step.title === 'string' ) {
 					document.getElementById('title').value = step.title;
@@ -954,6 +950,7 @@ addEventListener('DOMContentLoaded', function() {
 			const stepBlock = block.cloneNode(true);
 			stepBlock.classList.remove('dragging');
 			blueprintSteps.appendChild(stepBlock);
+			stepBlock.querySelectorAll('input,textarea').forEach( fixMouseCursor );
 			if ( step.count ) {
 				stepBlock.querySelector('[name="count"]').value = step.count;
 			}
@@ -974,7 +971,7 @@ addEventListener('DOMContentLoaded', function() {
 		loadCombinedExamples();
 	}
 	if ( location.hash ) {
-		restoreState( uncompressState( unescape( location.hash.slice(1) ) ) );
+		restoreState( uncompressState( location.hash.slice(1) ) );
 	} else {
 		loadCombinedExamples();
 	}
@@ -1048,16 +1045,6 @@ addEventListener('DOMContentLoaded', function() {
 		],
 		'Load Feeds into the Friends plugin': [
 		{
-			"step": "installPlugin",
-			"vars": {
-				"plugin": "friends",
-				"permalink": true
-			}
-		},
-		{
-			"step": "addCorsProxy"
-		},
-		{
 			"step": "setLandingPage",
 			"vars": {
 				"landingPage": "/friends/"
@@ -1083,7 +1070,7 @@ addEventListener('DOMContentLoaded', function() {
 			return;
 		}
 		document.getElementById('title').value = this.value;
-		restoreState( examples[this.value]);
+		restoreState( { steps: examples[this.value] });
 		loadCombinedExamples();
 	});
 	document.getElementById('filter').value = '';

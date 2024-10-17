@@ -1,4 +1,4 @@
-customSteps.importFriendFeeds = function( step ) {
+customSteps.importFriendFeeds = function( step, blueprint ) {
 	let opml = step.vars.opml;
 	// if it's a list of links, generate the opml file
 	// if it's an opml file, use it
@@ -21,7 +21,7 @@ customSteps.importFriendFeeds = function( step ) {
 </opml>`;
 	}
 	opml = opml.replace(/\"/g, '\\"');
-	return [
+	let steps = [
 		{
 			"step": "runPHP",
 			"code": `
@@ -33,6 +33,26 @@ do_action( 'cron_friends_refresh_feeds' );
 	`
 		}
 	];
+	let hasFriendsPlugin = false;
+	let hasCorsProxy = false;
+	for ( const i in blueprint.steps ) {
+		if ( blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.plugin === 'friends' ) {
+			hasFriendsPlugin = true;
+		}
+		if ( blueprint.steps[i].step === 'githubPlugin' && blueprint.steps[i]?.vars?.repo === 'akirk/friends' ) {
+			hasFriendsPlugin = true;
+		}
+		if ( blueprint.steps[i].step === 'addCorsProxy' ) {
+			hasCorsProxy = true;
+		}
+	}
+	if ( ! hasFriendsPlugin ) {
+		steps = customSteps.installPlugin( { vars: { plugin: 'friends', permalink: true }} ).concat( steps );
+	}
+	if ( ! hasCorsProxy ) {
+		steps = customSteps.addCorsProxy( {} ).concat( steps );
+	}
+	return steps;
 };
 customSteps.importFriendFeeds.info = "Provide useful additional info.";
 customSteps.importFriendFeeds.vars = [
