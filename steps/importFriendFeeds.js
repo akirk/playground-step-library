@@ -1,9 +1,6 @@
 customSteps.importFriendFeeds = function( step, blueprint ) {
 	let opml = step.vars.opml;
-	// if it's a list of links, generate the opml file
-	// if it's an opml file, use it
-
-	if ( !opml.match(/<opml/) ) {
+	if ( ! opml.match(/<opml/) ) {
 		opml = `<?xml version="1.0" encoding="utf-8"?><opml version="2.0">
 	<head>
 		<title>Subscriptions</title>
@@ -54,7 +51,7 @@ do_action( 'cron_friends_refresh_feeds' );
 	}
 	return steps;
 };
-customSteps.importFriendFeeds.info = "Provide useful additional info.";
+customSteps.importFriendFeeds.info = "Add subscriptions to the Friends plugin.";
 customSteps.importFriendFeeds.vars = [
 	{
 		"name": "opml",
