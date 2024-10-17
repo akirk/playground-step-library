@@ -51,6 +51,9 @@ do_action( 'cron_friends_refresh_feeds' );
 	}
 	if ( ! hasCorsProxy ) {
 		steps = customSteps.addCorsProxy( {} ).concat( steps );
+		steps.features = {
+			networking: true
+		};
 	}
 	return steps;
 };
