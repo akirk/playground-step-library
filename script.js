@@ -916,7 +916,7 @@ addEventListener('DOMContentLoaded', function() {
 		}
 		if ( useBlueprintURLParam || document.getElementById('base64').checked ) {
 			// queries.push( 'blueprint-url=data:application/json;charset=utf-8,' + encodeURIComponent( JSON.stringify( outputData ) ) );
-			queries.push( 'blueprint-url=data:application/json;base64,' + encodeStringAsBase64( JSON.stringify( outputData ) ) );
+			queries.push( 'blueprint-url=data:application/json;base64,' + encodeURIComponent( encodeStringAsBase64( JSON.stringify( outputData ) ) ) );
 			hash ='';
 		}
 		const query = (queries.length ? '?' + queries.join('&') : '');

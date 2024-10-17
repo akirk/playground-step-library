@@ -8,6 +8,9 @@ customSteps.importFriendFeeds = function( step, blueprint ) {
 	<body>
 		<outline text="Subscriptions" title="Subscriptions">
 			${opml.split('\n').map( line => {
+				if ( ! line ) {
+					return '';
+				}
 				const parts = line.split(/\s+/);
 				const url = parts.shift();
 				const title = (parts.join( ' ' ) || url).replace(/https?:\/\//, '').replace(/\/$/, '');
