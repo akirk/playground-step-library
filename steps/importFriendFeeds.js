@@ -64,6 +64,7 @@ Friends\\Import::opml("${opml}");
 			networking: true
 		};
 	}
+	steps.landingPage = '/friends/?refresh&welcome';
 	return steps;
 };
 customSteps.importFriendFeeds.info = "Add subscriptions to the Friends plugin.";
