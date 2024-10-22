@@ -12,9 +12,19 @@ customSteps.importFriendFeeds = function( step, blueprint ) {
 					return '';
 				}
 				const parts = line.split(/\s+/);
-				const url = parts.shift();
-				const title = (parts.join( ' ' ) || url).replace(/https?:\/\//, '').replace(/\/$/, '');
-				return `<outline type="rss" text="${title}" title="${title}" xmlUrl="${url}" htmlUrl="${url}" />`;
+				const urls = parts.filter( part => part.match(/^https?:\/\//) );
+				if ( urls.length === 0 ) {
+					return '';
+				}
+				let title = line.replace(urls.join(' '), '').trim();
+				if ( urls.length === 1 ) {
+					urls.push(urls[0]);
+				}
+				if ( ! title ) {
+					title = urls[0].replace(/^https?:\/\//, '').replace(/[^a-zA-Z0-9]+/g, ' ').trim();
+				}
+
+				return `<outline type="rss" text="${title}" title="${title}" xmlUrl="${urls[1]}" htmlUrl="${urls[0]}" />`;
 			} ).join('\n')}
 		</outline>
 	</body>
