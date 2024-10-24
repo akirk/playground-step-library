@@ -48,14 +48,11 @@ customSteps.${stepName}.vars = [
 `;
 
 // Writing the content to a new file
-fs.writeFile( stepsDir + '/' + stepName + '.js', content, ( err ) => {
-	if ( err ) {
-		console.error( 'Error creating file:', err );
-		return;
-	}
-	console.log( stepsDir + '/' + stepName + '.js created successfully.' );
-} );
-
+fs.writeFileSync( stepsDir + '/' + stepName + '.js', content );
+console.log( stepsDir + '/' + stepName + '.js created successfully.' );
 // Update the index.html file with the new step by calling the update-load-steps.js script
 require( './update-load-steps' );
 
+// open an editor with this new file by using the $EDITOR env variable
+const editor = process.env.EDITOR || 'vim';
+require( 'child_process' ).execSync( `${editor} ${stepsDir}/${stepName}.js`, { stdio: 'inherit' } );
