@@ -288,6 +288,7 @@ textarea#blueprint, textarea#blueprint-compiled {
   overflow: hidden;
 }
 
+#step-library .step .add,
 .step .options {
 	display: none;
 }

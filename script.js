@@ -51,6 +51,9 @@ addEventListener('DOMContentLoaded', function() {
 			shareBody += "I'd like to submit a step to the WordPress Playground: \n\n```js\n";
 			shareBody += 'customSteps.' + name + ' = customSteps.' + data.step + ";\n";
 			shareBody += 'customSteps.' + name + '.info = ' + JSON.stringify( data.info, null, 2) + ";\n";
+			if ( data.multiple ) {
+				shareBody += 'customSteps.' + name + '.multiple = true;\n';
+			}
 			shareBody += 'customSteps.' + name + '.vars = ' + JSON.stringify( data.vars, null, 2).replace( /\\n/g, "\\n\" + \n\"" ) + ";\n";
 			shareBody += "\n```";
 			gh.href = 'https://github.com/akirk/playground-step-library/issues/new?body=' + encodeURIComponent( shareBody ) + '&title=Add+a+' + encodeURIComponent( name ) + '+step';
@@ -208,6 +211,39 @@ addEventListener('DOMContentLoaded', function() {
 				tr.appendChild(td);
 				vars.appendChild(tr);
 			});
+			if ( data.multiple ) {
+				const add = document.createElement('button');
+				add.innerText = 'Add';
+				add.className = 'add';
+				step.appendChild(add);
+			}
+			if ( data.vars ) {
+				for ( let j = 0; j < data.vars.length; j++ ) {
+					if ( typeof data.vars[j].setValue === 'undefined' ) {
+						continue;
+					}
+					const key = data.vars[j].name;
+					if ( ! Array.isArray( data.vars[j].setValue ) ) {
+						data.vars[j].setValue = [ data.vars[j].setValue ];
+					}
+					for ( let i = 0; i < data.vars[j].setValue.length; i++ ) {
+						const vars = step.querySelector('.vars');
+						const inputs = step.querySelectorAll('[name="' + key + '"]');
+						if ( typeof inputs[i] === 'undefined' ) {
+							const clone = vars.cloneNode( true );
+							vars.parentNode.appendChild( clone );
+							clone.querySelectorAll('input,textarea').forEach( fixMouseCursor );
+						}
+						const value = data.vars[j].setValue[i];
+						const input = step.querySelectorAll('[name="' + key + '"]')[i];
+						if ( 'checkbox' === input.type ) {
+							input.checked = value === 'true' || value === true;
+						} else {
+							input.value = value;
+						}
+					}
+				}
+			}
 		}
 		step.setAttribute('id', 'step-' + name);
 		step.setAttribute('data-id', name);
@@ -295,6 +331,9 @@ addEventListener('DOMContentLoaded', function() {
 	}
 
 	document.addEventListener('keyup', (event) => {
+		if ( event.ctrlKey || event.altKey || event.metaKey ) {
+			return;
+		}
 		if ( event.target.id === 'blueprint-compiled' ) {
 			return;
 		}
@@ -419,8 +458,8 @@ addEventListener('DOMContentLoaded', function() {
 					const stepData = getStepData( event.target.closest('.step') );
 					const myStep = Object.assign({}, customSteps[stepData.step] );
 					for ( let i = 0; i < myStep.vars.length; i++ ) {
-						if ( myStep.vars[i].name in stepData.vars ) {
-							myStep.vars[i].samples = [ stepData.vars[myStep.vars[i].name] ];
+						if ( myStep.vars[i].name in stepData.vars && stepData.vars[myStep.vars[i].name] ) {
+							myStep.vars[i].setValue = stepData.vars[myStep.vars[i].name];
 						}
 					}
 					dialog.querySelector('input').value = stepData.step + Object.values( stepData.vars ).map( function( value ) {
@@ -435,6 +474,22 @@ addEventListener('DOMContentLoaded', function() {
 					dialog.showModal();
 					return;
 				}
+
+				if ( event.target.classList.contains('add') ) {
+					const table = event.target.closest('.step').querySelector('.vars');
+					const clone = table.cloneNode(true);
+					clone.querySelectorAll('input,textarea').forEach( fixMouseCursor );
+					clone.querySelectorAll('input,textarea').forEach( function( input ) {
+						if ( input.type === 'text' || input.type === 'textarea' ) {
+							input.value = '';
+						} else if ( input.type === 'checkbox' ) {
+							input.checked = false;
+						}
+					});
+					table.parentNode.appendChild( clone );
+					return;
+				}
+
 
 				if ( typeof customSteps[event.target.dataset.stepVar]?.vars[event.target.dataset.stepName]?.onclick === 'function' ) {
 					return customSteps[event.target.dataset.stepVar].vars[event.target.dataset.stepName].onclick( event, loadCombinedExamples );
@@ -716,10 +771,21 @@ addEventListener('DOMContentLoaded', function() {
 				step.count = parseInt(input.value);
 				return;
 			}
-			if ( input.type === 'checkbox' ) {
-				step.vars[input.name] = input.checked;
+			if ( typeof step.vars[input.name] !== 'undefined' ) {
+				if ( ! Array.isArray( step.vars[input.name] ) ) {
+					step.vars[input.name] = [ step.vars[input.name] ];
+				}
+				if ( input.type === 'checkbox' ) {
+					step.vars[input.name].push( input.checked );
+				} else {
+					step.vars[input.name].push( input.value );
+				}
 			} else {
-				step.vars[input.name] = input.value;
+				if ( input.type === 'checkbox' ) {
+					step.vars[input.name] = input.checked;
+				} else {
+					step.vars[input.name] = input.value;
+				}
 			}
 		});
 		if (!Object.keys(step.vars).length) {
@@ -777,6 +843,7 @@ addEventListener('DOMContentLoaded', function() {
 		}
 
 		let inputData = Object.assign( userDefined, JSON.parse(jsonInput) );
+		console.log( JSON.stringify(inputData, null, 2) );
 		const outputData = Object.assign( {}, inputData );
 		if ( outputData.title ) {
 			delete outputData.title;
@@ -947,10 +1014,44 @@ addEventListener('DOMContentLoaded', function() {
 				}
 				return;
 			}
-			const block = stepList.querySelector('[data-step="' + step.step + '"]');
-			if ( ! block ) {
+			let possibleBlocks = stepList.querySelectorAll('[data-step="' + step.step + '"]');
+			if ( ! possibleBlocks.length ) {
 				return;
 			}
+			if ( possibleBlocks.length > 1 ) {
+				const keys = Object.keys(step.vars || {});
+				possibleBlocks = [...possibleBlocks].filter( function( block ) {
+					for ( const key of keys ) {
+						const vars = Array.isArray( step.vars[key] ) ? step.vars[key] : [ step.vars[key] ];
+						const inputs = block.querySelectorAll('[name="' + key + '"]');
+						if ( inputs.length !== vars.length ) {
+							return false;
+						}
+						for ( let i = 0; i < inputs.length; i++ ) {
+							const input = inputs[i];
+							const value = vars[i];
+							console.log( input, value );
+							if ( 'checkbox' === input.type ) {
+								if ( input.checked !== ( value === 'true' || value === true ) ) {
+									return false;
+								}
+							} else if ( input.value !== value ) {
+								return false;
+							}
+						}
+					}
+					return true;
+				} );
+				if ( 0 === possibleBlocks.length ) {
+					possibleBlocks = [...stepList.querySelectorAll('[data-step="' + step.step + '"]')].filter( function ( block ) {
+						if ( block.classList.contains('mine') ) {
+							return false;
+						}
+						return true;
+					} );
+				}
+			}
+			const block = possibleBlocks[0];
 			const stepBlock = block.cloneNode(true);
 			stepBlock.classList.remove('dragging');
 			blueprintSteps.appendChild(stepBlock);
@@ -963,9 +1064,28 @@ addEventListener('DOMContentLoaded', function() {
 					return;
 				}
 				const input = stepBlock.querySelector('[name="' + key + '"]');
-				if ( 'SELECT' === input.tagName ) {
-					input.value = step.vars[key];
-				} else if ( 'checkbox' === input.type ) {
+				if ( Array.isArray(step.vars[key]) ) {
+					step.vars[key].forEach(function(value, index) {
+						if ( ! value ) {
+							return;
+						}
+						const inputs = stepBlock.querySelectorAll('[name="' + key + '"]');
+						if ( typeof inputs[index] === 'undefined' ) {
+							const vars = stepBlock.querySelector('.vars');
+							const clone = vars.cloneNode( true );
+							vars.parentNode.appendChild( clone );
+						}
+						const input = stepBlock.querySelectorAll('[name="' + key + '"]')[index];
+						if ( 'checkbox' === input.type ) {
+							input.checked = value === 'true' || value === true;
+						} else {
+							input.value = value;
+						}
+					});
+					return;
+				}
+
+				if ( 'checkbox' === input.type ) {
 					input.checked = step.vars[key] === 'true' || step.vars[key] === true;
 				} else {
 					input.value = step.vars[key];
