@@ -15,6 +15,10 @@ customSteps.installPlugin = function( step ) {
             }
 		}
 	];
+	if ( plugin.match( /^https?:/ ) ) {
+		steps[0].pluginData.resource = "url";
+		steps[0].pluginData.url = plugin;
+	}
 	if ( step?.vars?.permalink ) {
 		steps.unshift({
 			"step": "setSiteOptions",
