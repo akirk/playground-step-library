@@ -54,5 +54,5 @@ console.log( stepsDir + '/' + stepName + '.js created successfully.' );
 require( './update-load-steps' );
 
 // open an editor with this new file by using the $EDITOR env variable
-const editor = process.env.EDITOR || 'vim';
+const editor = process.env.VISUAL || process.env.EDITOR || 'vim';
 require( 'child_process' ).execSync( `${editor} ${stepsDir}/${stepName}.js`, { stdio: 'inherit' } );
