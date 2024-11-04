@@ -10,6 +10,7 @@ customSteps.importWxr = function( step ) {
 	];
 };
 customSteps.importWxr.info = "Import a WXR from a URL.";
+customSteps.importWxr.builtin = true;
 customSteps.importWxr.vars = [
 	{
 		"name": "url",
