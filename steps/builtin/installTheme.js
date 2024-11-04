@@ -16,8 +16,10 @@ customSteps.installTheme = function( step ) {
 		}
 	];
 	if ( theme.match( /^https?:/ ) ) {
-		steps[0].themeZipFile.resource = "url";
-		steps[0].themeZipFile.url = theme;
+		steps[0].themeZipFile = {
+			resource: "url",
+			url: plugin
+		};
 	}
 
 	return steps;
