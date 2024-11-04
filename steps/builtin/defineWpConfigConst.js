@@ -11,7 +11,13 @@ customSteps.defineWpConfigConst = function( step ) {
 			if ( ! name ) {
 				return;
 			}
-			constStep.consts[name] = step.vars.value[index];
+			if ( step.vars.value[index] === 'true' ) {
+				constStep.consts[name] = true;
+			} else if ( step.vars.value[index] === 'false' ) {
+				constStep.consts[name] = false;
+			} else {
+				constStep.consts[name] = step.vars.value[index];
+			}
 		} );
 	} else {
 		constStep.consts[step.vars.name] = step.vars.value;
