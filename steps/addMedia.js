@@ -1,4 +1,8 @@
 customSteps.addMedia = function( step ) {
+	if ( ! step.vars.downloadUrl || ! step.vars.downloadUrl.match( /^https?:/ ) ) {
+		return [];
+	}
+
 	const steps = [
 	{
 		"step": "mkdir",

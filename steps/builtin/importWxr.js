@@ -1,4 +1,7 @@
 customSteps.importWxr = function( step ) {
+	if ( ! step.vars.url || ! step.vars.url.match( /^https?:/ ) ) {
+		return [];
+	}
 	return [
 		{
 			"step": "importWxr",
