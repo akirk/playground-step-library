@@ -1030,7 +1030,6 @@ addEventListener('DOMContentLoaded', function() {
 						for ( let i = 0; i < inputs.length; i++ ) {
 							const input = inputs[i];
 							const value = vars[i];
-							console.log( input, value );
 							if ( 'checkbox' === input.type ) {
 								if ( input.checked !== ( value === 'true' || value === true ) ) {
 									return false;
