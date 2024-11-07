@@ -915,8 +915,9 @@ addEventListener( 'DOMContentLoaded', function () {
 			if ( outSteps ) {
 				for ( let i = 0; i < outSteps.length; i++ ) {
 					// Dedup by default. Prevent by specifying dedup: false as a step parameter.
-					if ( outSteps[ i ].dedup === undefined || outSteps[ i ].dedup ) {
-						const dedupStep = outputData.steps.find( function ( step ) {
+					if ( outSteps[ i ].dedup === undefined || outSteps[ i ].dedup || outSteps[ i ].dedup === 'last' ) {
+						let dedupIndex = -1;
+						const dedupStep = outputData.steps.find( function ( step, index ) {
 							for ( j in step ) {
 								if ( outSteps[ i ][ j ] === undefined ) {
 									return false;
@@ -929,9 +930,12 @@ addEventListener( 'DOMContentLoaded', function () {
 									return false;
 								}
 							}
+							dedupIndex = index;
 							return true;
 						} );
-						if ( dedupStep ) {
+						if ( outSteps[ i ].dedup === 'last' && dedupIndex ) {
+							delete outputData.steps[ dedupIndex ];
+						} else if ( dedupStep ) {
 							continue;
 						}
 						delete outSteps[ i ].dedup;

@@ -32,6 +32,7 @@ customSteps.addMedia = function( step ) {
 	}
 	steps.push( {
 		"step": "runPHP",
+		"dedup": "last",
 		"code": `
 <?php
 require_once 'wordpress/wp-load.php';
