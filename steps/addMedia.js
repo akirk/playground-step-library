@@ -39,18 +39,21 @@ require_once 'wordpress/wp-load.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
 require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once ABSPATH . 'wp-admin/includes/media.php';
-foreach ( glob( '/tmp/media/*' ) as $filename ) {
+$iterator = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( '/tmp/media/' ) );
+foreach ( $iterator as $filename ) {
+	if ( ! $filename->isFile() ) continue;
 	$file = array(
-		'tmp_name' => $filename,
-		'name'     => basename( $filename ),
-		'type'     => mime_content_type( $filename ),
-		'size'     => filesize( $filename ),
+		'tmp_name' => $filename->getPathname(),
+		'name'     => $filename->getBasename(),
+		'type'     => mime_content_type( $filename->getPathname() ),
+		'size'     => $filename->getSize(),
 	);
-	media_handle_sideload( $file );
+	$attachment_id = media_handle_sideload( $file );
 	if ( is_wp_error( $attachment_id ) ) {
 		error_log( print_r( $attachment_id, true ) );
 	}
 }
+
 `
 	} );
 	return steps;
