@@ -7,9 +7,9 @@ customSteps.importWxr = function( step ) {
 		{
 			"step": "importWxr",
 			"file": {
-                "resource": "url",
-                url
-            }
+				"resource": "url",
+				url
+			}
 		}
 	];
 };

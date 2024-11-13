@@ -857,6 +857,9 @@ addEventListener( 'DOMContentLoaded', function () {
 			step.vars.stepIndex = index;
 			if ( customSteps[ step.step ] ) {
 				outSteps = customSteps[ step.step ]( step, inputData );
+				if ( typeof outSteps !== 'object' ) {
+					outSteps = [];
+				}
 				if ( outSteps.landingPage ) {
 					outputData.landingPage = outSteps.landingPage;
 				}
