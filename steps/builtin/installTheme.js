@@ -6,7 +6,7 @@ customSteps.installTheme = function( step ) {
 	var steps = [
 		{
 			"step": "installTheme",
-			"themeZipFile": {
+			"themeData": {
                 "resource": "wordpress.org/themes",
                 "slug": theme
             },
@@ -16,7 +16,7 @@ customSteps.installTheme = function( step ) {
 		}
 	];
 	if ( theme.match( /^https?:/ ) ) {
-		steps[0].themeZipFile = {
+		steps[0].themeData = {
 			resource: "url",
 			url: plugin
 		};
