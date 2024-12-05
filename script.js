@@ -1017,6 +1017,9 @@ addEventListener( 'DOMContentLoaded', function () {
 		if ( state.networking ) {
 			document.getElementById( 'networking' ).checked = true;
 		}
+		if ( state.autosave ) {
+			document.getElementById( 'autosave' ).value = state.autosave;
+		}
 		blueprintSteps.innerHTML = '';
 		( state.steps || [] ).forEach( function ( step ) {
 			if ( typeof step.step === 'undefined' ) {
