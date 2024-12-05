@@ -724,6 +724,9 @@ addEventListener( 'DOMContentLoaded', function () {
 		if ( document.getElementById( 'networking' ).checked ) {
 			state.networking = true;
 		}
+		if ( document.getElementById( 'autosave' ).value ) {
+			state.autosave = document.getElementById( 'autosave' ).value;
+		}
 		const json = JSON.stringify( state );
 		if ( '{"steps":[]}' === json ) {
 			return '';
@@ -967,6 +970,11 @@ addEventListener( 'DOMContentLoaded', function () {
 		if ( document.getElementById( 'networking' ).checked ) {
 			queries.push( 'networking=yes' );
 		}
+		if ( document.getElementById( 'autosave' ).value ) {
+			queries.push( 'site-slug=' + encodeURIComponent( document.getElementById( 'autosave' ).value.replace( /[^a-z0-9-]/gi, '' ) ) );
+			queries.push( 'if-stored-site-missing=prompt' );
+		}
+
 		switch ( document.getElementById( 'mode' ).value ) {
 			case 'browser':
 				queries.push( 'mode=browser' );
