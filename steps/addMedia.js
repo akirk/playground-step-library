@@ -15,7 +15,8 @@ customSteps.addMedia = function( step ) {
 			"step": "unzip",
 			"zipFile": {
                 "resource": "url",
-                "url": 'https://playground.wordpress.net/cors-proxy.php?' + step.vars.downloadUrl
+                "url": 'https://playground.wordpress.net/cors-proxy.php?' + step.vars.downloadUrl,
+	            "caption": "Downloading " + step.vars.downloadUrl,
             },
             "extractToPath": "/tmp/media"
 		} );
@@ -42,6 +43,11 @@ require_once ABSPATH . 'wp-admin/includes/media.php';
 $iterator = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( '/tmp/media/' ) );
 foreach ( $iterator as $filename ) {
 	if ( ! $filename->isFile() ) continue;
+
+	// Skip Macos hidden files:
+	if ( strpos( $filename->getFilename(), '._' ) === 0 ) continue;
+	if ( strtolower( $filename->getFilename() ) === '.ds_store' ) continue;
+
 	$file = array(
 		'tmp_name' => $filename->getPathname(),
 		'name'     => $filename->getBasename(),
@@ -50,6 +56,7 @@ foreach ( $iterator as $filename ) {
 	);
 	$attachment_id = media_handle_sideload( $file );
 	if ( is_wp_error( $attachment_id ) ) {
+		error_log( print_r( $file, true ) );
 		error_log( print_r( $attachment_id, true ) );
 	}
 }
