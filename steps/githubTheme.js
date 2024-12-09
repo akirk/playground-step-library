@@ -8,16 +8,20 @@ customSteps.githubTheme = function( step ) {
 	if ( ! /^[a-z0-9-]+$/.test( branch ) ) {
 		return [];
 	}
-        const directory = step.vars.directory || "";
+	const directory = step.vars.directory || "";
 	const options = {
 		activate: true,
 	};
-
+	let url = `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`;
+	if ( directory ) {
+		url += `&directory=${directory}`;
+		options.activate = false;
+	}
 	const outStep = {
 		"step": "installTheme",
 		"themeData": {
 			"resource": "url",
-			"url": `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`
+			url
 		},
 		options
 	};
@@ -32,43 +36,43 @@ customSteps.githubTheme = function( step ) {
 			'ghexport-allow-include-zip': 'no',
 		};
 	}
-        const outSteps = [ outStep ];
-        if ( directory ) {
+	const outSteps = [ outStep ];
+	if ( directory ) {
                 // if its a subsub directory, move the lowest directory into wp-content/themes
-                const dirBasename = directory.split( '/' ).pop();
-                outSteps.push({
-                        "step": "mv",
-                        "fromPath": "/wordpress/wp-content/themes/" + repoTest[2] + '-' + branch + "/" + directory,
-                        "toPath": "/wordpress/wp-content/themes/" + dirBasename
-                });
-                outSteps.push({
-                        "step": "activateTheme",
-                        "themeFolderName": dirBasename
-                });
-        }
+		const dirBasename = directory.split( '/' ).pop();
+		outSteps.push({
+			"step": "mv",
+			"fromPath": "/wordpress/wp-content/themes/" + directory,
+			"toPath": "/wordpress/wp-content/themes/" + dirBasename
+		});
+		outSteps.push({
+			"step": "activateTheme",
+			"themeFolderName": dirBasename
+		});
+	}
 	return outSteps;
 };
 customSteps.githubTheme.info = "Install a theme from a Github repository.";
 customSteps.githubTheme.vars = [
-	{
-		"name": "repo",
-		"description": "The theme resides in this GitHub repository.",
-		"samples": [ "richtabor/kanso", "ndiego/nautilus" ]
-	},
-	{
-		"name": "branch",
-		"description": "Which branch to use.",
-		"samples": [ "main", "trunk" ]
-	},
-        {
-                "name": "directory",
-                "description": "Which subdirectory to use.",
-                "samples": [ "" ]
-        },
-	{
-		"name": "prs",
-		"description": "Add support for submitting Github Requests.",
-		"type": "boolean",
-		"samples": [ "false", "true" ]
-	}
+{
+	"name": "repo",
+	"description": "The theme resides in this GitHub repository.",
+	"samples": [ "richtabor/kanso", "ndiego/nautilus" ]
+},
+{
+	"name": "branch",
+	"description": "Which branch to use.",
+	"samples": [ "main", "trunk" ]
+},
+{
+	"name": "directory",
+	"description": "Which subdirectory to use.",
+	"samples": [ "" ]
+},
+{
+	"name": "prs",
+	"description": "Add support for submitting Github Requests.",
+	"type": "boolean",
+	"samples": [ "false", "true" ]
+}
 ];
