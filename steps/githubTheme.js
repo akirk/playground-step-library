@@ -15,7 +15,7 @@ customSteps.githubTheme = function( step ) {
 
 	const outStep = {
 		"step": "installTheme",
-		"themeZipFile": {
+		"themeData": {
 			"resource": "url",
 			"url": `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`
 		},
@@ -43,7 +43,7 @@ customSteps.githubTheme = function( step ) {
                 });
                 outSteps.push({
                         "step": "activateTheme",
-                        "themePath": "/wordpress/wp-content/themes/" + dirBasename
+                        "themeFolderName": dirBasename
                 });
         }
 	return outSteps;
