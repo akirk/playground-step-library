@@ -8,6 +8,7 @@ customSteps.githubTheme = function( step ) {
 	if ( ! /^[a-z0-9-]+$/.test( branch ) ) {
 		return [];
 	}
+        const directory = step.vars.directory || "";
 	const options = {
 		activate: true,
 	};
@@ -33,16 +34,16 @@ customSteps.githubTheme = function( step ) {
 	}
         const outSteps = [ outStep ];
         if ( directory ) {
-                // if its a subsub directory, move the lowest directory into wp-content/plugins
+                // if its a subsub directory, move the lowest directory into wp-content/themes
                 const dirBasename = directory.split( '/' ).pop();
                 outSteps.push({
                         "step": "mv",
-                        "fromPath": "/wordpress/wp-content/plugins/" + directory,
-                        "toPath": "/wordpress/wp-content/plugins/" + dirBasename
+                        "fromPath": "/wordpress/wp-content/themes/" + directory,
+                        "toPath": "/wordpress/wp-content/themes/" + dirBasename
                 });
                 outSteps.push({
-                        "step": "activatePlugin",
-                        "pluginPath": "/wordpress/wp-content/plugins/" + dirBasename
+                        "step": "activateTheme",
+                        "themePath": "/wordpress/wp-content/themes/" + dirBasename
                 });
         }
 	return outSteps;
