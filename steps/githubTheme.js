@@ -31,8 +31,21 @@ customSteps.githubTheme = function( step ) {
 			'ghexport-allow-include-zip': 'no',
 		};
 	}
-
-	return [ outStep ];
+        const outSteps = [ outStep ];
+        if ( directory ) {
+                // if its a subsub directory, move the lowest directory into wp-content/plugins
+                const dirBasename = directory.split( '/' ).pop();
+                outSteps.push({
+                        "step": "mv",
+                        "fromPath": "/wordpress/wp-content/plugins/" + directory,
+                        "toPath": "/wordpress/wp-content/plugins/" + dirBasename
+                });
+                outSteps.push({
+                        "step": "activatePlugin",
+                        "pluginPath": "/wordpress/wp-content/plugins/" + dirBasename
+                });
+        }
+	return outSteps;
 };
 customSteps.githubTheme.info = "Install a theme from a Github repository.";
 customSteps.githubTheme.vars = [
@@ -46,6 +59,11 @@ customSteps.githubTheme.vars = [
 		"description": "Which branch to use.",
 		"samples": [ "main", "trunk" ]
 	},
+        {
+                "name": "directory",
+                "description": "Which subdirectory to use.",
+                "samples": [ "" ]
+        },
 	{
 		"name": "prs",
 		"description": "Add support for submitting Github Requests.",
