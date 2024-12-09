@@ -38,7 +38,7 @@ customSteps.githubTheme = function( step ) {
                 const dirBasename = directory.split( '/' ).pop();
                 outSteps.push({
                         "step": "mv",
-                        "fromPath": "/wordpress/wp-content/themes/" + directory,
+                        "fromPath": "/wordpress/wp-content/themes/" + repoTest[2] + '-' + branch + "/" + directory,
                         "toPath": "/wordpress/wp-content/themes/" + dirBasename
                 });
                 outSteps.push({
