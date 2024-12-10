@@ -1,20 +1,20 @@
 customSteps.githubTheme = function( step ) {
-	const repoTest = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/.exec( step.vars.repo );
-	if ( ! repoTest ) {
+	const urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.vars.url );
+	if ( ! urlTest ) {
 		return [];
 	}
-	const repo = repoTest[1] + "/" + repoTest[2];
-	const branch = step.vars.branch || "main";
+	const repo = urlTest.groups.org + "/" + urlTest.groups.repo;
+	const branch = urlTest.groups.branch || "main";
 	if ( ! /^[a-z0-9-]+$/.test( branch ) ) {
 		return [];
 	}
-	const directory = step.vars.directory || "";
+	const directory = urlTest.groups.directory || "";
 	const options = {
 		activate: true,
 	};
 	let url = `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`;
 	if ( directory ) {
-		url += `&directory=${directory}`;
+		url += '&directory=' + directory.replace( /\/+$/, '' ).replace( /^\/+/, '' );
 		options.activate = false;
 	}
 	const outStep = {
@@ -55,19 +55,9 @@ customSteps.githubTheme = function( step ) {
 customSteps.githubTheme.info = "Install a theme from a Github repository.";
 customSteps.githubTheme.vars = [
 {
-	"name": "repo",
-	"description": "The theme resides in this GitHub repository.",
-	"samples": [ "richtabor/kanso", "ndiego/nautilus" ]
-},
-{
-	"name": "branch",
-	"description": "Which branch to use.",
-	"samples": [ "main", "trunk" ]
-},
-{
-	"name": "directory",
-	"description": "Which subdirectory to use.",
-	"samples": [ "" ]
+	"name": "url",
+	"description": "Github URL of the theme.",
+	"samples": [ "https://github.com/richtabor/kanso", "ndiego/nautilus", "https://github.com/Automattic/themes/tree/trunk/aether" ]
 },
 {
 	"name": "prs",

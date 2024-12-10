@@ -1,20 +1,20 @@
 customSteps.githubPlugin = function( step ) {
-	const repoTest = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/.exec( step.vars.repo );
-	if ( ! repoTest ) {
+	const urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.vars.url );
+	if ( ! urlTest ) {
 		return [];
 	}
-	const repo = repoTest[1] + "/" + repoTest[2];
-	const branch = step.vars.branch || "main";
+	const repo = urlTest.groups.org + "/" + urlTest.groups.repo;
+	const branch = urlTest.groups.branch || "main";
 	if ( ! /^[a-z0-9-]+$/.test( branch ) ) {
 		return [];
 	}
-	const directory = step.vars.directory || "";
+	const directory = urlTest.groups.directory || "";
 	const options = {
 		activate: true,
 	};
 	let url = `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`;
 	if ( directory ) {
-		url += `&directory=${directory}`;
+		url += '&directory=' + directory.replace( /\/+$/, '' ).replace( /^\/+/, '' );
 		options.activate = false;
 	}
 
@@ -26,6 +26,7 @@ customSteps.githubPlugin = function( step ) {
 		},
 		options
 	};
+
 	if ( step.vars.prs ) {
 		outStep.queryParams = {
 			'gh-ensure-auth': 'yes',
@@ -59,19 +60,9 @@ customSteps.githubPlugin = function( step ) {
 customSteps.githubPlugin.info = "Install a plugin from a Github repository.";
 customSteps.githubPlugin.vars = [
 	{
-		"name": "repo",
-		"description": "The plugin resides in this GitHub repository.",
-		"samples": [ "akirk/blueprint-recorder" ]
-	},
-	{
-		"name": "branch",
-		"description": "Which branch to use.",
-		"samples": [ "main", "trunk" ]
-	},
-	{
-		"name": "directory",
-		"description": "Which subdirectory to use.",
-		"samples": [ "" ]
+		"name": "url",
+		"description": "Github URL of the plugin.",
+		"samples": [ "https://github.com/akirk/blueprint-recorder" ]
 	},
 	{
 		"name": "prs",
