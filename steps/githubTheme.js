@@ -8,13 +8,13 @@ customSteps.githubTheme = function( step ) {
 	if ( ! /^[a-z0-9-]+$/.test( branch ) ) {
 		return [];
 	}
-	const directory = urlTest.groups.directory || "";
+	const directory = ( urlTest.groups.directory || "" ).replace( /\/+$/, '' ).replace( /^\/+/, '' );
 	const options = {
 		activate: true,
 	};
 	let url = `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`;
 	if ( directory ) {
-		url += '&directory=' + directory.replace( /\/+$/, '' ).replace( /^\/+/, '' );
+		url += '&directory=' + directory;
 		options.activate = false;
 	}
 	const outStep = {
@@ -38,13 +38,15 @@ customSteps.githubTheme = function( step ) {
 	}
 	const outSteps = [ outStep ];
 	if ( directory ) {
-                // if its a subsub directory, move the lowest directory into wp-content/themes
+		// if its a subsub directory, move the lowest directory into wp-content/themes
 		const dirBasename = directory.split( '/' ).pop();
-		outSteps.push({
-			"step": "mv",
-			"fromPath": "/wordpress/wp-content/themes/" + directory,
-			"toPath": "/wordpress/wp-content/themes/" + dirBasename
-		});
+		if ( directory !== dirBasename ) {
+			outSteps.push({
+				"step": "mv",
+				"fromPath": "/wordpress/wp-content/themes/" + directory,
+				"toPath": "/wordpress/wp-content/themes/" + dirBasename
+			});
+		}
 		outSteps.push({
 			"step": "activateTheme",
 			"themeFolderName": dirBasename
