@@ -32,8 +32,8 @@ customSteps.githubPlugin = function( step ) {
 			'gh-ensure-auth': 'yes',
 			'ghexport-repo-url': 'https://github.com/' + repo,
 			'ghexport-content-type': 'plugin',
-			'ghexport-plugin': repoTest[2] + '-' + branch,
-			'ghexport-playground-root': '/wordpress/wp-content/plugins/' + repoTest[2] + '-' + branch,
+			'ghexport-plugin': urlTest.groups.repo + '-' + branch,
+			'ghexport-playground-root': '/wordpress/wp-content/plugins/' + urlTest.groups.repo + '-' + branch,
 			'ghexport-pr-action': 'create',
 			'ghexport-allow-include-zip': 'no',
 		};
@@ -53,7 +53,6 @@ customSteps.githubPlugin = function( step ) {
 			"pluginPath": "/wordpress/wp-content/plugins/" + dirBasename
 		});
 	}
-
 
 	return outSteps;
 };

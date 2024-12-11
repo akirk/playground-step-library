@@ -15,6 +15,7 @@ customSteps.githubTheme = function( step ) {
 		url += '&directory=' + directory;
 		dirBasename = directory.split( '/' ).pop();
 	}
+
 	const outStep = {
 		"step": "installTheme",
 		"themeData": {
@@ -25,17 +26,19 @@ customSteps.githubTheme = function( step ) {
 			activate: true,
 		}
 	};
+
 	if ( step.vars.prs ) {
 		outStep.queryParams = {
 			'gh-ensure-auth': 'yes',
 			'ghexport-repo-url': 'https://github.com/' + repo,
 			'ghexport-content-type': 'theme',
-			'ghexport-theme': repoTest[2] + '-' + branch,
-			'ghexport-playground-root': '/wordpress/wp-content/themes/' + repoTest[2] + '-' + branch,
+			'ghexport-theme': urlTest.groups.repo + '-' + branch,
+			'ghexport-playground-root': '/wordpress/wp-content/themes/' + urlTest.groups.repo + '-' + branch,
 			'ghexport-pr-action': 'create',
 			'ghexport-allow-include-zip': 'no',
 		};
 	}
+
 	const outSteps = [ outStep ];
 	if ( directory && directory !== dirBasename ) {
 		// if its a subsub directory, move the lowest directory into wp-content/themes
@@ -50,6 +53,7 @@ customSteps.githubTheme = function( step ) {
 			"themeFolderName": dirBasename
 		});
 	}
+
 	return outSteps;
 };
 customSteps.githubTheme.info = "Install a theme from a Github repository.";
