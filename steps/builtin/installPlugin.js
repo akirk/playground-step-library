@@ -3,7 +3,7 @@ customSteps.installPlugin = function( step ) {
 	if ( urlTest ) {
 		return customSteps.githubPlugin( step );
 	}
-	let plugin = urlTest.groups.slug;
+	let plugin = steps.vars.url;
 	urlTest = /^(?:https:\/\/wordpress.org\/plugins\/)?(?<slug>[^\/]+)/.exec( step.vars.url );
 	if ( urlTest ) {
 		plugin = urlTest.groups.slug;
