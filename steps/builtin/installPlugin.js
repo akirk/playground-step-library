@@ -1,7 +1,12 @@
 customSteps.installPlugin = function( step ) {
-	const plugin =  step?.vars?.plugin;
-	if ( ! plugin ) {
-		return [];
+	let urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.vars.url );
+	if ( urlTest ) {
+		return customSteps.githubPlugin( step );
+	}
+	let plugin = urlTest.groups.slug;
+	urlTest = /^(?:https:\/\/wordpress.org\/plugins\/)?(?<slug>[^\/]+)/.exec( step.vars.url );
+	if ( urlTest ) {
+		plugin = urlTest.groups.slug;
 	}
 	var steps = [
 		{
@@ -18,7 +23,7 @@ customSteps.installPlugin = function( step ) {
 	if ( plugin.match( /^https?:/ ) ) {
 		steps[0].pluginData = {
 			resource: "url",
-			url: plugin
+			url: 'https://playground.wordpress.net/cors-proxy.php?' + plugin
 		};
 	}
 	if ( step?.vars?.permalink ) {
@@ -35,10 +40,20 @@ customSteps.installPlugin.description = "Install a plugin";
 customSteps.installPlugin.builtin = true;
 customSteps.installPlugin.vars = [
 	{
-		"name": "plugin",
-		"description": "Plugin slug",
-		"required": true,
-		"samples": [ "hello-dolly", 'friends', 'woocommerce', 'create-block-theme' ]
+		"name": "url",
+		"description": "URL of the plugin or WordPress.org slug.",
+		"samples": [ "hello-dolly", 'https://wordpress.org/plugins/friends', 'woocommerce', 'create-block-theme', "https://github.com/akirk/blueprint-recorder" ]
+	},
+	{
+		"name": "prs",
+		"description": "Add support for submitting Github Requests.",
+		"show": function( step ) {
+			const url = step.querySelector('input[name=url]')?.value;
+			console.log( url, url.match( /^https:\/\/github.com\// ) );
+			return url && url.match( /^https:\/\/github.com\// );
+		},
+		"type": "boolean",
+		"samples": [ "false", "true" ]
 	},
 	{
 		"name": "permalink",

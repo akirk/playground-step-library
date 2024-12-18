@@ -4,6 +4,7 @@ addEventListener( 'DOMContentLoaded', function () {
 	const blueprintSteps = document.getElementById( 'blueprint-steps' );
 	let blueprint = '';
 	let linkedTextarea = null;
+	const showCallbacks = {};
 
 	function createStep( name, data ) {
 		const step = document.createElement( 'div' );
@@ -110,6 +111,13 @@ addEventListener( 'DOMContentLoaded', function () {
 
 		if ( data.vars ) {
 			data.vars.forEach( function ( v, k ) {
+				if ( typeof v.show === 'function' ) {
+					if ( typeof showCallbacks[ data.step ] === 'undefined' ) {
+						showCallbacks[ data.step ] = {};
+					}
+					showCallbacks[ data.step ][ v.name ] = v.show;
+				}
+
 				let input;
 				const tr = document.createElement( 'tr' );
 				let td = document.createElement( 'td' );
@@ -764,6 +772,20 @@ addEventListener( 'DOMContentLoaded', function () {
 		const binString = String.fromCodePoint( ...bytes );
 		return btoa( binString );
 	}
+	function updateVariableVisibility( stepBlock ) {
+			console.log( showCallbacks );
+		stepBlock.querySelectorAll( 'input,select,textarea' ).forEach( function ( input ) {
+			if ( typeof showCallbacks[ stepBlock.dataset.step ][ input.name ] !== 'function' ) {
+				return;
+			}
+			const tr = input.closest( 'tr' );
+			if ( showCallbacks[ stepBlock.dataset.step ][input.name]( stepBlock ) ) {
+				tr.style.display = '';
+			} else {
+				tr.style.display = 'none';
+			}
+		} );
+	}
 	function getStepData( stepBlock ) {
 		const step = {
 			'step': stepBlock.dataset.step,
@@ -807,6 +829,7 @@ addEventListener( 'DOMContentLoaded', function () {
 		const state = [];
 
 		blueprintSteps.querySelectorAll( '.step' ).forEach( function ( stepBlock ) {
+			updateVariableVisibility( stepBlock );
 			const step = getStepData( stepBlock );
 			state.push( step );
 			combinedExamples.steps = combinedExamples.steps.concat( step );
