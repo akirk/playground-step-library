@@ -773,9 +773,8 @@ addEventListener( 'DOMContentLoaded', function () {
 		return btoa( binString );
 	}
 	function updateVariableVisibility( stepBlock ) {
-			console.log( showCallbacks );
 		stepBlock.querySelectorAll( 'input,select,textarea' ).forEach( function ( input ) {
-			if ( typeof showCallbacks[ stepBlock.dataset.step ][ input.name ] !== 'function' ) {
+			if ( ! input || typeof showCallbacks[ stepBlock.dataset.step ][ input.name ] !== 'function' ) {
 				return;
 			}
 			const tr = input.closest( 'tr' );
