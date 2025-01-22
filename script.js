@@ -11,15 +11,18 @@ addEventListener( 'DOMContentLoaded', function () {
 		step.dataset.step = data.step;
 		step.className = 'step';
 		step.tabIndex = 0;
+		const div = document.createElement( 'div' );
+		div.className = 'header';
+		step.appendChild( div );
 		const span = document.createElement( 'span' );
 		span.className = 'stepname';
 		span.innerText = name;
-		step.appendChild( span );
+		div.appendChild( span );
 		if ( data.info ) {
-			const info = document.createElement( 'span' );
+			const info = document.createElement( 'div' );
 			info.className = 'info';
 			info.innerText = data.info;
-			step.appendChild( info );
+			span.appendChild( info );
 			step.title = data.info;
 		}
 		if ( data.mine ) {
@@ -61,18 +64,11 @@ addEventListener( 'DOMContentLoaded', function () {
 			gh.className = 'submit-to-gh';
 			gh.title = 'Submit this step to GitHub';
 			options.appendChild( gh );
-			step.appendChild( options );
+			div.appendChild( options );
 
 		} else if ( data.builtin ) {
 			step.classList.add( 'builtin' );
 		}
-
-
-		const remove = document.createElement( 'a' );
-		remove.className = 'remove';
-		remove.href = '';
-		remove.innerText = '✕';
-		step.appendChild( remove );
 
 		const viewSource = document.createElement( 'a' );
 		viewSource.className = 'view-source';
@@ -83,12 +79,18 @@ addEventListener( 'DOMContentLoaded', function () {
 		}
 		viewSource.innerText = 'View Source';
 		viewSource.target = 'source-iframe';
-		step.appendChild( viewSource );
+		div.appendChild( viewSource );
 
 		const saveStep = document.createElement( 'button' );
 		saveStep.className = 'save-step';
 		saveStep.innerText = 'Save As Personal Step';
-		step.appendChild( saveStep );
+		div.appendChild( saveStep );
+
+		const remove = document.createElement( 'a' );
+		remove.className = 'remove';
+		remove.href = '';
+		remove.innerText = '✕';
+		div.appendChild( remove );
 
 		const vars = document.createElement( 'table' );
 		vars.className = 'vars';
@@ -570,7 +572,7 @@ addEventListener( 'DOMContentLoaded', function () {
 			return;
 		}
 		if ( event.target.classList.contains( 'remove' ) ) {
-			event.target.parentNode.remove();
+			event.target.closest( '.step' ).remove();
 			loadCombinedExamples();
 			event.preventDefault();
 			return false;
@@ -774,7 +776,7 @@ addEventListener( 'DOMContentLoaded', function () {
 	}
 	function updateVariableVisibility( stepBlock ) {
 		stepBlock.querySelectorAll( 'input,select,textarea' ).forEach( function ( input ) {
-			if ( ! input || typeof showCallbacks[ stepBlock.dataset.step ][ input.name ] !== 'function' ) {
+			if ( ! input || typeof showCallbacks[ stepBlock.dataset.step ] === 'undefined' || typeof showCallbacks[ stepBlock.dataset.step ][ input.name ] !== 'function' ) {
 				return;
 			}
 			const tr = input.closest( 'tr' );

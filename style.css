@@ -320,7 +320,7 @@ textarea#blueprint, textarea#blueprint-compiled {
 
 .step .info {
   font-size: 12px;
-  margin-left: .5em;
+  white-space: nowrap;
 }
 
 .step td > input,
@@ -354,7 +354,6 @@ textarea#blueprint, textarea#blueprint-compiled {
 }
 
 .step .remove {
-  float: right;
   margin-left: 2em;
 }
 
@@ -376,6 +375,24 @@ textarea#blueprint, textarea#blueprint-compiled {
 
 #blueprint-steps .step {
   overflow: clip;
+}
+
+div.header {
+  display: flex;
+  gap: 1em;
+  line-height: 1.3;
+  justify-content: right;
+  align-items: flex-start;
+  margin-bottom: .5em;
+}
+
+div.header span.stepname {
+  flex-grow: 1;
+}
+
+div.header button, div.header a {
+  line-height: 1.3;
+  font-size: .9em;
 }
 
 #blueprint-steps .step .vars {
@@ -427,8 +444,6 @@ a.view-source,
 button.save-step,
 #blueprint-steps .step.collapsed button.save-step {
   display: none;
-  float: right;
-  margin-left: .5em;
 }
 
 #blueprint-steps .step a.view-source, #blueprint-steps .step button.save-step {
@@ -477,7 +492,6 @@ button.save-step {
   padding: 0;
   box-shadow: none;
   font-size: 1em;
-  line-height: 30px;
   color: var(--link-color);
   text-decoration: underline;
 }
