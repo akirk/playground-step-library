@@ -2,7 +2,7 @@ customSteps.skipWooCommerceWizard = function( step, blueprint ) {
 	let steps = [
 		{
 			"step": "runPHP",
-			"code": "<?php require '/wordpress/wp-load.php'; update_option( 'woocommerce_onboarding_profile', [ 'completed' => true ] ); update_option( 'woocommerce_feature_email_improvements_enabled', 'yes' );"
+			"code": "<?php require '/wordpress/wp-load.php'; update_option( 'woocommerce_onboarding_profile', [ 'completed' => true ] );"
 		},
 		{
 			"step": "mkdir",
