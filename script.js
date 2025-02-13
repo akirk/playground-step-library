@@ -1162,7 +1162,12 @@ addEventListener( 'DOMContentLoaded', function () {
 			history.replaceState( null, '', '#' + location.hash.replace( /^#+/, '' ) );
 			location.href = document.getElementById( 'playground-link' ).href;
 		});
-
+		document.getElementById( 'autoredirecting' ).addEventListener( 'click', function ( event ) {
+			if ( event.target === this ) {
+				clearInterval( interval );
+				document.getElementById( 'autoredirecting' ).close();
+			}
+		});
 	}
 
 	if ( location.hash ) {
