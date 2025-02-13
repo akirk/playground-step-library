@@ -612,6 +612,11 @@ button.code-editor {
   margin-left: 1em;
 }
 
+#autoredirecting div {
+  display: flex;
+  justify-content: space-around;
+}
+
 @media (max-width: 734px) {
   #blueprint-builder {
     flex-direction: column;

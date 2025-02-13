@@ -684,7 +684,7 @@ addEventListener( 'DOMContentLoaded', function () {
 
 	window.addEventListener( 'hashchange', function () {
 		if ( location.hash ) {
-			restoreState( uncompressState( location.hash.slice( 1 ) ) );
+			restoreState( uncompressState( location.hash.replace( /^#+/, '' ) ) );
 		}
 	} );
 
@@ -1134,8 +1134,35 @@ addEventListener( 'DOMContentLoaded', function () {
 		} );
 		loadCombinedExamples();
 	}
+	function autoredirect() {
+		document.getElementById( 'autoredirecting' ).showModal();
+		let seconds = 5;
+		const interval = setInterval( function () {
+			seconds--;
+			document.getElementById( 'autoredirecting-seconds' ).innerText = seconds + ' second' + ( seconds === 1 ? '' : 's' );
+			if ( 0 === seconds ) {
+				clearInterval( interval );
+				document.getElementById( 'autoredirecting' ).close();
+				location.href = document.getElementById( 'playground-link' ).href;
+			}
+		}, 1000 );
+		let button = document.querySelector( '#autoredirect-cancel');
+		button.addEventListener( 'click', function () {
+			clearInterval( interval );
+			document.getElementById( 'autoredirecting' ).close();
+		});
+		button.focus();
+		button = document.querySelector( '#redirect-now');
+		button.addEventListener( 'click', function () {
+			clearInterval( interval );
+			location.href = document.getElementById( 'playground-link' ).href;
+		});
+
+	}
+
 	if ( location.hash ) {
-		restoreState( uncompressState( location.hash.slice( 1 ) ) );
+		restoreState( uncompressState( location.hash.replace( /^#+/, '' ) ) );
+		autoredirect();
 	} else {
 		loadCombinedExamples();
 	}
