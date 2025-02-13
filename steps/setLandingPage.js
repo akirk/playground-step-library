@@ -9,6 +9,6 @@ customSteps.setLandingPage.vars = [
 		"name": "landingPage",
 		"description": "The relative URL for the landing page",
 		"required": true,
-		"samples": [ "/" ]
+		"samples": [ "/", "/wp-admin/", "/wp-admin/post-new.php", "/wp-admin/post-new.php?post_type=page" ]
 	}
 ];
