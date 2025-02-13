@@ -3,6 +3,9 @@ customSteps.jetpackOfflineMode = function( step, blueprint ) {
 	if ( step.vars.blocks ) {
 		jetpack_active_modules.push( 'blocks' );
 	}
+	if ( step.vars.subscriptions ) {
+		jetpack_active_modules.push( 'subscriptions' );
+	}
 
 	let steps = [
 		{
@@ -36,6 +39,12 @@ customSteps.jetpackOfflineMode.vars = [
 	{
 		"name": "blocks",
 		"description": "Activate the Jetpack Blocks module.",
+		"type": "boolean",
+		"samples": [ "true", "false" ]
+	},
+	{
+		"name": "subscriptions",
+		"description": "Activate the Jetpack Subscriptions module.",
 		"type": "boolean",
 		"samples": [ "true", "false" ]
 	}
