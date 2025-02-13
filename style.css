@@ -612,6 +612,9 @@ button.code-editor {
   margin-left: 1em;
 }
 
+#autoredirecting {
+  text-align: center;
+}
 #autoredirecting div {
   display: flex;
   justify-content: space-around;

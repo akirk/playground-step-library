@@ -1136,13 +1136,17 @@ addEventListener( 'DOMContentLoaded', function () {
 	}
 	function autoredirect() {
 		document.getElementById( 'autoredirecting' ).showModal();
+		document.getElementById( 'autoredirect-title' ).textContent = document.getElementById( 'title' ).value;
 		let seconds = 5;
+		document.getElementById( 'autoredirecting-seconds' ).innerText = seconds + ' second' + ( seconds === 1 ? '' : 's' );
 		const interval = setInterval( function () {
 			seconds--;
 			document.getElementById( 'autoredirecting-seconds' ).innerText = seconds + ' second' + ( seconds === 1 ? '' : 's' );
 			if ( 0 === seconds ) {
 				clearInterval( interval );
 				document.getElementById( 'autoredirecting' ).close();
+				// ensure that the backbutton works to come back here:
+				history.replaceState( null, '', '#' + location.hash.replace( /^#+/, '' ) );
 				location.href = document.getElementById( 'playground-link' ).href;
 			}
 		}, 1000 );
@@ -1155,6 +1159,7 @@ addEventListener( 'DOMContentLoaded', function () {
 		button = document.querySelector( '#redirect-now');
 		button.addEventListener( 'click', function () {
 			clearInterval( interval );
+			history.replaceState( null, '', '#' + location.hash.replace( /^#+/, '' ) );
 			location.href = document.getElementById( 'playground-link' ).href;
 		});
 
