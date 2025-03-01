@@ -1,22 +1,46 @@
 customSteps.addPost = function( step ) {
-	const postTitle = step.vars.postTitle.replace(/'/g, "\\'" );
-	const postContent = step.vars.postContent.replace(/'/g, "\\'" );
+	const escapePhpString = (str) => {
+		return str.replace(/(\n)|(\r)|(\t)|(\v)|(\x1b)|(\f)|[\\\$\"]/g, (m0, m1, m2, m3, m4, m5, m6) => {
+			if (m1) {
+				return "\\n";
+			} else if (m2) {
+				return "\\r";
+			} else if (m3) {
+				return "\\t";
+			} else if (m4) {
+				return "\\v";
+			} else if (m5) {
+				return "\\e";
+			} else if (m6) {
+				return "\\f";
+			} else {
+				return "\\" + m0;
+			}
+		});
+	};
+	const postTitle = escapePhpString(step.vars.postTitle);
+	const postContent = escapePhpString(step.vars.postContent);
 	const postDate = step.vars.postDate.replace(/'/g, "\\'" );
 	const postType = step.vars.postType;
 	let code = `
 <?php require_once 'wordpress/wp-load.php';
 $page_args = array(
-	'post_type'    => '${postType}',
-	'post_date'    => strtotime('${postDate}'),
+	'post_type'    => '${postType}',`;
+	if ( postDate ) {
+		code += `
+	'post_date'    => '${postDate}',`;
+	}
+	code += `
 	'post_status'  => 'publish',
-	'post_title'   => '${postTitle}',
-	'post_content' => '${postContent}',
+	'post_title'   => "${postTitle}",
+	'post_content' => "${postContent}",
 );
-$page_id = wp_insert_post( $page_args );`
+$page_id = wp_insert_post( $page_args );`;
 	if ( step.vars.homepage ) {
 		code += "update_option( 'page_on_front', $page_id );";
 		code += "update_option( 'show_on_front', 'page' );";
 	}
+	code += "?>";
 
 	return [
 		{
@@ -43,8 +67,9 @@ customSteps.addPost.vars = [
 	{
 		"name": "postDate",
 		"description": "The date of the post",
-		"required": true,
-		"samples": [ "now", "2024-01-01 00:00:00" ]
+		"required": false,
+		'regex': '^$|^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$',
+		"samples": [ "", "2024-01-01 00:00:00" ]
 	},
 	{
 		"name": "postType",
