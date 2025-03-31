@@ -36,13 +36,13 @@ customSteps.installPlugin = function( step ) {
 	}
 	return steps;
 }
-customSteps.installPlugin.description = "Install a plugin";
+customSteps.installPlugin.description = "Install a plugin via WordPress.org or Github";
 customSteps.installPlugin.builtin = true;
 customSteps.installPlugin.vars = [
 	{
 		"name": "url",
 		"description": "URL of the plugin or WordPress.org slug.",
-		"samples": [ "hello-dolly", 'https://wordpress.org/plugins/friends', 'woocommerce', 'create-block-theme', "https://github.com/akirk/blueprint-recorder" ]
+		"samples": [ "hello-dolly", 'https://wordpress.org/plugins/friends', 'woocommerce', 'create-block-theme', "https://github.com/akirk/blueprint-recorder", "https://github.com/Automattic/wordpress-activitypub/tree/trunk" ]
 	},
 	{
 		"name": "prs",

@@ -41,7 +41,7 @@ customSteps.${camelCaseName} = function() {
 `;
 
 // Write the JavaScript content to a file
-const jsFilename = `steps/local/${camelCaseName}.js`;
+const jsFilename = `steps/${camelCaseName}.js`;
 fs.writeFileSync(jsFilename, jsContent);
 
 console.log(`JavaScript file created: ${jsFilename}`);

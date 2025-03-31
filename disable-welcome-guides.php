@@ -1,23 +1,10 @@
 <?php
 function my_disable_welcome_guides() {
 	wp_add_inline_script( 'wp-data', "window.onload = function() {
-	const selectPost = wp.data.select( 'core/edit-post' );
-	const selectPreferences = wp.data.select( 'core/preferences' );
-	const isFullscreenMode = selectPost.isFeatureActive( 'fullscreenMode' );
-	const isWelcomeGuidePost = selectPost.isFeatureActive( 'welcomeGuide' );
-	const isWelcomeGuideWidget = selectPreferences.get( 'core/edit-widgets', 'welcomeGuide' );
-	
-	if ( isWelcomeGuideWidget ) {
-		wp.data.dispatch( 'core/preferences' ).toggle( 'core/edit-widgets', 'welcomeGuide' );
-	}
-	
-	if ( isFullscreenMode ) {
-		wp.data.dispatch( 'core/edit-post' ).toggleFeature( 'fullscreenMode' );
-	}
-	
-	if ( isWelcomeGuidePost ) {
-		wp.data.dispatch( 'core/edit-post' ).toggleFeature( 'welcomeGuide' );
-	}
+		window.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuide', false );
+		window.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuideStyles', false );
+		window.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuidePage', false );
+		window.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuideTemplate', false );
 }" );
 }
 
