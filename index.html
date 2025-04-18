@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<title>WordPress Playground Step Library</title>
@@ -27,6 +28,7 @@
 	<script src="steps/customPostType.js"></script>
 	<script src="steps/deleteAllPosts.js"></script>
 	<script src="steps/disableWelcomeGuides.js"></script>
+	<script src="steps/doAction.js"></script>
 	<script src="steps/fakeHttpResponse.js"></script>
 	<script src="steps/githubImportExportWxr.js"></script>
 	<script src="steps/githubPlugin.js"></script>
@@ -50,62 +52,78 @@
 	<script src="steps/showAdminNotice.js"></script>
 	<script src="steps/skipWooCommerceWizard.js"></script>
 	<script src="steps/builtin/enableMultisite.js"></script>
-<!-- End Load Steps -->
+	<!-- End Load Steps -->
 </head>
+
 <body>
 	<header>
 		<h1>WordPress Playground Step Library</h1>
-		<p>Drag or click the steps to create a <a href="https://wordpress.github.io/wordpress-playground/blueprints-api/index/" target="_blank">blueprint</a> for <a href="https://wordpress.github.io/wordpress-playground/" target="_blank">WordPress Playground</a>.<br><a href="https://github.com/akirk/playground-step-library/#contributing">Create your own steps!</a> </p>
+		<p>Drag or click the steps to create a <a
+				href="https://wordpress.github.io/wordpress-playground/blueprints-api/index/"
+				target="_blank">blueprint</a> for <a href="https://wordpress.github.io/wordpress-playground/"
+				target="_blank">WordPress Playground</a>.<br><a
+				href="https://github.com/akirk/playground-step-library/#contributing">Create your own steps!</a> </p>
 		<span id="top-buttons">
-			<button id="clear">Clear Steps</button><br/>
-			<select id="examples"><option>Examples</option></select>
+			<button id="clear">Clear Steps</button><br />
+			<select id="examples">
+				<option>Examples</option>
+			</select>
 			<a href="#" id="playground-link-top" target="_blank">Launch in Playground</a>
 		</span>
 	</header>
 	<div id="blueprint-builder">
 		<div id="steps-holder">
-			<div id="title-holder"><label>Give it a title: <input type="text" id="title" name="title" placeholder="Title"></label></div>
+			<div id="title-holder"><label>Give it a title: <input type="text" id="title" name="title"
+						placeholder="Title"></label></div>
 			<div id="steps-group">
 				<div id="step-library-holder">
-					<div id="filter-holder"><input type="text" id="filter" placeholder="Filter"> <label><input type="checkbox" id="show-builtin" checked> Builtin</label></div>
-				<div id="step-library"></div>
+					<div id="filter-holder"><input type="text" id="filter" placeholder="Filter"> <label><input
+								type="checkbox" id="show-builtin" checked> Builtin</label></div>
+					<div id="step-library"></div>
 				</div>
-				<div id="blueprint-steps"><div id="draghint">Click or drag the steps to add them here.</div></div>
+				<div id="blueprint-steps">
+					<div id="draghint">Click or drag the steps to add them here.</div>
+				</div>
 			</div>
 			<details id="further-options">
 				<summary>Further Options</summary>
 				<div>
-				<label><input type="checkbox" id="phpExtensionBundles" value="kitchen-sink">Use all <a href="https://wordpress.github.io/wordpress-playground/blueprints-api/data-format#php-extensions" target="_blank">available PHP extensions</a></label>
-				<label>WordPress <select id="wp-version">
-					<option value="latest">latest</option>
-					<option value="6.4">6.4</option>
-					<option value="6.5">6.5</option>
-					<option value="6.6">6.6</option>
-					<option value="beta">beta</option>
-					<option value="nightly">nightly</option>
-				</select></label>
-				<label>PHP <select id="php-version">
-					<option value="latest">latest</option>
-					<option value="7.4">7.4</option>
-					<option value="8.0">8.0</option>
-					<option value="8.1">8.1</option>
-					<option value="8.2">8.2</option>
-					<option value="8.3">8.3</option>
-				</select></label>
-				<label><input type="checkbox" id="networking" value="true">Networking (<a href="https://github.com/WordPress/wordpress-playground/issues/85">experimental</a>)</label>
-				<label><a href="https://wordpress.github.io/wordpress-playground/query-api" target="_blank">Environment Mode:</a>
-				<select id="mode">
-					<option value="browser-full-screen">Fake Browser (full screen)</option>
-					<option value="browser">Fake Browser</option>
-					<option value="seamless">Seamless</option>
-				</select></label>
-				<label>Storage <select id="storage">
-					<option value="none">None (Changes get lost)</option>
-					<option value="browser">Browser</option>
-					<option value="device">Device</option>
-				</select></label>
-				<label><input type="checkbox" id="base64" value="true">base64 encode blueprint</label>
-				<label>Autosave <input type="text" id="autosave" placeholder="Enter a name" pattern="[a-z0-9][a-z0-9-]+"></label>
+					<label><input type="checkbox" id="phpExtensionBundles" value="kitchen-sink">Use all <a
+							href="https://wordpress.github.io/wordpress-playground/blueprints-api/data-format#php-extensions"
+							target="_blank">available PHP extensions</a></label>
+					<label>WordPress <select id="wp-version">
+							<option value="latest">latest</option>
+							<option value="6.4">6.4</option>
+							<option value="6.5">6.5</option>
+							<option value="6.6">6.6</option>
+							<option value="beta">beta</option>
+							<option value="nightly">nightly</option>
+						</select></label>
+					<label>PHP <select id="php-version">
+							<option value="latest">latest</option>
+							<option value="7.4">7.4</option>
+							<option value="8.0">8.0</option>
+							<option value="8.1">8.1</option>
+							<option value="8.2">8.2</option>
+							<option value="8.3">8.3</option>
+						</select></label>
+					<label><input type="checkbox" id="networking" value="true">Networking (<a
+							href="https://github.com/WordPress/wordpress-playground/issues/85">experimental</a>)</label>
+					<label><a href="https://wordpress.github.io/wordpress-playground/query-api"
+							target="_blank">Environment Mode:</a>
+						<select id="mode">
+							<option value="browser-full-screen">Fake Browser (full screen)</option>
+							<option value="browser">Fake Browser</option>
+							<option value="seamless">Seamless</option>
+						</select></label>
+					<label>Storage <select id="storage">
+							<option value="none">None (Changes get lost)</option>
+							<option value="browser">Browser</option>
+							<option value="device">Device</option>
+						</select></label>
+					<label><input type="checkbox" id="base64" value="true">base64 encode blueprint</label>
+					<label>Autosave <input type="text" id="autosave" placeholder="Enter a name"
+							pattern="[a-z0-9][a-z0-9-]+"></label>
 				</div>
 			</details>
 
@@ -114,7 +132,8 @@
 		<div id="blueprint-compiled-holder">
 			<div>Transformed Blueprint</div>
 			<textarea id="blueprint-compiled"></textarea><br>
-			<div id="playground-link-holder"><a href="#" id="playground-link" target="_blank">Launch in Playground</a> <button id="copy-playground-link">⧉</button></div>
+			<div id="playground-link-holder"><a href="#" id="playground-link" target="_blank">Launch in Playground</a>
+				<button id="copy-playground-link">⧉</button></div>
 			<a href="#" id="download-blueprint" download="blueprint.json" target="_blank">Download Blueprint</a>
 		</div>
 	</div>
@@ -143,8 +162,9 @@
 		<p><strong id="autoredirect-title"></strong></p>
 		<p>in <span id="autoredirecting-seconds">3 seconds</span>...</p>
 		<div>
-		<button id="redirect-now">Launch in Playground now</button><button id="autoredirect-cancel">Cancel</button>
+			<button id="redirect-now">Launch in Playground now</button><button id="autoredirect-cancel">Cancel</button>
 		</div>
 	</dialog>
-	</body>
+</body>
+
 </html>
