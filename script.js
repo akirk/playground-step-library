@@ -1025,7 +1025,8 @@ addEventListener( 'DOMContentLoaded', function () {
 			hash = '';
 		}
 		const query = ( queries.length ? '?' + queries.join( '&' ) : '' );
-		const href = 'https://playground.wordpress.net/' + query + hash;
+		const playground = document.getElementById( 'playground' ).value;
+		const href = 'https://' + playground + '/' + query + hash;
 		document.getElementById( 'playground-link' ).href = href;
 		document.getElementById( 'playground-link-top' ).href = href;
 		document.getElementById( 'download-blueprint' ).href = 'data:text/json;charset=utf-8,' + encodeURIComponent( document.getElementById( 'blueprint-compiled' ).value );
@@ -1191,7 +1192,7 @@ addEventListener( 'DOMContentLoaded', function () {
 				'vars': {
 					'repo': 'ryanwelcher/interactivity-api-todomvc',
 					'release': 'v0.1.3',
-					'filename': 'to-do-mvc.zip '
+					'filename': 'to-do-mvc.zip'
 				}
 			},
 			{
@@ -1207,7 +1208,7 @@ addEventListener( 'DOMContentLoaded', function () {
 			{
 				'step': 'installPlugin',
 				'vars': {
-					'plugin': 'activitypub',
+					'url': 'activitypub',
 					'permalink': true
 				}
 			},

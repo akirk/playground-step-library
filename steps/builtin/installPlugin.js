@@ -1,6 +1,17 @@
 customSteps.installPlugin = function( step ) {
 	let urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.vars.url );
 	if ( urlTest ) {
+		const releaseMatch = step.vars.url.match( /\/releases\/download\/(?<version>[^\/]+)\/(?<asset>[^\/]+)$/ );
+		if ( releaseMatch ) {
+			return customSteps.githubPluginRelease( {
+				vars: {
+					repo: urlTest.groups.org + '/' + urlTest.groups.repo,
+					release: releaseMatch.groups.version,
+					filename: releaseMatch.groups.asset
+				}
+			} );
+		}
+
 		return customSteps.githubPlugin( step );
 	}
 	let plugin = step.vars.url;

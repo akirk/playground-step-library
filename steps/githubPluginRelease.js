@@ -6,21 +6,27 @@ customSteps.githubPluginRelease = function( step ) {
 	const repo = repoTest[1] + "/" + repoTest[2];
 	const tag = step.vars.release;
 	const filename = step.vars.filename;
+	const dir = filename.replace( /\.zip$/, '' ).replace( /[^a-z0-9-]+/g, '-' ).toLowerCase();
 	const options = {
 		activate: true,
 	};
 
-	const outStep = {
-		"step": "installPlugin",
-		"pluginData": {
-			"resource": "url",
-			"url": `https://github-proxy.com/proxy/?repo=${repo}&release=${tag}&asset=${filename}`
+	const outSteps = [
+		{
+			"step": "unzip",
+			"zipFile": {
+				"resource": "url",
+				"url": `https://github-proxy.com/proxy/?repo=${repo}&release=${tag}&asset=${filename}`
+			},
+			"extractToPath": "/wordpress/wp-content/plugins/" + dir
 		},
-		options
-	};
+		{
+			"step": "activatePlugin",
+			"pluginPath": "/wordpress/wp-content/plugins/" + dir
+		}
+	];
 
-
-	return [ outStep ];
+	return outSteps;
 };
 customSteps.githubPluginRelease.info = "Install a specific plugin release from a Github repository.";
 customSteps.githubPluginRelease.vars = [
