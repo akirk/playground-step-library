@@ -731,9 +731,6 @@ addEventListener( 'DOMContentLoaded', function () {
 		if ( document.getElementById( 'title' ).value ) {
 			state.title = document.getElementById( 'title' ).value;
 		}
-		if ( document.getElementById( 'networking' ).checked ) {
-			state.networking = true;
-		}
 		if ( document.getElementById( 'autosave' ).value ) {
 			state.autosave = document.getElementById( 'autosave' ).value;
 		}
@@ -858,9 +855,6 @@ addEventListener( 'DOMContentLoaded', function () {
 		};
 		if ( document.getElementById( 'phpExtensionBundles' ).checked ) {
 			userDefined.phpExtensionBundles = [ 'kitchen-sink' ];
-		}
-		if ( document.getElementById( 'networking' ).checked ) {
-			userDefined.features = { 'networking': true };
 		}
 		if ( 'latest' !== document.getElementById( 'wp-version' ).value || 'latest' !== document.getElementById( 'php-version' ).value ) {
 			userDefined.preferredVersions = {
@@ -991,9 +985,6 @@ addEventListener( 'DOMContentLoaded', function () {
 
 		document.getElementById( 'blueprint-compiled' ).value = JSON.stringify( outputData, null, 2 );
 
-		if ( document.getElementById( 'networking' ).checked ) {
-			queries.push( 'networking=yes' );
-		}
 		if ( document.getElementById( 'autosave' ).value ) {
 			queries.push( 'site-slug=' + encodeURIComponent( document.getElementById( 'autosave' ).value.replace( /[^a-z0-9-]/gi, '' ) ) );
 			queries.push( 'if-stored-site-missing=prompt' );
@@ -1039,9 +1030,6 @@ addEventListener( 'DOMContentLoaded', function () {
 		if ( state.title ) {
 			document.getElementById( 'title' ).value = state.title;
 		}
-		if ( state.networking ) {
-			document.getElementById( 'networking' ).checked = true;
-		}
 		if ( state.autosave ) {
 			document.getElementById( 'autosave' ).value = state.autosave;
 		}
@@ -1050,9 +1038,6 @@ addEventListener( 'DOMContentLoaded', function () {
 			if ( typeof step.step === 'undefined' ) {
 				if ( typeof step.title === 'string' ) {
 					document.getElementById( 'title' ).value = step.title;
-				}
-				if ( typeof step.networking === 'boolean' ) {
-					document.getElementById( 'networking' ).checked = true;
 				}
 				return;
 			}
