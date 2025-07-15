@@ -1017,7 +1017,7 @@ addEventListener( 'DOMContentLoaded', function () {
 		}
 		const query = ( queries.length ? '?' + queries.join( '&' ) : '' );
 		const playground = document.getElementById( 'playground' ).value;
-		const href = 'https://' + playground + '/' + query + hash;
+		const href = ( playground.substr( 0, 7 ) === 'http://' ? playground : 'https://' + playground ) + '/' + query + hash;
 		document.getElementById( 'playground-link' ).href = href;
 		document.getElementById( 'playground-link-top' ).href = href;
 		document.getElementById( 'download-blueprint' ).href = 'data:text/json;charset=utf-8,' + encodeURIComponent( document.getElementById( 'blueprint-compiled' ).value );
