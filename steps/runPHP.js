@@ -2,7 +2,7 @@ customSteps.runPHP = function( step ) {
 	return [
 		{
 			"step": "runPHP",
-			"code": "<?php require_once 'wordpress/wp-load.php'; " + step.vars.code + ';'
+			"code": "<?php require_once 'wordpress/wp-load.php'; " + step.vars.code.replace( /;+$/, '' ) + ';'
 		}
 	];
 };
