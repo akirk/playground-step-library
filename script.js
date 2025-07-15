@@ -524,8 +524,8 @@ addEventListener( 'DOMContentLoaded', function () {
 			}
 			return;
 		}
-		if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' ) {
-			if ( event.target.type === 'checkbox' ) {
+		if ( event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'OPTION' ) {
+			if ( event.target.type === 'checkbox' || event.target.parentNode.id === 'playground' ) {
 				loadCombinedExamples();
 			}
 			return;
@@ -733,6 +733,9 @@ addEventListener( 'DOMContentLoaded', function () {
 		}
 		if ( document.getElementById( 'autosave' ).value ) {
 			state.autosave = document.getElementById( 'autosave' ).value;
+		}
+		if ( document.getElementById( 'playground' ).value !== 'playground.wordpress.net' ) {
+			state.playground = document.getElementById( 'playground' ).value;
 		}
 		const json = JSON.stringify( state );
 		if ( '{"steps":[]}' === json ) {
@@ -1032,6 +1035,9 @@ addEventListener( 'DOMContentLoaded', function () {
 		}
 		if ( state.autosave ) {
 			document.getElementById( 'autosave' ).value = state.autosave;
+		}
+		if ( state.playground ) {
+			document.getElementById( 'playground' ).value = state.playground;
 		}
 		blueprintSteps.innerHTML = '';
 		( state.steps || [] ).forEach( function ( step ) {
