@@ -724,6 +724,16 @@ addEventListener( 'DOMContentLoaded', function () {
 		stepList.classList.remove( 'show-builtin' );
 	}
 
+	// Handle mode changes
+	document.getElementById( 'mode' ).addEventListener( 'change', function() {
+		loadCombinedExamples();
+	} );
+
+	// Handle preview mode changes
+	document.getElementById( 'preview-mode' ).addEventListener( 'change', function() {
+		loadCombinedExamples();
+	} );
+
 	function compressState( steps ) {
 		const state = {
 			steps
@@ -736,6 +746,12 @@ addEventListener( 'DOMContentLoaded', function () {
 		}
 		if ( document.getElementById( 'playground' ).value !== 'playground.wordpress.net' ) {
 			state.playground = document.getElementById( 'playground' ).value;
+		}
+		if ( document.getElementById( 'mode' ).value ) {
+			state.mode = document.getElementById( 'mode' ).value;
+		}
+		if ( document.getElementById( 'preview-mode' ).value ) {
+			state.previewMode = document.getElementById( 'preview-mode' ).value;
 		}
 		const json = JSON.stringify( state );
 		if ( '{"steps":[]}' === json ) {
@@ -820,32 +836,41 @@ addEventListener( 'DOMContentLoaded', function () {
 		return step;
 	}
 
+	let lastCompressedState = '';
+
 	function loadCombinedExamples() {
-		const combinedExamples = {};
-		if ( document.getElementById( 'title' ).value ) {
-			combinedExamples.title = document.getElementById( 'title' ).value;
-		}
-		combinedExamples.landingPage = '/';
-		combinedExamples.steps = [];
-		const state = [];
+	  const combinedExamples = {};
+	  if (document.getElementById('title').value) {
+	    combinedExamples.title = document.getElementById('title').value;
+	  }
+	  combinedExamples.landingPage = '/';
+	  combinedExamples.steps = [];
+	  const state = [];
 
-		blueprintSteps.querySelectorAll( '.step' ).forEach( function ( stepBlock ) {
-			updateVariableVisibility( stepBlock );
-			const step = getStepData( stepBlock );
-			state.push( step );
-			combinedExamples.steps = combinedExamples.steps.concat( step );
-		} );
-		if ( combinedExamples.steps.length > 0 ) {
-			const draghint = document.getElementById( 'draghint' );
-			if ( draghint ) {
-				draghint.remove();
-			}
-		}
+	  blueprintSteps.querySelectorAll('.step').forEach(function (stepBlock) {
+	    updateVariableVisibility(stepBlock);
+	    const step = getStepData(stepBlock);
+	    state.push(step);
+	    combinedExamples.steps = combinedExamples.steps.concat(step);
+	  });
 
-		blueprint = JSON.stringify( combinedExamples, null, 2 );
-		// console.log( state );
-		history.pushState( state, '', '#' + compressState( state ) );
-		transformJson();
+	  if (combinedExamples.steps.length > 0) {
+	    const draghint = document.getElementById('draghint');
+	    if (draghint) {
+	      draghint.remove();
+	    }
+	  }
+
+	  blueprint = JSON.stringify(combinedExamples, null, 2);
+
+	  const currentCompressedState = compressState(state);
+
+	  // Only update history and transform JSON if the state has changed
+	  if (currentCompressedState !== lastCompressedState) {
+	    lastCompressedState = currentCompressedState;
+	    history.pushState(state, '', '#' + currentCompressedState);
+	    transformJson();
+	  }
 	}
 
 	function transformJson() {
@@ -1000,6 +1025,10 @@ addEventListener( 'DOMContentLoaded', function () {
 			case 'seamless':
 				queries.push( 'mode=seamless' );
 				break;
+			case 'split-view-bottom':
+			case 'split-view-right':
+				queries.push( 'mode=seamless' );
+				break;
 		}
 		switch ( document.getElementById( 'storage' ).value ) {
 			case 'browser':
@@ -1024,6 +1053,41 @@ addEventListener( 'DOMContentLoaded', function () {
 		document.getElementById( 'playground-link' ).href = href;
 		document.getElementById( 'playground-link-top' ).href = href;
 		document.getElementById( 'download-blueprint' ).href = 'data:text/json;charset=utf-8,' + encodeURIComponent( document.getElementById( 'blueprint-compiled' ).value );
+
+		// Handle split view mode
+		handleSplitViewMode( href );
+	}
+
+	function handleSplitViewMode( href ) {
+		const previewMode = document.getElementById( 'preview-mode' ).value;
+		const body = document.body;
+		const iframe = document.getElementById( 'playground-iframe' );
+
+		// Remove all split view classes
+		body.classList.remove( 'split-view-bottom', 'split-view-right' );
+
+		if ( previewMode === 'bottom' ) {
+			body.classList.add( 'split-view-bottom' );
+			updateIframeSrc( iframe, href );
+		} else if ( previewMode === 'right' ) {
+			body.classList.add( 'split-view-right' );
+			updateIframeSrc( iframe, href );
+		} else {
+			iframe.src = '';
+		}
+	}
+
+	function updateIframeSrc( iframe, newSrc ) {
+		// Always update iframe src to trigger reload with new blueprint
+		if ( iframe.src !== newSrc ) {
+			iframe.src = newSrc;
+		} else {
+			// If src is the same, force reload by temporarily clearing it
+			iframe.src = '';
+			setTimeout( () => {
+				iframe.src = newSrc;
+			}, 50 );
+		}
 	}
 
 	function restoreState( state ) {
@@ -1038,6 +1102,12 @@ addEventListener( 'DOMContentLoaded', function () {
 		}
 		if ( state.playground ) {
 			document.getElementById( 'playground' ).value = state.playground;
+		}
+		if ( state.mode ) {
+			document.getElementById( 'mode' ).value = state.mode;
+		}
+		if ( state.previewMode ) {
+			document.getElementById( 'preview-mode' ).value = state.previewMode;
 		}
 		blueprintSteps.innerHTML = '';
 		( state.steps || [] ).forEach( function ( step ) {
@@ -1164,7 +1234,9 @@ addEventListener( 'DOMContentLoaded', function () {
 
 	if ( location.hash ) {
 		restoreState( uncompressState( location.hash.replace( /^#+/, '' ) ) );
-		autoredirect();
+		if ( document.getElementById( 'playground-mode' ).value ) {
+			autoredirect();
+		}
 	} else {
 		loadCombinedExamples();
 	}

@@ -463,6 +463,7 @@ button,
 #playground-link-top,
 #download-blueprint,
 a.submit-to-gh,
+#preview-mode,
 #examples {
   font-size: .8em;
   line-height: 1em;
@@ -476,6 +477,9 @@ a.submit-to-gh,
   display: inline-block;
   box-shadow: 1px 1px 1px #888;
   cursor: pointer;
+}
+button {
+  padding: 7px;
 }
 
 button:hover,
@@ -522,7 +526,7 @@ button.save-step:hover {
   flex-grow: 1;
 }
 
-#copy-playground-link {
+#copy-playground-link, #copy-playground-link-top {
   background: none;
   font-size: 1.3em;
   line-height: 1;
@@ -533,6 +537,7 @@ button.save-step:hover {
   padding-right: .4em;
   color: light-dark( #333, #ccc );
 }
+#copy-playground-link-top:hover,
 #copy-playground-link:hover {
   background-color: light-dark(#ccc, #333);
 }
@@ -540,6 +545,9 @@ button.save-step:hover {
 #playground-link-top {
   display: none;
   font-size: 13.3px;
+}
+#copy-playground-link-top {
+  display: none;
 }
 
 #playground-link:any-link,
@@ -626,13 +634,116 @@ button.code-editor {
     width: 100%;
   }
 
-  #playground-link-top {
+  #title-holder {
+    margin-top: 0;
+  }
+
+
+  #playground-link-top, #copy-playground-link-top {
     display: inline-block;
   }
 
   #blueprint-steps .step a.view-source {
     display: none;
   }
+}
+
+/* Split view styles */
+body.split-view-right #blueprint-builder {
+  margin-top: 0;
+  flex-direction: column;
+  width: 100%;
+}
+body.split-view-right #title-holder,
+body.split-view-bottom #title-holder {
+  margin-top: 0;
+}
+
+body.split-view-right #playground-link-top,
+body.split-view-right #copy-playground-link-top {
+  display: inline-block;
+}
+
+body.split-view-right #blueprint-steps .step a.view-source {
+  display: none;
+}
+
+body.split-view-right #blueprint-compiled-holder {
+  display: none;
+}
+
+/* Apply mobile-like styles when in right split view (narrow layout) */
+body.split-view-right #blueprint-builder {
+  flex-direction: column;
+  width: 100%;
+}
+
+body.split-view-right #playground-link-top {
+  display: inline-block;
+}
+
+body.split-view-right #blueprint-steps .step a.view-source {
+  display: none;
+}
+
+body.split-view-bottom,
+body.split-view-right {
+  height: 100vh;
+  overflow: hidden;
+}
+
+body.split-view-bottom #split-view-wrapper,
+body.split-view-right #split-view-wrapper {
+  position: relative;
+  height: calc(100vh - 100px); /* Account for header height */
+}
+
+/* Bottom split view */
+body.split-view-bottom #blueprint-builder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: auto;
+}
+
+body.split-view-bottom #split-view-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  display: block !important;
+  border-top: 2px solid var(--border-color);
+  z-index: 5;
+}
+
+/* Right split view */
+body.split-view-right #blueprint-builder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  overflow: auto;
+}
+
+body.split-view-right #split-view-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  display: block !important;
+  border-left: 2px solid var(--border-color);
+}
+
+body.split-view-bottom #playground-iframe,
+body.split-view-right #playground-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 @media (max-width: 1100px) {
