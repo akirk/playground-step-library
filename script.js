@@ -862,6 +862,7 @@ addEventListener( 'DOMContentLoaded', function () {
 	  }
 
 	  blueprint = JSON.stringify(combinedExamples, null, 2);
+	  console.log( JSON.stringify( { [combinedExamples.title]:state}, null, 2 ).replace(/}$/, '').replace(/^{/, '') );
 
 	  const currentCompressedState = compressState(state);
 
@@ -892,7 +893,6 @@ addEventListener( 'DOMContentLoaded', function () {
 		}
 
 		let inputData = Object.assign( userDefined, JSON.parse( jsonInput ) );
-		console.log( JSON.stringify( inputData, null, 2 ) );
 		const outputData = Object.assign( {}, inputData );
 		if ( outputData.title ) {
 			delete outputData.title;
@@ -1234,7 +1234,7 @@ addEventListener( 'DOMContentLoaded', function () {
 
 	if ( location.hash ) {
 		restoreState( uncompressState( location.hash.replace( /^#+/, '' ) ) );
-		if ( document.getElementById( 'playground-mode' ).value ) {
+		if ( document.getElementById( 'preview-mode' ).value ) {
 			autoredirect();
 		}
 	} else {
@@ -1319,6 +1319,16 @@ addEventListener( 'DOMContentLoaded', function () {
 				'step': 'importFriendFeeds',
 				'vars': {
 					'opml': 'https://alex.kirk.at Alex Kirk\nhttps://adamadam.blog Adam Zieliński'
+				}
+			}
+		],
+		"Show the available PHP extensions + PHPinfo": [
+			{
+				"step": "addFilter",
+				"vars": {
+					"filter": "init",
+					"code": "$e = get_loaded_extensions(); sort( $e ); echo '<div style=\"float:left; margin-left: 1em\">AvailableExtensions:<ul><li>', implode('</li><li>', $e ), '</li></ul></div>'; phpinfo()",
+					"priority": "10"
 				}
 			}
 		]
