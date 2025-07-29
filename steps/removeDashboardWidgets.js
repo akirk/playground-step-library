@@ -2,12 +2,12 @@ customSteps.removeDashboardWidgets = function( step ) {
     var steps = [
         {
             "step": "mkdir",
-            "path": "wordpress/wp-content/mu-plugins",
+            "path": "/wordpress/wp-content/mu-plugins",
         },
         {
             "step": "writeFile",
             // Adapted from https://github.com/felixarntz/felixarntz-mu-plugins/blob/main/felixarntz-mu-plugins/remove-dashboard-widgets.php
-            "path": "wordpress/wp-content/mu-plugins/remove-dashboard-widgets.php",
+            "path": "/wordpress/wp-content/mu-plugins/remove-dashboard-widgets.php",
             "data": `<?php
 add_action(
 	'do_meta_boxes',

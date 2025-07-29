@@ -2,11 +2,11 @@ customSteps.customPostType = function() {
 	var steps = [
 		{
 			"step": "mkdir",
-			"path": "wordpress/wp-content/mu-plugins",
+			"path": "/wordpress/wp-content/mu-plugins",
 		},
 		{
 			"step": "writeFile",
-			"path": "wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
+			"path": "/wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
 			"data": "<?php add_action( 'init', function() { register_post_type('${slug}', array('public' => true, 'label' => '${name}')); } ); ?>"
 		}
 	];

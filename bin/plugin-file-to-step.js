@@ -28,11 +28,11 @@ customSteps.${camelCaseName} = function() {
 	var steps = [
 		{
 			"step": "mkdir",
-			"path": "wordpress/wp-content/mu-plugins",
+			"path": "/wordpress/wp-content/mu-plugins",
 		},
 		{
 			"step": "writeFile",
-			"path": "wordpress/wp-content/mu-plugins/${baseName}.php",
+			"path": "/wordpress/wp-content/mu-plugins/${baseName}.php",
 			"data": \`${phpContents}\`
 		}
 	];

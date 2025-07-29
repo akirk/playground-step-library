@@ -3,11 +3,11 @@ customSteps.muPlugin = function( step ) {
 	return [
 		{
 			"step": "mkdir",
-			"path": "wordpress/wp-content/mu-plugins",
+			"path": "/wordpress/wp-content/mu-plugins",
 		},
 		{
 			"step": "writeFile",
-			"path": "wordpress/wp-content/mu-plugins/addFilter-${stepIndex}.php",
+			"path": "/wordpress/wp-content/mu-plugins/addFilter-${stepIndex}.php",
 			"data": code
 		}
 	];

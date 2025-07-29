@@ -3,11 +3,11 @@ customSteps.disableWelcomeGuides = function() {
 	var steps = [
 		{
 			"step": "mkdir",
-			"path": "wordpress/wp-content/mu-plugins",
+			"path": "/wordpress/wp-content/mu-plugins",
 		},
 		{
 			"step": "writeFile",
-			"path": "wordpress/wp-content/mu-plugins/disable-welcome-guides.php",
+			"path": "/wordpress/wp-content/mu-plugins/disable-welcome-guides.php",
 			"data": `<?php
 function my_disable_welcome_guides() {
 	wp_add_inline_script( 'wp-data', "window.onload = function() {

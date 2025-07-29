@@ -49,7 +49,7 @@ add_filter(
 
 		steps.unshift( {
 			"step": "mkdir",
-			"path": "wordpress/wp-content/mu-plugins/fake-http-response",
+			"path": "/wordpress/wp-content/mu-plugins/fake-http-response",
 		} );
 	}
 	return steps;

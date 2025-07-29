@@ -58,11 +58,11 @@ add_action('admin_footer', function() {
 	var steps = [
 		{
 			"step": "mkdir",
-			"path": "wordpress/wp-content/mu-plugins",
+			"path": "/wordpress/wp-content/mu-plugins",
 		},
 		{
 			"step": "writeFile",
-			"path": "wordpress/wp-content/mu-plugins/show-admin-notice-${stepIndex}.php",
+			"path": "/wordpress/wp-content/mu-plugins/show-admin-notice-${stepIndex}.php",
 			"data": php
 		}
 	];
