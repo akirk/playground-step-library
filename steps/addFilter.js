@@ -23,10 +23,10 @@ customSteps.addFilter = function( step ) {
 				code += ", 10";
 			}
 			code += ", " + args;
-		} else if ( step.vars.priority != 10 ) {
+		} else if ( step.vars.priority > 0 && step.vars.priority != 10 ) {
 			code += ", " + step.vars.priority;
 		}
-	} else if ( step.vars.priority != 10 ) {
+	} else if ( step.vars.priority > 0 && step.vars.priority != 10 ) {
 		code += ", " + step.vars.priority;
 	}
 	code += " );";
