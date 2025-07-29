@@ -2,7 +2,7 @@ customSteps.addPage = function( step ) {
 	const postTitle = step.vars.postTitle.replace(/'/g, "\\'" );
 	const postContent = step.vars.postContent.replace(/'/g, "\\'" );
 	let code = `
-<?php require_once 'wordpress/wp-load.php';
+<?php require_once '/wordpress/wp-load.php';
 $page_args = array(
 	'post_type'    => 'page',
 	'post_status'  => 'publish',

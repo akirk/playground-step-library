@@ -3,7 +3,7 @@ customSteps.setTT4Homepage = function( step ) {
         {
             "step": "runPHP",
             "code": `
-<?php require_once 'wordpress/wp-load.php';
+<?php require_once '/wordpress/wp-load.php';
 $term = get_term_by('slug', 'twentytwentyfour', 'wp_theme');
 if ( ! $term) {
 	$term = wp_insert_term(

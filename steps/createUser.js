@@ -1,5 +1,5 @@
 customSteps.createUser = function ( step ) {
-	let code = "<?php require_once 'wordpress/wp-load.php';";
+	let code = "<?php require_once '/wordpress/wp-load.php';";
 	let username = step?.vars?.username;
 	let password = step?.vars?.password;
 	let role = step?.vars?.role;

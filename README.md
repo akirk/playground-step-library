@@ -61,7 +61,7 @@ which we then want to transforme to this:
 ```json
 {
 	"step": "runPHP",
-	"code": "<?php require_once 'wordpress/wp-load.php'; error_log( 'Hello World' ); ?>"
+	"code": "<?php require_once '/wordpress/wp-load.php'; error_log( 'Hello World' ); ?>"
 }
 ```
 
@@ -76,7 +76,7 @@ customSteps.helloWorldLogger = function( step ) {
 			// This step must be a builtin step:
             "step": "runPHP",
             // Here the variable ${text} is passed in the step as a variable (see above for how it's used and below for how it's defined).
-            "code": "<?php require_once 'wordpress/wp-load.php'; error_log( '${text}' ); ?>"
+            "code": "<?php require_once '/wordpress/wp-load.php'; error_log( '${text}' ); ?>"
 		}
 	];
 }

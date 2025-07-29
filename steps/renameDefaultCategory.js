@@ -7,7 +7,7 @@ customSteps.renameDefaultCategory = function( step ) {
 	return [
 		{
 			"step": "runPHP",
-			"code": `<?php require_once 'wordpress/wp-load.php'; wp_update_term( 1, 'category', array( 'name' => '${name}', 'slug' => '${slug}' ) ); ?>`
+			"code": `<?php require_once '/wordpress/wp-load.php'; wp_update_term( 1, 'category', array( 'name' => '${name}', 'slug' => '${slug}' ) ); ?>`
 		}
 	];
 };

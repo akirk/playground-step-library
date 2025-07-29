@@ -4,7 +4,7 @@ customSteps.addPost = function( step ) {
 	const postDate = step.vars.postDate.replace(/'/g, "\\'" );
 	const postType = step.vars.postType;
 	let code = `
-<?php require_once 'wordpress/wp-load.php';
+<?php require_once '/wordpress/wp-load.php';
 $page_args = array(
 	'post_type'    => '${postType}',
 	'post_date'    => strtotime('${postDate}'),

@@ -30,7 +30,7 @@ const content = `customSteps.${stepName} = function( step ) {
 		// Your steps here. Example:
 		// {
 		// 	"step": "runPHP",
-		// 	"code": "<?php require_once 'wordpress/wp-load.php'; error_log( 'Hello \${variableName}' ) ?>"
+		// 	"code": "<?php require_once '/wordpress/wp-load.php'; error_log( 'Hello \${variableName}' ) ?>"
 		// }
 	];
 };

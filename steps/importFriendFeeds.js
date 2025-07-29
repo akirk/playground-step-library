@@ -35,7 +35,7 @@ customSteps.importFriendFeeds = function( step, blueprint ) {
 		{
 			"step": "runPHP",
 			"code": `
-<?php require_once 'wordpress/wp-load.php';
+<?php require_once '/wordpress/wp-load.php';
 if ( class_exists('Friends\\Import')) {
 Friends\\Import::opml("${opml}");
 }
