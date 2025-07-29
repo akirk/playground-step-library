@@ -1234,7 +1234,7 @@ addEventListener( 'DOMContentLoaded', function () {
 
 	if ( location.hash ) {
 		restoreState( uncompressState( location.hash.replace( /^#+/, '' ) ) );
-		if ( document.getElementById( 'preview-mode' ).value ) {
+		if ( ! document.getElementById( 'preview-mode' ).value ) {
 			autoredirect();
 		}
 	} else {
