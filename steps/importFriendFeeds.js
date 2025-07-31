@@ -43,7 +43,6 @@ Friends\\Import::opml("${opml}");
 		}
 	];
 	let hasFriendsPlugin = false;
-	let hasCorsProxy = false;
 	for ( const i in blueprint.steps ) {
 		if ( blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'friends' ) {
 			hasFriendsPlugin = true;
@@ -51,18 +50,9 @@ Friends\\Import::opml("${opml}");
 		if ( blueprint.steps[i].step === 'githubPlugin' && blueprint.steps[i]?.vars?.repo === 'akirk/friends' ) {
 			hasFriendsPlugin = true;
 		}
-		if ( blueprint.steps[i].step === 'addCorsProxy' ) {
-			hasCorsProxy = true;
-		}
 	}
 	if ( ! hasFriendsPlugin ) {
 		steps = customSteps.installPlugin( { vars: { url: 'friends', permalink: true }} ).concat( steps );
-	}
-	if ( ! hasCorsProxy ) {
-		steps = customSteps.addCorsProxy( {} ).concat( steps );
-		steps.features = {
-			networking: true
-		};
 	}
 	steps.landingPage = '/friends/?refresh&welcome';
 	return steps;
