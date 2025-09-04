@@ -93,7 +93,22 @@ function runTests() {
     assert(jsonCompiled.steps.length === 1, 'Should compile JSON string input');
     console.log('✓ JSON string input works\n');
 
-    console.log('All tests passed! ✅');
+    console.log('All basic tests passed! ✅');
+    
+    // Run package installation test
+    console.log('\n' + '='.repeat(50));
+    console.log('🧪 PACKAGE INSTALLATION TESTS');
+    console.log('='.repeat(50));
+    
+    try {
+        const { testPackageInstallation } = require('./package-test.js');
+        const packageResults = testPackageInstallation();
+        
+        console.log('\n✅ Package tests passed!');
+    } catch (error) {
+        console.error('\n❌ Package tests failed:', error.message);
+        throw error;
+    }
 }
 
 function runExamples() {

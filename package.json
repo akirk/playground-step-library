@@ -10,6 +10,9 @@
   "scripts": {
     "build": "tsc && node build.js",
     "test": "node test/test.js",
+    "test:package": "node test/package-test.js",
+    "test:npm-pack": "node test/npm-pack-test.js",
+    "test:all": "npm test && npm run test:npm-pack",
     "prepare": "npm run build",
     "dev": "tsc --watch"
   },
