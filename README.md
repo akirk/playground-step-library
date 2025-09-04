@@ -10,6 +10,14 @@ You can then use those custom steps [in our Step Builder](https://akirk.github.i
 
 You can also use the steps in your own projects by using the [npm package](README-npm.md).
 
+## 📚 Documentation
+
+Comprehensive documentation for all steps is available:
+
+- **[📖 Step Documentation](docs/)** - Complete documentation with examples
+- **[📋 Steps Reference](docs/steps-reference.md)** - All steps in one page  
+- **[🔍 Individual Steps](docs/steps/)** - Detailed docs for each step
+
 ## What does it mean?
 
 You can tell WordPress Playground what to do before it loads using a [Blueprint JSON](https://wordpress.github.io/wordpress-playground/blueprints-api/index/) file. There are [a number of builtin steps provided](https://wordpress.github.io/wordpress-playground/blueprints-api/steps/) that in combination can make it do powerful things.

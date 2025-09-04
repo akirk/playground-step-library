@@ -13,7 +13,8 @@
     "test:package": "node test/package-test.js",
     "test:npm-pack": "node test/npm-pack-test.js",
     "test:all": "npm test && npm run test:npm-pack",
-    "prepare": "npm run build",
+    "docs:generate": "node scripts/generate-docs.js",
+    "prepare": "npm run build && npm run docs:generate",
     "dev": "tsc --watch"
   },
   "devDependencies": {
@@ -38,6 +39,8 @@
     "bin/",
     "steps/",
     "src/",
+    "docs/",
+    "scripts/",
     "README.md"
   ],
   "engines": {

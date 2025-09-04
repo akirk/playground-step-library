@@ -7,6 +7,13 @@ A compiler that transforms WordPress Playground blueprints with custom steps int
 ```bash
 npm install playground-step-library
 ```
+## 📚 Documentation
+
+Comprehensive documentation for all steps is available:
+
+- **[📖 Step Documentation](docs/)** - Complete documentation with examples
+- **[📋 Steps Reference](docs/steps-reference.md)** - All steps in one page  
+- **[🔍 Individual Steps](docs/steps/)** - Detailed docs for each step
 
 ## Usage
 
@@ -178,7 +185,7 @@ Compiles a blueprint with custom steps into a blueprint with native steps.
 - Returns: Compiled blueprint object
 - Throws: Error if compilation fails
 
-##### `validateBlueprint(blueprint)` 
+##### `validateBlueprint(blueprint)`
 Validates a blueprint structure and required variables.
 
 - `blueprint` (Object|string): Blueprint object or JSON string  
