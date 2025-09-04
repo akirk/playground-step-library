@@ -1,6 +1,6 @@
 # `githubPlugin` Step
 
-No description available.
+Install a plugin from a Github repository.
 
 ## Type
 ⚡ **Custom Step**

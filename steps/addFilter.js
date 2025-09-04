@@ -42,7 +42,7 @@ customSteps.addFilter = function( step ) {
 		}
 	];
 };
-customSteps.addFilter.info = "Easily add a filtered value.";
+customSteps.addFilter.description = "Easily add a filtered value.";
 customSteps.addFilter.vars = [
 	{
 		"name": "filter",

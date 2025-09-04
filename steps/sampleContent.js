@@ -24,4 +24,4 @@ customSteps.sampleContent = function() {
     return steps;
 };
 customSteps.sampleContent.count = 5;
-customSteps.sampleContent.info = "Inserts sample pages to the site.";
+customSteps.sampleContent.description = "Inserts sample pages to the site.";

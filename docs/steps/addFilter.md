@@ -1,6 +1,6 @@
 # `addFilter` Step
 
-No description available.
+Easily add a filtered value.
 
 ## Type
 ⚡ **Custom Step**

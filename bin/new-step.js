@@ -34,7 +34,7 @@ const content = `customSteps.${stepName} = function( step ) {
 		// }
 	];
 };
-customSteps.${stepName}.info = "Provide useful additional info.";
+customSteps.${stepName}.description = "Provide useful additional info.";
 customSteps.${stepName}.vars = [
 	// Your variables here. Example:
 	// {

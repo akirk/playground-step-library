@@ -1,6 +1,6 @@
 # `blueprintRecorder` Step
 
-No description available.
+Record steps made and compile a new blueprint.
 
 ## Type
 ⚡ **Custom Step**

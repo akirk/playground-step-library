@@ -30,4 +30,4 @@ add_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {
 	steps.landingPage = "/pheditor-main/pheditor.php";
 	return steps;
 };
-customSteps.installPhEditor.info = "Install phEditor. Password: admin";
+customSteps.installPhEditor.description = "Install phEditor. Password: admin";

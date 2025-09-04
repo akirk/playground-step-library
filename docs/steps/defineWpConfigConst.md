@@ -1,6 +1,6 @@
 # `defineWpConfigConst` Step
 
-No description available.
+Define a wp-config PHP constant.
 
 ## Type
 🔧 **Built-in Step**

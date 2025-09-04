@@ -32,54 +32,54 @@ const compiled = compiler.compile(blueprint);
 ### Built-in Steps
 Built-in steps are core WordPress Playground steps that are enhanced with additional functionality.
 
-- [`defineWpConfigConst`](steps/defineWpConfigConst.md) - No description available
+- [`defineWpConfigConst`](steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
 - [`enableMultisite`](steps/enableMultisite.md) - No description available
-- [`importWxr`](steps/importWxr.md) - No description available
+- [`importWxr`](steps/importWxr.md) - Import a WXR from a URL.
 - [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Github
 - [`installTheme`](steps/installTheme.md) - Install a theme
 - [`login`](steps/login.md) - Login to the site
-- [`runPHP`](steps/runPHP.md) - No description available
-- [`setSiteOption`](steps/setSiteOption.md) - No description available
+- [`runPHP`](steps/runPHP.md) - Run code in the context of WordPress.
+- [`setSiteOption`](steps/setSiteOption.md) - Set a site option.
 
 ### Custom Steps  
 Custom steps provide additional functionality beyond the core WordPress Playground capabilities.
 
-- [`addClientRole`](steps/addClientRole.md) - No description available
-- [`addCorsProxy`](steps/addCorsProxy.md) - No description available
-- [`addFilter`](steps/addFilter.md) - No description available
-- [`addMedia`](steps/addMedia.md) - No description available
-- [`addPage`](steps/addPage.md) - No description available
-- [`addPost`](steps/addPost.md) - No description available
-- [`addProduct`](steps/addProduct.md) - No description available
-- [`blueprintExtractor`](steps/blueprintExtractor.md) - No description available
-- [`blueprintRecorder`](steps/blueprintRecorder.md) - No description available
-- [`changeAdminColorScheme`](steps/changeAdminColorScheme.md) - No description available
+- [`addClientRole`](steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
+- [`addCorsProxy`](steps/addCorsProxy.md) - Automatically add the CORS proxy to outgoing HTTP requests.
+- [`addFilter`](steps/addFilter.md) - Easily add a filtered value.
+- [`addMedia`](steps/addMedia.md) - Add files to the media library.
+- [`addPage`](steps/addPage.md) - Add a custom page.
+- [`addPost`](steps/addPost.md) - Add a post.
+- [`addProduct`](steps/addProduct.md) - Add a WooCommerce product (will install WooCommerce if not present)
+- [`blueprintExtractor`](steps/blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
+- [`blueprintRecorder`](steps/blueprintRecorder.md) - Record steps made and compile a new blueprint.
+- [`changeAdminColorScheme`](steps/changeAdminColorScheme.md) - Useful to combine with a login step.
 - [`createUser`](steps/createUser.md) - No description available
 - [`customPostType`](steps/customPostType.md) - No description available
 - [`deleteAllPosts`](steps/deleteAllPosts.md) - No description available
 - [`disableWelcomeGuides`](steps/disableWelcomeGuides.md) - No description available
-- [`doAction`](steps/doAction.md) - No description available
-- [`fakeHttpResponse`](steps/fakeHttpResponse.md) - No description available
-- [`githubImportExportWxr`](steps/githubImportExportWxr.md) - No description available
-- [`githubPlugin`](steps/githubPlugin.md) - No description available
-- [`githubPluginRelease`](steps/githubPluginRelease.md) - No description available
-- [`githubTheme`](steps/githubTheme.md) - No description available
-- [`importFriendFeeds`](steps/importFriendFeeds.md) - No description available
+- [`doAction`](steps/doAction.md) - Execute a custom action.
+- [`fakeHttpResponse`](steps/fakeHttpResponse.md) - Fake a wp_remote_request() response.
+- [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
+- [`githubPlugin`](steps/githubPlugin.md) - Install a plugin from a Github repository.
+- [`githubPluginRelease`](steps/githubPluginRelease.md) - Install a specific plugin release from a Github repository.
+- [`githubTheme`](steps/githubTheme.md) - Install a theme from a Github repository.
+- [`importFriendFeeds`](steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.
 - [`importWordPressComExport`](steps/importWordPressComExport.md) - No description available
-- [`installPhEditor`](steps/installPhEditor.md) - No description available
-- [`installPhpLiteAdmin`](steps/installPhpLiteAdmin.md) - No description available
-- [`jetpackOfflineMode`](steps/jetpackOfflineMode.md) - No description available
-- [`muPlugin`](steps/muPlugin.md) - No description available
-- [`removeDashboardWidgets`](steps/removeDashboardWidgets.md) - No description available
-- [`renameDefaultCategory`](steps/renameDefaultCategory.md) - No description available
+- [`installPhEditor`](steps/installPhEditor.md) - Install phEditor. Password: admin
+- [`installPhpLiteAdmin`](steps/installPhpLiteAdmin.md) - Provide phpLiteAdmin. Password: admin
+- [`jetpackOfflineMode`](steps/jetpackOfflineMode.md) - Start Jetpack in Offline mode.
+- [`muPlugin`](steps/muPlugin.md) - Add code for a plugin.
+- [`removeDashboardWidgets`](steps/removeDashboardWidgets.md) - Remove widgets from the wp-admin dashboard.
+- [`renameDefaultCategory`](steps/renameDefaultCategory.md) - Change the default "Uncategorized".
 - [`runWpCliCommand`](steps/runWpCliCommand.md) - No description available
-- [`sampleContent`](steps/sampleContent.md) - No description available
-- [`setLandingPage`](steps/setLandingPage.md) - No description available
+- [`sampleContent`](steps/sampleContent.md) - Inserts sample pages to the site.
+- [`setLandingPage`](steps/setLandingPage.md) - Set the landing page.
 - [`setLanguage`](steps/setLanguage.md) - No description available
 - [`setSiteName`](steps/setSiteName.md) - No description available
-- [`setTT4Homepage`](steps/setTT4Homepage.md) - No description available
+- [`setTT4Homepage`](steps/setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
 - [`showAdminNotice`](steps/showAdminNotice.md) - No description available
-- [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - No description available
+- [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 
 ## 🔗 Cross-References
 
@@ -103,4 +103,4 @@ To add a new step:
 
 ---
 
-*This documentation is auto-generated from step definitions. Last updated: 2025-09-04T15:12:26.286Z*
+*This documentation is auto-generated from step definitions. Last updated: 2025-09-04T15:20:48.334Z*

@@ -1,6 +1,6 @@
 # `runPHP` Step
 
-No description available.
+Run code in the context of WordPress.
 
 ## Type
 🔧 **Built-in Step**

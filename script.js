@@ -18,12 +18,12 @@ addEventListener('DOMContentLoaded', function () {
 		span.className = 'stepname';
 		span.innerText = name;
 		div.appendChild(span);
-		if (data.info) {
+		if (data.description) {
 			const info = document.createElement('div');
 			info.className = 'info';
-			info.innerText = data.info;
+			info.innerText = data.description;
 			span.appendChild(info);
-			step.title = data.info;
+			step.title = data.description;
 		}
 		if (data.mine) {
 			step.classList.add('mine');
@@ -879,7 +879,7 @@ addEventListener('DOMContentLoaded', function () {
 		let jsonInput = blueprint;
 		const queries = [];
 		let useBlueprintURLParam = false;
-		
+
 		// Prepare compilation options from UI elements
 		const userDefined = {
 			'landingPage': '/',
@@ -902,7 +902,7 @@ addEventListener('DOMContentLoaded', function () {
 
 		// Extract query params from compiled steps (for the original web UI functionality)
 		if (outputData.steps) {
-			outputData.steps.forEach(function(step) {
+			outputData.steps.forEach(function (step) {
 				if (typeof step.queryParams === 'object') {
 					for (let j in step.queryParams) {
 						if ('gh-ensure-auth' === j) {

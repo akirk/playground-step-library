@@ -1,6 +1,6 @@
 # `githubImportExportWxr` Step
 
-No description available.
+Provide useful additional info.
 
 ## Type
 ⚡ **Custom Step**

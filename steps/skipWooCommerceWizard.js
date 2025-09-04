@@ -28,5 +28,5 @@ customSteps.skipWooCommerceWizard = function( step, blueprint ) {
 	return steps;
 
 };
-customSteps.skipWooCommerceWizard.info = "When running WooCommerce, don't show the wizard.";
+customSteps.skipWooCommerceWizard.description = "When running WooCommerce, don't show the wizard.";
 customSteps.skipWooCommerceWizard.vars = [];

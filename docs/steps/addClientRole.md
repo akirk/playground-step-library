@@ -1,6 +1,6 @@
 # `addClientRole` Step
 
-No description available.
+Adds a role for clients with additional capabilities than editors, but not quite admin.
 
 ## Type
 ⚡ **Custom Step**

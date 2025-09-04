@@ -12,7 +12,7 @@ customSteps.muPlugin = function( step ) {
 		}
 	];
 };
-customSteps.muPlugin.info = "Add code for a plugin.";
+customSteps.muPlugin.description = "Add code for a plugin.";
 customSteps.muPlugin.vars = [
 	{
 		"name": "code",

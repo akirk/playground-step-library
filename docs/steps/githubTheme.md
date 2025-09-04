@@ -1,6 +1,6 @@
 # `githubTheme` Step
 
-No description available.
+Install a theme from a Github repository.
 
 ## Type
 ⚡ **Custom Step**

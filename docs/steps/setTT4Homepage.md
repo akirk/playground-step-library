@@ -1,6 +1,6 @@
 # `setTT4Homepage` Step
 
-No description available.
+Set the homepage for the twentytwentyfour theme.
 
 ## Type
 ⚡ **Custom Step**

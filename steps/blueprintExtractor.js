@@ -6,4 +6,4 @@ customSteps.blueprintExtractor = function ( step ) {
 		}
 	} );
 };
-customSteps.blueprintExtractor.info = "Generate a new blueprint after modifying the WordPress.";
+customSteps.blueprintExtractor.description = "Generate a new blueprint after modifying the WordPress.";

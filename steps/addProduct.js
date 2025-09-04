@@ -74,7 +74,7 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 	return steps;
 };
 
-customSteps.addProduct.info = "Add a WooCommerce product (will install WooCommerce if not present)";
+customSteps.addProduct.description = "Add a WooCommerce product (will install WooCommerce if not present)";
 customSteps.addProduct.vars = [
 	{
 		"name": "productTitle",

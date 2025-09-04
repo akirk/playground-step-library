@@ -63,7 +63,7 @@ add_action(
 	];
 	return steps;
 };
-customSteps.addClientRole.info = "Adds a role for clients with additional capabilities than editors, but not quite admin.";
+customSteps.addClientRole.description = "Adds a role for clients with additional capabilities than editors, but not quite admin.";
 customSteps.addClientRole.vars = [
 	{
 		"name": "displayName",

@@ -1,6 +1,6 @@
 # `fakeHttpResponse` Step
 
-No description available.
+Fake a wp_remote_request() response.
 
 ## Type
 ⚡ **Custom Step**

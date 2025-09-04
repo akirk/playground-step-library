@@ -35,7 +35,7 @@ $page_id = wp_insert_post( $page_args );`;
 		}
 	];
 };
-customSteps.addPost.info = "Add a post.";
+customSteps.addPost.description = "Add a post.";
 customSteps.addPost.vars = [
 	{
 		"name": "postTitle",

@@ -82,7 +82,7 @@ customSteps.githubImportExportWxr = function( step ) {
 
 	return steps;
 };
-customSteps.githubImportExportWxr.info = "Provide useful additional info.";
+customSteps.githubImportExportWxr.description = "Provide useful additional info.";
 customSteps.githubImportExportWxr.vars = [
 {
 	"name": "repo",

@@ -54,7 +54,7 @@ add_filter(
 	}
 	return steps;
 };
-customSteps.fakeHttpResponse.info = "Fake a wp_remote_request() response.";
+customSteps.fakeHttpResponse.description = "Fake a wp_remote_request() response.";
 customSteps.fakeHttpResponse.vars = [
 	{
 		"name": "url",

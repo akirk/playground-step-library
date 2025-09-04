@@ -1,6 +1,6 @@
 # `addPost` Step
 
-No description available.
+Add a post.
 
 ## Type
 ⚡ **Custom Step**

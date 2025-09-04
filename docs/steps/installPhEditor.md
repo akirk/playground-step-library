@@ -1,6 +1,6 @@
 # `installPhEditor` Step
 
-No description available.
+Install phEditor. Password: admin
 
 ## Type
 ⚡ **Custom Step**

@@ -15,7 +15,7 @@ customSteps.doAction = function ( step ) {
 		}
 	];
 };
-customSteps.doAction.info = "Execute a custom action.";
+customSteps.doAction.description = "Execute a custom action.";
 customSteps.doAction.vars = [
 	{
 		"name": "action",

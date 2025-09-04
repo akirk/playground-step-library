@@ -1,6 +1,6 @@
 # `renameDefaultCategory` Step
 
-No description available.
+Change the default "Uncategorized".
 
 ## Type
 ⚡ **Custom Step**

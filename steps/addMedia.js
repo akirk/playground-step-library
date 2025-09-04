@@ -65,7 +65,7 @@ foreach ( $iterator as $filename ) {
 	} );
 	return steps;
 };
-customSteps.addMedia.info = "Add files to the media library.";
+customSteps.addMedia.description = "Add files to the media library.";
 customSteps.addMedia.vars = [
 	{
 		"name": "downloadUrl",

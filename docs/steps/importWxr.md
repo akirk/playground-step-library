@@ -1,6 +1,6 @@
 # `importWxr` Step
 
-No description available.
+Import a WXR from a URL.
 
 ## Type
 🔧 **Built-in Step**

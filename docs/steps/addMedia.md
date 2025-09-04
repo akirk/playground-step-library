@@ -1,6 +1,6 @@
 # `addMedia` Step
 
-No description available.
+Add files to the media library.
 
 ## Type
 ⚡ **Custom Step**

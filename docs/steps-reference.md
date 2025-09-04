@@ -54,7 +54,7 @@ This document provides detailed information about all available steps, including
 ## `addClientRole`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Adds a role for clients with additional capabilities than editors, but not quite admin.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -76,7 +76,7 @@ This document provides detailed information about all available steps, including
 ## `addCorsProxy`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Automatically add the CORS proxy to outgoing HTTP requests.
 
 *No parameters defined.*
 
@@ -94,7 +94,7 @@ This document provides detailed information about all available steps, including
 ## `addFilter`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Easily add a filtered value.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -120,7 +120,7 @@ This document provides detailed information about all available steps, including
 ## `addMedia`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Add files to the media library.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -142,7 +142,7 @@ This document provides detailed information about all available steps, including
 ## `addPage`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Add a custom page.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -168,7 +168,7 @@ This document provides detailed information about all available steps, including
 ## `addPost`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Add a post.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -200,7 +200,7 @@ This document provides detailed information about all available steps, including
 ## `addProduct`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Add a WooCommerce product (will install WooCommerce if not present)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -232,7 +232,7 @@ This document provides detailed information about all available steps, including
 ## `blueprintExtractor`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Generate a new blueprint after modifying the WordPress.
 
 *No parameters defined.*
 
@@ -250,7 +250,7 @@ This document provides detailed information about all available steps, including
 ## `blueprintRecorder`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Record steps made and compile a new blueprint.
 
 *No parameters defined.*
 
@@ -268,7 +268,7 @@ This document provides detailed information about all available steps, including
 ## `changeAdminColorScheme`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Useful to combine with a login step.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -346,7 +346,7 @@ This document provides detailed information about all available steps, including
 ## `defineWpConfigConst`
 
 **Type**: Built-in Step  
-**Description**: No description available
+**Description**: Define a wp-config PHP constant.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -406,7 +406,7 @@ This document provides detailed information about all available steps, including
 ## `doAction`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Execute a custom action.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -456,7 +456,7 @@ This document provides detailed information about all available steps, including
 ## `fakeHttpResponse`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Fake a wp_remote_request() response.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -480,7 +480,7 @@ This document provides detailed information about all available steps, including
 ## `githubImportExportWxr`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Provide useful additional info.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -508,7 +508,7 @@ This document provides detailed information about all available steps, including
 ## `githubPlugin`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Install a plugin from a Github repository.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -532,7 +532,7 @@ This document provides detailed information about all available steps, including
 ## `githubPluginRelease`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Install a specific plugin release from a Github repository.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -558,7 +558,7 @@ This document provides detailed information about all available steps, including
 ## `githubTheme`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Install a theme from a Github repository.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -582,7 +582,7 @@ This document provides detailed information about all available steps, including
 ## `importFriendFeeds`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Add subscriptions to the Friends plugin.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -628,7 +628,7 @@ This document provides detailed information about all available steps, including
 ## `importWxr`
 
 **Type**: Built-in Step  
-**Description**: No description available
+**Description**: Import a WXR from a URL.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -652,7 +652,7 @@ This document provides detailed information about all available steps, including
 ## `installPhEditor`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Install phEditor. Password: admin
 
 *No parameters defined.*
 
@@ -670,7 +670,7 @@ This document provides detailed information about all available steps, including
 ## `installPhpLiteAdmin`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Provide phpLiteAdmin. Password: admin
 
 *No parameters defined.*
 
@@ -738,7 +738,7 @@ This document provides detailed information about all available steps, including
 ## `jetpackOfflineMode`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Start Jetpack in Offline mode.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -788,7 +788,7 @@ This document provides detailed information about all available steps, including
 ## `muPlugin`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Add code for a plugin.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -810,7 +810,7 @@ This document provides detailed information about all available steps, including
 ## `removeDashboardWidgets`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Remove widgets from the wp-admin dashboard.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -842,7 +842,7 @@ This document provides detailed information about all available steps, including
 ## `renameDefaultCategory`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Change the default "Uncategorized".
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -866,7 +866,7 @@ This document provides detailed information about all available steps, including
 ## `runPHP`
 
 **Type**: Built-in Step  
-**Description**: No description available
+**Description**: Run code in the context of WordPress.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -910,7 +910,7 @@ This document provides detailed information about all available steps, including
 ## `sampleContent`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Inserts sample pages to the site.
 
 *No parameters defined.*
 
@@ -928,7 +928,7 @@ This document provides detailed information about all available steps, including
 ## `setLandingPage`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Set the landing page.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -996,7 +996,7 @@ This document provides detailed information about all available steps, including
 ## `setSiteOption`
 
 **Type**: Built-in Step  
-**Description**: No description available
+**Description**: Set a site option.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -1020,7 +1020,7 @@ This document provides detailed information about all available steps, including
 ## `setTT4Homepage`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Set the homepage for the twentytwentyfour theme.
 
 *No parameters defined.*
 
@@ -1064,7 +1064,7 @@ This document provides detailed information about all available steps, including
 ## `skipWooCommerceWizard`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: When running WooCommerce, don't show the wizard.
 
 *No parameters defined.*
 
@@ -1079,4 +1079,4 @@ This document provides detailed information about all available steps, including
 
 ---
 
-*Generated automatically from step definitions on 2025-09-04T15:12:26.291Z*
+*Generated automatically from step definitions on 2025-09-04T15:20:48.339Z*

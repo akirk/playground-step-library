@@ -61,7 +61,7 @@ customSteps.githubPlugin = function ( step ) {
 
 	return outSteps;
 };
-customSteps.githubPlugin.info = "Install a plugin from a Github repository.";
+customSteps.githubPlugin.description = "Install a plugin from a Github repository.";
 customSteps.githubPlugin.vars = [
 	{
 		"name": "url",

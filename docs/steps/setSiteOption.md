@@ -1,6 +1,6 @@
 # `setSiteOption` Step
 
-No description available.
+Set a site option.
 
 ## Type
 🔧 **Built-in Step**

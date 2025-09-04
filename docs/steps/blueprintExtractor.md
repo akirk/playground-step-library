@@ -1,6 +1,6 @@
 # `blueprintExtractor` Step
 
-No description available.
+Generate a new blueprint after modifying the WordPress.
 
 ## Type
 ⚡ **Custom Step**

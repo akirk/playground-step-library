@@ -1,6 +1,6 @@
 # `installPhpLiteAdmin` Step
 
-No description available.
+Provide phpLiteAdmin. Password: admin
 
 ## Type
 ⚡ **Custom Step**

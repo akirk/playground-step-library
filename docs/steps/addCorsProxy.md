@@ -1,6 +1,6 @@
 # `addCorsProxy` Step
 
-No description available.
+Automatically add the CORS proxy to outgoing HTTP requests.
 
 ## Type
 ⚡ **Custom Step**

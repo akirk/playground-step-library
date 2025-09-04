@@ -1,6 +1,6 @@
 # `addPage` Step
 
-No description available.
+Add a custom page.
 
 ## Type
 ⚡ **Custom Step**

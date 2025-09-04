@@ -1,6 +1,6 @@
 # `addProduct` Step
 
-No description available.
+Add a WooCommerce product (will install WooCommerce if not present)
 
 ## Type
 ⚡ **Custom Step**

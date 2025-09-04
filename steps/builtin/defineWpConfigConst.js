@@ -24,7 +24,7 @@ customSteps.defineWpConfigConst = function( step ) {
 	}
 	return [ constStep ];
 };
-customSteps.defineWpConfigConst.info = "Define a wp-config PHP constant.";
+customSteps.defineWpConfigConst.description = "Define a wp-config PHP constant.";
 customSteps.defineWpConfigConst.builtin = true;
 customSteps.defineWpConfigConst.multiple = true;
 customSteps.defineWpConfigConst.vars = [

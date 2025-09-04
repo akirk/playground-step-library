@@ -56,7 +56,7 @@ customSteps.githubTheme = function( step ) {
 
 	return outSteps;
 };
-customSteps.githubTheme.info = "Install a theme from a Github repository.";
+customSteps.githubTheme.description = "Install a theme from a Github repository.";
 customSteps.githubTheme.vars = [
 {
 	"name": "url",

@@ -1,6 +1,6 @@
 # `doAction` Step
 
-No description available.
+Execute a custom action.
 
 ## Type
 ⚡ **Custom Step**

@@ -1,6 +1,6 @@
 # `setLandingPage` Step
 
-No description available.
+Set the landing page.
 
 ## Type
 ⚡ **Custom Step**

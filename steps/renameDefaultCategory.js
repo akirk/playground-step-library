@@ -11,7 +11,7 @@ customSteps.renameDefaultCategory = function( step ) {
 		}
 	];
 };
-customSteps.renameDefaultCategory.info = "Change the default \"Uncategorized\".";
+customSteps.renameDefaultCategory.description = "Change the default \"Uncategorized\".";
 customSteps.renameDefaultCategory.vars = [
 	{
 		"name": "categoryName",

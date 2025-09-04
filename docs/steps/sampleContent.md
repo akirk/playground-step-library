@@ -1,6 +1,6 @@
 # `sampleContent` Step
 
-No description available.
+Inserts sample pages to the site.
 
 ## Type
 ⚡ **Custom Step**

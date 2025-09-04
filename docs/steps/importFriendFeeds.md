@@ -1,6 +1,6 @@
 # `importFriendFeeds` Step
 
-No description available.
+Add subscriptions to the Friends plugin.
 
 ## Type
 ⚡ **Custom Step**

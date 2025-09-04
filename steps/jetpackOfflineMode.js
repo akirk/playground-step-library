@@ -34,7 +34,7 @@ customSteps.jetpackOfflineMode = function( step, blueprint ) {
 	}
 	return steps;
 };
-customSteps.jetpackOfflineMode.info = "Start Jetpack in Offline mode.";
+customSteps.jetpackOfflineMode.description = "Start Jetpack in Offline mode.";
 customSteps.jetpackOfflineMode.vars = [
 	{
 		"name": "blocks",

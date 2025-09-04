@@ -6,4 +6,4 @@ customSteps.blueprintRecorder = function ( step ) {
 		}
 	} );
 };
-customSteps.blueprintRecorder.info = "Record steps made and compile a new blueprint.";
+customSteps.blueprintRecorder.description = "Record steps made and compile a new blueprint.";

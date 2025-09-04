@@ -1,6 +1,6 @@
 # `jetpackOfflineMode` Step
 
-No description available.
+Start Jetpack in Offline mode.
 
 ## Type
 ⚡ **Custom Step**

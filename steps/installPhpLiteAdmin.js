@@ -44,4 +44,4 @@ $directory = false;
 	steps.landingPage = "/phpliteadmin.php";
 	return steps;
 };
-customSteps.installPhpLiteAdmin.info = "Provide phpLiteAdmin. Password: admin";
+customSteps.installPhpLiteAdmin.description = "Provide phpLiteAdmin. Password: admin";

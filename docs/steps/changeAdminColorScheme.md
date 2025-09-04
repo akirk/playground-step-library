@@ -1,6 +1,6 @@
 # `changeAdminColorScheme` Step
 
-No description available.
+Useful to combine with a login step.
 
 ## Type
 ⚡ **Custom Step**

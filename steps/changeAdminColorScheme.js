@@ -9,7 +9,7 @@ customSteps.changeAdminColorScheme = function( step ) {
 		}
 	];
 };
-customSteps.changeAdminColorScheme.info = "Useful to combine with a login step.";
+customSteps.changeAdminColorScheme.description = "Useful to combine with a login step.";
 customSteps.changeAdminColorScheme.vars = [
 	{
 		"name": "colorScheme",

@@ -1,6 +1,6 @@
 # `removeDashboardWidgets` Step
 
-No description available.
+Remove widgets from the wp-admin dashboard.
 
 ## Type
 ⚡ **Custom Step**

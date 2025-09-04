@@ -56,4 +56,4 @@ wp_set_object_terms($post_id, $term_id, 'wp_theme');
     ];
     return steps;
 };
-customSteps.setTT4Homepage.info = "Set the homepage for the twentytwentyfour theme.";
+customSteps.setTT4Homepage.description = "Set the homepage for the twentytwentyfour theme.";

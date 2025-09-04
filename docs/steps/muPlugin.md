@@ -1,6 +1,6 @@
 # `muPlugin` Step
 
-No description available.
+Add code for a plugin.
 
 ## Type
 ⚡ **Custom Step**

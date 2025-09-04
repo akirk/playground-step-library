@@ -34,7 +34,7 @@ foreach ( $iterator as $file ) {
 		}
 	];
 };
-customSteps.importWordPressComExport.info = "";
+customSteps.importWordPressComExport.description = "";
 customSteps.importWordPressComExport.vars = [
 	{
 		"name": "url",

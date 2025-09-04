@@ -22,7 +22,7 @@ $page_id = wp_insert_post( $page_args );`
 		}
 	];
 };
-customSteps.addPage.info = "Add a custom page.";
+customSteps.addPage.description = "Add a custom page.";
 customSteps.addPage.vars = [
 	{
 		"name": "postTitle",

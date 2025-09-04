@@ -6,7 +6,7 @@ customSteps.runPHP = function (step) {
 		}
 	];
 };
-customSteps.runPHP.info = "Run code in the context of WordPress.";
+customSteps.runPHP.description = "Run code in the context of WordPress.";
 customSteps.runPHP.vars = [
 	{
 		"name": "code",

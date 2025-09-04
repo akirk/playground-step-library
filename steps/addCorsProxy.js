@@ -20,4 +20,4 @@ $url = 'https://playground.wordpress.net/cors-proxy.php?' . $url;
 
 	return steps;
 };
-customSteps.addCorsProxy.info = "Automatically add the CORS proxy to outgoing HTTP requests.";
+customSteps.addCorsProxy.description = "Automatically add the CORS proxy to outgoing HTTP requests.";

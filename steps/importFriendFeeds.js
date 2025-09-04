@@ -57,7 +57,7 @@ Friends\\Import::opml("${opml}");
 	steps.landingPage = '/friends/?refresh&welcome';
 	return steps;
 };
-customSteps.importFriendFeeds.info = "Add subscriptions to the Friends plugin.";
+customSteps.importFriendFeeds.description = "Add subscriptions to the Friends plugin.";
 customSteps.importFriendFeeds.vars = [
 	{
 		"name": "opml",

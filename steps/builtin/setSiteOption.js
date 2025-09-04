@@ -18,7 +18,7 @@ customSteps.setSiteOption = function( step ) {
 	}
 	return [ optionStep ];
 };
-customSteps.setSiteOption.info = "Set a site option.";
+customSteps.setSiteOption.description = "Set a site option.";
 customSteps.setSiteOption.builtin = true;
 customSteps.setSiteOption.multiple = true;
 customSteps.setSiteOption.vars = [

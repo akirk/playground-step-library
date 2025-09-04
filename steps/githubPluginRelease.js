@@ -28,7 +28,7 @@ customSteps.githubPluginRelease = function( step ) {
 
 	return outSteps;
 };
-customSteps.githubPluginRelease.info = "Install a specific plugin release from a Github repository.";
+customSteps.githubPluginRelease.description = "Install a specific plugin release from a Github repository.";
 customSteps.githubPluginRelease.vars = [
 	{
 		"name": "repo",

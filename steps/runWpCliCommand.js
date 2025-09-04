@@ -6,7 +6,7 @@ customSteps.runWpCliCommand = function( step ) {
 	}
 	];
 };
-customSteps.runWpCliCommand.info = "";
+customSteps.runWpCliCommand.description = "";
 customSteps.runWpCliCommand.vars = [
 	{
 		"name": "command",

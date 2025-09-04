@@ -1,6 +1,6 @@
 # `skipWooCommerceWizard` Step
 
-No description available.
+When running WooCommerce, don't show the wizard.
 
 ## Type
 ⚡ **Custom Step**
