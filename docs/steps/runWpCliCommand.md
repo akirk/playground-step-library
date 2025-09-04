@@ -1,6 +1,6 @@
 # `runWpCliCommand` Step
 
-No description available.
+Run a wp-cli command.
 
 ## Type
 ⚡ **Custom Step**

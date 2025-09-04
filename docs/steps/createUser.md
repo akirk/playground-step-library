@@ -1,6 +1,6 @@
 # `createUser` Step
 
-No description available.
+Create a new user.
 
 ## Type
 ⚡ **Custom Step**

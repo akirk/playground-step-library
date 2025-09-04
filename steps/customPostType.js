@@ -1,4 +1,4 @@
-customSteps.customPostType = function() {
+customSteps.customPostType = function () {
 	var steps = [
 		{
 			"step": "mkdir",
@@ -12,18 +12,19 @@ customSteps.customPostType = function() {
 	];
 	return steps;
 }
+customSteps.customPostType.description = "Register a custom post type.";
 customSteps.customPostType.vars = [
 	{
 		"name": "slug",
 		"description": "Post type key",
 		"regex": "^[a-z_]{0,20}$",
 		"required": true,
-		"samples": [ "book", 'music', 'story' ]
+		"samples": ["book", 'music', 'story']
 	},
 	{
 		"name": "name",
 		"description": "The user visible label",
 		"required": true,
-		"samples": [ "Books", 'Music', 'Stories' ]
+		"samples": ["Books", 'Music', 'Stories']
 	}
 ];

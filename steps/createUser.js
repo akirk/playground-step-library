@@ -1,19 +1,19 @@
-customSteps.createUser = function ( step ) {
+customSteps.createUser = function (step) {
 	let code = "<?php require_once '/wordpress/wp-load.php';";
 	let username = step?.vars?.username;
 	let password = step?.vars?.password;
 	let role = step?.vars?.role;
 	let display_name = step?.vars?.display_name;
 	let email = step?.vars?.email;
-	if ( !username || !password || !role ) {
+	if (!username || !password || !role) {
 		return [];
 	}
 	code += ` $data = array( 'user_login' => '${username}', 'user_pass' => '${password}', 'role' => '${role}',`
-	if ( display_name ) {
+	if (display_name) {
 		code += ` 'display_name' => '${display_name}',`;
 	}
 
-	if ( email ) {
+	if (email) {
 		code += ` 'user_email' => '${email}',`;
 	}
 
@@ -24,51 +24,52 @@ customSteps.createUser = function ( step ) {
 			code
 		}
 	];
-	if ( step?.vars?.login ) {
-		steps.push( {
+	if (step?.vars?.login) {
+		steps.push({
 			"step": "login",
 			"username": username,
 			"password": password
 
-		} );
+		});
 		steps.landingPage = '/wp-admin/';
 	}
 	return steps;
 }
+customSteps.createUser.description = "Create a new user.";
 customSteps.createUser.vars = [
 	{
 		"name": "username",
 		"description": "Username",
 		"required": true,
-		"samples": [ "user" ]
+		"samples": ["user"]
 	},
 	{
 		"name": "password",
 		"description": "Password",
 		"required": true,
-		"samples": [ "password" ]
+		"samples": ["password"]
 	},
 	{
 		"name": "role",
 		"description": "Role",
 		"required": true,
 		"type": "text",
-		"samples": [ "administrator", "editor", "read", "client" ]
+		"samples": ["administrator", "editor", "read", "client"]
 	},
 	{
 		"name": "display_name",
 		"description": "Display Name",
-		"samples": [ "User" ]
+		"samples": ["User"]
 	},
 	{
 		"name": "email",
 		"description": "E-Mail",
-		"samples": [ '', "wordpress@example.org" ]
+		"samples": ['', "wordpress@example.org"]
 	},
 	{
 		"name": "login",
 		"description": "Immediately log the user in",
 		'type': 'boolean',
-		'samples': [ true ]
+		'samples': [true]
 	}
 ];

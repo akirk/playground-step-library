@@ -1,6 +1,6 @@
 # `setSiteName` Step
 
-No description available.
+Set the site name and tagline.
 
 ## Type
 ⚡ **Custom Step**

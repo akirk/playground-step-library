@@ -1,6 +1,6 @@
 # `customPostType` Step
 
-No description available.
+Register a custom post type.
 
 ## Type
 ⚡ **Custom Step**

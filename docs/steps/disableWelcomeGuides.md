@@ -1,6 +1,6 @@
 # `disableWelcomeGuides` Step
 
-No description available.
+Disable the welcome guides in the site editor.
 
 ## Type
 ⚡ **Custom Step**

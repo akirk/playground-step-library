@@ -1,4 +1,4 @@
-customSteps.importWordPressComExport = function( step ) {
+customSteps.importWordPressComExport = function (step) {
 	const url = step.vars.corsProxy ? 'https://playground.wordpress.net/cors-proxy.php?' + step.vars.url : step.vars.url;
 	return [
 		{
@@ -14,8 +14,8 @@ customSteps.importWordPressComExport = function( step ) {
 			"extractToPath": "/tmp"
 		},
 		{
-		"step": "runPHP",
-		"code": `
+			"step": "runPHP",
+			"code": `
 <?php
 $iterator = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( '/tmp/' ) );
 foreach ( $iterator as $file ) {
@@ -34,19 +34,19 @@ foreach ( $iterator as $file ) {
 		}
 	];
 };
-customSteps.importWordPressComExport.description = "";
+customSteps.importWordPressComExport.description = "Import a WordPress.com export file (WXR in a ZIP)";
 customSteps.importWordPressComExport.vars = [
 	{
 		"name": "url",
 		"description": "URL of a WordPress.com export ZIP file",
 		"required": true,
-		"samples": [ "" ]
+		"samples": [""]
 	},
 	{
 		"name": "corsProxy",
 		"description": "Use a cors proxy for the request",
 		"required": true,
 		"type": "boolean",
-		"samples": [ "true", "false" ]
+		"samples": ["true", "false"]
 	}
 ];

@@ -1,4 +1,4 @@
-customSteps.deleteAllPosts = function() {
+customSteps.deleteAllPosts = function () {
     var steps = [
         {
             "step": "runPHP",
@@ -13,3 +13,4 @@ foreach ($posts as $post) wp_delete_post($post->ID, true);
     ];
     return steps;
 };
+customSteps.deleteAllPosts.description = "Delete all posts, pages, attachments, revisions and menu items.";

@@ -1,6 +1,6 @@
 # `showAdminNotice` Step
 
-No description available.
+Show an admin notice in the dashboard.
 
 ## Type
 ⚡ **Custom Step**

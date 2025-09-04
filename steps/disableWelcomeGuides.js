@@ -1,5 +1,4 @@
-
-customSteps.disableWelcomeGuides = function() {
+customSteps.disableWelcomeGuides = function () {
 	var steps = [
 		{
 			"step": "mkdir",
@@ -24,3 +23,4 @@ add_action( 'enqueue_block_editor_assets', 'my_disable_welcome_guides', 20 );
 	];
 	return steps;
 };
+customSteps.disableWelcomeGuides.description = "Disable the welcome guides in the site editor.";

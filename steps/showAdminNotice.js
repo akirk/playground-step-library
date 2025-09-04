@@ -1,4 +1,4 @@
-customSteps.showAdminNotice = function( step ) {
+customSteps.showAdminNotice = function (step) {
 	const dismissible = step?.vars?.dismissible ? ' is-dismissible' : '';
 	const text = step?.vars?.text.replace(/'/g, "\\'");
 
@@ -17,7 +17,7 @@ add_action(
 	}
 );`;
 
-	if ( step?.vars?.dismissible ) {
+	if (step?.vars?.dismissible) {
 		php += `
 add_action('wp_ajax_dismiss_custom-admin-notice-${step?.vars?.stepIndex}', function() {
 	check_ajax_referer('custom-admin-notice-${step?.vars?.stepIndex}', 'nonce');
@@ -69,24 +69,25 @@ add_action('admin_footer', function() {
 	steps.landingPage = '/wp-admin/';
 	return steps;
 }
+customSteps.showAdminNotice.description = "Show an admin notice in the dashboard.";
 customSteps.showAdminNotice.vars = [
 	{
 		"name": "text",
 		"description": "The notice to be displayed",
 		"required": true,
-		"samples": [ "Welcome to WordPress Playground!", "This is a demo of the Step Library" ]
+		"samples": ["Welcome to WordPress Playground!", "This is a demo of the Step Library"]
 	},
 	{
 		"name": "type",
 		"description": "The type of notice",
 		"type": "select",
-		"options": [ "success", "info", "warning", "error" ],
-		"samples": [ "success" ]
+		"options": ["success", "info", "warning", "error"],
+		"samples": ["success"]
 	},
 	{
 		"name": "dismissible",
 		"description": "Allow to dismiss",
 		"type": "boolean",
-		"samples": [ true ]
+		"samples": [true]
 	}
 ];

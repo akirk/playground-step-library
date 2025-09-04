@@ -290,7 +290,7 @@ This document provides detailed information about all available steps, including
 ## `createUser`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Create a new user.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -322,7 +322,7 @@ This document provides detailed information about all available steps, including
 ## `customPostType`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Register a custom post type.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -370,7 +370,7 @@ This document provides detailed information about all available steps, including
 ## `deleteAllPosts`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Delete all posts, pages, attachments, revisions and menu items.
 
 *No parameters defined.*
 
@@ -388,7 +388,7 @@ This document provides detailed information about all available steps, including
 ## `disableWelcomeGuides`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Disable the welcome guides in the site editor.
 
 *No parameters defined.*
 
@@ -604,7 +604,7 @@ This document provides detailed information about all available steps, including
 ## `importWordPressComExport`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Import a WordPress.com export file (WXR in a ZIP)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -888,7 +888,7 @@ This document provides detailed information about all available steps, including
 ## `runWpCliCommand`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Run a wp-cli command.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -950,7 +950,7 @@ This document provides detailed information about all available steps, including
 ## `setLanguage`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Set the WordPress site language.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -972,7 +972,7 @@ This document provides detailed information about all available steps, including
 ## `setSiteName`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Set the site name and tagline.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -1038,7 +1038,7 @@ This document provides detailed information about all available steps, including
 ## `showAdminNotice`
 
 **Type**: Custom Step  
-**Description**: No description available
+**Description**: Show an admin notice in the dashboard.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -1079,4 +1079,4 @@ This document provides detailed information about all available steps, including
 
 ---
 
-*Generated automatically from step definitions on 2025-09-04T15:20:48.339Z*
+*Generated automatically from step definitions on 2025-09-04T15:25:03.395Z*

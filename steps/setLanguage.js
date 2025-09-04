@@ -1,6 +1,6 @@
-customSteps.setLanguage = function( step ) {
+customSteps.setLanguage = function (step) {
 	const lang = step?.vars?.language;
-	if ( ! lang ) {
+	if (!lang) {
 		return [];
 	}
 	const localeMapping = {
@@ -22,11 +22,12 @@ customSteps.setLanguage = function( step ) {
 	];
 	return steps;
 };
+customSteps.setLanguage.description = "Set the WordPress site language.";
 customSteps.setLanguage.vars = [
 	{
 		"name": "language",
 		"description": "A valid WordPress language slug",
 		"required": true,
-		"samples": [ "de", "fr", "es", "it", "pl", "ar" ]
+		"samples": ["de", "fr", "es", "it", "pl", "ar"]
 	}
 ];

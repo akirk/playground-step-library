@@ -54,10 +54,10 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`blueprintExtractor`](steps/blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
 - [`blueprintRecorder`](steps/blueprintRecorder.md) - Record steps made and compile a new blueprint.
 - [`changeAdminColorScheme`](steps/changeAdminColorScheme.md) - Useful to combine with a login step.
-- [`createUser`](steps/createUser.md) - No description available
-- [`customPostType`](steps/customPostType.md) - No description available
-- [`deleteAllPosts`](steps/deleteAllPosts.md) - No description available
-- [`disableWelcomeGuides`](steps/disableWelcomeGuides.md) - No description available
+- [`createUser`](steps/createUser.md) - Create a new user.
+- [`customPostType`](steps/customPostType.md) - Register a custom post type.
+- [`deleteAllPosts`](steps/deleteAllPosts.md) - Delete all posts, pages, attachments, revisions and menu items.
+- [`disableWelcomeGuides`](steps/disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - [`doAction`](steps/doAction.md) - Execute a custom action.
 - [`fakeHttpResponse`](steps/fakeHttpResponse.md) - Fake a wp_remote_request() response.
 - [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
@@ -65,20 +65,20 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`githubPluginRelease`](steps/githubPluginRelease.md) - Install a specific plugin release from a Github repository.
 - [`githubTheme`](steps/githubTheme.md) - Install a theme from a Github repository.
 - [`importFriendFeeds`](steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.
-- [`importWordPressComExport`](steps/importWordPressComExport.md) - No description available
+- [`importWordPressComExport`](steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
 - [`installPhEditor`](steps/installPhEditor.md) - Install phEditor. Password: admin
 - [`installPhpLiteAdmin`](steps/installPhpLiteAdmin.md) - Provide phpLiteAdmin. Password: admin
 - [`jetpackOfflineMode`](steps/jetpackOfflineMode.md) - Start Jetpack in Offline mode.
 - [`muPlugin`](steps/muPlugin.md) - Add code for a plugin.
 - [`removeDashboardWidgets`](steps/removeDashboardWidgets.md) - Remove widgets from the wp-admin dashboard.
 - [`renameDefaultCategory`](steps/renameDefaultCategory.md) - Change the default "Uncategorized".
-- [`runWpCliCommand`](steps/runWpCliCommand.md) - No description available
+- [`runWpCliCommand`](steps/runWpCliCommand.md) - Run a wp-cli command.
 - [`sampleContent`](steps/sampleContent.md) - Inserts sample pages to the site.
 - [`setLandingPage`](steps/setLandingPage.md) - Set the landing page.
-- [`setLanguage`](steps/setLanguage.md) - No description available
-- [`setSiteName`](steps/setSiteName.md) - No description available
+- [`setLanguage`](steps/setLanguage.md) - Set the WordPress site language.
+- [`setSiteName`](steps/setSiteName.md) - Set the site name and tagline.
 - [`setTT4Homepage`](steps/setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
-- [`showAdminNotice`](steps/showAdminNotice.md) - No description available
+- [`showAdminNotice`](steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 
 ## 🔗 Cross-References
@@ -103,4 +103,4 @@ To add a new step:
 
 ---
 
-*This documentation is auto-generated from step definitions. Last updated: 2025-09-04T15:20:48.334Z*
+*This documentation is auto-generated from step definitions. Last updated: 2025-09-04T15:25:03.390Z*

@@ -1,6 +1,6 @@
 # `importWordPressComExport` Step
 
-No description available.
+Import a WordPress.com export file (WXR in a ZIP)
 
 ## Type
 ⚡ **Custom Step**

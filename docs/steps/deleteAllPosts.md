@@ -1,6 +1,6 @@
 # `deleteAllPosts` Step
 
-No description available.
+Delete all posts, pages, attachments, revisions and menu items.
 
 ## Type
 ⚡ **Custom Step**

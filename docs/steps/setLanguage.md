@@ -1,6 +1,6 @@
 # `setLanguage` Step
 
-No description available.
+Set the WordPress site language.
 
 ## Type
 ⚡ **Custom Step**
