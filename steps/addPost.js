@@ -1,18 +1,28 @@
 customSteps.addPost = function( step ) {
 	const postTitle = step.vars.postTitle.replace(/'/g, "\\'" );
 	const postContent = step.vars.postContent.replace(/'/g, "\\'" );
-	const postDate = step.vars.postDate.replace(/'/g, "\\'" );
 	const postType = step.vars.postType;
+	const postStatus = step.vars.postStatus || 'publish';
+	
 	let code = `
 <?php require_once '/wordpress/wp-load.php';
 $page_args = array(
 	'post_type'    => '${postType}',
-	'post_date'    => strtotime('${postDate}'),
-	'post_status'  => 'publish',
+	'post_status'  => '${postStatus}',
 	'post_title'   => '${postTitle}',
-	'post_content' => '${postContent}',
+	'post_content' => '${postContent}',`;
+
+	// Add post_date only if provided
+	if ( step.vars.postDate ) {
+		const postDate = step.vars.postDate.replace(/'/g, "\\'" );
+		code += `
+	'post_date'    => strtotime('${postDate}'),`;
+	}
+
+	code += `
 );
-$page_id = wp_insert_post( $page_args );`
+$page_id = wp_insert_post( $page_args );`;
+
 	if ( step.vars.homepage ) {
 		code += "update_option( 'page_on_front', $page_id );";
 		code += "update_option( 'show_on_front', 'page' );";
@@ -42,8 +52,8 @@ customSteps.addPost.vars = [
 	},
 	{
 		"name": "postDate",
-		"description": "The date of the post",
-		"required": true,
+		"description": "The date of the post (optional)",
+		"required": false,
 		"samples": [ "now", "2024-01-01 00:00:00" ]
 	},
 	{
@@ -52,6 +62,12 @@ customSteps.addPost.vars = [
 		"required": true,
 		'regex': '^[a-z][a-z0-9_]+$',
 		"samples": [ "post", "page", "custom" ]
+	},
+	{
+		"name": "postStatus",
+		"description": "The post status",
+		"required": false,
+		"samples": [ "publish", "draft", "private", "pending" ]
 	},
 	{
 		"label": "Register post type",

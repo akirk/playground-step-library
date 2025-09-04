@@ -1,8 +1,8 @@
-customSteps.runPHP = function( step ) {
+customSteps.runPHP = function (step) {
 	return [
 		{
 			"step": "runPHP",
-			"code": "<?php require_once '/wordpress/wp-load.php'; " + step.vars.code.replace( /[;\s]+$/, '' ) + ';'
+			code
 		}
 	];
 };
@@ -13,6 +13,6 @@ customSteps.runPHP.vars = [
 		"description": "The code to run",
 		"type": "textarea",
 		"required": true,
-		"samples": [ "" ]
+		"samples": [""]
 	}
 ];
