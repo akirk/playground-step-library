@@ -4,7 +4,7 @@
   "description": "Examples showing how to use playground-step-library with @wp-playground/cli",
   "main": "basic/index.ts",
   "scripts": {
-    "start": "node chooser.js",
+    "browse-examples": "node chooser.js",
     "build": "tsc",
     "example:basic:index": "tsx basic/index.ts",
     "example:basic:simple-post": "tsx basic/simple-post.ts",
@@ -12,7 +12,7 @@
     "example:blog:complete": "tsx blog-setup/complete-blog.ts",
     "example:advanced:validation": "tsx advanced/validation-demo.ts",
     "example:advanced:compile": "tsx advanced/compile-only.ts",
-    "example:ecommerce:shop": "tsx ecommerce/woocommerce-setup.ts"
+    "example:ecommerce:shop": "tsx ecommerce/woocommerce-shop.ts"
   },
   "dependencies": {
     "@wp-playground/cli": "^2.0.15",

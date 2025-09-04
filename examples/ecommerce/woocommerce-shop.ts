@@ -10,6 +10,7 @@ const compiler = new PlaygroundStepLibrary();
 
 const blueprint = {
   login: true,
+  landingPage: '/shop/',
   steps: [
     // Site configuration
     {
@@ -33,9 +34,9 @@ const blueprint = {
       role: 'administrator'
     },
 
-    // Create sample products using the new createProduct step
+    // Create sample products using the addProduct step
     {
-      step: 'createProduct',
+      step: 'addProduct',
       productTitle: 'Premium T-Shirt',
       productDescription: '<p>High-quality cotton t-shirt with modern design.</p><ul><li>100% Cotton</li><li>Machine washable</li><li>Available in multiple sizes</li></ul>',
       productPrice: '24.99',
@@ -43,21 +44,21 @@ const blueprint = {
       productSku: 'TSHIRT-001'
     },
     {
-      step: 'createProduct',
+      step: 'addProduct',
       productTitle: 'WordPress Development Guide',
       productDescription: '<p>Complete guide to WordPress development with practical examples.</p><p>Perfect for beginners and intermediate developers.</p>',
       productPrice: '49.99',
       productSku: 'GUIDE-WP-2024'
     },
     {
-      step: 'createProduct',
+      step: 'addProduct',
       productTitle: 'Coffee Mug',
       productDescription: '<p>Start your day with this beautiful ceramic mug.</p><p>Features:</p><ul><li>11oz capacity</li><li>Dishwasher safe</li><li>Custom WordPress design</li></ul>',
       productPrice: '15.99',
       productSku: 'MUG-WP-001'
     },
     {
-      step: 'createProduct',
+      step: 'addProduct',
       productTitle: 'Laptop Sticker Pack',
       productDescription: '<p>Collection of 10 high-quality vinyl stickers perfect for laptops, phones, and more.</p>',
       productPrice: '12.99',
@@ -114,13 +115,13 @@ const blueprint = {
 };
 
 console.log('🛒 Setting up WooCommerce shop with real products...');
-console.log(`📦 Creating ${blueprint.steps.filter(s => s.step === 'createProduct').length} products`);
+console.log(`📦 Creating ${blueprint.steps.filter(s => s.step === 'addProduct').length} products`);
 console.log(`📄 Creating ${blueprint.steps.filter(s => s.step === 'addPage').length} pages`);
 console.log(`🔌 Installing WooCommerce plugin`);
 
 const compiled = compiler.compile(blueprint);
 console.log(`\n⚙️  Compiled ${blueprint.steps.length} custom steps to ${compiled.steps.length} native steps`);
-
+console.log(compiled);
 // Start WordPress Playground
 const cliServer: RunCLIServer = await runCLI({
   command: 'server',

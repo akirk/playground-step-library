@@ -35,7 +35,11 @@ const blueprint = {
 };
 
 console.log('🏗️  Setting up a basic WordPress site...');
-console.log(`📋 Using ${blueprint.steps.length} custom steps`);
+console.log(`📋 Using ${blueprint.steps.length} custom steps:`);
+
+blueprint.steps.forEach((step, index) => {
+  console.log(`  ${index + 1}. ${step.step}`);
+});
 
 const compiled = compiler.compile(blueprint);
 console.log(`⚙️  Compiled to ${compiled.steps.length} native steps`);

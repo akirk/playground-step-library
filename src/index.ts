@@ -11,7 +11,7 @@ interface StepVariable {
 }
 
 interface CustomStepDefinition {
-    (step: { vars: Record<string, any> }): any[];
+    (step: BlueprintStep, inputData?: any): any[];
     description?: string;
     vars?: StepVariable[];
     builtin?: boolean;
@@ -20,11 +20,16 @@ interface CustomStepDefinition {
 
 interface BlueprintStep {
     step: string;
+    vars?: Record<string, any>;
+    count?: number;
     [key: string]: any;
 }
 
 interface Blueprint {
-    steps: BlueprintStep[];
+    steps?: BlueprintStep[];
+    title?: string;
+    landingPage?: string;
+    features?: Record<string, any>;
     [key: string]: any;
 }
 
@@ -35,6 +40,13 @@ interface ValidationResult {
 
 interface CompilerOptions {
     stepsDir?: string;
+    landingPage?: string;
+    features?: Record<string, any>;
+    phpExtensionBundles?: string[];
+    preferredVersions?: {
+        wp?: string;
+        php?: string;
+    };
 }
 
 interface StepInfo {
@@ -62,148 +74,222 @@ class PlaygroundStepLibrary {
      */
     private loadCustomSteps(): void {
         this.customSteps = {};
+
+        // First pass: collect all step files
+        const stepFiles: Array<{path: string, name: string, isBuiltin: boolean}> = [];
         
-        // Load custom steps from steps/ directory
-        this.loadStepsFromDirectory(this.stepsDir, false);
+        // Collect custom steps from steps/ directory
+        this.collectStepFiles(this.stepsDir, false, stepFiles);
         
-        // Load builtin steps from steps/builtin/ directory
+        // Collect builtin steps from steps/builtin/ directory
         const builtinDir = path.join(this.stepsDir, 'builtin');
         if (fs.existsSync(builtinDir)) {
-            this.loadStepsFromDirectory(builtinDir, true);
+            this.collectStepFiles(builtinDir, true, stepFiles);
         }
+        
+        // Second pass: load all steps with access to the full customSteps object
+        this.loadStepFiles(stepFiles);
     }
 
     /**
-     * Load step definitions from a directory
+     * Collect step files from a directory
      */
-    private loadStepsFromDirectory(dir: string, isBuiltin = false): void {
+    private collectStepFiles(dir: string, isBuiltin: boolean, stepFiles: Array<{path: string, name: string, isBuiltin: boolean}>): void {
         if (!fs.existsSync(dir)) {
             return;
         }
 
         const files = fs.readdirSync(dir).filter(file => file.endsWith('.js'));
-        
+
         for (const file of files) {
+            const stepName = path.basename(file, '.js');
+            const stepPath = path.join(dir, file);
+            stepFiles.push({ path: stepPath, name: stepName, isBuiltin });
+        }
+    }
+
+    /**
+     * Load all step files with access to the full customSteps object
+     */
+    private loadStepFiles(stepFiles: Array<{path: string, name: string, isBuiltin: boolean}>): void {
+        for (const stepFile of stepFiles) {
             try {
-                const stepName = path.basename(file, '.js');
-                const stepPath = path.join(dir, file);
-                const stepCode = fs.readFileSync(stepPath, 'utf8');
-                
-                // Create a sandbox environment to execute the step code
-                const customSteps: Record<string, CustomStepDefinition> = {};
-                const sandbox = { customSteps };
-                
-                // Execute the step code in the sandbox
+                const stepCode = fs.readFileSync(stepFile.path, 'utf8');
+
+                // Execute the step code with access to the full customSteps object
                 const func = new Function('customSteps', stepCode);
-                func(customSteps);
-                
-                if (customSteps[stepName]) {
-                    this.customSteps[stepName] = customSteps[stepName];
-                    this.customSteps[stepName].builtin = isBuiltin;
+                func(this.customSteps);
+
+                if (this.customSteps[stepFile.name]) {
+                    this.customSteps[stepFile.name].builtin = stepFile.isBuiltin;
                 }
             } catch (error) {
-                console.warn(`Warning: Failed to load step ${file}:`, (error as Error).message);
+                console.warn(`Warning: Failed to load step ${stepFile.name}:`, (error as Error).message);
             }
         }
     }
 
     /**
      * Compile a blueprint by transforming custom steps into native steps
+     * Uses the transformJson logic from script.js adapted for TypeScript
      */
-    compile(blueprint: Blueprint | string): Blueprint {
-        let parsedBlueprint: Blueprint;
-        
+    compile(blueprint: Blueprint | string, options: CompilerOptions = {}): Blueprint {
+        let inputData: Blueprint;
+
         if (typeof blueprint === 'string') {
-            parsedBlueprint = JSON.parse(blueprint);
+            inputData = JSON.parse(blueprint);
         } else {
-            parsedBlueprint = blueprint;
+            inputData = { ...blueprint };
         }
 
-        if (!parsedBlueprint || !parsedBlueprint.steps) {
+        if (!inputData || !inputData.steps || !Array.isArray(inputData.steps)) {
             throw new Error('Invalid blueprint: missing steps array');
         }
 
-        const compiledBlueprint: Blueprint = {
-            ...parsedBlueprint,
-            steps: this.compileSteps(parsedBlueprint.steps)
+        // Default user-defined options
+        const userDefined = {
+            landingPage: '/',
+            features: {},
+            ...options
         };
 
-        return compiledBlueprint;
-    }
+        // Merge user defined options with input data
+        inputData = Object.assign(userDefined, inputData);
+        const outputData: Blueprint = Object.assign({}, inputData);
 
-    /**
-     * Compile an array of steps
-     */
-    private compileSteps(steps: BlueprintStep[]): BlueprintStep[] {
-        return this.compileStepsWithDepth(steps, 0);
-    }
+        if ((outputData as any).title) {
+            delete (outputData as any).title;
+        }
 
-    /**
-     * Compile an array of steps with depth tracking
-     */
-    private compileStepsWithDepth(steps: BlueprintStep[], depth = 0): BlueprintStep[] {
-        const compiledSteps: BlueprintStep[] = [];
+        outputData.steps = [] as BlueprintStep[];
 
-        for (const step of steps) {
-            const compiledStep = this.compileStep(step, depth);
-            if (Array.isArray(compiledStep)) {
-                compiledSteps.push(...compiledStep);
-            } else {
-                compiledSteps.push(compiledStep);
+        inputData.steps!.forEach((step, index) => {
+            let outSteps: any[] = [];
+            if (!step.vars) {
+                step.vars = {};
             }
-        }
-
-        return compiledSteps;
-    }
-
-    /**
-     * Compile a single step
-     */
-    private compileStep(step: BlueprintStep, depth = 0): BlueprintStep | BlueprintStep[] {
-        if (depth > 10) {
-            throw new Error(`Maximum compilation depth exceeded for step: ${step.step}`);
-        }
-        
-        const { step: stepName, ...stepData } = step;
-
-        // Check if this is a custom step (but not a builtin step)
-        if (this.customSteps[stepName] && !this.customSteps[stepName].builtin) {
-            const customStep = this.customSteps[stepName];
             
-            // Prepare step context with variables
-            const stepContext = {
-                vars: stepData
-            };
+            // Move all step properties (except 'step' and 'vars') into vars
+            for (const key in step) {
+                if (key !== 'step' && key !== 'vars') {
+                    step.vars[key] = step[key];
+                }
+            }
+            
+            step.vars.stepIndex = index;
 
-            // Execute the custom step transformation
-            const transformedSteps = customStep(stepContext);
-            
-            // Process variable substitution in the transformed steps
-            const processedSteps = this.processVariableSubstitution(transformedSteps, stepData);
-            
-            // Recursively compile the transformed steps in case they contain more custom steps
-            return this.compileStepsWithDepth(processedSteps, depth + 1);
+            if (this.customSteps[step.step]) {
+                outSteps = this.customSteps[step.step](step, inputData);
+                if (typeof outSteps !== 'object') {
+                    outSteps = [];
+                }
+                if ((outSteps as any).landingPage) {
+                    (outputData as any).landingPage = (outSteps as any).landingPage;
+                }
+                if ((outSteps as any).features) {
+                    (outputData as any).features = (outSteps as any).features;
+                }
+                if ((outSteps as any).login) {
+                    (outputData as any).login = (outSteps as any).login;
+                }
+                if (step.count) {
+                    outSteps = outSteps.slice(0, step.count);
+                }
+            } else {
+                outSteps.push(step);
+            }
+
+            for (let i = 0; i < outSteps.length; i++) {
+                if (typeof outSteps[i] !== 'object') {
+                    continue;
+                }
+
+                // Handle query params (removed from node environment)
+                if (typeof outSteps[i].queryParams === 'object') {
+                    delete outSteps[i].queryParams;
+                }
+
+                // Variable substitution
+                if (step.vars) {
+                    Object.keys(step.vars).forEach(key => {
+                        for (let j in outSteps[i]) {
+                            if (typeof outSteps[i][j] === 'object') {
+                                Object.keys(outSteps[i][j]).forEach(k => {
+                                    if (typeof outSteps[i][j][k] === 'string' && outSteps[i][j][k].includes('${' + key + '}')) {
+                                        outSteps[i][j][k] = outSteps[i][j][k].replace('${' + key + '}', step.vars![key]);
+                                    }
+                                });
+                            } else if (typeof outSteps[i][j] === 'string' && outSteps[i][j].includes('${' + key + '}')) {
+                                outSteps[i][j] = outSteps[i][j].replace('${' + key + '}', step.vars![key]);
+                            }
+                        }
+                    });
+                }
+
+                // Remove unnecessary whitespace
+                for (let j in outSteps[i]) {
+                    if (typeof outSteps[i][j] === 'string') {
+                        outSteps[i][j] = outSteps[i][j].replace(/^\s+/g, '').replace(/\s+$/g, '').replace(/\n\s+/g, '\n');
+                    } else if (typeof outSteps[i][j] === 'object') {
+                        Object.keys(outSteps[i][j]).forEach(k => {
+                            if (typeof outSteps[i][j][k] === 'string') {
+                                outSteps[i][j][k] = outSteps[i][j][k].replace(/^\s+/g, '').replace(/\s+$/g, '').replace(/\n\s+/g, '\n');
+                            }
+                        });
+                    }
+                }
+            }
+
+            if (outSteps) {
+                for (let i = 0; i < outSteps.length; i++) {
+                    // Deduplication logic
+                    if (outSteps[i].dedup === undefined || outSteps[i].dedup || outSteps[i].dedup === 'last') {
+                        let dedupIndex = -1;
+                        const dedupStep = outputData.steps!.find((step, index) => {
+                            for (let j in step) {
+                                if (outSteps[i][j] === undefined) {
+                                    return false;
+                                }
+                                if (typeof step[j] === 'object') {
+                                    if (JSON.stringify(step[j]) !== JSON.stringify(outSteps[i][j])) {
+                                        return false;
+                                    }
+                                } else if (step[j] !== outSteps[i][j]) {
+                                    return false;
+                                }
+                            }
+                            dedupIndex = index;
+                            return true;
+                        });
+
+                        if (outSteps[i].dedup === 'last' && dedupIndex !== -1) {
+                            outputData.steps!.splice(dedupIndex, 1);
+                        } else if (dedupStep) {
+                            continue;
+                        }
+                        if (outSteps[i].dedup) {
+                            delete outSteps[i].dedup;
+                        }
+                    }
+                    outputData.steps!.push(outSteps[i]);
+                }
+            }
+        });
+
+        // Clean up output data
+        if ((outputData as any).landingPage === '/') {
+            delete (outputData as any).landingPage;
         }
 
-        // Return the step as-is if it's not a custom step or is a builtin step
-        return step;
-    }
-
-    /**
-     * Process variable substitution in step definitions
-     */
-    private processVariableSubstitution(steps: any[], variables: Record<string, any>): BlueprintStep[] {
-        const stepString = JSON.stringify(steps);
-        let processedString = stepString;
-
-        // Replace ${varName} placeholders with actual values
-        for (const [varName, varValue] of Object.entries(variables)) {
-            const placeholder = `\${${varName}}`;
-            const regex = new RegExp(placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-            processedString = processedString.replace(regex, String(varValue));
+        if ((outputData as any).features && Object.keys((outputData as any).features).length === 0) {
+            delete (outputData as any).features;
         }
 
-        return JSON.parse(processedString);
+        if (outputData.steps!.length === 0) {
+            delete outputData.steps;
+        }
+
+        return outputData;
     }
 
     /**
@@ -211,7 +297,7 @@ class PlaygroundStepLibrary {
      */
     getAvailableSteps(): Record<string, StepInfo> {
         const stepInfo: Record<string, StepInfo> = {};
-        
+
         for (const [stepName, stepDef] of Object.entries(this.customSteps)) {
             stepInfo[stepName] = {
                 description: stepDef.description || '',
@@ -229,7 +315,7 @@ class PlaygroundStepLibrary {
      */
     validateBlueprint(blueprint: Blueprint | string): ValidationResult {
         let parsedBlueprint: Blueprint;
-        
+
         if (typeof blueprint === 'string') {
             try {
                 parsedBlueprint = JSON.parse(blueprint);
@@ -249,9 +335,9 @@ class PlaygroundStepLibrary {
         }
 
         // Validate each step
-        for (let i = 0; i < parsedBlueprint.steps.length; i++) {
-            const step = parsedBlueprint.steps[i];
-            
+        for (let i = 0; i < parsedBlueprint.steps!.length; i++) {
+            const step: BlueprintStep = parsedBlueprint.steps![i];
+
             if (!step.step || typeof step.step !== 'string') {
                 return { valid: false, error: `Step ${i} must have a 'step' property with step name` };
             }
@@ -264,9 +350,9 @@ class PlaygroundStepLibrary {
                     // Validate required variables
                     for (const varDef of customStep.vars) {
                         if (varDef.required && !step.hasOwnProperty(varDef.name)) {
-                            return { 
-                                valid: false, 
-                                error: `Step ${i} (${stepName}) is missing required variable: ${varDef.name}` 
+                            return {
+                                valid: false,
+                                error: `Step ${i} (${stepName}) is missing required variable: ${varDef.name}`
                             };
                         }
                     }

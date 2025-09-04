@@ -876,9 +876,11 @@ addEventListener('DOMContentLoaded', function () {
 	}
 
 	function transformJson() {
-		let j, jsonInput = blueprint;
+		let jsonInput = blueprint;
 		const queries = [];
 		let useBlueprintURLParam = false;
+		
+		// Prepare compilation options from UI elements
 		const userDefined = {
 			'landingPage': '/',
 			'features': {}
@@ -893,123 +895,24 @@ addEventListener('DOMContentLoaded', function () {
 			};
 		}
 
-		let inputData = Object.assign(userDefined, JSON.parse(jsonInput));
-		const outputData = Object.assign({}, inputData);
-		if (outputData.title) {
-			delete outputData.title;
-		}
-		outputData.steps = [];
-		inputData.steps.forEach(function (step, index) {
-			let outSteps = [];
-			if (!step.vars) {
-				step.vars = {};
-			}
-			step.vars.stepIndex = index;
-			if (customSteps[step.step]) {
-				outSteps = customSteps[step.step](step, inputData);
-				if (typeof outSteps !== 'object') {
-					outSteps = [];
-				}
-				if (outSteps.landingPage) {
-					outputData.landingPage = outSteps.landingPage;
-				}
-				if (outSteps.features) {
-					outputData.features = outSteps.features;
-				}
-				if (outSteps.login) {
-					outputData.login = outSteps.login;
-				}
-				if (step.count) {
-					outSteps = outSteps.slice(0, step.count);
-				}
-			} else {
-				outSteps.push(step);
-			}
-			for (let i = 0; i < outSteps.length; i++) {
-				if (typeof outSteps[i] !== 'object') {
-					continue;
-				}
-				if (typeof outSteps[i].queryParams === 'object') {
-					for (j in outSteps[i].queryParams) {
+		// Use the PlaygroundStepLibrary to compile the blueprint
+		const compiler = new PlaygroundStepLibrary();
+		const inputData = Object.assign(userDefined, JSON.parse(jsonInput));
+		const outputData = compiler.compile(inputData);
+
+		// Extract query params from compiled steps (for the original web UI functionality)
+		if (outputData.steps) {
+			outputData.steps.forEach(function(step) {
+				if (typeof step.queryParams === 'object') {
+					for (let j in step.queryParams) {
 						if ('gh-ensure-auth' === j) {
 							useBlueprintURLParam = true;
 						}
-						queries.push(j + '=' + encodeURIComponent(outSteps[i].queryParams[j]));
+						queries.push(j + '=' + encodeURIComponent(step.queryParams[j]));
 					}
-					delete outSteps[i].queryParams;
+					delete step.queryParams;
 				}
-				Object.keys(step.vars).forEach(function (key) {
-					for (j in outSteps[i]) {
-						if (typeof outSteps[i][j] === 'object') {
-							Object.keys(outSteps[i][j]).forEach(function (k) {
-								if (typeof outSteps[i][j][k] === 'string' && outSteps[i][j][k].includes('${' + key + '}')) {
-									outSteps[i][j][k] = outSteps[i][j][k].replace('${' + key + '}', step.vars[key]);
-								}
-							});
-						} else if (typeof outSteps[i][j] === 'string' && outSteps[i][j].includes('${' + key + '}')) {
-							outSteps[i][j] = outSteps[i][j].replace('${' + key + '}', step.vars[key]);
-						}
-					}
-				});
-				// remove unnecessary whitespace
-				for (j in outSteps[i]) {
-					if (typeof outSteps[i][j] === 'string') {
-						outSteps[i][j] = outSteps[i][j].replace(/^\s+/g, '').replace(/\s+$/g, '').replace(/\n\s+/g, '\n');
-					} else if (typeof outSteps[i][j] === 'object') {
-						Object.keys(outSteps[i][j]).forEach(function (k) {
-							if (typeof outSteps[i][j][k] === 'string') {
-								outSteps[i][j][k] = outSteps[i][j][k].replace(/^\s+/g, '').replace(/\s+$/g, '').replace(/\n\s+/g, '\n');
-							}
-						});
-					}
-				}
-			}
-
-			if (outSteps) {
-				for (let i = 0; i < outSteps.length; i++) {
-					// Dedup by default. Prevent by specifying dedup: false as a step parameter.
-					if (outSteps[i].dedup === undefined || outSteps[i].dedup || outSteps[i].dedup === 'last') {
-						let dedupIndex = -1;
-						const dedupStep = outputData.steps.find(function (step, index) {
-							for (j in step) {
-								if (outSteps[i][j] === undefined) {
-									return false;
-								}
-								if (typeof step[j] === 'object') {
-									if (JSON.stringify(step[j]) !== JSON.stringify(outSteps[i][j])) {
-										return false;
-									}
-								} else if (step[j] !== outSteps[i][j]) {
-									return false;
-								}
-							}
-							dedupIndex = index;
-							return true;
-						});
-						if (outSteps[i].dedup === 'last' && dedupIndex) {
-							delete outputData.steps[dedupIndex];
-						} else if (dedupStep) {
-							continue;
-						}
-						delete outSteps[i].dedup;
-					}
-					outputData.steps.push(outSteps[i]);
-				}
-			}
-
-
-		});
-
-		if (outputData.landingPage === '/') {
-			delete outputData.landingPage;
-		}
-
-		if (Object.keys(outputData.features).length === 0) {
-			delete outputData.features;
-		}
-
-		if (outputData.steps.length === 0) {
-			delete outputData.steps;
+			});
 		}
 
 		document.getElementById('blueprint-compiled').value = JSON.stringify(outputData, null, 2);

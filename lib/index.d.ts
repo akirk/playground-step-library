@@ -8,10 +8,15 @@ interface StepVariable {
 }
 interface BlueprintStep {
     step: string;
+    vars?: Record<string, any>;
+    count?: number;
     [key: string]: any;
 }
 interface Blueprint {
-    steps: BlueprintStep[];
+    steps?: BlueprintStep[];
+    title?: string;
+    landingPage?: string;
+    features?: Record<string, any>;
     [key: string]: any;
 }
 interface ValidationResult {
@@ -20,6 +25,13 @@ interface ValidationResult {
 }
 interface CompilerOptions {
     stepsDir?: string;
+    landingPage?: string;
+    features?: Record<string, any>;
+    phpExtensionBundles?: string[];
+    preferredVersions?: {
+        wp?: string;
+        php?: string;
+    };
 }
 interface StepInfo {
     description: string;
@@ -40,29 +52,18 @@ declare class PlaygroundStepLibrary {
      */
     private loadCustomSteps;
     /**
-     * Load step definitions from a directory
+     * Collect step files from a directory
      */
-    private loadStepsFromDirectory;
+    private collectStepFiles;
+    /**
+     * Load all step files with access to the full customSteps object
+     */
+    private loadStepFiles;
     /**
      * Compile a blueprint by transforming custom steps into native steps
+     * Uses the transformJson logic from script.js adapted for TypeScript
      */
-    compile(blueprint: Blueprint | string): Blueprint;
-    /**
-     * Compile an array of steps
-     */
-    private compileSteps;
-    /**
-     * Compile an array of steps with depth tracking
-     */
-    private compileStepsWithDepth;
-    /**
-     * Compile a single step
-     */
-    private compileStep;
-    /**
-     * Process variable substitution in step definitions
-     */
-    private processVariableSubstitution;
+    compile(blueprint: Blueprint | string, options?: CompilerOptions): Blueprint;
     /**
      * Get information about available custom steps
      */

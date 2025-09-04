@@ -1,6 +1,6 @@
-customSteps.githubPlugin = function( step ) {
+customSteps.githubPlugin = function ( step ) {
 	const urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.vars.url );
-	if ( ! urlTest ) {
+	if ( !urlTest ) {
 		return [];
 	}
 	const repo = urlTest.groups.org + "/" + urlTest.groups.repo;
@@ -9,7 +9,7 @@ customSteps.githubPlugin = function( step ) {
 		return [];
 	}
 	let url = `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`;
-	const directory = ( urlTest.groups.directory || "" ).replace( /\/+$/, '' ).replace( /^\/+/, '' );
+	const directory = ( urlTest.groups.directory || '' ).replace( /\/+$/, '' ).replace( /^\/+/, '' );
 	let dirBasename;
 	if ( directory ) {
 		url += '&directory=' + directory;
@@ -23,7 +23,7 @@ customSteps.githubPlugin = function( step ) {
 			url
 		},
 		options: {
-			activate: true,
+			activate: false,
 		}
 	};
 
@@ -42,16 +42,21 @@ customSteps.githubPlugin = function( step ) {
 	const outSteps = [ outStep ];
 	if ( directory && directory !== dirBasename ) {
 		// if its a subsub directory, move the lowest directory into wp-content/plugins
-		outSteps[0].options.activate = false;
-		outSteps.push({
+		outSteps.push( {
 			"step": "mv",
 			"fromPath": "/wordpress/wp-content/plugins/" + directory,
 			"toPath": "/wordpress/wp-content/plugins/" + dirBasename
-		});
-		outSteps.push({
+		} );
+		outSteps.push( {
 			"step": "activatePlugin",
 			"pluginPath": "/wordpress/wp-content/plugins/" + dirBasename
-		});
+		} );
+	} else {
+		false && outSteps.push( {
+			"step": "activatePlugin",
+			"pluginPath": "/wordpress/wp-content/plugins/" + urlTest.groups.repo + '-' + branch + '/' + urlTest.groups.repo + '.php'
+		} );
+
 	}
 
 	return outSteps;
