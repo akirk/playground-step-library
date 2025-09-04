@@ -1,4 +1,4 @@
-customSteps.createProduct = function (step, blueprint) {
+customSteps.addProduct = function (step, blueprint) {
 	const productTitle = step.vars.productTitle.replace(/'/g, "\\'");
 	const productDescription = step.vars.productDescription.replace(/'/g, "\\'");
 	const productPrice = step.vars.productPrice || '';
@@ -74,8 +74,8 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 	return steps;
 };
 
-customSteps.createProduct.info = "Create a WooCommerce product (will install WooCommerce if not present)";
-customSteps.createProduct.vars = [
+customSteps.addProduct.info = "Add a WooCommerce product (will install WooCommerce if not present)";
+customSteps.addProduct.vars = [
 	{
 		"name": "productTitle",
 		"description": "The title of the product",
