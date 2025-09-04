@@ -438,7 +438,7 @@ This document provides detailed information about all available steps, including
 ## `enableMultisite`
 
 **Type**: Built-in Step  
-**Description**: No description available
+**Description**: Enable WordPress Multisite functionality.
 
 *No parameters defined.*
 
@@ -1079,4 +1079,4 @@ This document provides detailed information about all available steps, including
 
 ---
 
-*Generated automatically from step definitions on 2025-09-04T15:25:03.395Z*
+*Generated automatically from step definitions on 2025-09-04T15:25:25.582Z*

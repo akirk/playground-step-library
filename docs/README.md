@@ -33,7 +33,7 @@ const compiled = compiler.compile(blueprint);
 Built-in steps are core WordPress Playground steps that are enhanced with additional functionality.
 
 - [`defineWpConfigConst`](steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
-- [`enableMultisite`](steps/enableMultisite.md) - No description available
+- [`enableMultisite`](steps/enableMultisite.md) - Enable WordPress Multisite functionality.
 - [`importWxr`](steps/importWxr.md) - Import a WXR from a URL.
 - [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Github
 - [`installTheme`](steps/installTheme.md) - Install a theme
@@ -103,4 +103,4 @@ To add a new step:
 
 ---
 
-*This documentation is auto-generated from step definitions. Last updated: 2025-09-04T15:25:03.390Z*
+*This documentation is auto-generated from step definitions. Last updated: 2025-09-04T15:25:25.577Z*

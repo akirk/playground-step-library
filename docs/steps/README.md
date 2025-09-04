@@ -11,7 +11,7 @@ Browse detailed documentation for each WordPress Playground step.
 Enhanced core WordPress Playground steps with additional functionality.
 
 - [`defineWpConfigConst`](./defineWpConfigConst.md) - Define a wp-config PHP constant.
-- [`enableMultisite`](./enableMultisite.md) - No description available
+- [`enableMultisite`](./enableMultisite.md) - Enable WordPress Multisite functionality.
 - [`importWxr`](./importWxr.md) - Import a WXR from a URL.
 - [`installPlugin`](./installPlugin.md) - Install a plugin via WordPress.org or Github
 - [`installTheme`](./installTheme.md) - Install a theme
@@ -66,4 +66,4 @@ Extended functionality beyond core WordPress Playground capabilities.
 
 ---
 
-*Documentation auto-generated on 2025-09-04T15:25:03.398Z*
+*Documentation auto-generated on 2025-09-04T15:25:25.585Z*

@@ -1,6 +1,6 @@
 # `enableMultisite` Step
 
-No description available.
+Enable WordPress Multisite functionality.
 
 ## Type
 🔧 **Built-in Step**
