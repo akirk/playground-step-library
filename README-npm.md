@@ -38,14 +38,26 @@ node bin/cli.js --list-steps
 
 ### Programmatic API
 
-**JavaScript (CommonJS):**
+**JavaScript (ES Modules):**
 ```javascript
-const PlaygroundStepLibrary = require('playground-step-library');
+import PlaygroundStepLibrary from 'playground-step-library';
 ```
 
 **TypeScript:**
 ```typescript
-import PlaygroundStepLibrary = require('playground-step-library');
+import PlaygroundStepLibrary from 'playground-step-library';
+```
+
+**Browser (ES Modules):**
+```html
+<script type="module">
+import PlaygroundStepLibrary from 'https://unpkg.com/playground-step-library/lib/index.js';
+// or from your local installation
+// import PlaygroundStepLibrary from './node_modules/playground-step-library/lib/index.js';
+
+// Make it globally available if needed
+window.PlaygroundStepLibrary = PlaygroundStepLibrary;
+</script>
 ```
 
 **Usage:**
@@ -92,23 +104,24 @@ This compiler takes WordPress Playground blueprints that use custom steps (like 
 
 ### Custom Step Structure
 
-Custom steps are JavaScript files in the `steps/` directory that export transformation functions:
+Custom steps are ES module JavaScript files in the `steps/` directory that export transformation functions:
 
 ```javascript
 // steps/setSiteName.js
-customSteps.setSiteName = function(step) {
+export function setSiteName(step) {
     return [
         {
             "step": "setSiteOptions",
             "options": {
-                "blogname": "${sitename}",
-                "blogdescription": "${tagline}"
+                "blogname": step.vars.sitename,
+                "blogdescription": step.vars.tagline
             }
         }
     ];
-};
+}
 
-customSteps.setSiteName.vars = [
+setSiteName.description = "Set the site name and tagline";
+setSiteName.vars = [
     {
         "name": "sitename",
         "description": "Name of the site",

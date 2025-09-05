@@ -14,7 +14,7 @@
     "test:package": "node test/package-test.js",
     "test:npm-pack": "node test/npm-pack-test.js",
     "test:all": "npm test && npm run test:npm-pack",
-    "docs:generate": "node scripts/generate-docs.js",
+    "docs:generate": "node bin/generate-docs.js",
     "prepare": "npm run build && npm run docs:generate",
     "dev": "tsc --watch"
   },
