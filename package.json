@@ -1,0 +1,51 @@
+{
+  "name": "playground-step-library",
+  "version": "1.0.0",
+  "description": "A compiler that transforms WordPress Playground blueprints with custom steps into blueprints with native steps",
+  "type": "module",
+  "main": "lib/src/index.js",
+  "types": "lib/src/index.d.ts",
+  "bin": {
+    "playground-compile": "bin/cli.js"
+  },
+  "scripts": {
+    "build": "tsc && node build.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "docs:generate": "node bin/generate-docs.js",
+    "prepare": "npm run build && npm run docs:generate",
+    "dev": "tsc --watch",
+    "serve": "http-server -p 8127 -o index.html"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.13",
+    "@wp-playground/blueprints": "^2.0.16",
+    "http-server": "^14.1.1",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
+  },
+  "keywords": [
+    "wordpress",
+    "playground",
+    "blueprint",
+    "compiler",
+    "steps"
+  ],
+  "author": "Alex Kirk",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akirk/playground-step-library.git"
+  },
+  "files": [
+    "lib/",
+    "bin/",
+    "steps/",
+    "src/",
+    "docs/",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

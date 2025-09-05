@@ -1,0 +1,35 @@
+{
+  "name": "playground-step-library-examples",
+  "version": "1.0.0",
+  "description": "Examples showing how to use playground-step-library with @wp-playground/cli",
+  "main": "basic/index.ts",
+  "scripts": {
+    "browse-examples": "node chooser.js",
+    "build": "tsc",
+    "example:basic:index": "tsx basic/index.ts",
+    "example:basic:simple-post": "tsx basic/simple-post.ts",
+    "example:basic:site-setup": "tsx basic/site-setup.ts",
+    "example:blog:complete": "tsx blog-setup/complete-blog.ts",
+    "example:advanced:validation": "tsx advanced/validation-demo.ts",
+    "example:advanced:compile": "tsx advanced/compile-only.ts",
+    "example:ecommerce:shop": "tsx ecommerce/woocommerce-shop.ts"
+  },
+  "dependencies": {
+    "@wp-playground/cli": "^2.0.15",
+    "playground-step-library": "file:../.."
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "tsx": "^4.0.0",
+    "@types/node": "^20.0.0",
+    "chalk": "^5.3.0",
+    "inquirer": "^9.2.0",
+    "glob": "^10.3.0"
+  },
+  "type": "module",
+  "keywords": [
+    "wordpress",
+    "playground",
+    "blueprint"
+  ]
+}

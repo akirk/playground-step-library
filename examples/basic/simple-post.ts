@@ -1,0 +1,36 @@
+/**
+ * Basic Example: Create a simple post
+ * This shows the most minimal usage of the step library
+ */
+
+import { runCLI, RunCLIServer } from '@wp-playground/cli';
+import PlaygroundStepLibrary from '../../lib/index';
+
+const compiler = new PlaygroundStepLibrary();
+
+const blueprint = {
+  steps: [
+    {
+      step: 'addPost',
+      postTitle: 'Welcome to Playground',
+      postContent: '<p>This is a test post created by the blueprint!</p>',
+      postType: 'post'
+    }
+  ]
+};
+
+console.log('🚀 Creating a simple post...');
+console.log('Original blueprint:', JSON.stringify(blueprint, null, 2));
+
+const compiled = compiler.compile(blueprint);
+console.log('\n✨ Compiled blueprint:', JSON.stringify(compiled, null, 2));
+
+// Start WordPress Playground
+const cliServer: RunCLIServer = await runCLI({
+  command: 'server',
+  wp: 'latest',
+  login: true,
+  blueprint: compiled,
+});
+
+console.log('\n🌐 WordPress is running! Check your site for the new post.');
