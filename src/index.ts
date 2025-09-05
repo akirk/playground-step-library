@@ -104,18 +104,18 @@ class PlaygroundStepLibrary {
 
         inputData.steps!.forEach((step, index) => {
             let outSteps: any[] = [];
-            if (!step.vars) {
-                step.vars = {};
-            }
-
-            // Move all step properties (except 'step' and 'vars') into vars
-            for (const key in step) {
-                if (key !== 'step' && key !== 'vars') {
-                    step.vars[key] = step[key];
+            
+            // Support legacy format: if step has vars, flatten them to top level
+            if (step.vars) {
+                for (const key in step.vars) {
+                    if (!(key in step)) {
+                        step[key] = step.vars[key];
+                    }
                 }
+                delete step.vars;
             }
 
-            step.vars.stepIndex = index;
+            step.stepIndex = index;
 
             if (this.customSteps[step.step]) {
                 outSteps = this.customSteps[step.step](step, inputData);
@@ -149,21 +149,21 @@ class PlaygroundStepLibrary {
                 }
 
                 // Variable substitution
-                if (step.vars) {
-                    Object.keys(step.vars).forEach(key => {
-                        for (let j in outSteps[i]) {
-                            if (typeof outSteps[i][j] === 'object') {
-                                Object.keys(outSteps[i][j]).forEach(k => {
-                                    if (typeof outSteps[i][j][k] === 'string' && outSteps[i][j][k].includes('${' + key + '}')) {
-                                        outSteps[i][j][k] = outSteps[i][j][k].replace('${' + key + '}', step.vars![key]);
-                                    }
-                                });
-                            } else if (typeof outSteps[i][j] === 'string' && outSteps[i][j].includes('${' + key + '}')) {
-                                outSteps[i][j] = outSteps[i][j].replace('${' + key + '}', step.vars![key]);
-                            }
+                Object.keys(step).forEach(key => {
+                    if (key === 'step' || key === 'stepIndex') return;
+                    
+                    for (let j in outSteps[i]) {
+                        if (typeof outSteps[i][j] === 'object') {
+                            Object.keys(outSteps[i][j]).forEach(k => {
+                                if (typeof outSteps[i][j][k] === 'string' && outSteps[i][j][k].includes('${' + key + '}')) {
+                                    outSteps[i][j][k] = outSteps[i][j][k].replace('${' + key + '}', step[key]);
+                                }
+                            });
+                        } else if (typeof outSteps[i][j] === 'string' && outSteps[i][j].includes('${' + key + '}')) {
+                            outSteps[i][j] = outSteps[i][j].replace('${' + key + '}', step[key]);
                         }
-                    });
-                }
+                    }
+                });
 
                 // Remove unnecessary whitespace
                 for (let j in outSteps[i]) {

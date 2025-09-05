@@ -13,9 +13,9 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./lib",
-    "rootDir": "./src",
+    "rootDir": "./",
     "types": ["node"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "lib", "test", "examples"]
+  "include": ["src/**/*", "steps/**/*"],
+  "exclude": ["node_modules", "lib", "test", "examples", "**/*.spec.ts", "**/*.test.ts"]
 }

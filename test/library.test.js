@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import PlaygroundStepLibrary from '../lib/index.js';
+import PlaygroundStepLibrary from '../lib/src/index.js';
 
 describe('PlaygroundStepLibrary', () => {
   let compiler;

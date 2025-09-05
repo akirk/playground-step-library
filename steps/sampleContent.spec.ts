@@ -1,5 +1,5 @@
 import { sampleContent } from './sampleContent.js';
-import type { BlueprintStep } from '../types.js';
+import type { SampleContentStep } from './types.js';
 
 describe('sampleContent', () => {
     it('should create 5 sample content posts', () => {

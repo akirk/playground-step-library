@@ -1,15 +1,13 @@
 import { addPost } from './addPost.js';
-import type { BlueprintStep } from '../types.js';
+import type { AddPostStep } from './types.js';
 
 describe('addPost', () => {
     it('should create a basic post', () => {
-        const step: BlueprintStep = {
+        const step: AddPostStep = {
             step: 'addPost',
-            vars: {
-                postTitle: 'Test Post',
-                postContent: '<p>Test content</p>',
-                postType: 'post'
-            }
+            postTitle: 'Test Post',
+            postContent: '<p>Test content</p>',
+            postType: 'post'
         };
         
         const result = addPost(step);
@@ -24,14 +22,12 @@ describe('addPost', () => {
     });
 
     it('should handle custom post status', () => {
-        const step: BlueprintStep = {
+        const step: AddPostStep = {
             step: 'addPost',
-            vars: {
-                postTitle: 'Draft Post',
-                postContent: '<p>Draft content</p>',
-                postType: 'post',
-                postStatus: 'draft'
-            }
+            postTitle: 'Draft Post',
+            postContent: '<p>Draft content</p>',
+            postType: 'post',
+            postStatus: 'draft'
         };
         
         const result = addPost(step);
@@ -40,14 +36,12 @@ describe('addPost', () => {
     });
 
     it('should include post date when provided', () => {
-        const step: BlueprintStep = {
+        const step: AddPostStep = {
             step: 'addPost',
-            vars: {
-                postTitle: 'Scheduled Post',
-                postContent: '<p>Future content</p>',
-                postType: 'post',
-                postDate: '2024-12-25 10:00:00'
-            }
+            postTitle: 'Scheduled Post',
+            postContent: '<p>Future content</p>',
+            postType: 'post',
+            postDate: '2024-12-25 10:00:00'
         };
         
         const result = addPost(step);
@@ -56,13 +50,11 @@ describe('addPost', () => {
     });
 
     it('should not include post date when not provided', () => {
-        const step: BlueprintStep = {
+        const step: AddPostStep = {
             step: 'addPost',
-            vars: {
-                postTitle: 'Regular Post',
-                postContent: '<p>Regular content</p>',
-                postType: 'post'
-            }
+            postTitle: 'Regular Post',
+            postContent: '<p>Regular content</p>',
+            postType: 'post'
         };
         
         const result = addPost(step);
@@ -71,14 +63,12 @@ describe('addPost', () => {
     });
 
     it('should set homepage when homepage flag is true', () => {
-        const step: BlueprintStep = {
+        const step: AddPostStep = {
             step: 'addPost',
-            vars: {
-                postTitle: 'Home Page',
-                postContent: '<p>Welcome to our site</p>',
-                postType: 'page',
-                homepage: true
-            }
+            postTitle: 'Home Page',
+            postContent: '<p>Welcome to our site</p>',
+            postType: 'page',
+            homepage: true
         };
         
         const result = addPost(step);
@@ -88,14 +78,12 @@ describe('addPost', () => {
     });
 
     it('should not set homepage when homepage flag is false', () => {
-        const step: BlueprintStep = {
+        const step: AddPostStep = {
             step: 'addPost',
-            vars: {
-                postTitle: 'Regular Page',
-                postContent: '<p>Just a page</p>',
-                postType: 'page',
-                homepage: false
-            }
+            postTitle: 'Regular Page',
+            postContent: '<p>Just a page</p>',
+            postType: 'page',
+            homepage: false
         };
         
         const result = addPost(step);
@@ -105,13 +93,11 @@ describe('addPost', () => {
     });
 
     it('should escape single quotes in title and content', () => {
-        const step: BlueprintStep = {
+        const step: AddPostStep = {
             step: 'addPost',
-            vars: {
-                postTitle: "Title with 'single quotes'",
-                postContent: "<p>Content with 'quotes' here</p>",
-                postType: 'post'
-            }
+            postTitle: "Title with 'single quotes'",
+            postContent: "<p>Content with 'quotes' here</p>",
+            postType: 'post'
         };
         
         const result = addPost(step);
@@ -121,14 +107,12 @@ describe('addPost', () => {
     });
 
     it('should escape single quotes in post date', () => {
-        const step: BlueprintStep = {
+        const step: AddPostStep = {
             step: 'addPost',
-            vars: {
-                postTitle: 'Test Post',
-                postContent: '<p>Test content</p>',
-                postType: 'post',
-                postDate: "2024-01-01 12:00:00 O'Clock"
-            }
+            postTitle: 'Test Post',
+            postContent: '<p>Test content</p>',
+            postType: 'post',
+            postDate: "2024-01-01 12:00:00 O'Clock"
         };
         
         const result = addPost(step);
@@ -137,13 +121,11 @@ describe('addPost', () => {
     });
 
     it('should handle custom post types', () => {
-        const step: BlueprintStep = {
+        const step: AddPostStep = {
             step: 'addPost',
-            vars: {
-                postTitle: 'Custom Post',
-                postContent: '<p>Custom content</p>',
-                postType: 'custom_type'
-            }
+            postTitle: 'Custom Post',
+            postContent: '<p>Custom content</p>',
+            postType: 'custom_type'
         };
         
         const result = addPost(step);

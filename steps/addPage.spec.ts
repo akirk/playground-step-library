@@ -1,16 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { addPage } from './addPage.js';
-import type { BlueprintStep } from '../types.js';
+import type { AddPageStep } from './types.js';
 
 describe('addPage', () => {
   it('should create a basic page', () => {
-    const step: BlueprintStep = {
+    const step: AddPageStep = {
       step: 'addPage',
-      vars: {
-        postTitle: 'Test Page',
-        postContent: '<p>Test content</p>',
-        stepIndex: 0
-      }
+      postTitle: 'Test Page',
+      postContent: '<p>Test content</p>'
     };
 
     const result = addPage(step);
@@ -26,14 +23,11 @@ describe('addPage', () => {
   });
 
   it('should set as homepage when homepage flag is true', () => {
-    const step: BlueprintStep = {
+    const step: AddPageStep = {
       step: 'addPage',
-      vars: {
-        postTitle: 'Home Page',
-        postContent: '<p>Welcome home</p>',
-        homepage: true,
-        stepIndex: 0
-      }
+      postTitle: 'Home Page',
+      postContent: '<p>Welcome home</p>',
+      homepage: true
     };
 
     const result = addPage(step);
@@ -44,13 +38,10 @@ describe('addPage', () => {
   });
 
   it('should escape single quotes in title and content', () => {
-    const step: BlueprintStep = {
+    const step: AddPageStep = {
       step: 'addPage',
-      vars: {
-        postTitle: "John's Page",
-        postContent: "<p>Here's some content</p>",
-        stepIndex: 0
-      }
+      postTitle: "John's Page",
+      postContent: "<p>Here's some content</p>"
     };
 
     const result = addPage(step);

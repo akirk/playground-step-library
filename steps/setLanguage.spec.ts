@@ -1,13 +1,11 @@
 import { setLanguage } from './setLanguage.js';
-import type { BlueprintStep } from '../types.js';
+import type { SetLanguageStep } from './types.js';
 
 describe('setLanguage', () => {
     it('should set language using locale mapping', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {
-                language: 'de'
-            }
+            language: 'de'
         };
         
         const result = setLanguage(step);
@@ -19,11 +17,9 @@ describe('setLanguage', () => {
     });
 
     it('should map French correctly', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {
-                language: 'fr'
-            }
+            language: 'fr'
         };
         
         const result = setLanguage(step);
@@ -32,11 +28,9 @@ describe('setLanguage', () => {
     });
 
     it('should map Spanish correctly', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {
-                language: 'es'
-            }
+            language: 'es'
         };
         
         const result = setLanguage(step);
@@ -45,11 +39,9 @@ describe('setLanguage', () => {
     });
 
     it('should map Italian correctly', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {
-                language: 'it'
-            }
+            language: 'it'
         };
         
         const result = setLanguage(step);
@@ -58,11 +50,9 @@ describe('setLanguage', () => {
     });
 
     it('should map Japanese correctly', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {
-                language: 'ja'
-            }
+            language: 'ja'
         };
         
         const result = setLanguage(step);
@@ -71,11 +61,9 @@ describe('setLanguage', () => {
     });
 
     it('should map Polish correctly', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {
-                language: 'pl'
-            }
+            language: 'pl'
         };
         
         const result = setLanguage(step);
@@ -84,11 +72,9 @@ describe('setLanguage', () => {
     });
 
     it('should map Arabic correctly', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {
-                language: 'ar'
-            }
+            language: 'ar'
         };
         
         const result = setLanguage(step);
@@ -97,11 +83,9 @@ describe('setLanguage', () => {
     });
 
     it('should use original language when not in mapping', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {
-                language: 'en_US'
-            }
+            language: 'en_US'
         };
         
         const result = setLanguage(step);
@@ -110,11 +94,9 @@ describe('setLanguage', () => {
     });
 
     it('should handle full locale codes directly', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {
-                language: 'pt_BR'
-            }
+            language: 'pt_BR'
         };
         
         const result = setLanguage(step);
@@ -123,9 +105,9 @@ describe('setLanguage', () => {
     });
 
     it('should return empty array when language is missing', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {}
+            language: ''
         };
         
         const result = setLanguage(step);
@@ -134,11 +116,9 @@ describe('setLanguage', () => {
     });
 
     it('should return empty array when language is empty string', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {
-                language: ''
-            }
+            language: ''
         };
         
         const result = setLanguage(step);
@@ -147,11 +127,9 @@ describe('setLanguage', () => {
     });
 
     it('should return empty array when language is null', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {
-                language: null
-            }
+            language: null as any
         };
         
         const result = setLanguage(step);
@@ -159,9 +137,10 @@ describe('setLanguage', () => {
         expect(result).toEqual([]);
     });
 
-    it('should return empty array when vars is undefined', () => {
-        const step: BlueprintStep = {
-            step: 'setLanguage'
+    it('should return empty array when language is undefined', () => {
+        const step: SetLanguageStep = {
+            step: 'setLanguage',
+            language: undefined as any
         };
         
         const result = setLanguage(step);
@@ -170,11 +149,9 @@ describe('setLanguage', () => {
     });
 
     it('should handle custom locale formats', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {
-                language: 'zh_CN'
-            }
+            language: 'zh_CN'
         };
         
         const result = setLanguage(step);
@@ -196,11 +173,9 @@ describe('setLanguage', () => {
     });
 
     it('should return a valid WordPress Playground step', () => {
-        const step: BlueprintStep = {
+        const step: SetLanguageStep = {
             step: 'setLanguage',
-            vars: {
-                language: 'fr'
-            }
+            language: 'fr'
         };
         
         const result = setLanguage(step);

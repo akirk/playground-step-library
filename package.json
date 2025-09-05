@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "A compiler that transforms WordPress Playground blueprints with custom steps into blueprints with native steps",
   "type": "module",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/src/index.js",
+  "types": "lib/src/index.d.ts",
   "bin": {
     "playground-compile": "bin/cli.js"
   },
@@ -14,11 +14,13 @@
     "test:watch": "vitest",
     "docs:generate": "node bin/generate-docs.js",
     "prepare": "npm run build && npm run docs:generate",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "serve": "http-server -p 8127 -o --ext js"
   },
   "devDependencies": {
     "@types/node": "^20.19.13",
     "@wp-playground/blueprints": "^2.0.16",
+    "http-server": "^14.1.1",
     "typescript": "^5.0.0",
     "vitest": "^3.2.4"
   },

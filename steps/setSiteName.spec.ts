@@ -1,14 +1,12 @@
 import { setSiteName } from './setSiteName.js';
-import type { BlueprintStep } from '../types.js';
+import type { SetSiteNameStep } from './types.js';
 
 describe('setSiteName', () => {
     it('should set site name and tagline', () => {
-        const step: BlueprintStep = {
+        const step: SetSiteNameStep = {
             step: 'setSiteName',
-            vars: {
-                sitename: 'My WordPress Site',
-                tagline: 'Just another WordPress site'
-            }
+            sitename: 'My WordPress Site',
+            tagline: 'Just another WordPress site'
         };
         
         const result = setSiteName(step);
@@ -22,12 +20,10 @@ describe('setSiteName', () => {
     });
 
     it('should return setSiteOptions step with template variables', () => {
-        const step: BlueprintStep = {
+        const step: SetSiteNameStep = {
             step: 'setSiteName',
-            vars: {
-                sitename: 'Test Site',
-                tagline: 'Testing playground'
-            }
+            sitename: 'Test Site',
+            tagline: 'Testing playground'
         };
         
         const result = setSiteName(step);
@@ -38,12 +34,10 @@ describe('setSiteName', () => {
     });
 
     it('should work with empty values', () => {
-        const step: BlueprintStep = {
+        const step: SetSiteNameStep = {
             step: 'setSiteName',
-            vars: {
-                sitename: '',
-                tagline: ''
-            }
+            sitename: '',
+            tagline: ''
         };
         
         const result = setSiteName(step);
@@ -54,12 +48,10 @@ describe('setSiteName', () => {
     });
 
     it('should work with special characters in variables', () => {
-        const step: BlueprintStep = {
+        const step: SetSiteNameStep = {
             step: 'setSiteName',
-            vars: {
-                sitename: 'Site "Name" & More',
-                tagline: 'A tagline with <HTML> & symbols'
-            }
+            sitename: 'Site "Name" & More',
+            tagline: 'A tagline with <HTML> & symbols'
         };
         
         const result = setSiteName(step);
@@ -88,12 +80,10 @@ describe('setSiteName', () => {
     });
 
     it('should return a valid WordPress Playground step', () => {
-        const step: BlueprintStep = {
+        const step: SetSiteNameStep = {
             step: 'setSiteName',
-            vars: {
-                sitename: 'WordPress Site',
-                tagline: 'My awesome site'
-            }
+            sitename: 'WordPress Site',
+            tagline: 'My awesome site'
         };
         
         const result = setSiteName(step);
