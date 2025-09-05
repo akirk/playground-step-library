@@ -23,12 +23,12 @@ Remove widgets from the wp-admin dashboard.
 ```json
     {
           "step": "removeDashboardWidgets",
-          "welcome": true,
-          "glance": true,
-          "events": true,
-          "quickpress": true,
-          "activity": true,
-          "sitehealth": true
+          "welcome": "true",
+          "glance": "true",
+          "events": "true",
+          "quickpress": "true",
+          "activity": "true",
+          "sitehealth": "true"
     }
 ```
 
@@ -36,12 +36,12 @@ Remove widgets from the wp-admin dashboard.
 ```json
 {
   "step": "removeDashboardWidgets",
-  "welcome": true,
-  "glance": true,
-  "events": true,
-  "quickpress": true,
-  "activity": true,
-  "sitehealth": true
+  "welcome": "true",
+  "glance": "true",
+  "events": "true",
+  "quickpress": "true",
+  "activity": "true",
+  "sitehealth": "true"
 }
 ```
 
@@ -52,12 +52,12 @@ Remove widgets from the wp-admin dashboard.
   "steps": [
         {
           "step": "removeDashboardWidgets",
-          "welcome": true,
-          "glance": true,
-          "events": true,
-          "quickpress": true,
-          "activity": true,
-          "sitehealth": true
+          "welcome": "true",
+          "glance": "true",
+          "events": "true",
+          "quickpress": "true",
+          "activity": "true",
+          "sitehealth": "true"
     }
   ]
 }
@@ -73,12 +73,12 @@ const blueprint = {
   steps: [
         {
           "step": "removeDashboardWidgets",
-          "welcome": true,
-          "glance": true,
-          "events": true,
-          "quickpress": true,
-          "activity": true,
-          "sitehealth": true
+          "welcome": "true",
+          "glance": "true",
+          "events": "true",
+          "quickpress": "true",
+          "activity": "true",
+          "sitehealth": "true"
     }
   ]
 };

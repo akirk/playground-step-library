@@ -9,7 +9,7 @@ Install a plugin via WordPress.org or Github
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `url` | string | ❌ No | URL of the plugin or WordPress.org slug. |
+| `url` | string | ✅ Yes | URL of the plugin or WordPress.org slug. |
 | `prs` | boolean | ❌ No | Add support for submitting Github Requests. |
 | `permalink` | boolean | ❌ No | Requires a permalink structure |
 

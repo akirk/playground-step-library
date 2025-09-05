@@ -9,7 +9,7 @@ Adds a role for clients with additional capabilities than editors, but not quite
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `displayName` | string | ✅ Yes | No description |
+| `displayName` | string | ✅ Yes | Display name for the client role |
 
 
 ## Examples

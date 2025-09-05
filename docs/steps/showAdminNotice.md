@@ -22,7 +22,7 @@ Show an admin notice in the dashboard.
           "step": "showAdminNotice",
           "text": "Welcome to WordPress Playground!",
           "type": "success",
-          "dismissible": true
+          "dismissible": "true"
     }
 ```
 
@@ -35,7 +35,7 @@ Show an admin notice in the dashboard.
           "step": "showAdminNotice",
           "text": "Welcome to WordPress Playground!",
           "type": "success",
-          "dismissible": true
+          "dismissible": "true"
     }
   ]
 }
@@ -53,7 +53,7 @@ const blueprint = {
           "step": "showAdminNotice",
           "text": "Welcome to WordPress Playground!",
           "type": "success",
-          "dismissible": true
+          "dismissible": "true"
     }
   ]
 };

@@ -28,7 +28,7 @@ Create a new user.
           "role": "administrator",
           "display_name": "User",
           "email": "",
-          "login": true
+          "login": "true"
     }
 ```
 
@@ -41,7 +41,7 @@ Create a new user.
   "role": "editor",
   "display_name": "User",
   "email": "wordpress@example.org",
-  "login": true
+  "login": "true"
 }
 ```
 
@@ -57,7 +57,7 @@ Create a new user.
           "role": "administrator",
           "display_name": "User",
           "email": "",
-          "login": true
+          "login": "true"
     }
   ]
 }
@@ -78,7 +78,7 @@ const blueprint = {
           "role": "administrator",
           "display_name": "User",
           "email": "",
-          "login": true
+          "login": "true"
     }
   ]
 };

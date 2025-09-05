@@ -14,7 +14,7 @@ Add a post.
 | `postDate` | string | ❌ No | The date of the post (optional) |
 | `postType` | string | ✅ Yes | The post type |
 | `postStatus` | string | ❌ No | The post status |
-| `unknown` | button | ❌ No | No description |
+| `registerPostType` | button | ❌ No | Register custom post type if needed |
 
 
 ## Examples
@@ -28,7 +28,7 @@ Add a post.
           "postDate": "now",
           "postType": "post",
           "postStatus": "publish",
-          "undefined": "example-value"
+          "registerPostType": "example-value"
     }
 ```
 
@@ -41,7 +41,7 @@ Add a post.
   "postDate": "2024-01-01 00:00:00",
   "postType": "page",
   "postStatus": "draft",
-  "undefined": "example-value"
+  "registerPostType": "example-value"
 }
 ```
 
@@ -57,7 +57,7 @@ Add a post.
           "postDate": "now",
           "postType": "post",
           "postStatus": "publish",
-          "undefined": "example-value"
+          "registerPostType": "example-value"
     }
   ]
 }
@@ -78,7 +78,7 @@ const blueprint = {
           "postDate": "now",
           "postType": "post",
           "postStatus": "publish",
-          "undefined": "example-value"
+          "registerPostType": "example-value"
     }
   ]
 };

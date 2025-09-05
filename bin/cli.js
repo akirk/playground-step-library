@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import PlaygroundStepLibrary from '../lib/index.js';
+import PlaygroundStepLibrary from '../lib/src/index.js';
 
 function showHelp() {
     console.log(`

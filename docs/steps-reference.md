@@ -58,7 +58,7 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `displayName` | string | ✅ Yes | No description |
+| `displayName` | string | ✅ Yes | Display name for the client role |
 
 
 ### Example Usage
@@ -177,7 +177,7 @@ This document provides detailed information about all available steps, including
 | `postDate` | string | ❌ No | The date of the post (optional) |
 | `postType` | string | ✅ Yes | The post type |
 | `postStatus` | string | ❌ No | The post status |
-| `unknown` | button | ❌ No | No description |
+| `registerPostType` | button | ❌ No | Register custom post type if needed |
 
 
 ### Example Usage
@@ -190,7 +190,7 @@ This document provides detailed information about all available steps, including
           "postDate": "now",
           "postType": "post",
           "postStatus": "publish",
-          "undefined": "example-value"
+          "registerPostType": "example-value"
     }
 ```
 
@@ -312,7 +312,7 @@ This document provides detailed information about all available steps, including
           "role": "administrator",
           "display_name": "User",
           "email": "",
-          "login": true
+          "login": "true"
     }
 ```
 
@@ -328,6 +328,8 @@ This document provides detailed information about all available steps, including
 |-----------|------|----------|-------------|
 | `slug` | string | ✅ Yes | Post type key |
 | `name` | string | ✅ Yes | The user visible label |
+| `supports` | string | ❌ No | Features this post type supports |
+| `public` | boolean | ❌ No | Whether the post type is public |
 
 
 ### Example Usage
@@ -336,7 +338,9 @@ This document provides detailed information about all available steps, including
     {
           "step": "customPostType",
           "slug": "book",
-          "name": "Books"
+          "name": "Books",
+          "supports": "['title', 'editor']",
+          "public": "true"
     }
 ```
 
@@ -692,7 +696,7 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `url` | string | ❌ No | URL of the plugin or WordPress.org slug. |
+| `url` | string | ✅ Yes | URL of the plugin or WordPress.org slug. |
 | `prs` | boolean | ❌ No | Add support for submitting Github Requests. |
 | `permalink` | boolean | ❌ No | Requires a permalink structure |
 
@@ -827,12 +831,12 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "removeDashboardWidgets",
-          "welcome": true,
-          "glance": true,
-          "events": true,
-          "quickpress": true,
-          "activity": true,
-          "sitehealth": true
+          "welcome": "true",
+          "glance": "true",
+          "events": "true",
+          "quickpress": "true",
+          "activity": "true",
+          "sitehealth": "true"
     }
 ```
 
@@ -1054,7 +1058,7 @@ This document provides detailed information about all available steps, including
           "step": "showAdminNotice",
           "text": "Welcome to WordPress Playground!",
           "type": "success",
-          "dismissible": true
+          "dismissible": "true"
     }
 ```
 
@@ -1079,4 +1083,4 @@ This document provides detailed information about all available steps, including
 
 ---
 
-*Generated automatically from step definitions on 2025-09-05T04:06:09.458Z*
+*Generated automatically from step definitions on 2025-09-05T11:50:28.617Z*
