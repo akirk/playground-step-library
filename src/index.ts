@@ -58,6 +58,7 @@ interface CustomStepDefinition {
     vars?: StepVariable[];
     builtin?: boolean;
     multiple?: boolean;
+    count?: number;
 }
 
 interface BlueprintStep {
@@ -113,50 +114,50 @@ class PlaygroundStepLibrary {
      */
     private loadCustomSteps(): void {
         // Add imported ES modules to customSteps
-        this.customSteps.addClientRole = addClientRole as any;
-        this.customSteps.addCorsProxy = addCorsProxy as any;
-        this.customSteps.addFilter = addFilter as any;
-        this.customSteps.addMedia = addMedia as any;
-        this.customSteps.addPage = addPage as any;
-        this.customSteps.addPost = addPost as any;
-        this.customSteps.addProduct = addProduct as any;
-        this.customSteps.blueprintExtractor = blueprintExtractor as any;
-        this.customSteps.blueprintRecorder = blueprintRecorder as any;
-        this.customSteps.changeAdminColorScheme = changeAdminColorScheme as any;
-        this.customSteps.createUser = createUser as any;
-        this.customSteps.customPostType = customPostType as any;
-        this.customSteps.deleteAllPosts = deleteAllPosts as any;
-        this.customSteps.disableWelcomeGuides = disableWelcomeGuides as any;
-        this.customSteps.doAction = doAction as any;
-        this.customSteps.fakeHttpResponse = fakeHttpResponse as any;
-        this.customSteps.githubImportExportWxr = githubImportExportWxr as any;
-        this.customSteps.githubPlugin = githubPlugin as any;
-        this.customSteps.githubPluginRelease = githubPluginRelease as any;
-        this.customSteps.githubTheme = githubTheme as any;
-        this.customSteps.importFriendFeeds = importFriendFeeds as any;
-        this.customSteps.importWordPressComExport = importWordPressComExport as any;
-        this.customSteps.installPhEditor = installPhEditor as any;
-        this.customSteps.installPhpLiteAdmin = installPhpLiteAdmin as any;
-        this.customSteps.jetpackOfflineMode = jetpackOfflineMode as any;
-        this.customSteps.muPlugin = muPlugin as any;
-        this.customSteps.removeDashboardWidgets = removeDashboardWidgets as any;
-        this.customSteps.renameDefaultCategory = renameDefaultCategory as any;
-        this.customSteps.runWpCliCommand = runWpCliCommand as any;
-        this.customSteps.sampleContent = sampleContent as any;
-        this.customSteps.setLandingPage = setLandingPage as any;
-        this.customSteps.setLanguage = setLanguage as any;
-        this.customSteps.setSiteName = setSiteName as any;
-        this.customSteps.setTT4Homepage = setTT4Homepage as any;
-        this.customSteps.showAdminNotice = showAdminNotice as any;
-        this.customSteps.skipWooCommerceWizard = skipWooCommerceWizard as any;
-        this.customSteps.defineWpConfigConst = defineWpConfigConst as any;
-        this.customSteps.enableMultisite = enableMultisite as any;
-        this.customSteps.importWxr = importWxr as any;
-        this.customSteps.installPlugin = installPlugin as any;
-        this.customSteps.installTheme = installTheme as any;
-        this.customSteps.login = login as any;
-        this.customSteps.runPHP = runPHP as any;
-        this.customSteps.setSiteOption = setSiteOption as any;
+        this.customSteps.defineWpConfigConst = defineWpConfigConst;
+        this.customSteps.importWxr = importWxr;
+        this.customSteps.installPlugin = installPlugin;
+        this.customSteps.installTheme = installTheme;
+        this.customSteps.login = login;
+        this.customSteps.runPHP = runPHP;
+        this.customSteps.setSiteOption = setSiteOption;
+        this.customSteps.addClientRole = addClientRole;
+        this.customSteps.addCorsProxy = addCorsProxy;
+        this.customSteps.addFilter = addFilter;
+        this.customSteps.addMedia = addMedia;
+        this.customSteps.addPage = addPage;
+        this.customSteps.addPost = addPost;
+        this.customSteps.addProduct = addProduct;
+        this.customSteps.blueprintExtractor = blueprintExtractor;
+        this.customSteps.blueprintRecorder = blueprintRecorder;
+        this.customSteps.changeAdminColorScheme = changeAdminColorScheme;
+        this.customSteps.createUser = createUser;
+        this.customSteps.customPostType = customPostType;
+        this.customSteps.deleteAllPosts = deleteAllPosts;
+        this.customSteps.disableWelcomeGuides = disableWelcomeGuides;
+        this.customSteps.doAction = doAction;
+        this.customSteps.fakeHttpResponse = fakeHttpResponse;
+        this.customSteps.githubImportExportWxr = githubImportExportWxr;
+        this.customSteps.githubPlugin = githubPlugin;
+        this.customSteps.githubPluginRelease = githubPluginRelease;
+        this.customSteps.githubTheme = githubTheme;
+        this.customSteps.importFriendFeeds = importFriendFeeds;
+        this.customSteps.importWordPressComExport = importWordPressComExport;
+        this.customSteps.installPhEditor = installPhEditor;
+        this.customSteps.installPhpLiteAdmin = installPhpLiteAdmin;
+        this.customSteps.jetpackOfflineMode = jetpackOfflineMode;
+        this.customSteps.muPlugin = muPlugin;
+        this.customSteps.removeDashboardWidgets = removeDashboardWidgets;
+        this.customSteps.renameDefaultCategory = renameDefaultCategory;
+        this.customSteps.runWpCliCommand = runWpCliCommand;
+        this.customSteps.sampleContent = sampleContent;
+        this.customSteps.setLandingPage = setLandingPage;
+        this.customSteps.setLanguage = setLanguage;
+        this.customSteps.setSiteName = setSiteName;
+        this.customSteps.setTT4Homepage = setTT4Homepage;
+        this.customSteps.showAdminNotice = showAdminNotice;
+        this.customSteps.skipWooCommerceWizard = skipWooCommerceWizard;
+        this.customSteps.enableMultisite = enableMultisite;
     }
 
     /**
@@ -198,14 +199,14 @@ class PlaygroundStepLibrary {
             if (!step.vars) {
                 step.vars = {};
             }
-            
+
             // Move all step properties (except 'step' and 'vars') into vars
             for (const key in step) {
                 if (key !== 'step' && key !== 'vars') {
                     step.vars[key] = step[key];
                 }
             }
-            
+
             step.vars.stepIndex = index;
 
             if (this.customSteps[step.step]) {

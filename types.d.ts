@@ -16,9 +16,19 @@ export interface StepInput {
 }
 
 export interface StepFunction {
-	(step: StepInput): StepDefinition[];
+	(step: BlueprintStep, inputData?: any): StepDefinition[];
 	description: string;
 	vars: StepVariable[];
+	builtin?: boolean;
+	multiple?: boolean;
+	count?: number;
+}
+
+interface BlueprintStep {
+	step: string;
+	vars?: Record<string, any>;
+	count?: number;
+	[key: string]: any;
 }
 
 export interface CustomSteps {

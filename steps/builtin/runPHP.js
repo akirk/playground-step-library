@@ -1,12 +1,13 @@
-export function runPHP (step) {
+export function runPHP(step) {
 	return [
 		{
 			"step": "runPHP",
-			code
+			code: step.vars.code
 		}
 	];
 };
 runPHP.description = "Run code in the context of WordPress.";
+runPHP.builtin = true;
 runPHP.vars = [
 	{
 		"name": "code",
