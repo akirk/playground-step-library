@@ -1,12 +1,8 @@
+import PlaygroundStepLibrary from './lib/src/index.js';
+
 addEventListener('DOMContentLoaded', function () {
-	// Wait for PlaygroundStepLibrary to be available
-	if (!window.PlaygroundStepLibrary) {
-		console.error('PlaygroundStepLibrary not available');
-		return;
-	}
-	
 	// Create an instance to get available steps
-	const compiler = new window.PlaygroundStepLibrary();
+	const compiler = new PlaygroundStepLibrary();
 	const customSteps = compiler.getAvailableSteps();
 	
 	// Make compiler accessible for step functions
@@ -907,7 +903,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		// Use the PlaygroundStepLibrary to compile the blueprint
-		const compiler = new window.PlaygroundStepLibrary();
+		const compiler = new PlaygroundStepLibrary();
 		const inputData = Object.assign(userDefined, JSON.parse(jsonInput));
 		const outputData = compiler.compile(inputData);
 
@@ -993,16 +989,11 @@ addEventListener('DOMContentLoaded', function () {
 	}
 
 	function updateIframeSrc(iframe, newSrc) {
-		// Always update iframe src to trigger reload with new blueprint
-		if (iframe.src !== newSrc) {
+		// Always force reload to ensure the blueprint changes are reflected
+		iframe.src = '';
+		setTimeout(() => {
 			iframe.src = newSrc;
-		} else {
-			// If src is the same, force reload by temporarily clearing it
-			iframe.src = '';
-			setTimeout(() => {
-				iframe.src = newSrc;
-			}, 50);
-		}
+		}, 50);
 	}
 
 	function restoreState(state) {

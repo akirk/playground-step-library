@@ -15,7 +15,7 @@
     "docs:generate": "node bin/generate-docs.js",
     "prepare": "npm run build && npm run docs:generate",
     "dev": "tsc --watch",
-    "serve": "http-server -p 8127 -o --ext js"
+    "serve": "http-server -p 8127 -o index.html"
   },
   "devDependencies": {
     "@types/node": "^20.19.13",
