@@ -1,6 +1,6 @@
 import { githubPlugin } from './githubPlugin.js';
 import { githubPluginRelease } from './githubPluginRelease.js';
-import type { StepFunction, InstallPluginStep} from './types.js';
+import type { StepFunction, InstallPluginStep } from './types.js';
 
 
 export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPluginStep) => {
@@ -56,7 +56,7 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 	return steps;
 };
 
-installPlugin.description = "Install a plugin via WordPress.org or Github";
+installPlugin.description = "Install a plugin via WordPress.org or Github.";
 installPlugin.builtin = true;
 installPlugin.vars = Object.entries({
 	url: {

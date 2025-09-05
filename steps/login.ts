@@ -1,4 +1,4 @@
-import type { StepFunction, LoginStep} from './types.js';
+import type { StepFunction, LoginStep } from './types.js';
 
 
 export const login: StepFunction<LoginStep> = (step: LoginStep) => {
@@ -9,28 +9,28 @@ export const login: StepFunction<LoginStep> = (step: LoginStep) => {
 			"password": step.password
 		}
 	];
-	if ( step.landingPage ) {
-		(steps as any).landingPage ='/wp-admin/';
+	if (step.landingPage) {
+		(steps as any).landingPage = '/wp-admin/';
 	}
 	return steps;
 };
 
-login.description = "Login to the site";
+login.description = "Login to the site.";
 login.builtin = true;
 login.vars = Object.entries({
 	username: {
 		description: "Username",
 		required: true,
-		samples: [ "admin" ]
+		samples: ["admin"]
 	},
 	password: {
 		description: "Password",
 		required: true,
-		samples: [ "password" ]
+		samples: ["password"]
 	},
 	landingPage: {
 		description: "Change landing page to wp-admin",
 		type: "boolean",
-		samples: [ "true", "false" ]
+		samples: ["true", "false"]
 	}
 }).map(([name, varConfig]) => ({ name, ...varConfig }));

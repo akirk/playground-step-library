@@ -1,4 +1,4 @@
-import type { StepFunction, AddPageStep} from './types.js';
+import type { StepFunction, AddPageStep } from './types.js';
 
 
 export const addPage: StepFunction<AddPageStep> = (step: AddPageStep) => {
@@ -27,7 +27,7 @@ $page_id = wp_insert_post( $page_args );`;
 	];
 };
 
-addPage.description = "Add a custom page.";
+addPage.description = "Add a page with title and content.";
 addPage.vars = Object.entries({
 	postTitle: {
 		description: "The title of the post",

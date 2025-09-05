@@ -51,12 +51,12 @@ describe('addPage', () => {
   });
 
   it('should have proper metadata', () => {
-    expect(addPage.description).toBe("Add a custom page.");
+    expect(addPage.description).toBe("Add a page with title and content.");
     expect(addPage.vars).toHaveLength(3);
-    
+
     const titleVar = addPage.vars.find(v => v.name === 'postTitle');
     expect(titleVar?.required).toBe(true);
-    
+
     const homepageVar = addPage.vars.find(v => v.name === 'homepage');
     expect(homepageVar?.type).toBe('boolean');
   });
