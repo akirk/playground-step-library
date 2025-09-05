@@ -1,6 +1,6 @@
 # WordPress Playground Step Library
 
-In this Github repository we collect custom [blueprint steps](https://wordpress.github.io/wordpress-playground/blueprints-api/steps/) for [WordPress Playground](https://wordpress.github.io/wordpress-playground/).
+In this Github repository we collect custom [blueprint steps](https://wordpress.github.io/wordpress-playground/blueprints/steps/) for [WordPress Playground](https://wordpress.github.io/wordpress-playground/).
 
 ## Web UI
 
@@ -20,7 +20,7 @@ Comprehensive documentation for all steps is available:
 
 ## What does it mean?
 
-You can tell WordPress Playground what to do before it loads using a [Blueprint JSON](https://wordpress.github.io/wordpress-playground/blueprints-api/index/) file. There are [a number of builtin steps provided](https://wordpress.github.io/wordpress-playground/blueprints-api/steps/) that in combination can make it do powerful things.
+You can tell WordPress Playground what to do before it loads using a [Blueprint JSON](https://wordpress.github.io/wordpress-playground/blueprints) file. There are [a number of builtin steps provided](https://wordpress.github.io/wordpress-playground/blueprints/steps/) that in combination can make it do powerful things.
 
 Now, this tool collects custom steps that make it easier to specify more complex tasks. The steps get transformed into builtin steps to form a valid, final blueprint that can be executed by WordPress Playground.
 
@@ -135,6 +135,26 @@ export interface HelloWorldLoggerStep extends BlueprintStep {
 ```
 
 The step will automatically appear in the [Step Library UI](https://akirk.github.io/playground-step-library/) after running `npm run build`.
+
+#### Transformation
+
+Now, you can use a step like this (which is incompatible with WordPress Playground [because this step is not provided](https://wordpress.github.io/wordpress-playground/blueprints/steps/)):
+```json
+{
+  "step": "helloWorldLogger",
+  "text": "Hello from WordPress Playground Step Library!"
+}
+```
+
+which will then be transformed to:
+```json
+{
+  "step": "runPHP",
+  "code": "<?php require_once '/wordpress/wp-load.php'; error_log( 'Hello from WordPress Playground Step Library!' ); ?>"
+}
+```
+
+which does what you asked for and only uses native WordPress Playground steps.
 
 ## Using as NPM Package
 
