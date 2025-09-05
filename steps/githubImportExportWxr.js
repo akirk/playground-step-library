@@ -1,4 +1,6 @@
-customSteps.githubImportExportWxr = function( step ) {
+import { deleteAllPosts } from './deleteAllPosts.js';
+
+export function githubImportExportWxr( step ) {
 	// modelled after https://github.com/carstingaxion/crud-the-docs-playground
 	// props @carstingaxion
 	const repoTest = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/.exec( step.vars.repo );
@@ -20,7 +22,7 @@ customSteps.githubImportExportWxr = function( step ) {
 	if ( step.vars.targetUrl ) {
 		siteOptions["wordpress_export_to_server__export_home"] = step.vars.targetUrl;
 	}
-	steps = steps.concat(customSteps.deleteAllPosts());
+	steps = steps.concat(deleteAllPosts());
 	steps = steps.concat([
 	{
 		"step": "setSiteOptions",
@@ -82,8 +84,8 @@ customSteps.githubImportExportWxr = function( step ) {
 
 	return steps;
 };
-customSteps.githubImportExportWxr.description = "Provide useful additional info.";
-customSteps.githubImportExportWxr.vars = [
+githubImportExportWxr.description = "Provide useful additional info.";
+githubImportExportWxr.vars = [
 {
 	"name": "repo",
 	"description": "The WXR file resides in this GitHub repository.",

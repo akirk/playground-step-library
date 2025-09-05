@@ -1,4 +1,4 @@
-customSteps.setSiteOption = function( step ) {
+export function setSiteOption( step ) {
 	if ( ! step.vars.name ) {
 		return [];
 	}
@@ -18,10 +18,10 @@ customSteps.setSiteOption = function( step ) {
 	}
 	return [ optionStep ];
 };
-customSteps.setSiteOption.description = "Set a site option.";
-customSteps.setSiteOption.builtin = true;
-customSteps.setSiteOption.multiple = true;
-customSteps.setSiteOption.vars = [
+setSiteOption.description = "Set a site option.";
+setSiteOption.builtin = true;
+setSiteOption.multiple = true;
+setSiteOption.vars = [
 	{
 		"name": "name",
 		"description": "Option name",

@@ -1,4 +1,4 @@
-customSteps.addClientRole = function( step ) {
+export function addClientRole( step ) {
     var steps = [
         {
             "step": "mkdir",
@@ -63,8 +63,8 @@ add_action(
 	];
 	return steps;
 };
-customSteps.addClientRole.description = "Adds a role for clients with additional capabilities than editors, but not quite admin.";
-customSteps.addClientRole.vars = [
+addClientRole.description = "Adds a role for clients with additional capabilities than editors, but not quite admin.";
+addClientRole.vars = [
 	{
 		"name": "displayName",
 		"required": true,

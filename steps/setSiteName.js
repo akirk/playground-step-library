@@ -1,4 +1,4 @@
-customSteps.setSiteName = function (step) {
+export function setSiteName (step) {
 	return [
 		{
 			"step": "setSiteOptions",
@@ -9,8 +9,8 @@ customSteps.setSiteName = function (step) {
 		}
 	];
 };
-customSteps.setSiteName.description = "Set the site name and tagline.";
-customSteps.setSiteName.vars = [
+setSiteName.description = "Set the site name and tagline.";
+setSiteName.vars = [
 	{
 		"name": "sitename",
 		"description": "Name of the site",

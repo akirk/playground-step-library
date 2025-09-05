@@ -1,10 +1,10 @@
-customSteps.setLandingPage = function( step ) {
+export function setLandingPage( step ) {
 	const steps = [];
 	steps.landingPage = step.vars.landingPage;
 	return steps;
 };
-customSteps.setLandingPage.description = "Set the landing page.";
-customSteps.setLandingPage.vars = [
+setLandingPage.description = "Set the landing page.";
+setLandingPage.vars = [
 	{
 		"name": "landingPage",
 		"description": "The relative URL for the landing page",

@@ -1,4 +1,4 @@
-customSteps.doAction = function ( step ) {
+export function doAction ( step ) {
 	if ( !step?.vars?.action ) {
 		return [];
 	}
@@ -15,8 +15,8 @@ customSteps.doAction = function ( step ) {
 		}
 	];
 };
-customSteps.doAction.description = "Execute a custom action.";
-customSteps.doAction.vars = [
+doAction.description = "Execute a custom action.";
+doAction.vars = [
 	{
 		"name": "action",
 		"description": "Execute a custom action.",

@@ -1,4 +1,4 @@
-customSteps.showAdminNotice = function (step) {
+export function showAdminNotice (step) {
 	const dismissible = step?.vars?.dismissible ? ' is-dismissible' : '';
 	const text = step?.vars?.text.replace(/'/g, "\\'");
 
@@ -69,8 +69,8 @@ add_action('admin_footer', function() {
 	steps.landingPage = '/wp-admin/';
 	return steps;
 }
-customSteps.showAdminNotice.description = "Show an admin notice in the dashboard.";
-customSteps.showAdminNotice.vars = [
+showAdminNotice.description = "Show an admin notice in the dashboard.";
+showAdminNotice.vars = [
 	{
 		"name": "text",
 		"description": "The notice to be displayed",

@@ -1,4 +1,4 @@
-customSteps.githubPluginRelease = function( step ) {
+export function githubPluginRelease( step ) {
 	const repoTest = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/.exec( step.vars.repo );
 	if ( ! repoTest ) {
 		return [];
@@ -28,8 +28,8 @@ customSteps.githubPluginRelease = function( step ) {
 
 	return outSteps;
 };
-customSteps.githubPluginRelease.description = "Install a specific plugin release from a Github repository.";
-customSteps.githubPluginRelease.vars = [
+githubPluginRelease.description = "Install a specific plugin release from a Github repository.";
+githubPluginRelease.vars = [
 	{
 		"name": "repo",
 		"description": "The plugin resides in this GitHub repository.",

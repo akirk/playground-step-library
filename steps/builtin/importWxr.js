@@ -1,4 +1,4 @@
-customSteps.importWxr = function( step ) {
+export function importWxr( step ) {
 	if ( ! step.vars.url || ! step.vars.url.match( /^https?:/ ) ) {
 		return [];
 	}
@@ -13,9 +13,9 @@ customSteps.importWxr = function( step ) {
 		}
 	];
 };
-customSteps.importWxr.description = "Import a WXR from a URL.";
-customSteps.importWxr.builtin = true;
-customSteps.importWxr.vars = [
+importWxr.description = "Import a WXR from a URL.";
+importWxr.builtin = true;
+importWxr.vars = [
 	{
 		"name": "url",
 		"description": "URL of a WXR file",

@@ -1,4 +1,4 @@
-customSteps.setTT4Homepage = function( step ) {
+export function setTT4Homepage( step ) {
     var steps = [
         {
             "step": "runPHP",
@@ -56,4 +56,4 @@ wp_set_object_terms($post_id, $term_id, 'wp_theme');
     ];
     return steps;
 };
-customSteps.setTT4Homepage.description = "Set the homepage for the twentytwentyfour theme.";
+setTT4Homepage.description = "Set the homepage for the twentytwentyfour theme.";

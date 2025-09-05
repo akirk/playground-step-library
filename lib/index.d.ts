@@ -24,7 +24,6 @@ interface ValidationResult {
     error?: string;
 }
 interface CompilerOptions {
-    stepsDir?: string;
     landingPage?: string;
     features?: Record<string, any>;
     phpExtensionBundles?: string[];
@@ -45,20 +44,11 @@ interface StepInfo {
  */
 declare class PlaygroundStepLibrary {
     private customSteps;
-    private stepsDir;
     constructor(options?: CompilerOptions);
     /**
-     * Load all custom step definitions from the steps directory
+     * Load all ES module steps
      */
     private loadCustomSteps;
-    /**
-     * Collect step files from a directory
-     */
-    private collectStepFiles;
-    /**
-     * Load all step files with access to the full customSteps object
-     */
-    private loadStepFiles;
     /**
      * Compile a blueprint by transforming custom steps into native steps
      * Uses the transformJson logic from script.js adapted for TypeScript
@@ -73,5 +63,5 @@ declare class PlaygroundStepLibrary {
      */
     validateBlueprint(blueprint: Blueprint | string): ValidationResult;
 }
-export = PlaygroundStepLibrary;
+export default PlaygroundStepLibrary;
 //# sourceMappingURL=index.d.ts.map

@@ -1,4 +1,4 @@
-customSteps.importWordPressComExport = function (step) {
+export function importWordPressComExport (step) {
 	const url = step.vars.corsProxy ? 'https://playground.wordpress.net/cors-proxy.php?' + step.vars.url : step.vars.url;
 	return [
 		{
@@ -34,8 +34,8 @@ foreach ( $iterator as $file ) {
 		}
 	];
 };
-customSteps.importWordPressComExport.description = "Import a WordPress.com export file (WXR in a ZIP)";
-customSteps.importWordPressComExport.vars = [
+importWordPressComExport.description = "Import a WordPress.com export file (WXR in a ZIP)";
+importWordPressComExport.vars = [
 	{
 		"name": "url",
 		"description": "URL of a WordPress.com export ZIP file",

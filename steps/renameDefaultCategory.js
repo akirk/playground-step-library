@@ -1,4 +1,4 @@
-customSteps.renameDefaultCategory = function( step ) {
+export function renameDefaultCategory( step ) {
 	const name = step.vars.categoryName.replace( /'/g, "\\'" ).trim();
 	if ( ! name ) {
 		return [];
@@ -11,8 +11,8 @@ customSteps.renameDefaultCategory = function( step ) {
 		}
 	];
 };
-customSteps.renameDefaultCategory.description = "Change the default \"Uncategorized\".";
-customSteps.renameDefaultCategory.vars = [
+renameDefaultCategory.description = "Change the default \"Uncategorized\".";
+renameDefaultCategory.vars = [
 	{
 		"name": "categoryName",
 		"description": "Change the default category name",

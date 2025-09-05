@@ -1,4 +1,6 @@
-customSteps.skipWooCommerceWizard = function( step, blueprint ) {
+import { installPlugin } from './builtin/installPlugin.js';
+
+export function skipWooCommerceWizard( step, blueprint ) {
 	let steps = [
 		{
 			"step": "runPHP",
@@ -22,11 +24,11 @@ customSteps.skipWooCommerceWizard = function( step, blueprint ) {
 		}
 	}
 	if ( ! hasWoocommercePlugin ) {
-		steps = customSteps.installPlugin( { vars: { url: 'woocommerce' }} ).concat( steps );
+		steps = installPlugin( { vars: { url: 'woocommerce' }} ).concat( steps );
 	}
 	steps.landingPage = '/wp-admin/admin.php?page=wc-admin';
 	return steps;
 
 };
-customSteps.skipWooCommerceWizard.description = "When running WooCommerce, don't show the wizard.";
-customSteps.skipWooCommerceWizard.vars = [];
+skipWooCommerceWizard.description = "When running WooCommerce, don't show the wizard.";
+skipWooCommerceWizard.vars = [];

@@ -1,9 +1,12 @@
-customSteps.installPlugin = function (step) {
+import { githubPlugin } from '../githubPlugin.js';
+import { githubPluginRelease } from '../githubPluginRelease.js';
+
+export function installPlugin (step) {
 	let urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec(step.vars.url);
 	if (urlTest) {
 		const releaseMatch = step.vars.url.match(/\/releases\/download\/(?<version>[^\/]+)\/(?<asset>[^\/]+)$/);
 		if (releaseMatch) {
-			return customSteps.githubPluginRelease({
+			return githubPluginRelease({
 				vars: {
 					repo: urlTest.groups.org + '/' + urlTest.groups.repo,
 					release: releaseMatch.groups.version,
@@ -12,7 +15,7 @@ customSteps.installPlugin = function (step) {
 			});
 		}
 
-		return customSteps.githubPlugin(step);
+		return githubPlugin(step);
 	}
 	let plugin = step.vars.url;
 	urlTest = /^(?:https:\/\/wordpress.org\/plugins\/)?(?<slug>[^\/]+)/.exec(step.vars.url);
@@ -47,9 +50,9 @@ customSteps.installPlugin = function (step) {
 	}
 	return steps;
 }
-customSteps.installPlugin.description = "Install a plugin via WordPress.org or Github";
-customSteps.installPlugin.builtin = true;
-customSteps.installPlugin.vars = [
+installPlugin.description = "Install a plugin via WordPress.org or Github";
+installPlugin.builtin = true;
+installPlugin.vars = [
 	{
 		"name": "url",
 		"description": "URL of the plugin or WordPress.org slug.",

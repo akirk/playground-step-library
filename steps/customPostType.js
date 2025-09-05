@@ -1,4 +1,4 @@
-customSteps.customPostType = function () {
+export function customPostType () {
 	var steps = [
 		{
 			"step": "mkdir",
@@ -12,8 +12,8 @@ customSteps.customPostType = function () {
 	];
 	return steps;
 }
-customSteps.customPostType.description = "Register a custom post type.";
-customSteps.customPostType.vars = [
+customPostType.description = "Register a custom post type.";
+customPostType.vars = [
 	{
 		"name": "slug",
 		"description": "Post type key",

@@ -1,4 +1,4 @@
-customSteps.addPage = function( step ) {
+export function addPage( step ) {
 	const postTitle = step.vars.postTitle.replace(/'/g, "\\'" );
 	const postContent = step.vars.postContent.replace(/'/g, "\\'" );
 	let code = `
@@ -21,9 +21,10 @@ $page_id = wp_insert_post( $page_args );`
 			code
 		}
 	];
-};
-customSteps.addPage.description = "Add a custom page.";
-customSteps.addPage.vars = [
+}
+
+addPage.description = "Add a custom page.";
+addPage.vars = [
 	{
 		"name": "postTitle",
 		"description": "The title of the post",
@@ -44,3 +45,4 @@ customSteps.addPage.vars = [
 		"samples": [ "true", "false" ]
 	}
 ];
+

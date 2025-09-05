@@ -1,4 +1,4 @@
-customSteps.changeAdminColorScheme = function( step ) {
+export function changeAdminColorScheme( step ) {
 	return [
 		{
 			"step": "updateUserMeta",
@@ -9,8 +9,8 @@ customSteps.changeAdminColorScheme = function( step ) {
 		}
 	];
 };
-customSteps.changeAdminColorScheme.description = "Useful to combine with a login step.";
-customSteps.changeAdminColorScheme.vars = [
+changeAdminColorScheme.description = "Useful to combine with a login step.";
+changeAdminColorScheme.vars = [
 	{
 		"name": "colorScheme",
 		"description": "Color scheme",

@@ -1,4 +1,4 @@
-customSteps.addCorsProxy = function( step ) {
+export function addCorsProxy( step ) {
 	let code = `<?php add_action( 'requests-requests.before_request', function( &$url ) {
 $url = 'https://playground.wordpress.net/cors-proxy.php?' . $url;
 } );
@@ -20,4 +20,4 @@ $url = 'https://playground.wordpress.net/cors-proxy.php?' . $url;
 
 	return steps;
 };
-customSteps.addCorsProxy.description = "Automatically add the CORS proxy to outgoing HTTP requests.";
+addCorsProxy.description = "Automatically add the CORS proxy to outgoing HTTP requests.";

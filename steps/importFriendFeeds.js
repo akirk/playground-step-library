@@ -1,4 +1,6 @@
-customSteps.importFriendFeeds = function( step, blueprint ) {
+import { installPlugin } from './builtin/installPlugin.js';
+
+export function importFriendFeeds( step, blueprint ) {
 	let opml = step.vars.opml;
 	if ( ! opml.match(/<opml/) ) {
 		opml = `<?xml version="1.0" encoding="utf-8"?><opml version="2.0">
@@ -52,13 +54,13 @@ Friends\\Import::opml("${opml}");
 		}
 	}
 	if ( ! hasFriendsPlugin ) {
-		steps = customSteps.installPlugin( { vars: { url: 'friends', permalink: true }} ).concat( steps );
+		steps = installPlugin( { vars: { url: 'friends', permalink: true }} ).concat( steps );
 	}
 	steps.landingPage = '/friends/?refresh&welcome';
 	return steps;
 };
-customSteps.importFriendFeeds.description = "Add subscriptions to the Friends plugin.";
-customSteps.importFriendFeeds.vars = [
+importFriendFeeds.description = "Add subscriptions to the Friends plugin.";
+importFriendFeeds.vars = [
 	{
 		"name": "opml",
 		"description": "An OPML file, or a list of RSS feed URLs, one per line.",

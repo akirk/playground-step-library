@@ -1,4 +1,4 @@
-customSteps.runWpCliCommand = function (step) {
+export function runWpCliCommand (step) {
 	return [
 		{
 			step: 'wp-cli',
@@ -6,8 +6,8 @@ customSteps.runWpCliCommand = function (step) {
 		}
 	];
 };
-customSteps.runWpCliCommand.description = "Run a wp-cli command.";
-customSteps.runWpCliCommand.vars = [
+runWpCliCommand.description = "Run a wp-cli command.";
+runWpCliCommand.vars = [
 	{
 		"name": "command",
 		"description": "The wp-cli command to run",

@@ -1,4 +1,6 @@
-customSteps.jetpackOfflineMode = function( step, blueprint ) {
+import { installPlugin } from './builtin/installPlugin.js';
+
+export function jetpackOfflineMode( step, blueprint ) {
 	let jetpack_active_modules = [];
 	if ( step.vars.blocks ) {
 		jetpack_active_modules.push( 'blocks' );
@@ -30,12 +32,12 @@ customSteps.jetpackOfflineMode = function( step, blueprint ) {
 		}
 	}
 	if ( ! hasJetpackPlugin ) {
-		steps = customSteps.installPlugin( { vars: { url: 'jetpack'}} ).concat( steps );
+		steps = installPlugin( { vars: { url: 'jetpack'}} ).concat( steps );
 	}
 	return steps;
 };
-customSteps.jetpackOfflineMode.description = "Start Jetpack in Offline mode.";
-customSteps.jetpackOfflineMode.vars = [
+jetpackOfflineMode.description = "Start Jetpack in Offline mode.";
+jetpackOfflineMode.vars = [
 	{
 		"name": "blocks",
 		"description": "Activate the Jetpack Blocks module.",

@@ -1,4 +1,4 @@
-customSteps.runPHP = function (step) {
+export function runPHP (step) {
 	return [
 		{
 			"step": "runPHP",
@@ -6,8 +6,8 @@ customSteps.runPHP = function (step) {
 		}
 	];
 };
-customSteps.runPHP.description = "Run code in the context of WordPress.";
-customSteps.runPHP.vars = [
+runPHP.description = "Run code in the context of WordPress.";
+runPHP.vars = [
 	{
 		"name": "code",
 		"description": "The code to run",

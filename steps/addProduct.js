@@ -1,4 +1,6 @@
-customSteps.addProduct = function (step, blueprint) {
+import { installPlugin } from './builtin/installPlugin.js';
+
+export function addProduct (step, blueprint) {
 	const productTitle = step.vars.productTitle.replace(/'/g, "\\'");
 	const productDescription = step.vars.productDescription.replace(/'/g, "\\'");
 	const productPrice = step.vars.productPrice || '';
@@ -63,7 +65,7 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 		}
 	}
 	if (!hasWoocommercePlugin) {
-		steps = customSteps.installPlugin({ vars: { url: 'woocommerce', permalink: true } }).concat(steps);
+		steps = installPlugin({ vars: { url: 'woocommerce', permalink: true } }).concat(steps);
 	}
 
 	steps.push({
@@ -74,8 +76,8 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 	return steps;
 };
 
-customSteps.addProduct.description = "Add a WooCommerce product (will install WooCommerce if not present)";
-customSteps.addProduct.vars = [
+addProduct.description = "Add a WooCommerce product (will install WooCommerce if not present)";
+addProduct.vars = [
 	{
 		"name": "productTitle",
 		"description": "The title of the product",

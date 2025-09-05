@@ -1,4 +1,4 @@
-customSteps.login = function( step ) {
+export function login( step ) {
 	const steps = [
 		{
 			"step": "login",
@@ -11,9 +11,9 @@ customSteps.login = function( step ) {
 	}
 	return steps;
 }
-customSteps.login.description = "Login to the site";
-customSteps.login.builtin = true;
-customSteps.login.vars = [
+login.description = "Login to the site";
+login.builtin = true;
+login.vars = [
 	{
 		"name": "username",
 		"description": "Username",

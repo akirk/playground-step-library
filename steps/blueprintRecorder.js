@@ -1,9 +1,11 @@
-customSteps.blueprintRecorder = function ( step ) {
-	return customSteps.githubPlugin( {
+import { githubPlugin } from './githubPlugin.js';
+
+export function blueprintRecorder ( step ) {
+	return githubPlugin( {
 		vars: {
 			url: "https://github.com/akirk/blueprint-recorder",
 			branch: "main",
 		}
 	} );
 };
-customSteps.blueprintRecorder.description = "Record steps made and compile a new blueprint.";
+blueprintRecorder.description = "Record steps made and compile a new blueprint.";

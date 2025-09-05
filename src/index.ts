@@ -1,5 +1,47 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import { addClientRole } from '../steps/addClientRole.js';
+import { addCorsProxy } from '../steps/addCorsProxy.js';
+import { addFilter } from '../steps/addFilter.js';
+import { addMedia } from '../steps/addMedia.js';
+import { addPage } from '../steps/addPage.js';
+import { addPost } from '../steps/addPost.js';
+import { addProduct } from '../steps/addProduct.js';
+import { blueprintExtractor } from '../steps/blueprintExtractor.js';
+import { blueprintRecorder } from '../steps/blueprintRecorder.js';
+import { changeAdminColorScheme } from '../steps/changeAdminColorScheme.js';
+import { createUser } from '../steps/createUser.js';
+import { customPostType } from '../steps/customPostType.js';
+import { deleteAllPosts } from '../steps/deleteAllPosts.js';
+import { disableWelcomeGuides } from '../steps/disableWelcomeGuides.js';
+import { doAction } from '../steps/doAction.js';
+import { fakeHttpResponse } from '../steps/fakeHttpResponse.js';
+import { githubImportExportWxr } from '../steps/githubImportExportWxr.js';
+import { githubPlugin } from '../steps/githubPlugin.js';
+import { githubPluginRelease } from '../steps/githubPluginRelease.js';
+import { githubTheme } from '../steps/githubTheme.js';
+import { importFriendFeeds } from '../steps/importFriendFeeds.js';
+import { importWordPressComExport } from '../steps/importWordPressComExport.js';
+import { installPhEditor } from '../steps/installPhEditor.js';
+import { installPhpLiteAdmin } from '../steps/installPhpLiteAdmin.js';
+import { jetpackOfflineMode } from '../steps/jetpackOfflineMode.js';
+import { muPlugin } from '../steps/muPlugin.js';
+import { removeDashboardWidgets } from '../steps/removeDashboardWidgets.js';
+import { renameDefaultCategory } from '../steps/renameDefaultCategory.js';
+import { runWpCliCommand } from '../steps/runWpCliCommand.js';
+import { sampleContent } from '../steps/sampleContent.js';
+import { setLandingPage } from '../steps/setLandingPage.js';
+import { setLanguage } from '../steps/setLanguage.js';
+import { setSiteName } from '../steps/setSiteName.js';
+import { setTT4Homepage } from '../steps/setTT4Homepage.js';
+import { showAdminNotice } from '../steps/showAdminNotice.js';
+import { skipWooCommerceWizard } from '../steps/skipWooCommerceWizard.js';
+import { defineWpConfigConst } from '../steps/builtin/defineWpConfigConst.js';
+import { enableMultisite } from '../steps/builtin/enableMultisite.js';
+import { importWxr } from '../steps/builtin/importWxr.js';
+import { installPlugin } from '../steps/builtin/installPlugin.js';
+import { installTheme } from '../steps/builtin/installTheme.js';
+import { login } from '../steps/builtin/login.js';
+import { runPHP } from '../steps/builtin/runPHP.js';
+import { setSiteOption } from '../steps/builtin/setSiteOption.js';
 
 interface StepVariable {
     name: string;
@@ -39,7 +81,6 @@ interface ValidationResult {
 }
 
 interface CompilerOptions {
-    stepsDir?: string;
     landingPage?: string;
     features?: Record<string, any>;
     phpExtensionBundles?: string[];
@@ -62,71 +103,60 @@ interface StepInfo {
  */
 class PlaygroundStepLibrary {
     private customSteps: Record<string, CustomStepDefinition> = {};
-    private stepsDir: string;
 
     constructor(options: CompilerOptions = {}) {
-        this.stepsDir = options.stepsDir || path.join(__dirname, '../steps');
         this.loadCustomSteps();
     }
 
     /**
-     * Load all custom step definitions from the steps directory
+     * Load all ES module steps
      */
     private loadCustomSteps(): void {
-        this.customSteps = {};
-
-        // First pass: collect all step files
-        const stepFiles: Array<{path: string, name: string, isBuiltin: boolean}> = [];
-        
-        // Collect custom steps from steps/ directory
-        this.collectStepFiles(this.stepsDir, false, stepFiles);
-        
-        // Collect builtin steps from steps/builtin/ directory
-        const builtinDir = path.join(this.stepsDir, 'builtin');
-        if (fs.existsSync(builtinDir)) {
-            this.collectStepFiles(builtinDir, true, stepFiles);
-        }
-        
-        // Second pass: load all steps with access to the full customSteps object
-        this.loadStepFiles(stepFiles);
-    }
-
-    /**
-     * Collect step files from a directory
-     */
-    private collectStepFiles(dir: string, isBuiltin: boolean, stepFiles: Array<{path: string, name: string, isBuiltin: boolean}>): void {
-        if (!fs.existsSync(dir)) {
-            return;
-        }
-
-        const files = fs.readdirSync(dir).filter(file => file.endsWith('.js'));
-
-        for (const file of files) {
-            const stepName = path.basename(file, '.js');
-            const stepPath = path.join(dir, file);
-            stepFiles.push({ path: stepPath, name: stepName, isBuiltin });
-        }
-    }
-
-    /**
-     * Load all step files with access to the full customSteps object
-     */
-    private loadStepFiles(stepFiles: Array<{path: string, name: string, isBuiltin: boolean}>): void {
-        for (const stepFile of stepFiles) {
-            try {
-                const stepCode = fs.readFileSync(stepFile.path, 'utf8');
-
-                // Execute the step code with access to the full customSteps object
-                const func = new Function('customSteps', stepCode);
-                func(this.customSteps);
-
-                if (this.customSteps[stepFile.name]) {
-                    this.customSteps[stepFile.name].builtin = stepFile.isBuiltin;
-                }
-            } catch (error) {
-                console.warn(`Warning: Failed to load step ${stepFile.name}:`, (error as Error).message);
-            }
-        }
+        // Add imported ES modules to customSteps
+        this.customSteps.addClientRole = addClientRole as any;
+        this.customSteps.addCorsProxy = addCorsProxy as any;
+        this.customSteps.addFilter = addFilter as any;
+        this.customSteps.addMedia = addMedia as any;
+        this.customSteps.addPage = addPage as any;
+        this.customSteps.addPost = addPost as any;
+        this.customSteps.addProduct = addProduct as any;
+        this.customSteps.blueprintExtractor = blueprintExtractor as any;
+        this.customSteps.blueprintRecorder = blueprintRecorder as any;
+        this.customSteps.changeAdminColorScheme = changeAdminColorScheme as any;
+        this.customSteps.createUser = createUser as any;
+        this.customSteps.customPostType = customPostType as any;
+        this.customSteps.deleteAllPosts = deleteAllPosts as any;
+        this.customSteps.disableWelcomeGuides = disableWelcomeGuides as any;
+        this.customSteps.doAction = doAction as any;
+        this.customSteps.fakeHttpResponse = fakeHttpResponse as any;
+        this.customSteps.githubImportExportWxr = githubImportExportWxr as any;
+        this.customSteps.githubPlugin = githubPlugin as any;
+        this.customSteps.githubPluginRelease = githubPluginRelease as any;
+        this.customSteps.githubTheme = githubTheme as any;
+        this.customSteps.importFriendFeeds = importFriendFeeds as any;
+        this.customSteps.importWordPressComExport = importWordPressComExport as any;
+        this.customSteps.installPhEditor = installPhEditor as any;
+        this.customSteps.installPhpLiteAdmin = installPhpLiteAdmin as any;
+        this.customSteps.jetpackOfflineMode = jetpackOfflineMode as any;
+        this.customSteps.muPlugin = muPlugin as any;
+        this.customSteps.removeDashboardWidgets = removeDashboardWidgets as any;
+        this.customSteps.renameDefaultCategory = renameDefaultCategory as any;
+        this.customSteps.runWpCliCommand = runWpCliCommand as any;
+        this.customSteps.sampleContent = sampleContent as any;
+        this.customSteps.setLandingPage = setLandingPage as any;
+        this.customSteps.setLanguage = setLanguage as any;
+        this.customSteps.setSiteName = setSiteName as any;
+        this.customSteps.setTT4Homepage = setTT4Homepage as any;
+        this.customSteps.showAdminNotice = showAdminNotice as any;
+        this.customSteps.skipWooCommerceWizard = skipWooCommerceWizard as any;
+        this.customSteps.defineWpConfigConst = defineWpConfigConst as any;
+        this.customSteps.enableMultisite = enableMultisite as any;
+        this.customSteps.importWxr = importWxr as any;
+        this.customSteps.installPlugin = installPlugin as any;
+        this.customSteps.installTheme = installTheme as any;
+        this.customSteps.login = login as any;
+        this.customSteps.runPHP = runPHP as any;
+        this.customSteps.setSiteOption = setSiteOption as any;
     }
 
     /**
@@ -364,4 +394,4 @@ class PlaygroundStepLibrary {
     }
 }
 
-export = PlaygroundStepLibrary;
+export default PlaygroundStepLibrary;

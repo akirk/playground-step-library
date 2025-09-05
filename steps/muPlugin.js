@@ -1,4 +1,4 @@
-customSteps.muPlugin = function( step ) {
+export function muPlugin( step ) {
 	const code = '<?php ' + step.vars.code.replace( /<\?php/, '' );
 	return [
 		{
@@ -12,8 +12,8 @@ customSteps.muPlugin = function( step ) {
 		}
 	];
 };
-customSteps.muPlugin.description = "Add code for a plugin.";
-customSteps.muPlugin.vars = [
+muPlugin.description = "Add code for a plugin.";
+muPlugin.vars = [
 	{
 		"name": "code",
 		"description": "Code for your mu-plugin",

@@ -1,4 +1,4 @@
-customSteps.addPost = function( step ) {
+export function addPost( step ) {
 	const postTitle = step.vars.postTitle.replace(/'/g, "\\'" );
 	const postContent = step.vars.postContent.replace(/'/g, "\\'" );
 	const postType = step.vars.postType;
@@ -34,9 +34,10 @@ $page_id = wp_insert_post( $page_args );`;
 			code
 		}
 	];
-};
-customSteps.addPost.description = "Add a post.";
-customSteps.addPost.vars = [
+}
+
+addPost.description = "Add a post.";
+addPost.vars = [
 	{
 		"name": "postTitle",
 		"description": "The title of the post",
@@ -90,3 +91,4 @@ customSteps.addPost.vars = [
 		}
 	}
 ];
+

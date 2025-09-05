@@ -1,4 +1,4 @@
-customSteps.installPhEditor = function( step ) {
+export function installPhEditor( step ) {
 	const steps = [
 		{
 			"step": "mkdir",
@@ -30,4 +30,4 @@ add_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {
 	steps.landingPage = "/pheditor-main/pheditor.php";
 	return steps;
 };
-customSteps.installPhEditor.description = "Install phEditor. Password: admin";
+installPhEditor.description = "Install phEditor. Password: admin";

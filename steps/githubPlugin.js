@@ -1,4 +1,4 @@
-customSteps.githubPlugin = function ( step ) {
+export function githubPlugin ( step ) {
 	const urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.vars.url );
 	if ( !urlTest ) {
 		return [];
@@ -61,8 +61,8 @@ customSteps.githubPlugin = function ( step ) {
 
 	return outSteps;
 };
-customSteps.githubPlugin.description = "Install a plugin from a Github repository.";
-customSteps.githubPlugin.vars = [
+githubPlugin.description = "Install a plugin from a Github repository.";
+githubPlugin.vars = [
 	{
 		"name": "url",
 		"description": "Github URL of the plugin.",

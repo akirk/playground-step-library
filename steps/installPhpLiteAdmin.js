@@ -1,4 +1,4 @@
-customSteps.installPhpLiteAdmin = function( step ) {
+export function installPhpLiteAdmin( step ) {
 	const steps = [
 		{
 			"step": "mkdir",
@@ -44,4 +44,4 @@ $directory = false;
 	steps.landingPage = "/phpliteadmin.php";
 	return steps;
 };
-customSteps.installPhpLiteAdmin.description = "Provide phpLiteAdmin. Password: admin";
+installPhpLiteAdmin.description = "Provide phpLiteAdmin. Password: admin";

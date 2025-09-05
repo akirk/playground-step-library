@@ -1,4 +1,4 @@
-customSteps.enableMultisite = function (step) {
+export function enableMultisite (step) {
 	const steps = [
 		{
 			"step": "enableMultisite"
@@ -7,5 +7,5 @@ customSteps.enableMultisite = function (step) {
 	steps.landingPage = '/wp-admin/network/sites.php';
 	return steps;
 };
-customSteps.enableMultisite.description = "Enable WordPress Multisite functionality.";
-customSteps.enableMultisite.builtin = true;
+enableMultisite.description = "Enable WordPress Multisite functionality.";
+enableMultisite.builtin = true;

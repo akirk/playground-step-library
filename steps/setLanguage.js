@@ -1,4 +1,4 @@
-customSteps.setLanguage = function (step) {
+export function setLanguage (step) {
 	const lang = step?.vars?.language;
 	if (!lang) {
 		return [];
@@ -22,8 +22,8 @@ customSteps.setLanguage = function (step) {
 	];
 	return steps;
 };
-customSteps.setLanguage.description = "Set the WordPress site language.";
-customSteps.setLanguage.vars = [
+setLanguage.description = "Set the WordPress site language.";
+setLanguage.vars = [
 	{
 		"name": "language",
 		"description": "A valid WordPress language slug",

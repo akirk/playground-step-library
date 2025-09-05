@@ -1,9 +1,11 @@
-customSteps.blueprintExtractor = function ( step ) {
-	return customSteps.githubPlugin( {
+import { githubPlugin } from './githubPlugin.js';
+
+export function blueprintExtractor ( step ) {
+	return githubPlugin( {
 		vars: {
 			url: "https://github.com/akirk/blueprint-extractor",
 			branch: "main",
 		}
 	} );
 };
-customSteps.blueprintExtractor.description = "Generate a new blueprint after modifying the WordPress.";
+blueprintExtractor.description = "Generate a new blueprint after modifying the WordPress.";

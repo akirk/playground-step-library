@@ -1,4 +1,4 @@
-customSteps.sampleContent = function() {
+export function sampleContent() {
     var steps = [
         {
             "step": "runPHP",
@@ -23,5 +23,5 @@ customSteps.sampleContent = function() {
     ];
     return steps;
 };
-customSteps.sampleContent.count = 5;
-customSteps.sampleContent.description = "Inserts sample pages to the site.";
+sampleContent.count = 5;
+sampleContent.description = "Inserts sample pages to the site.";

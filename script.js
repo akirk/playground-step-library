@@ -1,5 +1,16 @@
-const customSteps = {};
 addEventListener('DOMContentLoaded', function () {
+	// Wait for PlaygroundStepLibrary to be available
+	if (!window.PlaygroundStepLibrary) {
+		console.error('PlaygroundStepLibrary not available');
+		return;
+	}
+	
+	// Create an instance to get available steps
+	const compiler = new window.PlaygroundStepLibrary();
+	const customSteps = compiler.getAvailableSteps();
+	
+	// Make compiler accessible for step functions
+	window.stepCompiler = compiler;
 	const stepList = document.getElementById('step-library');
 	const blueprintSteps = document.getElementById('blueprint-steps');
 	let blueprint = '';
@@ -896,7 +907,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		// Use the PlaygroundStepLibrary to compile the blueprint
-		const compiler = new PlaygroundStepLibrary();
+		const compiler = new window.PlaygroundStepLibrary();
 		const inputData = Object.assign(userDefined, JSON.parse(jsonInput));
 		const outputData = compiler.compile(inputData);
 

@@ -1,4 +1,4 @@
-customSteps.createUser = function (step) {
+export function createUser (step) {
 	let code = "<?php require_once '/wordpress/wp-load.php';";
 	let username = step?.vars?.username;
 	let password = step?.vars?.password;
@@ -35,8 +35,8 @@ customSteps.createUser = function (step) {
 	}
 	return steps;
 }
-customSteps.createUser.description = "Create a new user.";
-customSteps.createUser.vars = [
+createUser.description = "Create a new user.";
+createUser.vars = [
 	{
 		"name": "username",
 		"description": "Username",

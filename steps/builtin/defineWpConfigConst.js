@@ -1,4 +1,4 @@
-customSteps.defineWpConfigConst = function( step ) {
+export function defineWpConfigConst( step ) {
 	if ( ! step.vars.name ) {
 		return [];
 	}
@@ -24,10 +24,10 @@ customSteps.defineWpConfigConst = function( step ) {
 	}
 	return [ constStep ];
 };
-customSteps.defineWpConfigConst.description = "Define a wp-config PHP constant.";
-customSteps.defineWpConfigConst.builtin = true;
-customSteps.defineWpConfigConst.multiple = true;
-customSteps.defineWpConfigConst.vars = [
+defineWpConfigConst.description = "Define a wp-config PHP constant.";
+defineWpConfigConst.builtin = true;
+defineWpConfigConst.multiple = true;
+defineWpConfigConst.vars = [
 	{
 		"name": "name",
 		"description": "Constant name",

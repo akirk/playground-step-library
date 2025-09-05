@@ -1,4 +1,4 @@
-customSteps.removeDashboardWidgets = function( step ) {
+export function removeDashboardWidgets( step ) {
     var steps = [
         {
             "step": "mkdir",
@@ -59,8 +59,8 @@ add_action(
 	];
 	return steps;
 };
-customSteps.removeDashboardWidgets.description = "Remove widgets from the wp-admin dashboard.";
-customSteps.removeDashboardWidgets.vars = [
+removeDashboardWidgets.description = "Remove widgets from the wp-admin dashboard.";
+removeDashboardWidgets.vars = [
 	{
 		"name": "welcome",
 		"description": "Remove Welcome Panel",

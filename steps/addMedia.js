@@ -1,4 +1,4 @@
-customSteps.addMedia = function( step ) {
+export function addMedia( step ) {
 	if ( ! step.vars.downloadUrl || ! step.vars.downloadUrl.match( /^https?:/ ) ) {
 		return [];
 	}
@@ -65,8 +65,8 @@ foreach ( $iterator as $filename ) {
 	} );
 	return steps;
 };
-customSteps.addMedia.description = "Add files to the media library.";
-customSteps.addMedia.vars = [
+addMedia.description = "Add files to the media library.";
+addMedia.vars = [
 	{
 		"name": "downloadUrl",
 		"description": "Where to download the media from (can be a zip).",

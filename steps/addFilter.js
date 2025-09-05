@@ -1,4 +1,4 @@
-customSteps.addFilter = function( step ) {
+export function addFilter( step ) {
 	let code = "<?php add_filter( '" + step.vars.filter + "', ";
 	// Automatically put code in a function if it is not already.
 	if ( step.vars.code.match( /^function\s*\(/i ) ) {
@@ -42,8 +42,8 @@ customSteps.addFilter = function( step ) {
 		}
 	];
 };
-customSteps.addFilter.description = "Easily add a filtered value.";
-customSteps.addFilter.vars = [
+addFilter.description = "Easily add a filtered value.";
+addFilter.vars = [
 	{
 		"name": "filter",
 		"description": "Name of the filter",

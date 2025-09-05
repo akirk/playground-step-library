@@ -2,6 +2,7 @@
   "name": "playground-step-library",
   "version": "1.0.0",
   "description": "A compiler that transforms WordPress Playground blueprints with custom steps into blueprints with native steps",
+  "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "bin": {
@@ -18,8 +19,9 @@
     "dev": "tsc --watch"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "@wp-playground/blueprints": "^2.0.16",
+    "typescript": "^5.0.0"
   },
   "keywords": [
     "wordpress",

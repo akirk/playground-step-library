@@ -1,7 +1,9 @@
-customSteps.installTheme = function( step ) {
+import { githubTheme } from '../githubTheme.js';
+
+export function installTheme( step ) {
 	let urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.vars.url );
 	if ( urlTest ) {
-		return customSteps.githubTheme( step );
+		return githubTheme( step );
 	}
 
 	let theme = step.vars.url;
@@ -33,9 +35,9 @@ customSteps.installTheme = function( step ) {
 
 	return steps;
 }
-customSteps.installTheme.description = "Install a theme";
-customSteps.installTheme.builtin = true;
-customSteps.installTheme.vars = [
+installTheme.description = "Install a theme";
+installTheme.builtin = true;
+installTheme.vars = [
 	{
 		"name": "url",
 		"description": "URL of the theme or WordPress.org slug",

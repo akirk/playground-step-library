@@ -1,4 +1,4 @@
-customSteps.githubTheme = function( step ) {
+export function githubTheme( step ) {
 	const urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.vars.url );
 	if ( ! urlTest ) {
 		return [];
@@ -56,8 +56,8 @@ customSteps.githubTheme = function( step ) {
 
 	return outSteps;
 };
-customSteps.githubTheme.description = "Install a theme from a Github repository.";
-customSteps.githubTheme.vars = [
+githubTheme.description = "Install a theme from a Github repository.";
+githubTheme.vars = [
 {
 	"name": "url",
 	"description": "Github URL of the theme.",

@@ -1,4 +1,4 @@
-customSteps.fakeHttpResponse = function( step, blueprint ) {
+export function fakeHttpResponse( step, blueprint ) {
 	const steps = [];
 
 	if ( step.vars.url ) {
@@ -54,8 +54,8 @@ add_filter(
 	}
 	return steps;
 };
-customSteps.fakeHttpResponse.description = "Fake a wp_remote_request() response.";
-customSteps.fakeHttpResponse.vars = [
+fakeHttpResponse.description = "Fake a wp_remote_request() response.";
+fakeHttpResponse.vars = [
 	{
 		"name": "url",
 		"description": "URL like https://wordpress.org/",
