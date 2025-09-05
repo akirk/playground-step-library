@@ -38,13 +38,8 @@ node bin/cli.js --list-steps
 
 ### Programmatic API
 
-**JavaScript (ES Modules):**
+**TypeScript / JavaScript (ES Modules):**
 ```javascript
-import PlaygroundStepLibrary from 'playground-step-library';
-```
-
-**TypeScript:**
-```typescript
 import PlaygroundStepLibrary from 'playground-step-library';
 ```
 

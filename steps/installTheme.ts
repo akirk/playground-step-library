@@ -48,7 +48,7 @@ export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeS
 	return steps;
 };
 
-installTheme.description = "Install a theme";
+installTheme.description = "Install a theme via WordPress.org or Github";
 installTheme.builtin = true;
 installTheme.vars = createVarsConfig({
 	url: {

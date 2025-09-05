@@ -31,38 +31,64 @@ if ( !stepName || !isValidCamelCase( stepName ) ) {
 	process.exit( 1 );
 }
 
-// Creating the content derived from the name
-const content = `export function ${stepName}( step ) {
+// Convert stepName to PascalCase for interface name
+const pascalCaseStepName = stepName.charAt(0).toUpperCase() + stepName.slice(1);
+
+// Creating the TypeScript content derived from the name
+const content = `import type { StepFunction, ${pascalCaseStepName}Step, StepVariable } from './types.js';
+
+const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
+	return Object.entries(config).map(([name, varConfig]) => ({
+		name,
+		...varConfig
+	}));
+};
+
+export const ${stepName}: StepFunction<${pascalCaseStepName}Step> = (step: ${pascalCaseStepName}Step) => {
 	return [
 		// Your steps here. Example:
 		// {
 		// 	"step": "runPHP",
-		// 	"code": "<?php require_once '/wordpress/wp-load.php'; error_log( 'Hello \${variableName}' ) ?>"
+		// 	"code": \`<?php require_once '/wordpress/wp-load.php'; error_log( 'Hello \${step.variableName}' ); ?>\`
 		// }
 	];
-}
+};
 
 ${stepName}.description = "Provide useful additional info.";
-${stepName}.vars = [
+${stepName}.vars = createVarsConfig({
 	// Your variables here. Example:
-	// {
-	// 	"name": "variableName",
-	// 	"description": "Variable description",
-	// 	"type": "boolean",
-	// 	"required": true,
-	// 	"samples": [ "sample1", "sample2" ]
+	// variableName: {
+	// 		description: "Variable description",
+	// 		type: "text",
+	// 		required: true,
+	// 		samples: ["sample1", "sample2"]
 	// }
-];
+});
 `;
 
-// Writing the content to a new file
-fs.writeFileSync( stepsDir + '/' + stepName + '.js', content );
-console.log( stepsDir + '/' + stepName + '.js created successfully.' );
+// Writing the TypeScript content to a new file
+fs.writeFileSync( stepsDir + '/' + stepName + '.ts', content );
+console.log( stepsDir + '/' + stepName + '.ts created successfully.' );
 
-// Create TypeScript declaration file
-const declarationContent = `import type { StepFunction } from '../types.js';\n\nexport const ${stepName}: StepFunction;\n`;
-fs.writeFileSync( stepsDir + '/' + stepName + '.d.ts', declarationContent );
-console.log( stepsDir + '/' + stepName + '.d.ts created successfully.' );
+// Add the step interface to types.ts
+const typesPath = path.join( process.cwd(), stepsDir, 'types.ts' );
+let typesContent = fs.readFileSync( typesPath, 'utf8' );
+
+// Create a basic interface template - user can customize
+const newInterface = `
+export interface ${pascalCaseStepName}Step extends BlueprintStep {
+	// Add your step properties here. Example:
+	// variableName: string;
+}`;
+
+if ( !typesContent.includes( `${pascalCaseStepName}Step` ) ) {
+	// Add the interface at the end, before the last newline
+	typesContent = typesContent.trimEnd() + newInterface + '\n\n';
+	fs.writeFileSync( typesPath, typesContent );
+	console.log( `Added ${pascalCaseStepName}Step interface to types.ts` );
+} else {
+	console.log( `Interface ${pascalCaseStepName}Step already exists in types.ts` );
+}
 
 // Update src/steps-registry.ts to include the new step
 const registryPath = path.join( process.cwd(), 'src', 'steps-registry.ts' );
@@ -85,17 +111,20 @@ if ( registryContent.includes( newImport ) ) {
 	}
 }
 
-// Add to registry object
-const registryEndRegex = /(skipWooCommerceWizard,\s*\n\s*}\s*;)/;
-const newRegistryEntry = `    ${stepName},`;
+// Add to registry object (find the closing brace and add before it)
+const registryEntryLine = `    ${stepName},`;
 
-if ( registryContent.includes( newRegistryEntry ) ) {
+if ( registryContent.includes( registryEntryLine ) ) {
 	console.log( `Registry entry for ${stepName} already exists in src/steps-registry.ts` );
 } else {
-	// Add before the closing brace
-	registryContent = registryContent.replace( registryEndRegex, `$1\n${newRegistryEntry}\n};` );
-	registryContent = registryContent.replace( /(skipWooCommerceWizard,\s*)\n\s*}\s*;\n\s*(\w+,\s*)\n\s*}\s*;/, '$1\n    $2\n};' );
-	console.log( `Added ${stepName} to steps registry` );
+	// Find the closing brace of the stepsRegistry object and add before it
+	const registryClosingIndex = registryContent.lastIndexOf( '};' );
+	if ( registryClosingIndex !== -1 ) {
+		registryContent = registryContent.slice( 0, registryClosingIndex ) + registryEntryLine + '\n};';
+		console.log( `Added ${stepName} to steps registry` );
+	} else {
+		console.error( 'Could not find registry closing brace to add new step' );
+	}
 }
 
 // Write the updated content back
@@ -106,4 +135,4 @@ console.log( 'Remember to run "npm run build" to rebuild the library' );
 
 // open an editor with this new file by using the $EDITOR env variable
 const editor = process.env.VISUAL || process.env.EDITOR || 'vim';
-execSync( `${editor} ${stepsDir}/${stepName}.js`, { stdio: 'inherit' } );
+execSync( `${editor} ${stepsDir}/${stepName}.ts`, { stdio: 'inherit' } );

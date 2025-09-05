@@ -103,4 +103,4 @@ To add a new step:
 
 ---
 
-*This documentation is auto-generated from step definitions. Last updated: 2025-09-05T11:50:28.582Z*
+*This documentation is auto-generated from step definitions. Last updated: 2025-09-05T12:20:37.225Z*
