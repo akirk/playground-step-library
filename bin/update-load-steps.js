@@ -1,64 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-
-// Specify the directory containing the steps
-const stepsDir = "steps";
-
-// chdir into the directory where this script lives
-process.chdir(__dirname + '/..');
-
-// Specify the HTML file and the delimiters
-const htmlFile = "index.html";
-const startDelimiter = "<!-- Start Load Steps -->";
-const endDelimiter = "<!-- End Load Steps -->";
-
-// Function to recursively find all JS files in a directory
-function getAllJsFiles(dir, filesList = []) {
-	const files = fs.readdirSync(dir);
-	files.forEach(file => {
-		const filePath = path.join(dir, file);
-		if (fs.statSync(filePath).isDirectory()) {
-			getAllJsFiles(filePath, filesList);
-		} else if (path.extname(file) === '.js') {
-			filesList.push(filePath);
-		}
-	});
-	return filesList;
-}
-
-// Get a list of all JS files in the specified directory and subdirectories
-const jsFiles = getAllJsFiles(stepsDir).map(file => path.relative(stepsDir, file)).sort( function( aPath, bPath ) {
-	// sort by filenames but steps/builtin/*.js to the top. but steps/builtin/enableMultisite.js to the bottom.
-	const a = path.basename(aPath);
-	const b = path.basename(bPath);
-
-	if ( a === 'enableMultisite.js' ) {
-		return 1;
-	}
-	if ( b === 'enableMultisite.js' ) {
-		return -1;
-	}
-	if ( aPath.startsWith('builtin') && !bPath.startsWith('builtin') ) {
-		return -1;
-	}
-	if ( !aPath.startsWith('builtin') && bPath.startsWith('builtin') ) {
-		return 1;
-	}
-	return a.localeCompare(b);
-});
-
-console.log(jsFiles);
-
-// Construct the sorted script tags for each JS file
-const scriptTags = jsFiles.map(jsFile => `\t<script src="${path.join(stepsDir, jsFile)}"></script>`).join('\n');
-
-// Read the contents of the HTML file
-let htmlContent = fs.readFileSync(htmlFile, 'utf8');
-
-// Replace everything inside the delimiters with the sorted script tags
-const startIndex = htmlContent.indexOf(startDelimiter) + startDelimiter.length;
-const endIndex = htmlContent.indexOf(endDelimiter);
-const newHtmlContent = htmlContent.substring(0, startIndex) + '\n' + scriptTags + '\n' + htmlContent.substring(endIndex);
-
-// Write the updated HTML content back to the file
-fs.writeFileSync(htmlFile, newHtmlContent);
+console.log('⚠️  This script is deprecated.');
+console.log('With ES modules, steps are imported directly in src/index.ts');
+console.log('Please manually add new steps to src/index.ts instead:');
+console.log('1. Add import statement');
+console.log('2. Add assignment in loadCustomSteps()');
+console.log('3. Run "npm run build"');
+process.exit(0);

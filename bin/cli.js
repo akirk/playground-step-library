@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const PlaygroundStepLibrary = require('../lib/index.js');
+import fs from 'fs';
+import path from 'path';
+import PlaygroundStepLibrary from '../lib/index.js';
 
 function showHelp() {
     console.log(`
@@ -189,8 +189,7 @@ process.on('uncaughtException', (error) => {
     process.exit(1);
 });
 
-if (require.main === module) {
+// Check if this is the main module (ES module equivalent)
+if (import.meta.url === `file://${process.argv[1]}`) {
     main();
 }
-
-module.exports = { main, parseArgs };
