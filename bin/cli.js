@@ -13,7 +13,6 @@ Usage:
 
 Options:
   -o, --output <file>     Output file (default: stdout)
-  -s, --steps-dir <dir>   Custom steps directory (default: ./steps)
   -v, --validate          Validate blueprint without compiling
   -l, --list-steps        List available custom steps
   -p, --pretty            Pretty print JSON output
@@ -31,7 +30,6 @@ function parseArgs(args) {
     const options = {
         input: null,
         output: null,
-        stepsDir: null,
         validate: false,
         listSteps: false,
         pretty: false,
@@ -49,10 +47,6 @@ function parseArgs(args) {
             case '-o':
             case '--output':
                 options.output = args[++i];
-                break;
-            case '-s':
-            case '--steps-dir':
-                options.stepsDir = args[++i];
                 break;
             case '-v':
             case '--validate':
@@ -87,12 +81,7 @@ function main() {
     }
 
     // Initialize compiler
-    const compilerOptions = {};
-    if (options.stepsDir) {
-        compilerOptions.stepsDir = path.resolve(options.stepsDir);
-    }
-
-    const compiler = new PlaygroundStepLibrary(compilerOptions);
+    const compiler = new PlaygroundStepLibrary();
 
     // List available steps
     if (options.listSteps) {

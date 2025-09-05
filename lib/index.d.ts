@@ -23,14 +23,9 @@ interface ValidationResult {
     valid: boolean;
     error?: string;
 }
-interface CompilerOptions {
+interface CompileOptions {
     landingPage?: string;
     features?: Record<string, any>;
-    phpExtensionBundles?: string[];
-    preferredVersions?: {
-        wp?: string;
-        php?: string;
-    };
 }
 interface StepInfo {
     description: string;
@@ -44,7 +39,7 @@ interface StepInfo {
  */
 declare class PlaygroundStepLibrary {
     private customSteps;
-    constructor(options?: CompilerOptions);
+    constructor();
     /**
      * Load all ES module steps
      */
@@ -53,7 +48,7 @@ declare class PlaygroundStepLibrary {
      * Compile a blueprint by transforming custom steps into native steps
      * Uses the transformJson logic from script.js adapted for TypeScript
      */
-    compile(blueprint: Blueprint | string, options?: CompilerOptions): Blueprint;
+    compile(blueprint: Blueprint | string, options?: CompileOptions): Blueprint;
     /**
      * Get information about available custom steps
      */

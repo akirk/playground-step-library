@@ -1,5 +1,10 @@
-const PlaygroundStepLibrary = require('../lib/index.js');
-const path = require('path');
+import PlaygroundStepLibrary from '../lib/index.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 function assert(condition, message) {
     if (!condition) {
@@ -7,14 +12,12 @@ function assert(condition, message) {
     }
 }
 
-function runTests() {
+async function runTests() {
     console.log('Running tests...\n');
 
     // Test 1: Basic compilation
     console.log('Test 1: Basic compilation');
-    const compiler = new PlaygroundStepLibrary({
-        stepsDir: path.join(__dirname, '../steps')
-    });
+    const compiler = new PlaygroundStepLibrary();
 
     const testBlueprint = {
         steps: [
@@ -93,6 +96,23 @@ function runTests() {
     assert(jsonCompiled.steps.length === 1, 'Should compile JSON string input');
     console.log('✓ JSON string input works\n');
 
+    // Test 7: landingPage property preservation
+    console.log('Test 7: landingPage property preservation');
+    const landingPageBlueprint = {
+        landingPage: '/custom-landing',
+        steps: [
+            {
+                step: 'setSiteName',
+                sitename: 'Landing Page Test',
+                tagline: 'Testing landingPage preservation'
+            }
+        ]
+    };
+
+    const landingCompiled = compiler.compile(landingPageBlueprint);
+    assert(landingCompiled.landingPage === '/custom-landing', 'Should preserve original landingPage');
+    console.log('✓ landingPage property preservation works\n');
+
     console.log('All basic tests passed! ✅');
     
     // Run package installation test
@@ -101,7 +121,7 @@ function runTests() {
     console.log('='.repeat(50));
     
     try {
-        const { testPackageInstallation } = require('./package-test.js');
+        const { testPackageInstallation } = await import('./package-test.js');
         const packageResults = testPackageInstallation();
         
         console.log('\n✅ Package tests passed!');
@@ -114,9 +134,7 @@ function runTests() {
 function runExamples() {
     console.log('\nRunning examples...\n');
 
-    const compiler = new PlaygroundStepLibrary({
-        stepsDir: path.join(__dirname, '../steps')
-    });
+    const compiler = new PlaygroundStepLibrary();
 
     // Example 1: Simple site setup
     console.log('Example 1: Simple site setup');
@@ -147,9 +165,9 @@ function runExamples() {
     console.log();
 }
 
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
     try {
-        runTests();
+        await runTests();
         runExamples();
     } catch (error) {
         console.error('Test failed:', error.message);

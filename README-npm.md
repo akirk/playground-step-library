@@ -63,9 +63,7 @@ window.PlaygroundStepLibrary = PlaygroundStepLibrary;
 **Usage:**
 ```javascript
 // Initialize compiler
-const compiler = new PlaygroundStepLibrary({
-    stepsDir: './steps' // optional, defaults to './steps'
-});
+const compiler = new PlaygroundStepLibrary();
 
 // Compile a blueprint
 const blueprint = {
@@ -179,22 +177,25 @@ setSiteName.vars = [
 
 ## API Reference
 
-### `PlaygroundStepCompiler`
+### `PlaygroundStepLibrary`
 
 #### Constructor
 
 ```javascript
-new PlaygroundStepCompiler(options)
+new PlaygroundStepLibrary()
 ```
 
-- `options.stepsDir` (string): Path to directory containing custom step definitions. Defaults to `'./steps'`
+No parameters required - all steps are statically imported.
 
 #### Methods
 
-##### `compile(blueprint)`
+##### `compile(blueprint, options?)`
 Compiles a blueprint with custom steps into a blueprint with native steps.
 
 - `blueprint` (Object|string): Blueprint object or JSON string
+- `options` (Object, optional): Compilation options
+  - `options.landingPage` (string): Default landing page path
+  - `options.features` (Object): Feature configuration
 - Returns: Compiled blueprint object
 - Throws: Error if compilation fails
 

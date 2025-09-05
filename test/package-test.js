@@ -3,15 +3,15 @@
  * This test verifies that steps are properly loaded from the package structure
  */
 
-const path = require('path');
-const fs = require('fs');
+import path from 'path';
+import fs from 'fs';
 
 // Test the package as if it were installed in node_modules
-function testPackageInstallation() {
+async function testPackageInstallation() {
     console.log('🧪 Testing package installation simulation...\n');
     
     // Simulate the package being in node_modules
-    const PlaygroundStepLibrary = require('../lib/index.js');
+    const PlaygroundStepLibrary = (await import('../lib/index.js')).default;
     
     // Test 1: Basic instantiation
     console.log('Test 1: Basic instantiation');
@@ -110,9 +110,9 @@ function testPackageInstallation() {
 }
 
 // Run the test
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
     try {
-        const results = testPackageInstallation();
+        const results = await testPackageInstallation();
         console.log('\n📊 Test Summary:', results);
         process.exit(0);
     } catch (error) {
@@ -121,4 +121,4 @@ if (require.main === module) {
     }
 }
 
-module.exports = { testPackageInstallation };
+export { testPackageInstallation };

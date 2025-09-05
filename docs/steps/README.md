@@ -66,4 +66,4 @@ Extended functionality beyond core WordPress Playground capabilities.
 
 ---
 
-*Documentation auto-generated on 2025-09-04T15:25:25.585Z*
+*Documentation auto-generated on 2025-09-05T04:06:09.461Z*

@@ -42,7 +42,6 @@
     "steps/",
     "src/",
     "docs/",
-    "scripts/",
     "README.md"
   ],
   "engines": {

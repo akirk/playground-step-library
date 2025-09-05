@@ -81,14 +81,9 @@ interface ValidationResult {
     error?: string;
 }
 
-interface CompilerOptions {
+interface CompileOptions {
     landingPage?: string;
     features?: Record<string, any>;
-    phpExtensionBundles?: string[];
-    preferredVersions?: {
-        wp?: string;
-        php?: string;
-    };
 }
 
 interface StepInfo {
@@ -105,7 +100,7 @@ interface StepInfo {
 class PlaygroundStepLibrary {
     private customSteps: Record<string, CustomStepDefinition> = {};
 
-    constructor(options: CompilerOptions = {}) {
+    constructor() {
         this.loadCustomSteps();
     }
 
@@ -164,7 +159,7 @@ class PlaygroundStepLibrary {
      * Compile a blueprint by transforming custom steps into native steps
      * Uses the transformJson logic from script.js adapted for TypeScript
      */
-    compile(blueprint: Blueprint | string, options: CompilerOptions = {}): Blueprint {
+    compile(blueprint: Blueprint | string, options: CompileOptions = {}): Blueprint {
         let inputData: Blueprint;
 
         if (typeof blueprint === 'string') {
