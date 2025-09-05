@@ -68,7 +68,7 @@ We welcome contributions to the WordPress Playground Step Library! Here's how yo
    ```
 
 2. **Edit your step files:**
-   The script will create `steps/yourStepName.ts` and automatically open it in your editor. It also creates a type definition and updates the registry.
+   The script will create `steps/yourStepName.ts` and automatically open it in your editor. It also creates a type definition and updates the registry. [See below how to create your step](#implementation-of-a-step).
 
 3. **Test your changes:**
    ```bash
