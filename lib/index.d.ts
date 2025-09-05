@@ -41,7 +41,7 @@ declare class PlaygroundStepLibrary {
     private customSteps;
     constructor();
     /**
-     * Load all ES module steps
+     * Load all steps from the registry
      */
     private loadCustomSteps;
     /**

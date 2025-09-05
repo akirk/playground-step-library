@@ -10,18 +10,17 @@
   },
   "scripts": {
     "build": "tsc && node build.js",
-    "test": "node test/test.js",
-    "test:package": "node test/package-test.js",
-    "test:npm-pack": "node test/npm-pack-test.js",
-    "test:all": "npm test && npm run test:npm-pack",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "docs:generate": "node bin/generate-docs.js",
     "prepare": "npm run build && npm run docs:generate",
     "dev": "tsc --watch"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@types/node": "^20.19.13",
     "@wp-playground/blueprints": "^2.0.16",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
   },
   "keywords": [
     "wordpress",

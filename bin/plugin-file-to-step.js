@@ -54,45 +54,46 @@ fs.writeFileSync(jsFilename, jsContent);
 console.log(`JavaScript file created: ${jsFilename}`);
 
 // Create TypeScript declaration file
-const declarationContent = `import type { StepFunction } from '../types';\n\nexport const ${camelCaseName}: StepFunction;`;
+const declarationContent = `import type { StepFunction } from '../types.js';\n\nexport const ${camelCaseName}: StepFunction;\n`;
 fs.writeFileSync(`steps/${camelCaseName}.d.ts`, declarationContent);
 console.log(`TypeScript declaration created: steps/${camelCaseName}.d.ts`);
 
-// Update src/index.ts to include the new step
-const indexTsPath = path.join( process.cwd(), 'src', 'index.ts' );
-let indexContent = fs.readFileSync( indexTsPath, 'utf-8' );
+// Update src/steps-registry.ts to include the new step
+const registryPath = path.join( process.cwd(), 'src', 'steps-registry.ts' );
+let registryContent = fs.readFileSync( registryPath, 'utf-8' );
 
 // Add import statement after the last import
 const newImport = `import { ${camelCaseName} } from '../steps/${camelCaseName}.js';`;
 
-if ( indexContent.includes( newImport ) ) {
-	console.log( `Import for ${camelCaseName} already exists in src/index.ts` );
+if ( registryContent.includes( newImport ) ) {
+	console.log( `Import for ${camelCaseName} already exists in src/steps-registry.ts` );
 } else {
 	// Find the last import statement and add after it
-	const lastImportMatch = indexContent.match( /(import \\{[^}]+\\} from '[^']+';)(?!\\n*import)/g );
+	const lastImportMatch = registryContent.match( /(import \\{[^}]+\\} from '[^']+';)(?!\\n*import)/g );
 	if ( lastImportMatch ) {
 		const lastImport = lastImportMatch[lastImportMatch.length - 1];
-		const lastImportIndex = indexContent.lastIndexOf( lastImport );
+		const lastImportIndex = registryContent.lastIndexOf( lastImport );
 		const insertIndex = lastImportIndex + lastImport.length;
-		indexContent = indexContent.slice( 0, insertIndex ) + '\\n' + newImport + indexContent.slice( insertIndex );
-		console.log( `Added import statement for ${camelCaseName} to src/index.ts` );
+		registryContent = registryContent.slice( 0, insertIndex ) + '\\n' + newImport + registryContent.slice( insertIndex );
+		console.log( `Added import statement for ${camelCaseName} to src/steps-registry.ts` );
 	}
 }
 
-// Add assignment in loadCustomSteps method
-const assignmentRegex = /(this\\.customSteps\\.enableMultisite = enableMultisite;)/;
-const newAssignment = `        this.customSteps.${camelCaseName} = ${camelCaseName};`;
+// Add to registry object
+const registryEndRegex = /(skipWooCommerceWizard,\\s*\\n\\s*}\\s*;)/;
+const newRegistryEntry = `    ${camelCaseName},`;
 
-if ( indexContent.includes( newAssignment ) ) {
-	console.log( `Assignment for ${camelCaseName} already exists in src/index.ts` );
+if ( registryContent.includes( newRegistryEntry ) ) {
+	console.log( `Registry entry for ${camelCaseName} already exists in src/steps-registry.ts` );
 } else {
-	// Add after the last assignment
-	indexContent = indexContent.replace( assignmentRegex, `$1\\n${newAssignment}` );
-	console.log( `Added assignment for ${camelCaseName} to loadCustomSteps() method` );
+	// Add before the closing brace
+	registryContent = registryContent.replace( registryEndRegex, `$1\\n${newRegistryEntry}\\n};` );
+	registryContent = registryContent.replace( /(skipWooCommerceWizard,\\s*)\\n\\s*}\\s*;\\n\\s*(\\w+,\\s*)\\n\\s*}\\s*;/, '$1\\n    $2\\n};' );
+	console.log( `Added ${camelCaseName} to steps registry` );
 }
 
 // Write the updated content back
-fs.writeFileSync( indexTsPath, indexContent );
+fs.writeFileSync( registryPath, registryContent );
 
 console.log( '\\nStep created and integrated successfully!' );
 console.log( 'Remember to run "npm run build" to rebuild the library' );

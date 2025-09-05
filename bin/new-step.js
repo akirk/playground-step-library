@@ -60,45 +60,46 @@ fs.writeFileSync( stepsDir + '/' + stepName + '.js', content );
 console.log( stepsDir + '/' + stepName + '.js created successfully.' );
 
 // Create TypeScript declaration file
-const declarationContent = `import type { StepFunction } from '../types';\n\nexport const ${stepName}: StepFunction;`;
+const declarationContent = `import type { StepFunction } from '../types.js';\n\nexport const ${stepName}: StepFunction;\n`;
 fs.writeFileSync( stepsDir + '/' + stepName + '.d.ts', declarationContent );
 console.log( stepsDir + '/' + stepName + '.d.ts created successfully.' );
 
-// Update src/index.ts to include the new step
-const indexTsPath = path.join( process.cwd(), 'src', 'index.ts' );
-let indexContent = fs.readFileSync( indexTsPath, 'utf8' );
+// Update src/steps-registry.ts to include the new step
+const registryPath = path.join( process.cwd(), 'src', 'steps-registry.ts' );
+let registryContent = fs.readFileSync( registryPath, 'utf8' );
 
 // Add import statement after the last import
 const newImport = `import { ${stepName} } from '../steps/${stepName}.js';`;
 
-if ( indexContent.includes( newImport ) ) {
-	console.log( `Import for ${stepName} already exists in src/index.ts` );
+if ( registryContent.includes( newImport ) ) {
+	console.log( `Import for ${stepName} already exists in src/steps-registry.ts` );
 } else {
 	// Find the last import statement and add after it
-	const lastImportMatch = indexContent.match( /(import \{[^}]+\} from '[^']+';)(?!\n*import)/g );
+	const lastImportMatch = registryContent.match( /(import \{[^}]+\} from '[^']+';)(?!\n*import)/g );
 	if ( lastImportMatch ) {
 		const lastImport = lastImportMatch[lastImportMatch.length - 1];
-		const lastImportIndex = indexContent.lastIndexOf( lastImport );
+		const lastImportIndex = registryContent.lastIndexOf( lastImport );
 		const insertIndex = lastImportIndex + lastImport.length;
-		indexContent = indexContent.slice( 0, insertIndex ) + '\n' + newImport + indexContent.slice( insertIndex );
-		console.log( `Added import statement for ${stepName} to src/index.ts` );
+		registryContent = registryContent.slice( 0, insertIndex ) + '\n' + newImport + registryContent.slice( insertIndex );
+		console.log( `Added import statement for ${stepName} to src/steps-registry.ts` );
 	}
 }
 
-// Add assignment in loadCustomSteps method
-const assignmentRegex = /(this\.customSteps\.enableMultisite = enableMultisite;)/;
-const newAssignment = `        this.customSteps.${stepName} = ${stepName};`;
+// Add to registry object
+const registryEndRegex = /(skipWooCommerceWizard,\s*\n\s*}\s*;)/;
+const newRegistryEntry = `    ${stepName},`;
 
-if ( indexContent.includes( newAssignment ) ) {
-	console.log( `Assignment for ${stepName} already exists in src/index.ts` );
+if ( registryContent.includes( newRegistryEntry ) ) {
+	console.log( `Registry entry for ${stepName} already exists in src/steps-registry.ts` );
 } else {
-	// Add after the last assignment
-	indexContent = indexContent.replace( assignmentRegex, `$1\n${newAssignment}` );
-	console.log( `Added assignment for ${stepName} to loadCustomSteps() method` );
+	// Add before the closing brace
+	registryContent = registryContent.replace( registryEndRegex, `$1\n${newRegistryEntry}\n};` );
+	registryContent = registryContent.replace( /(skipWooCommerceWizard,\s*)\n\s*}\s*;\n\s*(\w+,\s*)\n\s*}\s*;/, '$1\n    $2\n};' );
+	console.log( `Added ${stepName} to steps registry` );
 }
 
 // Write the updated content back
-fs.writeFileSync( indexTsPath, indexContent );
+fs.writeFileSync( registryPath, registryContent );
 
 console.log( '\nStep created and integrated successfully!' );
 console.log( 'Remember to run "npm run build" to rebuild the library' );
