@@ -1,13 +1,7 @@
 import { githubPlugin } from './githubPlugin.js';
 import { githubPluginRelease } from './githubPluginRelease.js';
-import type { StepFunction, InstallPluginStep, StepVariable } from './types.js';
+import type { StepFunction, InstallPluginStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPluginStep) => {
 	let urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec(step.url);
@@ -64,7 +58,7 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 
 installPlugin.description = "Install a plugin via WordPress.org or Github";
 installPlugin.builtin = true;
-installPlugin.vars = createVarsConfig({
+installPlugin.vars = Object.entries({
 	url: {
 		description: "URL of the plugin or WordPress.org slug.",
 		required: true,
@@ -84,4 +78,4 @@ installPlugin.vars = createVarsConfig({
 		description: "Requires a permalink structure",
 		type: "boolean"
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

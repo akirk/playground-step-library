@@ -1,11 +1,5 @@
-import type { StepFunction, RunPHPStep, StepVariable } from './types.js';
+import type { StepFunction, RunPHPStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const runPHP: StepFunction<RunPHPStep> = (step: RunPHPStep) => {
 	return [
@@ -18,11 +12,11 @@ export const runPHP: StepFunction<RunPHPStep> = (step: RunPHPStep) => {
 
 runPHP.description = "Run code in the context of WordPress.";
 runPHP.builtin = true;
-runPHP.vars = createVarsConfig({
+runPHP.vars = Object.entries({
 	code: {
 		description: "The code to run",
 		type: "textarea",
 		required: true,
 		samples: [""]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

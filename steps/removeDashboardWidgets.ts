@@ -1,11 +1,5 @@
-import type { StepFunction, RemoveDashboardWidgetsStep, StepVariable } from './types.js';
+import type { StepFunction, RemoveDashboardWidgetsStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const removeDashboardWidgets: StepFunction<RemoveDashboardWidgetsStep> = (step: RemoveDashboardWidgetsStep) => {
 	return [
@@ -69,7 +63,7 @@ add_action(
 };
 
 removeDashboardWidgets.description = "Remove widgets from the wp-admin dashboard.";
-removeDashboardWidgets.vars = createVarsConfig({
+removeDashboardWidgets.vars = Object.entries({
 	welcome: {
 		description: "Remove Welcome Panel",
 		type: 'boolean',
@@ -100,4 +94,4 @@ removeDashboardWidgets.vars = createVarsConfig({
 		type: 'boolean',
 		samples: [ "true" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

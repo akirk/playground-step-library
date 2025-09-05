@@ -1,11 +1,5 @@
-import type { StepFunction, SetLanguageStep, StepVariable } from './types.js';
+import type { StepFunction, SetLanguageStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const setLanguage: StepFunction<SetLanguageStep> = (step: SetLanguageStep) => {
 	const lang = step.language;
@@ -33,10 +27,10 @@ export const setLanguage: StepFunction<SetLanguageStep> = (step: SetLanguageStep
 };
 
 setLanguage.description = "Set the WordPress site language.";
-setLanguage.vars = createVarsConfig({
+setLanguage.vars = Object.entries({
 	language: {
 		description: "A valid WordPress language slug",
 		required: true,
 		samples: ["de", "fr", "es", "it", "pl", "ar"]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

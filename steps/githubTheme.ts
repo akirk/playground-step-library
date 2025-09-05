@@ -1,11 +1,5 @@
-import type { StepFunction, GithubThemeStep, StepVariable } from './types.js';
+import type { StepFunction, GithubThemeStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep) => {
 	const urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.url );
@@ -67,7 +61,7 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 };
 
 githubTheme.description = "Install a theme from a Github repository.";
-githubTheme.vars = createVarsConfig({
+githubTheme.vars = Object.entries({
 	url: {
 		description: "Github URL of the theme.",
 		samples: [ "https://github.com/richtabor/kanso", "ndiego/nautilus", "https://github.com/Automattic/themes/tree/trunk/aether" ]
@@ -77,4 +71,4 @@ githubTheme.vars = createVarsConfig({
 		type: "boolean",
 		samples: [ "false", "true" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

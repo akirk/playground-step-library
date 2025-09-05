@@ -1,11 +1,5 @@
-import type { StepFunction, AddFilterStep, StepVariable } from './types.js';
+import type { StepFunction, AddFilterStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const addFilter: StepFunction<AddFilterStep> = (step: AddFilterStep) => {
 	let code = "<?php add_filter( '" + step.filter + "', ";
@@ -54,7 +48,7 @@ export const addFilter: StepFunction<AddFilterStep> = (step: AddFilterStep) => {
 };
 
 addFilter.description = "Easily add a filtered value.";
-addFilter.vars = createVarsConfig({
+addFilter.vars = Object.entries({
 	filter: {
 		description: "Name of the filter",
 		required: true,
@@ -71,4 +65,4 @@ addFilter.vars = createVarsConfig({
 		required: false,
 		samples: [ "10" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

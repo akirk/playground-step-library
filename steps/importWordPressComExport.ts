@@ -1,11 +1,5 @@
-import type { StepFunction, ImportWordPressComExportStep, StepVariable } from './types.js';
+import type { StepFunction, ImportWordPressComExportStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const importWordPressComExport: StepFunction<ImportWordPressComExportStep> = (step: ImportWordPressComExportStep) => {
 	const url = step.corsProxy ? 'https://playground.wordpress.net/cors-proxy.php?' + step.url : step.url;
@@ -45,7 +39,7 @@ foreach ( $iterator as $file ) {
 };
 
 importWordPressComExport.description = "Import a WordPress.com export file (WXR in a ZIP)";
-importWordPressComExport.vars = createVarsConfig({
+importWordPressComExport.vars = Object.entries({
 	url: {
 		description: "URL of a WordPress.com export ZIP file",
 		required: true,
@@ -57,4 +51,4 @@ importWordPressComExport.vars = createVarsConfig({
 		type: "boolean",
 		samples: ["true", "false"]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

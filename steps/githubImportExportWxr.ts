@@ -1,12 +1,6 @@
-import type { StepFunction, GithubImportExportWxrStep, StepVariable } from './types.js';
+import type { StepFunction, GithubImportExportWxrStep} from './types.js';
 import { deleteAllPosts } from './deleteAllPosts.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (step: GithubImportExportWxrStep) => {
 	// modelled after https://github.com/carstingaxion/crud-the-docs-playground
@@ -94,7 +88,7 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 };
 
 githubImportExportWxr.description = "Provide useful additional info.";
-githubImportExportWxr.vars = createVarsConfig({
+githubImportExportWxr.vars = Object.entries({
 	repo: {
 		description: "The WXR file resides in this GitHub repository.",
 		samples: [ "carstingaxion/gatherpress-demo-data" ]
@@ -111,4 +105,4 @@ githubImportExportWxr.vars = createVarsConfig({
 		description: "Rewrite the exported paths to this destination URL.",
 		samples: [ "https://gatherpress.test" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

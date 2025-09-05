@@ -1,11 +1,5 @@
-import type { StepFunction, ChangeAdminColorSchemeStep, StepVariable } from './types.js';
+import type { StepFunction, ChangeAdminColorSchemeStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const changeAdminColorScheme: StepFunction<ChangeAdminColorSchemeStep> = (step: ChangeAdminColorSchemeStep) => {
 	return [
@@ -20,7 +14,7 @@ export const changeAdminColorScheme: StepFunction<ChangeAdminColorSchemeStep> = 
 };
 
 changeAdminColorScheme.description = "Useful to combine with a login step.";
-changeAdminColorScheme.vars = createVarsConfig({
+changeAdminColorScheme.vars = Object.entries({
 	colorScheme: {
 		description: "Color scheme",
 		required: true,
@@ -36,4 +30,4 @@ changeAdminColorScheme.vars = createVarsConfig({
 			'sunrise'
 		]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

@@ -1,11 +1,5 @@
-import type { StepFunction, SetSiteOptionStep, StepVariable } from './types.js';
+import type { StepFunction, SetSiteOptionStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const setSiteOption: StepFunction<SetSiteOptionStep> = (step: SetSiteOptionStep) => {
 	if ( ! step.name ) {
@@ -31,7 +25,7 @@ export const setSiteOption: StepFunction<SetSiteOptionStep> = (step: SetSiteOpti
 setSiteOption.description = "Set a site option.";
 setSiteOption.builtin = true;
 setSiteOption.multiple = true;
-setSiteOption.vars = createVarsConfig({
+setSiteOption.vars = Object.entries({
 	name: {
 		description: "Option name",
 		samples: [ "","permalink_structure" ]
@@ -40,4 +34,4 @@ setSiteOption.vars = createVarsConfig({
 		description: "Option value",
 		samples: [ "", "/%postname%/" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

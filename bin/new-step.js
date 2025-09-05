@@ -35,14 +35,7 @@ if ( !stepName || !isValidCamelCase( stepName ) ) {
 const pascalCaseStepName = stepName.charAt(0).toUpperCase() + stepName.slice(1);
 
 // Creating the TypeScript content derived from the name
-const content = `import type { StepFunction, ${pascalCaseStepName}Step, StepVariable } from './types.js';
-
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
+const content = `import type { StepFunction, ${pascalCaseStepName}Step } from './types.js';
 
 export const ${stepName}: StepFunction<${pascalCaseStepName}Step> = (step: ${pascalCaseStepName}Step) => {
 	return [
@@ -55,15 +48,15 @@ export const ${stepName}: StepFunction<${pascalCaseStepName}Step> = (step: ${pas
 };
 
 ${stepName}.description = "Provide useful additional info.";
-${stepName}.vars = createVarsConfig({
+${stepName}.vars = Object.entries({
 	// Your variables here. Example:
 	// variableName: {
-	// 		description: "Variable description",
-	// 		type: "text",
-	// 		required: true,
-	// 		samples: ["sample1", "sample2"]
+	// 	description: "Variable description",
+	// 	type: "text",
+	// 	required: true,
+	// 	samples: ["sample1", "sample2"]
 	// }
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));
 `;
 
 // Writing the TypeScript content to a new file

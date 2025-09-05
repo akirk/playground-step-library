@@ -1,12 +1,6 @@
-import type { StepFunction, AddProductStep, StepVariable } from './types.js';
+import type { StepFunction, AddProductStep} from './types.js';
 import { installPlugin } from './installPlugin.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const addProduct: StepFunction<AddProductStep> = (step: AddProductStep, blueprint: any) => {
 	const productTitle = step.productTitle?.replace(/'/g, "\\'") || '';
@@ -85,7 +79,7 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 };
 
 addProduct.description = "Add a WooCommerce product (will install WooCommerce if not present)";
-addProduct.vars = createVarsConfig({
+addProduct.vars = Object.entries({
 	productTitle: {
 		description: "The title of the product",
 		required: true,
@@ -117,4 +111,4 @@ addProduct.vars = createVarsConfig({
 		required: false,
 		samples: ["publish", "draft", "private"]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

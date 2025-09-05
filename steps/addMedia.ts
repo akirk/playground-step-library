@@ -1,11 +1,5 @@
-import type { StepFunction, AddMediaStep, StepVariable } from './types.js';
+import type { StepFunction, AddMediaStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const addMedia: StepFunction<AddMediaStep> = (step: AddMediaStep) => {
 	if ( ! step.downloadUrl || ! step.downloadUrl.match( /^https?:/ ) ) {
@@ -76,10 +70,10 @@ foreach ( $iterator as $filename ) {
 };
 
 addMedia.description = "Add files to the media library.";
-addMedia.vars = createVarsConfig({
+addMedia.vars = Object.entries({
 	downloadUrl: {
 		description: "Where to download the media from (can be a zip).",
 		required: true,
 		samples: [ "https://s.w.org/style/images/about/WordPress-logotype-wmark.png" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

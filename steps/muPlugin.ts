@@ -1,11 +1,5 @@
-import type { StepFunction, MuPluginStep, StepVariable } from './types.js';
+import type { StepFunction, MuPluginStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const muPlugin: StepFunction<MuPluginStep> = (step: MuPluginStep) => {
 	const code = '<?php ' + (step.code || '').replace( /<\?php/, '' );
@@ -23,11 +17,11 @@ export const muPlugin: StepFunction<MuPluginStep> = (step: MuPluginStep) => {
 };
 
 muPlugin.description = "Add code for a plugin.";
-muPlugin.vars = createVarsConfig({
+muPlugin.vars = Object.entries({
 	code: {
 		description: "Code for your mu-plugin",
 		type: "textarea",
 		required: true,
 		samples: [ '' ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

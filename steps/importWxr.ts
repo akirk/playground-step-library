@@ -1,11 +1,5 @@
-import type { StepFunction, ImportWxrFromUrlStep, StepVariable } from './types.js';
+import type { StepFunction, ImportWxrFromUrlStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const importWxr: StepFunction<ImportWxrFromUrlStep> = (step: ImportWxrFromUrlStep) => {
 	if ( ! step.url || ! step.url.match( /^https?:/ ) ) {
@@ -25,7 +19,7 @@ export const importWxr: StepFunction<ImportWxrFromUrlStep> = (step: ImportWxrFro
 
 importWxr.description = "Import a WXR from a URL.";
 importWxr.builtin = true;
-importWxr.vars = createVarsConfig({
+importWxr.vars = Object.entries({
 	url: {
 		description: "URL of a WXR file",
 		required: true,
@@ -37,4 +31,4 @@ importWxr.vars = createVarsConfig({
 		type: "boolean",
 		samples: [ "true", "false" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

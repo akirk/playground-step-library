@@ -1,12 +1,6 @@
-import type { StepFunction, ImportFriendFeedsStep, StepVariable } from './types.js';
+import type { StepFunction, ImportFriendFeedsStep} from './types.js';
 import { installPlugin } from './installPlugin.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const importFriendFeeds: StepFunction<ImportFriendFeedsStep> = (step: ImportFriendFeedsStep, blueprint: any) => {
 	let opml = step.opml || '';
@@ -69,11 +63,11 @@ Friends\\Import::opml("${opml}");
 };
 
 importFriendFeeds.description = "Add subscriptions to the Friends plugin.";
-importFriendFeeds.vars = createVarsConfig({
+importFriendFeeds.vars = Object.entries({
 	opml: {
 		description: "An OPML file, or a list of RSS feed URLs, one per line.",
 		type: "textarea",
 		required: true,
 		samples: [ "", 'https://alex.kirk.at Alex Kirk', '<?xml version="1.0" encoding="utf-8"?><opml version="2.0"><head><title>Alex Kirk&#039; Subscriptions</title></head><body><outline text="Feeds"><outline text="Alex Kirk" htmlUrl="https://alex.kirk.at/" title="Alex Kirk" type="rss" xmlUrl="https://alex.kirk.at/feed/"/></outline></body></opml>' ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

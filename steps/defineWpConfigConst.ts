@@ -1,11 +1,5 @@
-import type { StepFunction, DefineWpConfigConstStep, StepVariable } from './types.js';
+import type { StepFunction, DefineWpConfigConstStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const defineWpConfigConst: StepFunction<DefineWpConfigConstStep> = (step: DefineWpConfigConstStep) => {
 	if ( ! step.name ) {
@@ -39,7 +33,7 @@ export const defineWpConfigConst: StepFunction<DefineWpConfigConstStep> = (step:
 defineWpConfigConst.description = "Define a wp-config PHP constant.";
 defineWpConfigConst.builtin = true;
 defineWpConfigConst.multiple = true;
-defineWpConfigConst.vars = createVarsConfig({
+defineWpConfigConst.vars = Object.entries({
 	name: {
 		description: "Constant name",
 		samples: [ "WP_DEBUG" ]
@@ -48,4 +42,4 @@ defineWpConfigConst.vars = createVarsConfig({
 		description: "Constant value",
 		samples: [ "true" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

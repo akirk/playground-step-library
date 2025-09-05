@@ -1,11 +1,5 @@
-import type { StepFunction, CustomPostTypeStep, StepVariable } from './types.js';
+import type { StepFunction, CustomPostTypeStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPostTypeStep) => {
 	var steps = [
@@ -23,7 +17,7 @@ export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPos
 };
 
 customPostType.description = "Register a custom post type.";
-customPostType.vars = createVarsConfig({
+customPostType.vars = Object.entries({
 	slug: {
 		description: "Post type key",
 		regex: "^[a-z_]{0,20}$",
@@ -46,4 +40,4 @@ customPostType.vars = createVarsConfig({
 		required: false,
 		samples: ["true", "false"]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

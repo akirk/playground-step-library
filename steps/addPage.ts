@@ -1,11 +1,5 @@
-import type { StepFunction, AddPageStep, StepVariable } from './types.js';
+import type { StepFunction, AddPageStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const addPage: StepFunction<AddPageStep> = (step: AddPageStep) => {
 	const postTitle = step.postTitle.replace(/'/g, "\\'");
@@ -34,7 +28,7 @@ $page_id = wp_insert_post( $page_args );`;
 };
 
 addPage.description = "Add a custom page.";
-addPage.vars = createVarsConfig({
+addPage.vars = Object.entries({
 	postTitle: {
 		description: "The title of the post",
 		required: true,
@@ -51,4 +45,4 @@ addPage.vars = createVarsConfig({
 		type: "boolean",
 		samples: ["true", "false"]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

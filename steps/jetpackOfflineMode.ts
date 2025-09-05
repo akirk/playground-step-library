@@ -1,12 +1,6 @@
 import { installPlugin } from './installPlugin.js';
-import type { StepFunction, JetpackOfflineModeStep, StepVariable } from './types.js';
+import type { StepFunction, JetpackOfflineModeStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const jetpackOfflineMode: StepFunction<JetpackOfflineModeStep> = (step: JetpackOfflineModeStep, blueprint?: any) => {
 	let jetpack_active_modules = [];
@@ -49,7 +43,7 @@ export const jetpackOfflineMode: StepFunction<JetpackOfflineModeStep> = (step: J
 };
 
 jetpackOfflineMode.description = "Start Jetpack in Offline mode.";
-jetpackOfflineMode.vars = createVarsConfig({
+jetpackOfflineMode.vars = Object.entries({
 	blocks: {
 		description: "Activate the Jetpack Blocks module.",
 		type: "boolean",
@@ -60,4 +54,4 @@ jetpackOfflineMode.vars = createVarsConfig({
 		type: "boolean",
 		samples: [ "true", "false" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

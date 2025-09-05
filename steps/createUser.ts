@@ -1,11 +1,5 @@
-import type { StepFunction, CreateUserStep, StepVariable } from './types.js';
+import type { StepFunction, CreateUserStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const createUser: StepFunction<CreateUserStep> = (step: CreateUserStep) => {
 	let code = "<?php require_once '/wordpress/wp-load.php';";
@@ -51,7 +45,7 @@ export const createUser: StepFunction<CreateUserStep> = (step: CreateUserStep) =
 };
 
 createUser.description = "Create a new user.";
-createUser.vars = createVarsConfig({
+createUser.vars = Object.entries({
 	username: {
 		description: "Username",
 		required: true,
@@ -81,4 +75,4 @@ createUser.vars = createVarsConfig({
 		type: 'boolean',
 		samples: ['true']
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

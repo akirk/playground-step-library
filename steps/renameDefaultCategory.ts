@@ -1,11 +1,5 @@
-import type { StepFunction, RenameDefaultCategoryStep, StepVariable } from './types.js';
+import type { StepFunction, RenameDefaultCategoryStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const renameDefaultCategory: StepFunction<RenameDefaultCategoryStep> = (step: RenameDefaultCategoryStep) => {
 	const name = (step.categoryName || '').replace( /'/g, "\\'" ).trim();
@@ -22,7 +16,7 @@ export const renameDefaultCategory: StepFunction<RenameDefaultCategoryStep> = (s
 };
 
 renameDefaultCategory.description = "Change the default \"Uncategorized\".";
-renameDefaultCategory.vars = createVarsConfig({
+renameDefaultCategory.vars = Object.entries({
 	categoryName: {
 		description: "Change the default category name",
 		required: true,
@@ -33,4 +27,4 @@ renameDefaultCategory.vars = createVarsConfig({
 		required: true,
 		samples: [ "" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

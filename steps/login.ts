@@ -1,11 +1,5 @@
-import type { StepFunction, LoginStep, StepVariable } from './types.js';
+import type { StepFunction, LoginStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const login: StepFunction<LoginStep> = (step: LoginStep) => {
 	const steps = [
@@ -23,7 +17,7 @@ export const login: StepFunction<LoginStep> = (step: LoginStep) => {
 
 login.description = "Login to the site";
 login.builtin = true;
-login.vars = createVarsConfig({
+login.vars = Object.entries({
 	username: {
 		description: "Username",
 		required: true,
@@ -39,4 +33,4 @@ login.vars = createVarsConfig({
 		type: "boolean",
 		samples: [ "true", "false" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

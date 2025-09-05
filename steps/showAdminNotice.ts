@@ -1,11 +1,4 @@
-import type { StepFunction, ShowAdminNoticeStep, StepVariable } from './types.js';
-
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
+import type { StepFunction, ShowAdminNoticeStep } from './types.js';
 
 export const showAdminNotice: StepFunction<ShowAdminNoticeStep> = (step: ShowAdminNoticeStep) => {
 	const dismissible = step?.dismissible ? ' is-dismissible' : '';
@@ -80,7 +73,7 @@ add_action('admin_footer', function() {
 };
 
 showAdminNotice.description = "Show an admin notice in the dashboard.";
-showAdminNotice.vars = createVarsConfig({
+showAdminNotice.vars = Object.entries({
 	text: {
 		description: "The notice to be displayed",
 		required: true,
@@ -96,4 +89,4 @@ showAdminNotice.vars = createVarsConfig({
 		type: "boolean",
 		samples: ["true"]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

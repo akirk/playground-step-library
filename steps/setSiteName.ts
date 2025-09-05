@@ -1,11 +1,5 @@
-import type { StepFunction, SetSiteNameStep, StepVariable } from './types.js';
+import type { StepFunction, SetSiteNameStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const setSiteName: StepFunction<SetSiteNameStep> = (step: SetSiteNameStep) => {
 	return [
@@ -20,7 +14,7 @@ export const setSiteName: StepFunction<SetSiteNameStep> = (step: SetSiteNameStep
 };
 
 setSiteName.description = "Set the site name and tagline.";
-setSiteName.vars = createVarsConfig({
+setSiteName.vars = Object.entries({
 	sitename: {
 		description: "Name of the site",
 		required: true,
@@ -31,4 +25,4 @@ setSiteName.vars = createVarsConfig({
 		required: true,
 		samples: ["Trying out WordPress Playground."]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

@@ -1,11 +1,5 @@
-import type { StepFunction, GithubPluginStep, StepVariable } from './types.js';
+import type { StepFunction, GithubPluginStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginStep) => {
 	const urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.url );
@@ -72,7 +66,7 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 };
 
 githubPlugin.description = "Install a plugin from a Github repository.";
-githubPlugin.vars = createVarsConfig({
+githubPlugin.vars = Object.entries({
 	url: {
 		description: "Github URL of the plugin.",
 		samples: [ "https://github.com/akirk/blueprint-recorder" ]
@@ -82,4 +76,4 @@ githubPlugin.vars = createVarsConfig({
 		type: "boolean",
 		samples: [ "false", "true" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

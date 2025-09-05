@@ -1,11 +1,5 @@
-import type { StepFunction, DoActionStep, StepVariable } from './types.js';
+import type { StepFunction, DoActionStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const doAction: StepFunction<DoActionStep> = (step: DoActionStep) => {
 	if ( !step?.action ) {
@@ -27,7 +21,7 @@ export const doAction: StepFunction<DoActionStep> = (step: DoActionStep) => {
 };
 
 doAction.description = "Execute a custom action.";
-doAction.vars = createVarsConfig({
+doAction.vars = Object.entries({
 	action: {
 		description: "Execute a custom action.",
 		type: "text",
@@ -64,4 +58,4 @@ doAction.vars = createVarsConfig({
 		required: false,
 		samples: [ "" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

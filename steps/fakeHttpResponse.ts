@@ -1,11 +1,5 @@
-import type { StepFunction, FakeHttpResponseStep, StepVariable } from './types.js';
+import type { StepFunction, FakeHttpResponseStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const fakeHttpResponse: StepFunction<FakeHttpResponseStep> = (step: FakeHttpResponseStep, blueprint?: any) => {
 	const steps = [];
@@ -67,7 +61,7 @@ add_filter(
 };
 
 fakeHttpResponse.description = "Fake a wp_remote_request() response.";
-fakeHttpResponse.vars = createVarsConfig({
+fakeHttpResponse.vars = Object.entries({
 	url: {
 		description: "URL like https://wordpress.org/",
 		type: "url",
@@ -78,4 +72,4 @@ fakeHttpResponse.vars = createVarsConfig({
 		type: "textarea",
 		samples: [ "hello world" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

@@ -1,11 +1,5 @@
-import type { StepFunction, RunWpCliCommandStep, StepVariable } from './types.js';
+import type { StepFunction, RunWpCliCommandStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const runWpCliCommand: StepFunction<RunWpCliCommandStep> = (step: RunWpCliCommandStep) => {
 	return [
@@ -17,10 +11,10 @@ export const runWpCliCommand: StepFunction<RunWpCliCommandStep> = (step: RunWpCl
 };
 
 runWpCliCommand.description = "Run a wp-cli command.";
-runWpCliCommand.vars = createVarsConfig({
+runWpCliCommand.vars = Object.entries({
 	command: {
 		description: "The wp-cli command to run",
 		required: true,
 		samples: [""]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

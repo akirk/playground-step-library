@@ -1,12 +1,6 @@
 import { githubTheme } from './githubTheme.js';
-import type { StepFunction, InstallThemeStep, StepVariable } from './types.js';
+import type { StepFunction, InstallThemeStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeStep) => {
 	let urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec(step.url);
@@ -50,7 +44,7 @@ export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeS
 
 installTheme.description = "Install a theme via WordPress.org or Github";
 installTheme.builtin = true;
-installTheme.vars = createVarsConfig({
+installTheme.vars = Object.entries({
 	url: {
 		description: "URL of the theme or WordPress.org slug",
 		required: true,
@@ -66,4 +60,4 @@ installTheme.vars = createVarsConfig({
 		type: "boolean",
 		samples: ["false", "true"]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

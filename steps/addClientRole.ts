@@ -1,11 +1,5 @@
-import type { StepFunction, AddClientRoleStep, StepVariable } from './types.js';
+import type { StepFunction, AddClientRoleStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const addClientRole: StepFunction<AddClientRoleStep> = (step: AddClientRoleStep) => {
 	return [
@@ -73,10 +67,10 @@ add_action(
 };
 
 addClientRole.description = "Adds a role for clients with additional capabilities than editors, but not quite admin.";
-addClientRole.vars = createVarsConfig({
+addClientRole.vars = Object.entries({
 	displayName: {
 		description: "Display name for the client role",
 		required: true,
 		samples: [ "Client" ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

@@ -1,11 +1,5 @@
-import type { StepFunction, GithubPluginReleaseStep, StepVariable } from './types.js';
+import type { StepFunction, GithubPluginReleaseStep} from './types.js';
 
-const createVarsConfig = (config: Record<string, Omit<StepVariable, 'name'>>): StepVariable[] => {
-	return Object.entries(config).map(([name, varConfig]) => ({
-		name,
-		...varConfig
-	}));
-};
 
 export const githubPluginRelease: StepFunction<GithubPluginReleaseStep> = (step: GithubPluginReleaseStep) => {
 	const repoTest = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/.exec( step.repo );
@@ -39,7 +33,7 @@ export const githubPluginRelease: StepFunction<GithubPluginReleaseStep> = (step:
 };
 
 githubPluginRelease.description = "Install a specific plugin release from a Github repository.";
-githubPluginRelease.vars = createVarsConfig({
+githubPluginRelease.vars = Object.entries({
 	repo: {
 		description: "The plugin resides in this GitHub repository.",
 		samples: [ "ryanwelcher/interactivity-api-todomvc" ]
@@ -52,4 +46,4 @@ githubPluginRelease.vars = createVarsConfig({
 		description: "Which filename to use.",
 		samples: [ " to-do-mvc.zip " ]
 	}
-});
+}).map(([name, varConfig]) => ({ name, ...varConfig }));
