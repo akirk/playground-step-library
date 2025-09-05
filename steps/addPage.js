@@ -1,4 +1,4 @@
-export function addPage( step ) {
+export function addPage(step) {
 	const postTitle = step.vars.postTitle.replace(/'/g, "\\'" );
 	const postContent = step.vars.postContent.replace(/'/g, "\\'" );
 	let code = `
@@ -9,7 +9,8 @@ $page_args = array(
 	'post_title'   => '${postTitle}',
 	'post_content' => '${postContent}',
 );
-$page_id = wp_insert_post( $page_args );`
+$page_id = wp_insert_post( $page_args );`;
+
 	if ( step.vars.homepage ) {
 		code += "update_option( 'page_on_front', $page_id );";
 		code += "update_option( 'show_on_front', 'page' );";
@@ -32,7 +33,7 @@ addPage.vars = [
 		"samples": [ "Hello World" ]
 	},
 	{
-		"name": "postContent",
+		"name": "postContent", 
 		"description": "The HTML of the post",
 		"type": "textarea",
 		"required": true,
@@ -45,4 +46,3 @@ addPage.vars = [
 		"samples": [ "true", "false" ]
 	}
 ];
-
