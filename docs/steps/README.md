@@ -14,7 +14,7 @@ Enhanced core WordPress Playground steps with additional functionality.
 - [`enableMultisite`](./enableMultisite.md) - Enable WordPress Multisite functionality.
 - [`importWxr`](./importWxr.md) - Import a WXR from a URL.
 - [`installPlugin`](./installPlugin.md) - Install a plugin via WordPress.org or Github
-- [`installTheme`](./installTheme.md) - Install a theme
+- [`installTheme`](./installTheme.md) - Install a theme via WordPress.org or Github
 - [`login`](./login.md) - Login to the site
 - [`runPHP`](./runPHP.md) - Run code in the context of WordPress.
 - [`setSiteOption`](./setSiteOption.md) - Set a site option.
@@ -66,4 +66,4 @@ Extended functionality beyond core WordPress Playground capabilities.
 
 ---
 
-*Documentation auto-generated on 2025-09-05T12:20:37.233Z*
+*Documentation auto-generated on 2025-09-05T12:51:25.734Z*

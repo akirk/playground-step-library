@@ -718,7 +718,7 @@ This document provides detailed information about all available steps, including
 ## `installTheme`
 
 **Type**: Built-in Step  
-**Description**: Install a theme
+**Description**: Install a theme via WordPress.org or Github
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -1083,4 +1083,4 @@ This document provides detailed information about all available steps, including
 
 ---
 
-*Generated automatically from step definitions on 2025-09-05T12:20:37.230Z*
+*Generated automatically from step definitions on 2025-09-05T12:51:25.731Z*

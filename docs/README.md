@@ -35,7 +35,7 @@ Built-in steps are core WordPress Playground steps that are enhanced with additi
 - [`defineWpConfigConst`](steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
 - [`importWxr`](steps/importWxr.md) - Import a WXR from a URL.
 - [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Github
-- [`installTheme`](steps/installTheme.md) - Install a theme
+- [`installTheme`](steps/installTheme.md) - Install a theme via WordPress.org or Github
 - [`login`](steps/login.md) - Login to the site
 - [`runPHP`](steps/runPHP.md) - Run code in the context of WordPress.
 - [`setSiteOption`](steps/setSiteOption.md) - Set a site option.
@@ -103,4 +103,4 @@ To add a new step:
 
 ---
 
-*This documentation is auto-generated from step definitions. Last updated: 2025-09-05T12:20:37.225Z*
+*This documentation is auto-generated from step definitions. Last updated: 2025-09-05T12:51:25.725Z*
