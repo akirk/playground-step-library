@@ -350,4 +350,4 @@ This library provides **44** total steps (8 built-in enhanced steps + 36 custom 
 - [`showAdminNotice`](docs/steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](docs/steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 
-*This list is automatically generated. Last updated: 2025-09-05*
+*This list was automatically generated on 2025-09-05.*
