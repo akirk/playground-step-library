@@ -55,6 +55,10 @@ class StepDocumentationGenerator {
         fs.writeFileSync('docs/steps/README.md', navIndex);
         console.log('✅ Generated docs/steps/README.md (navigation index)');
         
+        // Update main README with custom steps list
+        this.updateMainReadmeWithSteps();
+        console.log('✅ Updated main README.md with custom steps list');
+        
         console.log(`✅ Generated ${Object.keys(docs.individualDocs).length} individual step docs`);
         console.log('\n🎉 Documentation generation complete!');
 
@@ -99,7 +103,7 @@ ${customSteps.map(([name, info]) =>
 
 ---
 
-*Documentation auto-generated on ${new Date().toISOString()}*
+*Documentation auto-generated on ${new Date().toISOString().split('T')[0]}*
 `;
     }
 
@@ -178,7 +182,7 @@ To add a new step:
 
 ---
 
-*This documentation is auto-generated from step definitions. Last updated: ${new Date().toISOString()}*
+*This documentation is auto-generated from step definitions. Last updated: ${new Date().toISOString().split('T')[0]}*
 `;
     }
 
@@ -204,7 +208,7 @@ ${stepEntries.map(([name]) => `- [\`${name}\`](#${name.toLowerCase()})`).join('\
             content += this.generateStepSection(stepName, stepInfo) + '\n---\n\n';
         });
 
-        content += `*Generated automatically from step definitions on ${new Date().toISOString()}*`;
+        content += `*Generated automatically from step definitions on ${new Date().toISOString().split('T')[0]}*`;
 
         return content;
     }
@@ -396,6 +400,58 @@ ${JSON.stringify(advancedExample, null, 2)}
         }
 
         return examples.join('\n\n');
+    }
+
+    /**
+     * Update the main README.md file with the list of custom steps
+     */
+    updateMainReadmeWithSteps() {
+        const readmePath = 'README.md';
+        
+        if (!fs.existsSync(readmePath)) {
+            console.log('⚠️  README.md not found, skipping update');
+            return;
+        }
+
+        let readmeContent = fs.readFileSync(readmePath, 'utf8');
+        
+        // Generate the custom steps section
+        const stepEntries = Object.entries(this.steps).sort(([a], [b]) => a.localeCompare(b));
+        const builtinSteps = stepEntries.filter(([, info]) => info.builtin);
+        const customSteps = stepEntries.filter(([, info]) => !info.builtin);
+        
+        const stepsSection = `
+## Custom Steps
+
+This library provides **${stepEntries.length}** total steps (${builtinSteps.length} built-in enhanced steps + ${customSteps.length} custom steps):
+
+### Built-in Enhanced Steps
+${builtinSteps.map(([name, info]) => 
+    `- [\`${name}\`](docs/steps/${name}.md) - ${info.description || 'No description available'}`
+).join('\n')}
+
+### Custom Steps
+${customSteps.map(([name, info]) => 
+    `- [\`${name}\`](docs/steps/${name}.md) - ${info.description || 'No description available'}`
+).join('\n')}
+
+*This list is automatically generated. Last updated: ${new Date().toISOString().split('T')[0]}*`;
+
+        // Remove all existing custom steps sections (more comprehensive regex)
+        const customStepsRegex = /(\n## Custom Steps[\s\S]*?)(?=\n## [^C]|\n### Built-in Enhanced Steps[\s\S]*?\*This list is automatically generated[\s\S]*?\*|$)/g;
+        readmeContent = readmeContent.replace(customStepsRegex, '');
+        
+        // Also remove any leftover fragments
+        readmeContent = readmeContent.replace(/\n### Built-in Enhanced Steps[\s\S]*?\*This list is automatically generated[\s\S]*?\*/g, '');
+        readmeContent = readmeContent.replace(/\n### Custom Steps[\s\S]*?\*This list is automatically generated[\s\S]*?\*/g, '');
+        
+        // Clean up any extra whitespace at the end
+        readmeContent = readmeContent.trim();
+        
+        // Append the new custom steps section at the end
+        readmeContent = readmeContent + stepsSection;
+        
+        fs.writeFileSync(readmePath, readmeContent);
     }
 }
 

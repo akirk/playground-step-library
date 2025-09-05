@@ -8,7 +8,7 @@ You can then use those custom steps [in our Step Builder](https://akirk.github.i
 
 ## NPM Package
 
-You can also use the steps in your own projects by using the [npm package](README-npm.md).
+You can also use the steps in your own projects by using the [npm package](#using-as-npm-package).
 
 ## 📚 Documentation
 
@@ -135,3 +135,219 @@ export interface HelloWorldLoggerStep extends BlueprintStep {
 ```
 
 The step will automatically appear in the [Step Library UI](https://akirk.github.io/playground-step-library/) after running `npm run build`.
+
+## Using as NPM Package
+
+This compiler transforms WordPress Playground blueprints with custom steps into blueprints with native steps. It's available as an npm package for integration into your own projects.
+
+### Installation
+
+```bash
+npm install playground-step-library
+```
+
+### Command Line Interface
+
+```bash
+# Compile a blueprint
+node bin/cli.js blueprint.json
+
+# Compile with pretty output
+node bin/cli.js blueprint.json --pretty
+
+# Save to file
+node bin/cli.js blueprint.json --output compiled.json
+
+# Validate a blueprint
+node bin/cli.js blueprint.json --validate
+
+# List available custom steps
+node bin/cli.js --list-steps
+```
+
+### Programmatic API
+
+**TypeScript / JavaScript (ES Modules):**
+```javascript
+import PlaygroundStepLibrary from 'playground-step-library';
+```
+
+**Browser (ES Modules):**
+```html
+<script type="module">
+import PlaygroundStepLibrary from 'https://unpkg.com/playground-step-library/lib/index.js';
+// or from your local installation
+// import PlaygroundStepLibrary from './node_modules/playground-step-library/lib/index.js';
+
+// Make it globally available if needed
+window.PlaygroundStepLibrary = PlaygroundStepLibrary;
+</script>
+```
+
+**Usage:**
+```javascript
+// Initialize compiler
+const compiler = new PlaygroundStepLibrary();
+
+// Compile a blueprint
+const blueprint = {
+    steps: [
+        {
+            step: 'setSiteName',
+            sitename: 'My Site',
+            tagline: 'A WordPress site'
+        },
+        {
+            step: 'addPage',
+            postTitle: 'Welcome',
+            postContent: '<p>Welcome to my site!</p>',
+            homepage: true
+        }
+    ]
+};
+
+const compiledBlueprint = compiler.compile(blueprint);
+console.log(JSON.stringify(compiledBlueprint, null, 2));
+
+// Validate a blueprint
+const validation = compiler.validateBlueprint(blueprint);
+if (!validation.valid) {
+    console.error('Validation error:', validation.error);
+}
+
+// Get available custom steps
+const steps = compiler.getAvailableSteps();
+console.log('Available steps:', Object.keys(steps));
+```
+
+### How It Works
+
+This compiler takes WordPress Playground blueprints that use custom steps (like `setSiteName`, `addPage`, etc.) and transforms them into blueprints that only use native WordPress Playground steps (like `runPHP`, `setSiteOptions`, etc.).
+
+#### Input Example
+
+```json
+{
+  "steps": [
+    {
+      "step": "setSiteName",
+      "sitename": "My Demo Site",
+      "tagline": "A WordPress Playground demo"
+    },
+    {
+      "step": "addPage",
+      "postTitle": "Welcome Page",
+      "postContent": "<p>Welcome to my WordPress site!</p>",
+      "homepage": false
+    }
+  ]
+}
+```
+
+#### Output Example
+
+```json
+{
+  "steps": [
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "My Demo Site",
+        "blogdescription": "A WordPress Playground demo"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "\n<?php require_once '/wordpress/wp-load.php';\n$page_args = array(\n\t'post_type'    => 'page',\n\t'post_status'  => 'publish',\n\t'post_title'   => 'Welcome Page',\n\t'post_content' => '<p>Welcome to my WordPress site!</p>',\n);\n$page_id = wp_insert_post( $page_args );"
+    }
+  ]
+}
+```
+
+### API Reference
+
+#### `PlaygroundStepLibrary`
+
+##### Constructor
+
+```javascript
+new PlaygroundStepLibrary()
+```
+
+No parameters required - all steps are statically imported.
+
+##### Methods
+
+###### `compile(blueprint, options?)`
+Compiles a blueprint with custom steps into a blueprint with native steps.
+
+- `blueprint` (Object|string): Blueprint object or JSON string
+- `options` (Object, optional): Compilation options
+  - `options.landingPage` (string): Default landing page path
+  - `options.features` (Object): Feature configuration
+- Returns: Compiled blueprint object
+- Throws: Error if compilation fails
+
+###### `validateBlueprint(blueprint)`
+Validates a blueprint structure and required variables.
+
+- `blueprint` (Object|string): Blueprint object or JSON string  
+- Returns: `{valid: boolean, error?: string}`
+
+###### `getAvailableSteps()`
+Returns information about all available custom steps.
+
+- Returns: Object with step names as keys and step info as values
+## Custom Steps
+
+This library provides **44** total steps (8 built-in enhanced steps + 36 custom steps):
+
+### Built-in Enhanced Steps
+- [`defineWpConfigConst`](docs/steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
+- [`enableMultisite`](docs/steps/enableMultisite.md) - Enable WordPress Multisite functionality.
+- [`importWxr`](docs/steps/importWxr.md) - Import a WXR from a URL.
+- [`installPlugin`](docs/steps/installPlugin.md) - Install a plugin via WordPress.org or Github
+- [`installTheme`](docs/steps/installTheme.md) - Install a theme via WordPress.org or Github
+- [`login`](docs/steps/login.md) - Login to the site
+- [`runPHP`](docs/steps/runPHP.md) - Run code in the context of WordPress.
+- [`setSiteOption`](docs/steps/setSiteOption.md) - Set a site option.
+
+### Custom Steps
+- [`addClientRole`](docs/steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
+- [`addCorsProxy`](docs/steps/addCorsProxy.md) - Automatically add the CORS proxy to outgoing HTTP requests.
+- [`addFilter`](docs/steps/addFilter.md) - Easily add a filtered value.
+- [`addMedia`](docs/steps/addMedia.md) - Add files to the media library.
+- [`addPage`](docs/steps/addPage.md) - Add a custom page.
+- [`addPost`](docs/steps/addPost.md) - Add a post.
+- [`addProduct`](docs/steps/addProduct.md) - Add a WooCommerce product (will install WooCommerce if not present)
+- [`blueprintExtractor`](docs/steps/blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
+- [`blueprintRecorder`](docs/steps/blueprintRecorder.md) - Record steps made and compile a new blueprint.
+- [`changeAdminColorScheme`](docs/steps/changeAdminColorScheme.md) - Useful to combine with a login step.
+- [`createUser`](docs/steps/createUser.md) - Create a new user.
+- [`customPostType`](docs/steps/customPostType.md) - Register a custom post type.
+- [`deleteAllPosts`](docs/steps/deleteAllPosts.md) - Delete all posts, pages, attachments, revisions and menu items.
+- [`disableWelcomeGuides`](docs/steps/disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
+- [`doAction`](docs/steps/doAction.md) - Execute a custom action.
+- [`fakeHttpResponse`](docs/steps/fakeHttpResponse.md) - Fake a wp_remote_request() response.
+- [`githubImportExportWxr`](docs/steps/githubImportExportWxr.md) - Provide useful additional info.
+- [`githubPlugin`](docs/steps/githubPlugin.md) - Install a plugin from a Github repository.
+- [`githubPluginRelease`](docs/steps/githubPluginRelease.md) - Install a specific plugin release from a Github repository.
+- [`githubTheme`](docs/steps/githubTheme.md) - Install a theme from a Github repository.
+- [`importFriendFeeds`](docs/steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.
+- [`importWordPressComExport`](docs/steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
+- [`installPhEditor`](docs/steps/installPhEditor.md) - Install phEditor. Password: admin
+- [`installPhpLiteAdmin`](docs/steps/installPhpLiteAdmin.md) - Provide phpLiteAdmin. Password: admin
+- [`jetpackOfflineMode`](docs/steps/jetpackOfflineMode.md) - Start Jetpack in Offline mode.
+- [`muPlugin`](docs/steps/muPlugin.md) - Add code for a plugin.
+- [`removeDashboardWidgets`](docs/steps/removeDashboardWidgets.md) - Remove widgets from the wp-admin dashboard.
+- [`renameDefaultCategory`](docs/steps/renameDefaultCategory.md) - Change the default "Uncategorized".
+- [`runWpCliCommand`](docs/steps/runWpCliCommand.md) - Run a wp-cli command.
+- [`sampleContent`](docs/steps/sampleContent.md) - Inserts sample pages to the site.
+- [`setLandingPage`](docs/steps/setLandingPage.md) - Set the landing page.
+- [`setLanguage`](docs/steps/setLanguage.md) - Set the WordPress site language.
+- [`setSiteName`](docs/steps/setSiteName.md) - Set the site name and tagline.
+- [`setTT4Homepage`](docs/steps/setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
+- [`showAdminNotice`](docs/steps/showAdminNotice.md) - Show an admin notice in the dashboard.
+- [`skipWooCommerceWizard`](docs/steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
+
+*This list is automatically generated. Last updated: 2025-09-05*
