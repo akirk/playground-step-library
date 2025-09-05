@@ -158,7 +158,7 @@ which does what you asked for and only uses native WordPress Playground steps.
 
 ## Using as NPM Package
 
-This compiler transforms WordPress Playground blueprints with custom steps into blueprints with native steps. It's available as an npm package for integration into your own projects.
+The npm package provides a compiler to transform WordPress Playground blueprints with custom steps into blueprints with native steps. It's available as an [npm package](https://www.npmjs.com/package/playground-step-library).
 
 ### Installation
 
