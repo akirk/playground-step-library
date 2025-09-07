@@ -1,14 +1,16 @@
 /**
  * Basic Site Setup Example
  * Shows how to set up a basic WordPress site with custom steps
+ * Now with type-safe StepLibraryBlueprint
  */
 
 import { runCLI, RunCLIServer } from '@wp-playground/cli';
 import PlaygroundStepLibrary from '../../lib/src/index';
+import type { StepLibraryBlueprint } from '../../steps/types';
 
 const compiler = new PlaygroundStepLibrary();
 
-const blueprint = {
+const blueprint: StepLibraryBlueprint = {
   steps: [
     // Configure site basics
     {
@@ -35,9 +37,11 @@ const blueprint = {
 };
 
 console.log('🏗️  Setting up a basic WordPress site...');
-console.log(`📋 Using ${blueprint.steps.length} custom steps:`);
+console.log(`📋 Using ${blueprint.steps!.length} custom steps:`);
 
-blueprint.steps.forEach((step, index) => {
+blueprint.steps!.forEach((stepItem, index) => {
+  if (!stepItem || typeof stepItem !== 'object') return;
+  const step = stepItem as any;
   console.log(`  ${index + 1}. ${step.step}`);
 });
 

@@ -1,14 +1,16 @@
 /**
  * Basic Example: Create a simple post
  * This shows the most minimal usage of the step library
+ * Now with type-safe StepLibraryBlueprint
  */
 
 import { runCLI, RunCLIServer } from '@wp-playground/cli';
 import PlaygroundStepLibrary from '../../lib/src/index';
+import type { StepLibraryBlueprint } from '../../steps/types';
 
 const compiler = new PlaygroundStepLibrary();
 
-const blueprint = {
+const blueprint: StepLibraryBlueprint = {
   steps: [
     {
       step: 'addPost',

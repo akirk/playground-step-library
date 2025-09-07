@@ -1,24 +1,5 @@
-interface StepVariable {
-    name: string;
-    description?: string;
-    required?: boolean;
-    type?: string;
-    samples?: string[];
-    regex?: string;
-}
-interface BlueprintStep {
-    step: string;
-    vars?: Record<string, any>;
-    count?: number;
-    [key: string]: any;
-}
-interface Blueprint {
-    steps?: BlueprintStep[];
-    title?: string;
-    landingPage?: string;
-    features?: Record<string, any>;
-    [key: string]: any;
-}
+import type { StepVariable, StepLibraryBlueprint } from '../steps/types.js';
+import type { Blueprint } from '@wp-playground/blueprints';
 interface ValidationResult {
     valid: boolean;
     error?: string;
@@ -48,7 +29,7 @@ declare class PlaygroundStepLibrary {
      * Compile a blueprint by transforming custom steps into native steps
      * Uses the transformJson logic from script.js adapted for TypeScript
      */
-    compile(blueprint: Blueprint | string, options?: CompileOptions): Blueprint;
+    compile(blueprint: StepLibraryBlueprint | string, options?: CompileOptions): Blueprint;
     /**
      * Get information about available custom steps
      */
@@ -56,7 +37,19 @@ declare class PlaygroundStepLibrary {
     /**
      * Validate a blueprint structure
      */
-    validateBlueprint(blueprint: Blueprint | string): ValidationResult;
+    validateBlueprint(blueprint: StepLibraryBlueprint | string): ValidationResult;
+    /**
+     * Helper method for variable substitution in step properties
+     */
+    private performVariableSubstitution;
+    /**
+     * Helper method to clean up whitespace in step properties
+     */
+    private cleanupWhitespace;
+    /**
+     * Deduplicates steps based on PHP comment strategies
+     */
+    private deduplicateSteps;
 }
 export default PlaygroundStepLibrary;
 //# sourceMappingURL=index.d.ts.map

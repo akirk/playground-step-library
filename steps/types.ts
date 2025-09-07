@@ -1,5 +1,19 @@
 // Types for WordPress Playground Step Library
 
+import type { 
+	StepDefinition, 
+	Blueprint as WPBlueprint, 
+	BlueprintDeclaration as WPBlueprintDeclaration,
+	InstallPluginStep as WPInstallPluginStep,
+	InstallThemeStep as WPInstallThemeStep,
+	RunPHPStep as WPRunPHPStep,
+	LoginStep as WPLoginStep,
+	ImportWxrStep as WPImportWxrStep,
+	DefineWpConfigConstsStep as WPDefineWpConfigConstsStep,
+	SetSiteOptionsStep as WPSetSiteOptionsStep,
+	FileReference
+} from '@wp-playground/blueprints';
+
 export interface BlueprintStep {
     step: string;
     [key: string]: any;
@@ -263,3 +277,60 @@ export interface GithubImportExportWxrStep extends BlueprintStep {
     targetUrl?: string;
 }
 
+// Union of all step types including both builtin WP steps and custom Step Library steps
+export type StepLibraryStepDefinition = 
+	// Builtin WP Playground steps
+	StepDefinition |
+	// Custom Step Library steps
+	AddPageStep |
+	SetSiteNameStep |
+	SetLanguageStep |
+	SampleContentStep |
+	CreateUserStep |
+	RunPHPStep |
+	RunWpCliCommandStep |
+	DeleteAllPostsStep |
+	InstallPhEditorStep |
+	SkipWooCommerceWizardStep |
+	DisableWelcomeGuidesStep |
+	RenameDefaultCategoryStep |
+	SetSiteOptionStep |
+	ChangeAdminColorSchemeStep |
+	ShowAdminNoticeStep |
+	RemoveDashboardWidgetsStep |
+	FakeHttpResponseStep |
+	DefineWpConfigConstStep |
+	DoActionStep |
+	AddClientRoleStep |
+	LoginStep |
+	AddCorsProxyStep |
+	InstallPhpLiteAdminStep |
+	SetLandingPageStep |
+	AddPostStep |
+	EnableMultisiteStep |
+	JetpackOfflineModeStep |
+	SetTT4HomepageStep |
+	AddFilterStep |
+	GithubPluginStep |
+	GithubPluginReleaseStep |
+	InstallPluginStep |
+	InstallThemeStep |
+	GithubThemeStep |
+	ImportWordPressComExportStep |
+	ImportWxrStep |
+	ImportWxrFromUrlStep |
+	ImportFriendFeedsStep |
+	AddMediaStep |
+	AddProductStep |
+	CustomPostTypeStep |
+	MuPluginStep |
+	BlueprintRecorderStep |
+	BlueprintExtractorStep |
+	GithubImportExportWxrStep;
+
+// Extended Blueprint type that supports both builtin and Step Library custom steps
+export interface StepLibraryBlueprintDeclaration extends Omit<WPBlueprintDeclaration, 'steps'> {
+	steps?: Array<StepLibraryStepDefinition | string | undefined | false | null>;
+}
+
+export type StepLibraryBlueprint = StepLibraryBlueprintDeclaration;

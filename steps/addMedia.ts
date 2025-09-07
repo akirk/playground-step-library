@@ -36,9 +36,8 @@ export const addMedia: StepFunction<AddMediaStep> = (step: AddMediaStep) => {
 	}
 	steps.push( {
 		"step": "runPHP",
-		"dedup": "last",
-		"code": `
-<?php
+		"code": `<?php
+// DEDUP_STRATEGY: keep_last
 require_once '/wordpress/wp-load.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
 require_once ABSPATH . 'wp-admin/includes/file.php';

@@ -1,3 +1,9 @@
 node_modules
 examples/node_modules
 examples/package-lock.json
+
+# Build artifacts
+lib/
+steps/*.js
+steps/*.d.ts
+steps/*.js.map

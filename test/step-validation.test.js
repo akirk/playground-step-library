@@ -54,9 +54,16 @@ describe('Step Output Validation', () => {
       // The step type must be valid
       expect(VALID_STEP_TYPES, `${stepName}[${index}].step "${step.step}" is not a valid WordPress Playground step type. Valid types: ${VALID_STEP_TYPES.join(', ')}`).toContain(step.step);
       
-      // Validate common step properties
-      if (step.dedup !== undefined) {
-        expect([true, false, 'last'], `${stepName}[${index}].dedup must be boolean or 'last'`).toContain(step.dedup);
+      // Validate deduplication strategy in PHP comments (if runPHP step)
+      if (step.step === 'runPHP' && step.code && typeof step.code === 'string') {
+        const hasStrategy = step.code.includes('// DEDUP_STRATEGY:');
+        if (hasStrategy) {
+          const validStrategies = ['keep_last'];
+          const strategyMatch = step.code.match(/\/\/ DEDUP_STRATEGY:\s*(\w+)/);
+          if (strategyMatch) {
+            expect(validStrategies, `${stepName}[${index}] has invalid dedup strategy "${strategyMatch[1]}". Valid strategies: ${validStrategies.join(', ')}`).toContain(strategyMatch[1]);
+          }
+        }
       }
       
       // Validate step-specific required properties
