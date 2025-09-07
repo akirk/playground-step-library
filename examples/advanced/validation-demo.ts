@@ -4,7 +4,7 @@
  */
 
 import { createRequire } from 'module';
-import PlaygroundStepLibrary from '../../lib/index';
+import PlaygroundStepLibrary from '../../lib/src/index';
 
 const compiler = new PlaygroundStepLibrary();
 

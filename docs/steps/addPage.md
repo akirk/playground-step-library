@@ -1,6 +1,6 @@
 # `addPage` Step
 
-Add a custom page.
+Add a page with title and content.
 
 ## Type
 ⚡ **Custom Step**

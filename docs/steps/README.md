@@ -13,9 +13,9 @@ Enhanced core WordPress Playground steps with additional functionality.
 - [`defineWpConfigConst`](./defineWpConfigConst.md) - Define a wp-config PHP constant.
 - [`enableMultisite`](./enableMultisite.md) - Enable WordPress Multisite functionality.
 - [`importWxr`](./importWxr.md) - Import a WXR from a URL.
-- [`installPlugin`](./installPlugin.md) - Install a plugin via WordPress.org or Github
-- [`installTheme`](./installTheme.md) - Install a theme via WordPress.org or Github
-- [`login`](./login.md) - Login to the site
+- [`installPlugin`](./installPlugin.md) - Install a plugin via WordPress.org or Github.
+- [`installTheme`](./installTheme.md) - Install a theme via WordPress.org or Github.
+- [`login`](./login.md) - Login to the site.
 - [`runPHP`](./runPHP.md) - Run code in the context of WordPress.
 - [`setSiteOption`](./setSiteOption.md) - Set a site option.
 
@@ -26,8 +26,8 @@ Extended functionality beyond core WordPress Playground capabilities.
 - [`addCorsProxy`](./addCorsProxy.md) - Automatically add the CORS proxy to outgoing HTTP requests.
 - [`addFilter`](./addFilter.md) - Easily add a filtered value.
 - [`addMedia`](./addMedia.md) - Add files to the media library.
-- [`addPage`](./addPage.md) - Add a custom page.
-- [`addPost`](./addPost.md) - Add a post.
+- [`addPage`](./addPage.md) - Add a page with title and content.
+- [`addPost`](./addPost.md) - Add a post with title, content, type, status, and date.
 - [`addProduct`](./addProduct.md) - Add a WooCommerce product (will install WooCommerce if not present)
 - [`blueprintExtractor`](./blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
 - [`blueprintRecorder`](./blueprintRecorder.md) - Record steps made and compile a new blueprint.

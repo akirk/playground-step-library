@@ -142,7 +142,7 @@ This document provides detailed information about all available steps, including
 ## `addPage`
 
 **Type**: Custom Step  
-**Description**: Add a custom page.
+**Description**: Add a page with title and content.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -168,7 +168,7 @@ This document provides detailed information about all available steps, including
 ## `addPost`
 
 **Type**: Custom Step  
-**Description**: Add a post.
+**Description**: Add a post with title, content, type, status, and date.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -692,7 +692,7 @@ This document provides detailed information about all available steps, including
 ## `installPlugin`
 
 **Type**: Built-in Step  
-**Description**: Install a plugin via WordPress.org or Github
+**Description**: Install a plugin via WordPress.org or Github.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -718,7 +718,7 @@ This document provides detailed information about all available steps, including
 ## `installTheme`
 
 **Type**: Built-in Step  
-**Description**: Install a theme via WordPress.org or Github
+**Description**: Install a theme via WordPress.org or Github.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -766,7 +766,7 @@ This document provides detailed information about all available steps, including
 ## `login`
 
 **Type**: Built-in Step  
-**Description**: Login to the site
+**Description**: Login to the site.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|

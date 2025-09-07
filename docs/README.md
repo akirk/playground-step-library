@@ -34,9 +34,9 @@ Built-in steps are core WordPress Playground steps that are enhanced with additi
 
 - [`defineWpConfigConst`](steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
 - [`importWxr`](steps/importWxr.md) - Import a WXR from a URL.
-- [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Github
-- [`installTheme`](steps/installTheme.md) - Install a theme via WordPress.org or Github
-- [`login`](steps/login.md) - Login to the site
+- [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Github.
+- [`installTheme`](steps/installTheme.md) - Install a theme via WordPress.org or Github.
+- [`login`](steps/login.md) - Login to the site.
 - [`runPHP`](steps/runPHP.md) - Run code in the context of WordPress.
 - [`setSiteOption`](steps/setSiteOption.md) - Set a site option.
 - [`enableMultisite`](steps/enableMultisite.md) - Enable WordPress Multisite functionality.
@@ -48,8 +48,8 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`addCorsProxy`](steps/addCorsProxy.md) - Automatically add the CORS proxy to outgoing HTTP requests.
 - [`addFilter`](steps/addFilter.md) - Easily add a filtered value.
 - [`addMedia`](steps/addMedia.md) - Add files to the media library.
-- [`addPage`](steps/addPage.md) - Add a custom page.
-- [`addPost`](steps/addPost.md) - Add a post.
+- [`addPage`](steps/addPage.md) - Add a page with title and content.
+- [`addPost`](steps/addPost.md) - Add a post with title, content, type, status, and date.
 - [`addProduct`](steps/addProduct.md) - Add a WooCommerce product (will install WooCommerce if not present)
 - [`blueprintExtractor`](steps/blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
 - [`blueprintRecorder`](steps/blueprintRecorder.md) - Record steps made and compile a new blueprint.
