@@ -11,6 +11,7 @@ import { showAdminNotice } from '../steps/showAdminNotice.js';
 import { login } from '../steps/login.js';
 import { addCorsProxy } from '../steps/addCorsProxy.js';
 import { installPhpLiteAdmin } from '../steps/installPhpLiteAdmin.js';
+import { installAdminer } from '../steps/installAdminer.js';
 import { runWpCliCommand } from '../steps/runWpCliCommand.js';
 import { doAction } from '../steps/doAction.js';
 import { defineWpConfigConst } from '../steps/defineWpConfigConst.js';
@@ -79,6 +80,7 @@ export const stepsRegistry = {
     githubTheme,
     importFriendFeeds,
     importWordPressComExport,
+    installAdminer,
     installPhEditor,
     installPhpLiteAdmin,
     jetpackOfflineMode,
