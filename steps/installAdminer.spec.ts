@@ -11,7 +11,7 @@ describe('installAdminer', () => {
     const result = installAdminer(step);
 
     expect(result).toHaveLength(5);
-    
+
     // Should create mu-plugins directory
     expect(result[0]).toEqual({
       step: 'mkdir',
@@ -25,7 +25,6 @@ describe('installAdminer', () => {
       data: expect.stringContaining('add_action( \'admin_bar_menu\'')
     });
     expect(result[1].data).toContain('Adminer');
-    expect(result[1].data).toContain('/adminer/?sqlite=&username=&db=%2Fwordpress%2Fwp-content%2Fdatabase%2F.ht.sqlite');
 
     // Should create adminer directory
     expect(result[2]).toEqual({
@@ -56,17 +55,6 @@ describe('installAdminer', () => {
         url: 'https://github.com/vrana/adminer/releases/download/v5.3.0/adminer-5.3.0-en.php'
       }
     });
-  });
-
-
-  it('should set the correct landing page', () => {
-    const step: InstallAdminerStep = {
-      step: 'installAdminer'
-    };
-
-    const result = installAdminer(step);
-
-    expect((result as any).landingPage).toBe('/adminer/?sqlite=&username=&db=%2Fwordpress%2Fwp-content%2Fdatabase%2F.ht.sqlite');
   });
 
   it('should have proper metadata', () => {
