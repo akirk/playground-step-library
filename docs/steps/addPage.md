@@ -9,8 +9,8 @@ Add a page with title and content.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `postTitle` | string | ✅ Yes | The title of the post |
-| `postContent` | textarea | ✅ Yes | The HTML of the post |
+| `title` | string | ✅ Yes | The title of the page |
+| `content` | textarea | ✅ Yes | The HTML content of the page |
 | `homepage` | boolean | ❌ No | Set it as the Homepage |
 
 
@@ -20,8 +20,8 @@ Add a page with title and content.
 ```json
     {
           "step": "addPage",
-          "postTitle": "Hello World",
-          "postContent": "<p>Hello World</p>",
+          "title": "Hello World",
+          "content": "<p>Hello World</p>",
           "homepage": "true"
     }
 ```
@@ -33,8 +33,8 @@ Add a page with title and content.
   "steps": [
         {
           "step": "addPage",
-          "postTitle": "Hello World",
-          "postContent": "<p>Hello World</p>",
+          "title": "Hello World",
+          "content": "<p>Hello World</p>",
           "homepage": "true"
     }
   ]
@@ -51,8 +51,8 @@ const blueprint = {
   steps: [
         {
           "step": "addPage",
-          "postTitle": "Hello World",
-          "postContent": "<p>Hello World</p>",
+          "title": "Hello World",
+          "content": "<p>Hello World</p>",
           "homepage": "true"
     }
   ]
@@ -60,6 +60,15 @@ const blueprint = {
 
 const compiled = compiler.compile(blueprint);
 ```
+
+## Deprecated Parameters
+
+The following parameters are deprecated but still supported for backward compatibility:
+
+- `postTitle` → Use `title` instead
+- `postContent` → Use `content` instead
+
+
 
 ---
 

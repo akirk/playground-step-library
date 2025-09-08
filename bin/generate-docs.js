@@ -235,6 +235,7 @@ ${stepEntries.map(([name]) => `- [\`${name}\`](#${name.toLowerCase()})`).join('\
      */
     generateIndividualStepDoc(stepName, stepInfo) {
         const examples = this.generateStepExamples(stepName, stepInfo);
+        const deprecationNotices = this.generateDeprecationNotices(stepInfo.vars || []);
 
         return `# \`${stepName}\` Step
 
@@ -276,6 +277,8 @@ const blueprint = {
 const compiled = compiler.compile(blueprint);
 \`\`\`
 
+${deprecationNotices}
+
 ---
 
 *This documentation was auto-generated from the step definition.*
@@ -310,9 +313,16 @@ ${this.generateJsonExample(stepName, stepInfo.vars || [])}
             return '*No parameters defined.*';
         }
 
+        // Filter out deprecated variables
+        const activeVars = vars.filter(varDef => !varDef.deprecated);
+
+        if (activeVars.length === 0) {
+            return '*No parameters defined.*';
+        }
+
         let table = `| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n`;
 
-        vars.forEach(varDef => {
+        activeVars.forEach(varDef => {
             const name = varDef.name || 'unknown';
             const type = varDef.type || 'string';
             const required = varDef.required ? '✅ Yes' : '❌ No';
@@ -331,7 +341,10 @@ ${this.generateJsonExample(stepName, stepInfo.vars || [])}
         const example = { step: stepName };
 
         if (vars && vars.length > 0) {
-            vars.forEach(varDef => {
+            // Filter out deprecated variables
+            const activeVars = vars.filter(varDef => !varDef.deprecated);
+            
+            activeVars.forEach(varDef => {
                 if (varDef.samples && varDef.samples.length > 0) {
                     example[varDef.name] = varDef.samples[0];
                 } else {
@@ -369,6 +382,41 @@ ${this.generateJsonExample(stepName, stepInfo.vars || [])}
     }
 
     /**
+     * Generate deprecation notices for deprecated variables
+     */
+    generateDeprecationNotices(vars) {
+        if (!vars || vars.length === 0) {
+            return '';
+        }
+
+        const deprecatedVars = vars.filter(varDef => varDef.deprecated);
+        
+        if (deprecatedVars.length === 0) {
+            return '';
+        }
+
+        let notices = '## Deprecated Parameters\n\n';
+        notices += 'The following parameters are deprecated but still supported for backward compatibility:\n\n';
+        
+        deprecatedVars.forEach(varDef => {
+            // Try to match deprecated parameter with new one based on description
+            const activeVar = vars.find(v => 
+                !v.deprecated && 
+                (v.description?.toLowerCase().includes(varDef.name?.replace('post', '').toLowerCase()) ||
+                 varDef.description?.toLowerCase().includes(v.name?.toLowerCase()))
+            );
+            
+            if (activeVar) {
+                notices += `- \`${varDef.name}\` → Use \`${activeVar.name}\` instead\n`;
+            } else {
+                notices += `- \`${varDef.name}\` → Deprecated\n`;
+            }
+        });
+
+        return notices + '\n';
+    }
+
+    /**
      * Generate usage examples for a step
      */
     generateStepExamples(stepName, stepInfo) {
@@ -381,9 +429,10 @@ ${this.generateJsonExample(stepName, stepInfo.vars || [])}
 \`\`\``);
 
         // Advanced example if step has multiple parameters
-        if (stepInfo.vars && stepInfo.vars.length > 3) {
+        const activeVars = stepInfo.vars ? stepInfo.vars.filter(varDef => !varDef.deprecated) : [];
+        if (activeVars.length > 3) {
             const advancedExample = { step: stepName };
-            stepInfo.vars.forEach(varDef => {
+            activeVars.forEach(varDef => {
                 if (varDef.samples && varDef.samples.length > 1) {
                     advancedExample[varDef.name] = varDef.samples[1];
                 } else if (varDef.samples && varDef.samples.length > 0) {

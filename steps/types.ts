@@ -29,6 +29,7 @@ export interface StepVariable {
     label?: string;
     onclick?: Function;
     regex?: string;
+    deprecated?: boolean;
 }
 
 export interface StepFunction<T extends BlueprintStep = BlueprintStep> {
@@ -38,12 +39,16 @@ export interface StepFunction<T extends BlueprintStep = BlueprintStep> {
     builtin?: boolean;
     count?: number;
     multiple?: boolean;
+    deprecated?: boolean;
 }
 
 // Step-specific interfaces (flattened, no vars wrapper)
 export interface AddPageStep extends BlueprintStep {
-    postTitle: string;
-    postContent: string;
+    title?: string;
+    content?: string;
+    // Backward compatibility
+    postTitle?: string;
+    postContent?: string;
     homepage?: boolean;
 }
 
@@ -165,10 +170,16 @@ export interface SetLandingPageStep extends BlueprintStep {
 }
 
 export interface AddPostStep extends BlueprintStep {
-    postTitle: string;
-    postContent: string;
+    title?: string;
+    content?: string;
+    date?: string;
+    type: string;
+    status?: string;
+    // Backward compatibility
+    postTitle?: string;
+    postContent?: string;
     postDate?: string;
-    postType: string;
+    postType?: string;
     postStatus?: string;
     homepage?: boolean;
 }
@@ -243,8 +254,15 @@ export interface AddMediaStep extends BlueprintStep {
 }
 
 export interface AddProductStep extends BlueprintStep {
-    productTitle: string;
-    productDescription: string;
+    title?: string;
+    description?: string;
+    price?: string;
+    salePrice?: string;
+    sku?: string;
+    status?: string;
+    // Backward compatibility
+    productTitle?: string;
+    productDescription?: string;
     productPrice?: string;
     productSalePrice?: string;
     productSku?: string;
