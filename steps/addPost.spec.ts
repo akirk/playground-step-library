@@ -1,8 +1,28 @@
+import { describe, it, expect } from 'vitest';
 import { addPost } from './addPost.js';
 import type { AddPostStep } from './types.js';
 
 describe('addPost', () => {
-    it('should create a basic post', () => {
+    it('should create a basic post with new variable names', () => {
+        const step: AddPostStep = {
+            step: 'addPost',
+            title: 'Test Post',
+            content: '<p>Test content</p>',
+            type: 'post'
+        };
+
+        const result = addPost(step);
+
+        expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('runPHP');
+        expect(result[0].code).toContain("'post_title'   => 'Test Post'");
+        expect(result[0].code).toContain("'post_content' => '<p>Test content</p>'");
+        expect(result[0].code).toContain("'post_type'    => 'post'");
+        expect(result[0].code).toContain("'post_status'  => 'publish'");
+    });
+
+    it('should create a basic post with deprecated variable names (backward compatibility)', () => {
         const step: AddPostStep = {
             step: 'addPost',
             postTitle: 'Test Post',
@@ -24,10 +44,10 @@ describe('addPost', () => {
     it('should handle custom post status', () => {
         const step: AddPostStep = {
             step: 'addPost',
-            postTitle: 'Draft Post',
-            postContent: '<p>Draft content</p>',
-            postType: 'post',
-            postStatus: 'draft'
+            title: 'Draft Post',
+            content: '<p>Draft content</p>',
+            type: 'post',
+            status: 'draft'
         };
 
         const result = addPost(step);
@@ -38,10 +58,10 @@ describe('addPost', () => {
     it('should include post date when provided', () => {
         const step: AddPostStep = {
             step: 'addPost',
-            postTitle: 'Scheduled Post',
-            postContent: '<p>Future content</p>',
-            postType: 'post',
-            postDate: '2024-12-25 10:00:00'
+            title: 'Scheduled Post',
+            content: '<p>Future content</p>',
+            type: 'post',
+            date: '2024-12-25 10:00:00'
         };
 
         const result = addPost(step);
@@ -52,9 +72,9 @@ describe('addPost', () => {
     it('should not include post date when not provided', () => {
         const step: AddPostStep = {
             step: 'addPost',
-            postTitle: 'Regular Post',
-            postContent: '<p>Regular content</p>',
-            postType: 'post'
+            title: 'Regular Post',
+            content: '<p>Regular content</p>',
+            type: 'post'
         };
 
         const result = addPost(step);
@@ -65,9 +85,9 @@ describe('addPost', () => {
     it('should set homepage when homepage flag is true', () => {
         const step: AddPostStep = {
             step: 'addPost',
-            postTitle: 'Home Page',
-            postContent: '<p>Welcome to our site</p>',
-            postType: 'page',
+            title: 'Home Page',
+            content: '<p>Welcome to our site</p>',
+            type: 'page',
             homepage: true
         };
 
@@ -80,9 +100,9 @@ describe('addPost', () => {
     it('should not set homepage when homepage flag is false', () => {
         const step: AddPostStep = {
             step: 'addPost',
-            postTitle: 'Regular Page',
-            postContent: '<p>Just a page</p>',
-            postType: 'page',
+            title: 'Regular Page',
+            content: '<p>Just a page</p>',
+            type: 'page',
             homepage: false
         };
 
@@ -95,9 +115,9 @@ describe('addPost', () => {
     it('should escape single quotes in title and content', () => {
         const step: AddPostStep = {
             step: 'addPost',
-            postTitle: "Title with 'single quotes'",
-            postContent: "<p>Content with 'quotes' here</p>",
-            postType: 'post'
+            title: "Title with 'single quotes'",
+            content: "<p>Content with 'quotes' here</p>",
+            type: 'post'
         };
 
         const result = addPost(step);
@@ -109,10 +129,10 @@ describe('addPost', () => {
     it('should escape single quotes in post date', () => {
         const step: AddPostStep = {
             step: 'addPost',
-            postTitle: 'Test Post',
-            postContent: '<p>Test content</p>',
-            postType: 'post',
-            postDate: "2024-01-01 12:00:00 O'Clock"
+            title: 'Test Post',
+            content: '<p>Test content</p>',
+            type: 'post',
+            date: "2024-01-01 12:00:00 O'Clock"
         };
 
         const result = addPost(step);
@@ -123,9 +143,9 @@ describe('addPost', () => {
     it('should handle custom post types', () => {
         const step: AddPostStep = {
             step: 'addPost',
-            postTitle: 'Custom Post',
-            postContent: '<p>Custom content</p>',
-            postType: 'custom_type'
+            title: 'Custom Post',
+            content: '<p>Custom content</p>',
+            type: 'custom_type'
         };
 
         const result = addPost(step);
@@ -133,26 +153,59 @@ describe('addPost', () => {
         expect(result[0].code).toContain("'post_type'    => 'custom_type'");
     });
 
+    it('should prefer new variable names over deprecated ones', () => {
+        const step: AddPostStep = {
+            step: 'addPost',
+            title: 'New Title',
+            content: '<p>New Content</p>',
+            type: 'post',
+            status: 'draft',
+            date: '2024-01-01',
+            postTitle: 'Old Title',
+            postContent: '<p>Old Content</p>',
+            postType: 'page',
+            postStatus: 'publish',
+            postDate: '2025-01-01'
+        };
+
+        const result = addPost(step);
+
+        expect(result[0].code).toContain("'post_title'   => 'New Title'");
+        expect(result[0].code).toContain("'post_content' => '<p>New Content</p>'");
+        expect(result[0].code).toContain("'post_type'    => 'post'");
+        expect(result[0].code).toContain("'post_status'  => 'draft'");
+        expect(result[0].code).toContain("strtotime('2024-01-01')");
+    });
+
     it('should have correct metadata', () => {
         expect(addPost.description).toBe('Add a post with title, content, type, status, and date.');
         expect(Array.isArray(addPost.vars)).toBe(true);
-        expect(addPost.vars).toHaveLength(6); // 5 vars + 1 button
+        expect(addPost.vars.length).toBeGreaterThan(6); // Now includes deprecated vars
 
-        const postTitleVar = addPost.vars.find(v => v.name === 'postTitle');
-        expect(postTitleVar).toBeDefined();
-        expect(postTitleVar.required).toBe(true);
+        // Check new variable names
+        const titleVar = addPost.vars.find(v => v.name === 'title');
+        expect(titleVar).toBeDefined();
+        expect(titleVar?.required).toBe(true);
+        expect(titleVar?.deprecated).toBeFalsy();
 
-        const postTypeVar = addPost.vars.find(v => v.name === 'postType');
-        expect(postTypeVar).toBeDefined();
-        expect(postTypeVar.required).toBe(true);
-        expect(postTypeVar.regex).toBe('^[a-z][a-z0-9_]+$');
+        const typeVar = addPost.vars.find(v => v.name === 'type');
+        expect(typeVar).toBeDefined();
+        expect(typeVar?.required).toBe(true);
+        expect(typeVar?.regex).toBe('^[a-z][a-z0-9_]+$');
 
-        const postStatusVar = addPost.vars.find(v => v.name === 'postStatus');
-        expect(postStatusVar).toBeDefined();
-        expect(postStatusVar.required).toBe(false);
+        const statusVar = addPost.vars.find(v => v.name === 'status');
+        expect(statusVar).toBeDefined();
+        expect(statusVar?.required).toBe(false);
 
-        const postDateVar = addPost.vars.find(v => v.name === 'postDate');
-        expect(postDateVar).toBeDefined();
-        expect(postDateVar.required).toBe(false);
+        const dateVar = addPost.vars.find(v => v.name === 'date');
+        expect(dateVar).toBeDefined();
+        expect(dateVar?.required).toBe(false);
+
+        // Check deprecated variables
+        const deprecatedTitleVar = addPost.vars.find(v => v.name === 'postTitle');
+        expect(deprecatedTitleVar?.deprecated).toBe(true);
+
+        const deprecatedTypeVar = addPost.vars.find(v => v.name === 'postType');
+        expect(deprecatedTypeVar?.deprecated).toBe(true);
     });
 });

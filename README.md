@@ -219,8 +219,8 @@ const blueprint = {
         },
         {
             step: 'addPage',
-            postTitle: 'Welcome',
-            postContent: '<p>Welcome to my site!</p>',
+            title: 'Welcome',
+            content: '<p>Welcome to my site!</p>',
             homepage: true
         }
     ]
@@ -256,8 +256,8 @@ This compiler takes WordPress Playground blueprints that use custom steps (like 
     },
     {
       "step": "addPage",
-      "postTitle": "Welcome Page",
-      "postContent": "<p>Welcome to my WordPress site!</p>",
+      "title": "Welcome Page",
+      "content": "<p>Welcome to my WordPress site!</p>",
       "homepage": false
     }
   ]
@@ -370,4 +370,4 @@ This library provides **44** total steps (8 built-in enhanced steps + 36 custom 
 - [`showAdminNotice`](docs/steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](docs/steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 
-*This list was automatically generated on 2025-09-05.*
+*This list was automatically generated on 2025-09-08.*

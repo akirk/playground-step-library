@@ -9,12 +9,12 @@ Add a WooCommerce product (will install WooCommerce if not present)
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `productTitle` | string | ✅ Yes | The title of the product |
-| `productDescription` | textarea | ✅ Yes | The description of the product |
-| `productPrice` | string | ❌ No | Regular price (without currency symbol) |
-| `productSalePrice` | string | ❌ No | Sale price (optional, must be less than regular price) |
-| `productSku` | string | ❌ No | Product SKU/code (optional) |
-| `productStatus` | string | ❌ No | Product status |
+| `title` | string | ✅ Yes | The title of the product |
+| `description` | textarea | ✅ Yes | The description of the product |
+| `price` | string | ❌ No | Regular price (without currency symbol) |
+| `salePrice` | string | ❌ No | Sale price (optional, must be less than regular price) |
+| `sku` | string | ❌ No | Product SKU/code (optional) |
+| `status` | string | ❌ No | Product status |
 
 
 ## Examples
@@ -23,12 +23,12 @@ Add a WooCommerce product (will install WooCommerce if not present)
 ```json
     {
           "step": "addProduct",
-          "productTitle": "Sample Product",
-          "productDescription": "<p>This is a great product!</p>",
-          "productPrice": "19.99",
-          "productSalePrice": "15.99",
-          "productSku": "PROD-001",
-          "productStatus": "publish"
+          "title": "Sample Product",
+          "description": "<p>This is a great product!</p>",
+          "price": "19.99",
+          "salePrice": "15.99",
+          "sku": "PROD-001",
+          "status": "publish"
     }
 ```
 
@@ -36,12 +36,12 @@ Add a WooCommerce product (will install WooCommerce if not present)
 ```json
 {
   "step": "addProduct",
-  "productTitle": "T-Shirt",
-  "productDescription": "<p>High quality item with excellent features.</p>",
-  "productPrice": "29.95",
-  "productSalePrice": "24.95",
-  "productSku": "SHIRT-RED-M",
-  "productStatus": "draft"
+  "title": "T-Shirt",
+  "description": "<p>High quality item with excellent features.</p>",
+  "price": "29.95",
+  "salePrice": "24.95",
+  "sku": "SHIRT-RED-M",
+  "status": "draft"
 }
 ```
 
@@ -52,12 +52,12 @@ Add a WooCommerce product (will install WooCommerce if not present)
   "steps": [
         {
           "step": "addProduct",
-          "productTitle": "Sample Product",
-          "productDescription": "<p>This is a great product!</p>",
-          "productPrice": "19.99",
-          "productSalePrice": "15.99",
-          "productSku": "PROD-001",
-          "productStatus": "publish"
+          "title": "Sample Product",
+          "description": "<p>This is a great product!</p>",
+          "price": "19.99",
+          "salePrice": "15.99",
+          "sku": "PROD-001",
+          "status": "publish"
     }
   ]
 }
@@ -73,18 +73,31 @@ const blueprint = {
   steps: [
         {
           "step": "addProduct",
-          "productTitle": "Sample Product",
-          "productDescription": "<p>This is a great product!</p>",
-          "productPrice": "19.99",
-          "productSalePrice": "15.99",
-          "productSku": "PROD-001",
-          "productStatus": "publish"
+          "title": "Sample Product",
+          "description": "<p>This is a great product!</p>",
+          "price": "19.99",
+          "salePrice": "15.99",
+          "sku": "PROD-001",
+          "status": "publish"
     }
   ]
 };
 
 const compiled = compiler.compile(blueprint);
 ```
+
+## Deprecated Parameters
+
+The following parameters are deprecated but still supported for backward compatibility:
+
+- `productTitle` → Use `title` instead
+- `productDescription` → Use `description` instead
+- `productPrice` → Use `price` instead
+- `productSalePrice` → Use `price` instead
+- `productSku` → Use `sku` instead
+- `productStatus` → Use `status` instead
+
+
 
 ---
 

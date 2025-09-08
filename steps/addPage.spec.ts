@@ -3,7 +3,26 @@ import { addPage } from './addPage.js';
 import type { AddPageStep } from './types.js';
 
 describe('addPage', () => {
-  it('should create a basic page', () => {
+  it('should create a basic page with new variable names', () => {
+    const step: AddPageStep = {
+      step: 'addPage',
+      title: 'Test Page',
+      content: '<p>Test content</p>'
+    };
+
+    const result = addPage(step);
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual({
+      step: 'runPHP',
+      code: expect.stringContaining("'post_title'   => 'Test Page'")
+    });
+    expect(result[0].code).toContain("'post_content' => '<p>Test content</p>'");
+    expect(result[0].code).toContain("'post_type'    => 'page'");
+    expect(result[0].code).not.toContain('update_option');
+  });
+
+  it('should create a basic page with deprecated variable names (backward compatibility)', () => {
     const step: AddPageStep = {
       step: 'addPage',
       postTitle: 'Test Page',
@@ -25,8 +44,8 @@ describe('addPage', () => {
   it('should set as homepage when homepage flag is true', () => {
     const step: AddPageStep = {
       step: 'addPage',
-      postTitle: 'Home Page',
-      postContent: '<p>Welcome home</p>',
+      title: 'Home Page',
+      content: '<p>Welcome home</p>',
       homepage: true
     };
 
@@ -40,8 +59,8 @@ describe('addPage', () => {
   it('should escape single quotes in title and content', () => {
     const step: AddPageStep = {
       step: 'addPage',
-      postTitle: "John's Page",
-      postContent: "<p>Here's some content</p>"
+      title: "John's Page",
+      content: "<p>Here's some content</p>"
     };
 
     const result = addPage(step);
@@ -50,12 +69,31 @@ describe('addPage', () => {
     expect(result[0].code).toContain("'post_content' => '<p>Here\\'s some content</p>'");
   });
 
+  it('should prefer new variable names over deprecated ones', () => {
+    const step: AddPageStep = {
+      step: 'addPage',
+      title: 'New Title',
+      content: '<p>New Content</p>',
+      postTitle: 'Old Title',
+      postContent: '<p>Old Content</p>'
+    };
+
+    const result = addPage(step);
+
+    expect(result[0].code).toContain("'post_title'   => 'New Title'");
+    expect(result[0].code).toContain("'post_content' => '<p>New Content</p>'");
+  });
+
   it('should have proper metadata', () => {
     expect(addPage.description).toBe("Add a page with title and content.");
-    expect(addPage.vars).toHaveLength(3);
+    expect(addPage.vars.length).toBeGreaterThan(3); // Now includes deprecated vars
 
-    const titleVar = addPage.vars.find(v => v.name === 'postTitle');
+    const titleVar = addPage.vars.find(v => v.name === 'title');
     expect(titleVar?.required).toBe(true);
+    expect(titleVar?.deprecated).toBeFalsy();
+
+    const deprecatedTitleVar = addPage.vars.find(v => v.name === 'postTitle');
+    expect(deprecatedTitleVar?.deprecated).toBe(true);
 
     const homepageVar = addPage.vars.find(v => v.name === 'homepage');
     expect(homepageVar?.type).toBe('boolean');

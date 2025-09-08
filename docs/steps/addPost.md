@@ -9,11 +9,11 @@ Add a post with title, content, type, status, and date.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `postTitle` | string | ✅ Yes | The title of the post |
-| `postContent` | textarea | ✅ Yes | The HTML of the post |
-| `postDate` | string | ❌ No | The date of the post (optional) |
-| `postType` | string | ✅ Yes | The post type |
-| `postStatus` | string | ❌ No | The post status |
+| `title` | string | ✅ Yes | The title of the post |
+| `content` | textarea | ✅ Yes | The HTML content of the post |
+| `date` | string | ❌ No | The date of the post (optional) |
+| `type` | string | ✅ Yes | The post type |
+| `status` | string | ❌ No | The post status |
 | `registerPostType` | button | ❌ No | Register custom post type if needed |
 
 
@@ -23,11 +23,11 @@ Add a post with title, content, type, status, and date.
 ```json
     {
           "step": "addPost",
-          "postTitle": "Hello World",
-          "postContent": "<p>Hello World</p>",
-          "postDate": "now",
-          "postType": "post",
-          "postStatus": "publish",
+          "title": "Hello World",
+          "content": "<p>Hello World</p>",
+          "date": "now",
+          "type": "post",
+          "status": "publish",
           "registerPostType": "example-value"
     }
 ```
@@ -36,11 +36,11 @@ Add a post with title, content, type, status, and date.
 ```json
 {
   "step": "addPost",
-  "postTitle": "Hello World",
-  "postContent": "<p>Hello World</p>",
-  "postDate": "2024-01-01 00:00:00",
-  "postType": "page",
-  "postStatus": "draft",
+  "title": "Hello World",
+  "content": "<p>Hello World</p>",
+  "date": "2024-01-01 00:00:00",
+  "type": "page",
+  "status": "draft",
   "registerPostType": "example-value"
 }
 ```
@@ -52,11 +52,11 @@ Add a post with title, content, type, status, and date.
   "steps": [
         {
           "step": "addPost",
-          "postTitle": "Hello World",
-          "postContent": "<p>Hello World</p>",
-          "postDate": "now",
-          "postType": "post",
-          "postStatus": "publish",
+          "title": "Hello World",
+          "content": "<p>Hello World</p>",
+          "date": "now",
+          "type": "post",
+          "status": "publish",
           "registerPostType": "example-value"
     }
   ]
@@ -73,11 +73,11 @@ const blueprint = {
   steps: [
         {
           "step": "addPost",
-          "postTitle": "Hello World",
-          "postContent": "<p>Hello World</p>",
-          "postDate": "now",
-          "postType": "post",
-          "postStatus": "publish",
+          "title": "Hello World",
+          "content": "<p>Hello World</p>",
+          "date": "now",
+          "type": "post",
+          "status": "publish",
           "registerPostType": "example-value"
     }
   ]
@@ -85,6 +85,18 @@ const blueprint = {
 
 const compiled = compiler.compile(blueprint);
 ```
+
+## Deprecated Parameters
+
+The following parameters are deprecated but still supported for backward compatibility:
+
+- `postTitle` → Use `title` instead
+- `postContent` → Use `content` instead
+- `postDate` → Use `date` instead
+- `postType` → Use `type` instead
+- `postStatus` → Use `status` instead
+
+
 
 ---
 

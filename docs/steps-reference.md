@@ -146,8 +146,8 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `postTitle` | string | ✅ Yes | The title of the post |
-| `postContent` | textarea | ✅ Yes | The HTML of the post |
+| `title` | string | ✅ Yes | The title of the page |
+| `content` | textarea | ✅ Yes | The HTML content of the page |
 | `homepage` | boolean | ❌ No | Set it as the Homepage |
 
 
@@ -156,8 +156,8 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "addPage",
-          "postTitle": "Hello World",
-          "postContent": "<p>Hello World</p>",
+          "title": "Hello World",
+          "content": "<p>Hello World</p>",
           "homepage": "true"
     }
 ```
@@ -172,11 +172,11 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `postTitle` | string | ✅ Yes | The title of the post |
-| `postContent` | textarea | ✅ Yes | The HTML of the post |
-| `postDate` | string | ❌ No | The date of the post (optional) |
-| `postType` | string | ✅ Yes | The post type |
-| `postStatus` | string | ❌ No | The post status |
+| `title` | string | ✅ Yes | The title of the post |
+| `content` | textarea | ✅ Yes | The HTML content of the post |
+| `date` | string | ❌ No | The date of the post (optional) |
+| `type` | string | ✅ Yes | The post type |
+| `status` | string | ❌ No | The post status |
 | `registerPostType` | button | ❌ No | Register custom post type if needed |
 
 
@@ -185,11 +185,11 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "addPost",
-          "postTitle": "Hello World",
-          "postContent": "<p>Hello World</p>",
-          "postDate": "now",
-          "postType": "post",
-          "postStatus": "publish",
+          "title": "Hello World",
+          "content": "<p>Hello World</p>",
+          "date": "now",
+          "type": "post",
+          "status": "publish",
           "registerPostType": "example-value"
     }
 ```
@@ -204,12 +204,12 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `productTitle` | string | ✅ Yes | The title of the product |
-| `productDescription` | textarea | ✅ Yes | The description of the product |
-| `productPrice` | string | ❌ No | Regular price (without currency symbol) |
-| `productSalePrice` | string | ❌ No | Sale price (optional, must be less than regular price) |
-| `productSku` | string | ❌ No | Product SKU/code (optional) |
-| `productStatus` | string | ❌ No | Product status |
+| `title` | string | ✅ Yes | The title of the product |
+| `description` | textarea | ✅ Yes | The description of the product |
+| `price` | string | ❌ No | Regular price (without currency symbol) |
+| `salePrice` | string | ❌ No | Sale price (optional, must be less than regular price) |
+| `sku` | string | ❌ No | Product SKU/code (optional) |
+| `status` | string | ❌ No | Product status |
 
 
 ### Example Usage
@@ -217,12 +217,12 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "addProduct",
-          "productTitle": "Sample Product",
-          "productDescription": "<p>This is a great product!</p>",
-          "productPrice": "19.99",
-          "productSalePrice": "15.99",
-          "productSku": "PROD-001",
-          "productStatus": "publish"
+          "title": "Sample Product",
+          "description": "<p>This is a great product!</p>",
+          "price": "19.99",
+          "salePrice": "15.99",
+          "sku": "PROD-001",
+          "status": "publish"
     }
 ```
 
@@ -1083,4 +1083,4 @@ This document provides detailed information about all available steps, including
 
 ---
 
-*Generated automatically on 2025-09-05.*
+*Generated automatically on 2025-09-08.*

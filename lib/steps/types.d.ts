@@ -13,6 +13,7 @@ export interface StepVariable {
     label?: string;
     onclick?: Function;
     regex?: string;
+    deprecated?: boolean;
 }
 export interface StepFunction<T extends BlueprintStep = BlueprintStep> {
     (step: T, blueprint?: any): any[];
@@ -21,10 +22,13 @@ export interface StepFunction<T extends BlueprintStep = BlueprintStep> {
     builtin?: boolean;
     count?: number;
     multiple?: boolean;
+    deprecated?: boolean;
 }
 export interface AddPageStep extends BlueprintStep {
-    postTitle: string;
-    postContent: string;
+    title?: string;
+    content?: string;
+    postTitle?: string;
+    postContent?: string;
     homepage?: boolean;
 }
 export interface SetSiteNameStep extends BlueprintStep {
@@ -115,10 +119,15 @@ export interface SetLandingPageStep extends BlueprintStep {
     landingPage: string;
 }
 export interface AddPostStep extends BlueprintStep {
-    postTitle: string;
-    postContent: string;
+    title?: string;
+    content?: string;
+    date?: string;
+    type: string;
+    status?: string;
+    postTitle?: string;
+    postContent?: string;
     postDate?: string;
-    postType: string;
+    postType?: string;
     postStatus?: string;
     homepage?: boolean;
 }
@@ -176,8 +185,14 @@ export interface AddMediaStep extends BlueprintStep {
     downloadUrl: string;
 }
 export interface AddProductStep extends BlueprintStep {
-    productTitle: string;
-    productDescription: string;
+    title?: string;
+    description?: string;
+    price?: string;
+    salePrice?: string;
+    sku?: string;
+    status?: string;
+    productTitle?: string;
+    productDescription?: string;
     productPrice?: string;
     productSalePrice?: string;
     productSku?: string;

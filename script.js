@@ -119,7 +119,10 @@ addEventListener('DOMContentLoaded', function () {
 		step.appendChild(vars);
 
 		if (data.vars) {
-			data.vars.forEach(function (v, k) {
+			data.vars.filter(function (v) {
+				// Skip deprecated variables
+				return !v.deprecated;
+			}).forEach(function (v, k) {
 				if (typeof v.show === 'function') {
 					if (typeof showCallbacks[data.step] === 'undefined') {
 						showCallbacks[data.step] = {};
@@ -300,6 +303,10 @@ addEventListener('DOMContentLoaded', function () {
 
 	for (const name in customSteps) {
 		const data = customSteps[name];
+		// Skip deprecated steps
+		if (data.deprecated) {
+			continue;
+		}
 		data.step = name;
 		const step = createStep(name, data);
 		stepList.appendChild(step);
