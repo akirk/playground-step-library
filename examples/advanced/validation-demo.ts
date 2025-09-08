@@ -1,15 +1,16 @@
 /**
  * Advanced Example: Blueprint Validation Demo
  * Shows validation features without starting WordPress
+ * Now demonstrates compile-time type safety with StepLibraryBlueprint
  */
 
-import { createRequire } from 'module';
-import PlaygroundStepLibrary from '../../lib/index';
+import PlaygroundStepLibrary from '../../lib/src/index';
+import type { StepLibraryBlueprint } from '../../steps/types';
 
 const compiler = new PlaygroundStepLibrary();
 
-// Valid blueprint
-const validBlueprint = {
+// Valid blueprint - TypeScript ensures this is correct at compile time
+const validBlueprint: StepLibraryBlueprint = {
   steps: [
     {
       step: 'setSiteName',
@@ -32,33 +33,47 @@ if (!validation1.valid) {
   console.log(`Error: ${validation1.error}`);
 }
 
-// Invalid blueprint - missing required field
-const invalidBlueprint = {
+// 🎯 TypeScript now prevents invalid blueprints at compile time!
+// These examples would cause TypeScript compilation errors:
+
+/*
+// ❌ This would fail TypeScript compilation - missing required 'postType' field
+const invalidBlueprint: StepLibraryBlueprint = {
   steps: [
     {
       step: 'addPost',
       postTitle: 'Missing Required Field',
       postContent: 'This post is missing postType'
-      // Missing required 'postType' field
+      // Missing required 'postType' field - TypeScript error!
     }
   ]
 };
+*/
 
-console.log('\n❌ Testing INVALID blueprint (missing required field):');
-const validation2 = compiler.validateBlueprint(invalidBlueprint);
-console.log(`Result: ${validation2.valid ? 'PASSED' : 'FAILED'}`);
-if (!validation2.valid) {
-  console.log(`Error: ${validation2.error}`);
-}
-
-// Invalid blueprint - malformed structure
-const malformedBlueprint = {
-  // Missing 'steps' array
-  invalidProperty: true
+/*
+// ❌ This would fail TypeScript compilation - missing 'steps' array
+const malformedBlueprint: StepLibraryBlueprint = {
+  invalidProperty: true  // TypeScript error - 'steps' is required!
 };
+*/
 
-console.log('\n❌ Testing MALFORMED blueprint (missing steps array):');
-const validation3 = compiler.validateBlueprint(malformedBlueprint);
+console.log('\n🛡️  TypeScript prevents invalid blueprints at compile time!');
+console.log('The above commented examples would cause compilation errors.');
+
+// ✅ Runtime validation is still useful for JSON strings or dynamic data
+const jsonString = JSON.stringify({
+  steps: [
+    {
+      step: 'addPost',
+      postTitle: 'From JSON',
+      postContent: 'This might be missing required fields'
+      // Missing 'postType' - will be caught at runtime
+    }
+  ]
+});
+
+console.log('\n📝 Testing runtime validation of JSON string:');
+const validation3 = compiler.validateBlueprint(jsonString);
 console.log(`Result: ${validation3.valid ? 'PASSED' : 'FAILED'}`);
 if (!validation3.valid) {
   console.log(`Error: ${validation3.error}`);

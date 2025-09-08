@@ -1,13 +1,11 @@
 import { stepsRegistry } from './steps-registry.js';
-
-interface StepVariable {
-    name: string;
-    description?: string;
-    required?: boolean;
-    type?: string;
-    samples?: string[];
-    regex?: string;
-}
+import type { 
+    StepVariable, 
+    StepFunction, 
+    BlueprintStep,
+    StepLibraryBlueprint
+} from '../steps/types.js';
+import type { Blueprint, StepDefinition } from '@wp-playground/blueprints';
 
 interface CustomStepDefinition {
     (step: BlueprintStep, inputData?: any): any[];
@@ -18,20 +16,6 @@ interface CustomStepDefinition {
     count?: number;
 }
 
-interface BlueprintStep {
-    step: string;
-    vars?: Record<string, any>;
-    count?: number;
-    [key: string]: any;
-}
-
-interface Blueprint {
-    steps?: BlueprintStep[];
-    title?: string;
-    landingPage?: string;
-    features?: Record<string, any>;
-    [key: string]: any;
-}
 
 interface ValidationResult {
     valid: boolean;
@@ -72,8 +56,8 @@ class PlaygroundStepLibrary {
      * Compile a blueprint by transforming custom steps into native steps
      * Uses the transformJson logic from script.js adapted for TypeScript
      */
-    compile(blueprint: Blueprint | string, options: CompileOptions = {}): Blueprint {
-        let inputData: Blueprint;
+    compile(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}): Blueprint {
+        let inputData: StepLibraryBlueprint;
 
         if (typeof blueprint === 'string') {
             inputData = JSON.parse(blueprint);
@@ -94,16 +78,24 @@ class PlaygroundStepLibrary {
 
         // Merge user defined options with input data
         inputData = Object.assign(userDefined, inputData);
-        const outputData: Blueprint = Object.assign({}, inputData);
+        // Create output blueprint with proper typing
+        const outputData: Blueprint = {
+            ...inputData,
+            steps: []
+        };
 
-        if ((outputData as any).title) {
+        if ('title' in outputData) {
             delete (outputData as any).title;
         }
 
-        outputData.steps = [] as BlueprintStep[];
-
-        inputData.steps!.forEach((step, index) => {
-            let outSteps: any[] = [];
+        inputData.steps!.forEach((stepItem, index) => {
+            // Filter out null, undefined, false values and strings
+            if (!stepItem || typeof stepItem !== 'object') {
+                return;
+            }
+            
+            const step = stepItem as BlueprintStep;
+            let outSteps: StepDefinition[] = [];
             
             // Support legacy format: if step has vars, flatten them to top level
             if (step.vars) {
@@ -117,11 +109,58 @@ class PlaygroundStepLibrary {
 
             step.stepIndex = index;
 
-            if (this.customSteps[step.step]) {
-                outSteps = this.customSteps[step.step](step, inputData);
-                if (typeof outSteps !== 'object') {
-                    outSteps = [];
+            // TypeScript discriminated union logic for step type determination
+            // Since interfaces are erased at runtime, we can't use instanceof with TypeScript interfaces.
+            // Instead, we use discriminated unions based on the properties that exist on the step object.
+            // For steps that have both custom and builtin variants (like installPlugin), we check
+            // for distinguishing properties:
+            // - Custom installPlugin: has 'url' property
+            // - Builtin installPlugin: has 'pluginData' property
+            // This allows TypeScript to narrow the type and lets us decide whether to transform
+            // the step using our custom functions or pass it through as a builtin step.
+            // Use discriminated union logic to determine step type
+            if (step.step === 'installPlugin') {
+                if ('url' in step) {
+                    // Custom installPlugin step - transform it
+                    outSteps = this.customSteps[step.step](step, inputData);
+                } else {
+                    // Builtin installPlugin step - pass through
+                    outSteps.push(step as StepDefinition);
                 }
+            } else if (step.step === 'installTheme') {
+                if ('url' in step) {
+                    // Custom installTheme step - transform it
+                    outSteps = this.customSteps[step.step](step, inputData);
+                } else {
+                    // Builtin installTheme step - pass through
+                    outSteps.push(step as StepDefinition);
+                }
+            } else if (step.step === 'defineWpConfigConst') {
+                if ('name' in step && 'value' in step) {
+                    // Custom defineWpConfigConst step - transform it
+                    outSteps = this.customSteps[step.step](step, inputData);
+                } else {
+                    // Builtin defineWpConfigConsts step - pass through
+                    outSteps.push(step as StepDefinition);
+                }
+            } else if (step.step === 'setSiteOptions') {
+                if ('name' in step && 'value' in step) {
+                    // Custom setSiteOptions step - transform it
+                    outSteps = this.customSteps[step.step](step, inputData);
+                } else {
+                    // Builtin setSiteOptions step - pass through
+                    outSteps.push(step as StepDefinition);
+                }
+            } else if (this.customSteps[step.step]) {
+                // For other custom steps (no builtin equivalent), always transform
+                outSteps = this.customSteps[step.step](step, inputData);
+            } else {
+                // Pure builtin step - pass through
+                outSteps.push(step as StepDefinition);
+            }
+
+            // Handle transformed step results
+            if (Array.isArray(outSteps) && outSteps.length > 0) {
                 if ((outSteps as any).landingPage) {
                     (outputData as any).landingPage = (outSteps as any).landingPage;
                 }
@@ -134,86 +173,34 @@ class PlaygroundStepLibrary {
                 if (step.count) {
                     outSteps = outSteps.slice(0, step.count);
                 }
-            } else {
-                outSteps.push(step);
-            }
 
-            for (let i = 0; i < outSteps.length; i++) {
-                if (typeof outSteps[i] !== 'object') {
-                    continue;
-                }
-
-                // Handle query params (removed from node environment)
-                if (typeof outSteps[i].queryParams === 'object') {
-                    delete outSteps[i].queryParams;
-                }
-
-                // Variable substitution
-                Object.keys(step).forEach(key => {
-                    if (key === 'step' || key === 'stepIndex') return;
-                    
-                    for (let j in outSteps[i]) {
-                        if (typeof outSteps[i][j] === 'object') {
-                            Object.keys(outSteps[i][j]).forEach(k => {
-                                if (typeof outSteps[i][j][k] === 'string' && outSteps[i][j][k].includes('${' + key + '}')) {
-                                    outSteps[i][j][k] = outSteps[i][j][k].replace('${' + key + '}', step[key]);
-                                }
-                            });
-                        } else if (typeof outSteps[i][j] === 'string' && outSteps[i][j].includes('${' + key + '}')) {
-                            outSteps[i][j] = outSteps[i][j].replace('${' + key + '}', step[key]);
-                        }
-                    }
-                });
-
-                // Remove unnecessary whitespace
-                for (let j in outSteps[i]) {
-                    if (typeof outSteps[i][j] === 'string') {
-                        outSteps[i][j] = outSteps[i][j].replace(/^\s+/g, '').replace(/\s+$/g, '').replace(/\n\s+/g, '\n');
-                    } else if (typeof outSteps[i][j] === 'object') {
-                        Object.keys(outSteps[i][j]).forEach(k => {
-                            if (typeof outSteps[i][j][k] === 'string') {
-                                outSteps[i][j][k] = outSteps[i][j][k].replace(/^\s+/g, '').replace(/\s+$/g, '').replace(/\n\s+/g, '\n');
-                            }
-                        });
-                    }
-                }
-            }
-
-            if (outSteps) {
+                // Process each step for variable substitution and cleanup
                 for (let i = 0; i < outSteps.length; i++) {
-                    // Deduplication logic
-                    if (outSteps[i].dedup === undefined || outSteps[i].dedup || outSteps[i].dedup === 'last') {
-                        let dedupIndex = -1;
-                        const dedupStep = outputData.steps!.find((step, index) => {
-                            for (let j in step) {
-                                if (outSteps[i][j] === undefined) {
-                                    return false;
-                                }
-                                if (typeof step[j] === 'object') {
-                                    if (JSON.stringify(step[j]) !== JSON.stringify(outSteps[i][j])) {
-                                        return false;
-                                    }
-                                } else if (step[j] !== outSteps[i][j]) {
-                                    return false;
-                                }
-                            }
-                            dedupIndex = index;
-                            return true;
-                        });
+                    const processedStep = { ...outSteps[i] } as any;
 
-                        if (outSteps[i].dedup === 'last' && dedupIndex !== -1) {
-                            outputData.steps!.splice(dedupIndex, 1);
-                        } else if (dedupStep) {
-                            continue;
-                        }
-                        if (outSteps[i].dedup) {
-                            delete outSteps[i].dedup;
-                        }
+                    // Handle query params (removed from node environment)
+                    if (typeof processedStep.queryParams === 'object') {
+                        delete processedStep.queryParams;
                     }
-                    outputData.steps!.push(outSteps[i]);
+
+                    // Variable substitution
+                    Object.keys(step).forEach(key => {
+                        if (key === 'step' || key === 'stepIndex') return;
+                        
+                        this.performVariableSubstitution(processedStep, key, step[key]);
+                    });
+
+                    // Remove unnecessary whitespace
+                    this.cleanupWhitespace(processedStep);
+
+                    // Add to output steps
+                    outputData.steps!.push(processedStep);
                 }
             }
         });
+
+        // Perform deduplication based on PHP comments
+        outputData.steps = this.deduplicateSteps(outputData.steps!);
 
         // Clean up output data
         if ((outputData as any).landingPage === '/') {
@@ -252,8 +239,8 @@ class PlaygroundStepLibrary {
     /**
      * Validate a blueprint structure
      */
-    validateBlueprint(blueprint: Blueprint | string): ValidationResult {
-        let parsedBlueprint: Blueprint;
+    validateBlueprint(blueprint: StepLibraryBlueprint | string): ValidationResult {
+        let parsedBlueprint: StepLibraryBlueprint;
 
         if (typeof blueprint === 'string') {
             try {
@@ -275,7 +262,14 @@ class PlaygroundStepLibrary {
 
         // Validate each step
         for (let i = 0; i < parsedBlueprint.steps!.length; i++) {
-            const step: BlueprintStep = parsedBlueprint.steps![i];
+            const stepItem = parsedBlueprint.steps![i];
+            
+            // Skip null, undefined, false values and strings
+            if (!stepItem || typeof stepItem !== 'object') {
+                continue;
+            }
+            
+            const step = stepItem as BlueprintStep;
 
             if (!step.step || typeof step.step !== 'string') {
                 return { valid: false, error: `Step ${i} must have a 'step' property with step name` };
@@ -300,6 +294,91 @@ class PlaygroundStepLibrary {
         }
 
         return { valid: true };
+    }
+
+    /**
+     * Helper method for variable substitution in step properties
+     */
+    private performVariableSubstitution(obj: any, key: string, value: any): void {
+        for (let prop in obj) {
+            if (typeof obj[prop] === 'object' && obj[prop] !== null) {
+                Object.keys(obj[prop]).forEach(k => {
+                    if (typeof obj[prop][k] === 'string' && obj[prop][k].includes('${' + key + '}')) {
+                        obj[prop][k] = obj[prop][k].replace('${' + key + '}', value);
+                    }
+                });
+            } else if (typeof obj[prop] === 'string' && obj[prop].includes('${' + key + '}')) {
+                obj[prop] = obj[prop].replace('${' + key + '}', value);
+            }
+        }
+    }
+
+    /**
+     * Helper method to clean up whitespace in step properties
+     */
+    private cleanupWhitespace(obj: any): void {
+        for (let prop in obj) {
+            if (typeof obj[prop] === 'string') {
+                obj[prop] = obj[prop].replace(/^\s+/g, '').replace(/\s+$/g, '').replace(/\n\s+/g, '\n');
+            } else if (typeof obj[prop] === 'object' && obj[prop] !== null) {
+                Object.keys(obj[prop]).forEach(k => {
+                    if (typeof obj[prop][k] === 'string') {
+                        obj[prop][k] = obj[prop][k].replace(/^\s+/g, '').replace(/\s+$/g, '').replace(/\n\s+/g, '\n');
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * Deduplicates steps based on PHP comment strategies
+     */
+    private deduplicateSteps(steps: Array<StepDefinition | string | undefined | false | null>): Array<StepDefinition | string | undefined | false | null> {
+        const result: Array<StepDefinition | string | undefined | false | null> = [];
+        const seenSteps = new Map<string, number[]>(); // JSON string -> array of indices
+
+        // First pass: collect all steps and their positions
+        steps.forEach((stepItem, index) => {
+            if (!stepItem || typeof stepItem !== 'object') {
+                result.push(stepItem);
+                return;
+            }
+
+            const stepJson = JSON.stringify(stepItem);
+            if (!seenSteps.has(stepJson)) {
+                seenSteps.set(stepJson, []);
+            }
+            seenSteps.get(stepJson)!.push(index);
+            result.push(stepItem);
+        });
+
+        // Second pass: handle duplicates based on dedup strategy
+        const toRemove = new Set<number>();
+
+        seenSteps.forEach((indices, stepJson) => {
+            if (indices.length > 1) {
+                const step = JSON.parse(stepJson) as any;
+                const hasKeepLastStrategy = step.step === 'runPHP' && 
+                    step.code && 
+                    typeof step.code === 'string' && 
+                    step.code.includes('// DEDUP_STRATEGY: keep_last');
+
+                if (hasKeepLastStrategy) {
+                    // Keep last, remove all previous duplicates
+                    for (let i = 0; i < indices.length - 1; i++) {
+                        toRemove.add(indices[i]);
+                    }
+                } else {
+                    // Default: keep first, remove all following duplicates
+                    for (let i = 1; i < indices.length; i++) {
+                        toRemove.add(indices[i]);
+                    }
+                }
+            }
+        });
+
+        // Return filtered result
+        return result.filter((_, index) => !toRemove.has(index));
     }
 }
 

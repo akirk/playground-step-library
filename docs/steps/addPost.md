@@ -1,6 +1,6 @@
 # `addPost` Step
 
-Add a post.
+Add a post with title, content, type, status, and date.
 
 ## Type
 ⚡ **Custom Step**

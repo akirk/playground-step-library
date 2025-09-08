@@ -1,3 +1,4 @@
+import type { StepDefinition, BlueprintDeclaration as WPBlueprintDeclaration } from '@wp-playground/blueprints';
 export interface BlueprintStep {
     step: string;
     [key: string]: any;
@@ -201,4 +202,9 @@ export interface GithubImportExportWxrStep extends BlueprintStep {
     filename?: string;
     targetUrl?: string;
 }
+export type StepLibraryStepDefinition = StepDefinition | AddPageStep | SetSiteNameStep | SetLanguageStep | SampleContentStep | CreateUserStep | RunPHPStep | RunWpCliCommandStep | DeleteAllPostsStep | InstallPhEditorStep | SkipWooCommerceWizardStep | DisableWelcomeGuidesStep | RenameDefaultCategoryStep | SetSiteOptionStep | ChangeAdminColorSchemeStep | ShowAdminNoticeStep | RemoveDashboardWidgetsStep | FakeHttpResponseStep | DefineWpConfigConstStep | DoActionStep | AddClientRoleStep | LoginStep | AddCorsProxyStep | InstallPhpLiteAdminStep | SetLandingPageStep | AddPostStep | EnableMultisiteStep | JetpackOfflineModeStep | SetTT4HomepageStep | AddFilterStep | GithubPluginStep | GithubPluginReleaseStep | InstallPluginStep | InstallThemeStep | GithubThemeStep | ImportWordPressComExportStep | ImportWxrStep | ImportWxrFromUrlStep | ImportFriendFeedsStep | AddMediaStep | AddProductStep | CustomPostTypeStep | MuPluginStep | BlueprintRecorderStep | BlueprintExtractorStep | GithubImportExportWxrStep;
+export interface StepLibraryBlueprintDeclaration extends Omit<WPBlueprintDeclaration, 'steps'> {
+    steps?: Array<StepLibraryStepDefinition | string | undefined | false | null>;
+}
+export type StepLibraryBlueprint = StepLibraryBlueprintDeclaration;
 //# sourceMappingURL=types.d.ts.map

@@ -1,14 +1,15 @@
 /**
  * Advanced Example: Compilation Only Demo
  * Shows the compilation process without starting WordPress
+ * Now supports both custom Step Library steps and builtin WP Playground steps
  */
 
-import { createRequire } from 'module';
-import PlaygroundStepLibrary from '../../lib/index';
+import PlaygroundStepLibrary from '../../lib/src/index';
+import type { StepLibraryBlueprint } from '../../steps/types';
 
 const compiler = new PlaygroundStepLibrary();
 
-const blueprint = {
+const blueprint: StepLibraryBlueprint = {
   steps: [
     {
       step: 'setSiteName',

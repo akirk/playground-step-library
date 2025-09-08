@@ -4,7 +4,7 @@
  */
 
 import { runCLI, RunCLIServer } from '@wp-playground/cli';
-import PlaygroundStepLibrary from '../../lib/index';
+import PlaygroundStepLibrary from '../../lib/src/index';
 
 const compiler = new PlaygroundStepLibrary();
 

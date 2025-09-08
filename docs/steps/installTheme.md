@@ -1,6 +1,6 @@
 # `installTheme` Step
 
-Install a theme via WordPress.org or Github
+Install a theme via WordPress.org or Github.
 
 ## Type
 🔧 **Built-in Step**

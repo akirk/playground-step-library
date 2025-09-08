@@ -326,9 +326,9 @@ This library provides **44** total steps (8 built-in enhanced steps + 36 custom 
 - [`defineWpConfigConst`](docs/steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
 - [`enableMultisite`](docs/steps/enableMultisite.md) - Enable WordPress Multisite functionality.
 - [`importWxr`](docs/steps/importWxr.md) - Import a WXR from a URL.
-- [`installPlugin`](docs/steps/installPlugin.md) - Install a plugin via WordPress.org or Github
-- [`installTheme`](docs/steps/installTheme.md) - Install a theme via WordPress.org or Github
-- [`login`](docs/steps/login.md) - Login to the site
+- [`installPlugin`](docs/steps/installPlugin.md) - Install a plugin via WordPress.org or Github.
+- [`installTheme`](docs/steps/installTheme.md) - Install a theme via WordPress.org or Github.
+- [`login`](docs/steps/login.md) - Login to the site.
 - [`runPHP`](docs/steps/runPHP.md) - Run code in the context of WordPress.
 - [`setSiteOption`](docs/steps/setSiteOption.md) - Set a site option.
 
@@ -337,8 +337,8 @@ This library provides **44** total steps (8 built-in enhanced steps + 36 custom 
 - [`addCorsProxy`](docs/steps/addCorsProxy.md) - Automatically add the CORS proxy to outgoing HTTP requests.
 - [`addFilter`](docs/steps/addFilter.md) - Easily add a filtered value.
 - [`addMedia`](docs/steps/addMedia.md) - Add files to the media library.
-- [`addPage`](docs/steps/addPage.md) - Add a custom page.
-- [`addPost`](docs/steps/addPost.md) - Add a post.
+- [`addPage`](docs/steps/addPage.md) - Add a page with title and content.
+- [`addPost`](docs/steps/addPost.md) - Add a post with title, content, type, status, and date.
 - [`addProduct`](docs/steps/addProduct.md) - Add a WooCommerce product (will install WooCommerce if not present)
 - [`blueprintExtractor`](docs/steps/blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
 - [`blueprintRecorder`](docs/steps/blueprintRecorder.md) - Record steps made and compile a new blueprint.

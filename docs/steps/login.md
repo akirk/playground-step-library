@@ -1,6 +1,6 @@
 # `login` Step
 
-Login to the site
+Login to the site.
 
 ## Type
 🔧 **Built-in Step**
