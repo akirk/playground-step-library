@@ -82,6 +82,7 @@ showAdminNotice.vars = Object.entries({
 	type: {
 		description: "The type of notice",
 		type: "select",
+		options: ["success", "error", "warning", "info"],
 		samples: ["success"]
 	},
 	dismissible: {
