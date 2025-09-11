@@ -1,1 +1,0 @@
-{"version":3,"file":"deleteAllPosts.js","sourceRoot":"","sources":["../../steps/deleteAllPosts.ts"],"names":[],"mappings":"AAEA,MAAM,CAAC,MAAM,cAAc,GAAqC,CAAC,IAAwB,EAAE,EAAE;IAC5F,OAAO;QACN;YACC,MAAM,EAAE,QAAQ;YAChB,MAAM,EAAE;;;;;;CAMV;SACE;KACD,CAAC;AACH,CAAC,CAAC;AAEF,cAAc,CAAC,WAAW,GAAG,iEAAiE,CAAC;AAC/F,cAAc,CAAC,IAAI,GAAG,EAAE,CAAC"}

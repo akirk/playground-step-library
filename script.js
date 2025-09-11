@@ -1148,9 +1148,22 @@ addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
+	// Detect if page was accessed via reload (F5, Ctrl+R, etc.)
+	// Use modern Performance Navigation API
+	const pageAccessedByReload = (() => {
+		try {
+			const navigationEntry = performance.getEntriesByType('navigation')[0];
+			return navigationEntry && navigationEntry.type === 'reload';
+		} catch (e) {
+			// Fallback: check if document.referrer is the same as current URL
+			// This catches most reload cases across browsers
+			return document.referrer === window.location.href;
+		}
+	})();
+
 	if (location.hash) {
 		restoreState(uncompressState(location.hash.replace(/^#+/, '')));
-		if (!document.getElementById('preview-mode').value && blueprintSteps.querySelectorAll('.step').length) {
+		if (!document.getElementById('preview-mode').value && blueprintSteps.querySelectorAll('.step').length && !pageAccessedByReload) {
 			autoredirect();
 		}
 	} else {

@@ -1,7 +1,7 @@
 import type { StepFunction, InstallPhpLiteAdminStep } from './types.js';
 
 export const installPhpLiteAdmin: StepFunction<InstallPhpLiteAdminStep> = (step: InstallPhpLiteAdminStep) => {
-	const steps = [
+	const steps: any = [
 		{
 			"step": "mkdir",
 			"path": "/wordpress/wp-content/mu-plugins",
@@ -43,7 +43,6 @@ $directory = false;
 			}
 		}
 	];
-	(steps as any).landingPage = "/phpliteadmin.php";
 	return steps;
 };
 

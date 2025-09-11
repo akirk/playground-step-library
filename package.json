@@ -14,14 +14,13 @@
     "test:watch": "vitest",
     "docs:generate": "node bin/generate-docs.js",
     "prepare": "npm run build && npm run docs:generate",
-    "dev": "tsc --watch",
-    "serve": "http-server -p 8127 -o index.html"
+    "dev": "tsc --watch & vite"
   },
   "devDependencies": {
     "@types/node": "^20.19.13",
     "@wp-playground/blueprints": "^2.0.16",
-    "http-server": "^14.1.1",
     "typescript": "^5.0.0",
+    "vite": "^7.1.5",
     "vitest": "^3.2.4"
   },
   "keywords": [
