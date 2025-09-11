@@ -352,3 +352,11 @@ export interface StepLibraryBlueprintDeclaration extends Omit<WPBlueprintDeclara
 }
 
 export type StepLibraryBlueprint = StepLibraryBlueprintDeclaration;
+export interface GenerateProductsStep extends BlueprintStep {
+	count?: number;
+	orders?: number;
+	customers?: number;
+	coupons?: number;
+	categories?: number;
+}
+
