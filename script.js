@@ -1003,10 +1003,76 @@ addEventListener('DOMContentLoaded', function () {
 		}, 50);
 	}
 
+	function migrateState(state) {
+		if (!state || !state.steps) {
+			return state;
+		}
+
+		// Migration rules for variable name changes
+		const variableMigrations = {
+			'addPage': {
+				'postTitle': 'title',
+				'postContent': 'content'
+			},
+			'addPost': {
+				'postTitle': 'title',
+				'postContent': 'content',
+				'postDate': 'date',
+				'postType': 'type',
+				'postStatus': 'status'
+			},
+			'addProduct': {
+				'productTitle': 'title',
+				'productDescription': 'description',
+				'productPrice': 'price',
+				'productSalePrice': 'salePrice',
+				'productSku': 'sku',
+				'productStatus': 'status'
+			}
+			// Add more step migrations here as needed
+			// 'stepName': {
+			//     'oldVarName': 'newVarName'
+			// }
+		};
+
+		// Apply migrations to each step
+		state.steps = state.steps.map(function(step) {
+			if (!step.vars || !variableMigrations[step.step]) {
+				return step;
+			}
+
+			const migrations = variableMigrations[step.step];
+			const migratedVars = {};
+
+			// Copy existing vars and apply migrations
+			Object.keys(step.vars).forEach(function(varName) {
+				if (migrations[varName]) {
+					// Migrate old variable name to new name
+					const newVarName = migrations[varName];
+					migratedVars[newVarName] = step.vars[varName];
+					console.info('Migrated variable "' + varName + '" to "' + newVarName + '" in step "' + step.step + '"');
+				} else {
+					// Keep existing variable
+					migratedVars[varName] = step.vars[varName];
+				}
+			});
+
+			return {
+				...step,
+				vars: migratedVars
+			};
+		});
+
+		return state;
+	}
+
 	function restoreState(state) {
 		if (!state) {
 			return;
 		}
+
+		// Apply migrations before restoring
+		state = migrateState(state);
 		if (state.title) {
 			document.getElementById('title').value = state.title;
 		}
@@ -1082,6 +1148,10 @@ addEventListener('DOMContentLoaded', function () {
 					return;
 				}
 				const input = stepBlock.querySelector('[name="' + key + '"]');
+				if (!input) {
+					console.warn('Step "' + step.step + '" is missing variable "' + key + '" - step definition may have changed');
+					return;
+				}
 				if (Array.isArray(step.vars[key])) {
 					step.vars[key].forEach(function (value, index) {
 						if (!value) {
@@ -1094,6 +1164,10 @@ addEventListener('DOMContentLoaded', function () {
 							vars.parentNode.appendChild(clone);
 						}
 						const input = stepBlock.querySelectorAll('[name="' + key + '"]')[index];
+						if (!input) {
+							console.warn('Step "' + step.step + '" is missing variable "' + key + '" at index ' + index + ' - step definition may have changed');
+							return;
+						}
 						if ('checkbox' === input.type) {
 							input.checked = value === 'true' || value === true;
 						} else {
