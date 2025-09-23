@@ -16,11 +16,35 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 			});
 		}
 
-		return githubPlugin({
+		const githubSteps = githubPlugin({
 			step: 'githubPlugin',
 			url: step.url,
 			prs: step.prs
 		});
+
+		// If branch is known, automatically add activatePlugin step
+		if (urlTest.groups!.branch) {
+			const repo = urlTest.groups!.repo;
+			const branch = urlTest.groups!.branch;
+			const directory = urlTest.groups!.directory;
+
+			let pluginPath;
+			if (directory) {
+				// For subdirectory plugins, use the lowest directory name
+				const dirBasename = directory.replace(/\/+$/, '').replace(/^\/+/, '').split('/').pop();
+				pluginPath = `/wordpress/wp-content/plugins/${dirBasename}/${repo}.php`;
+			} else {
+				// Standard case: repo-branch/repo.php
+				pluginPath = `/wordpress/wp-content/plugins/${repo}-${branch}/${repo}.php`;
+			}
+
+			githubSteps.push({
+				step: 'activatePlugin',
+				pluginPath: pluginPath
+			});
+		}
+
+		return githubSteps;
 	}
 	let plugin = step.url;
 	urlTest = /^https:\/\/wordpress.org\/plugins\/(?<slug>[^\/]+)/.exec(step.url);
