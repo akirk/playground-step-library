@@ -160,7 +160,8 @@ class PlaygroundStepLibrary {
             }
 
             // Handle transformed step results
-            if (Array.isArray(outSteps) && outSteps.length > 0) {
+            if (Array.isArray(outSteps)) {
+                // Check for blueprint-level properties even on empty arrays
                 if ((outSteps as any).landingPage) {
                     (outputData as any).landingPage = (outSteps as any).landingPage;
                 }
@@ -170,32 +171,36 @@ class PlaygroundStepLibrary {
                 if ((outSteps as any).login) {
                     (outputData as any).login = (outSteps as any).login;
                 }
-                if (step.count) {
-                    outSteps = outSteps.slice(0, step.count);
-                }
 
-                // Process each step for variable substitution and cleanup
-                for (let i = 0; i < outSteps.length; i++) {
-                    const processedStep = { ...outSteps[i] } as any;
+                // Only process steps if there are any
+		if (outSteps.length > 0) {
+			if (step.count) {
+				outSteps = outSteps.slice(0, step.count);
+			}
 
-                    // Handle query params (removed from node environment)
-                    if (typeof processedStep.queryParams === 'object') {
-                        delete processedStep.queryParams;
-                    }
+			// Process each step for variable substitution and cleanup
+			for (let i = 0; i < outSteps.length; i++) {
+				const processedStep = { ...outSteps[i] } as any;
 
-                    // Variable substitution
-                    Object.keys(step).forEach(key => {
-                        if (key === 'step' || key === 'stepIndex') return;
-                        
-                        this.performVariableSubstitution(processedStep, key, step[key]);
-                    });
+				// Handle query params (removed from node environment)
+				if (typeof processedStep.queryParams === 'object') {
+					delete processedStep.queryParams;
+				}
 
-                    // Remove unnecessary whitespace
-                    this.cleanupWhitespace(processedStep);
+				// Variable substitution
+				Object.keys(step).forEach(key => {
+						if (key === 'step' || key === 'stepIndex') return;
 
-                    // Add to output steps
-                    outputData.steps!.push(processedStep);
-                }
+						this.performVariableSubstitution(processedStep, key, step[key]);
+						});
+
+				// Remove unnecessary whitespace
+				this.cleanupWhitespace(processedStep);
+
+				// Add to output steps
+				outputData.steps!.push(processedStep);
+			}
+		}
             }
         });
 
