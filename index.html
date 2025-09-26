@@ -25,6 +25,7 @@
 					<option value="bottom">Preview Bottom</option>
 					<option value="right">Preview Right</option>
 				</select>
+				<button id="wizard-mode-toggle">🪄 Wizard Mode</button>
 				<a href="#" id="playground-link-top" target="_blank">Launch in Playground</a>
 				<button id="copy-playground-link-top">⧉</button>
 			</span>
@@ -107,6 +108,138 @@
 
 		<div id="split-view-container" style="display: none;">
 			<iframe id="playground-iframe" src="" frameborder="0"></iframe>
+		</div>
+	</div>
+
+	<div id="wizard-container" style="display: none;">
+		<div id="wizard-header">
+			<div id="wizard-progress">
+				<div class="wizard-step-indicator active" data-step="1">
+					<span class="step-number">1</span>
+					<span class="step-title">Plugins & Themes</span>
+				</div>
+				<div class="wizard-step-indicator" data-step="2">
+					<span class="step-number">2</span>
+					<span class="step-title">Content & Setup</span>
+				</div>
+				<div class="wizard-step-indicator" data-step="3">
+					<span class="step-number">3</span>
+					<span class="step-title">Configure</span>
+				</div>
+				<div class="wizard-step-indicator" data-step="4">
+					<span class="step-number">4</span>
+					<span class="step-title">Name & Launch</span>
+				</div>
+			</div>
+			<button id="wizard-close">✕ Exit Wizard</button>
+		</div>
+
+		<div id="wizard-content">
+			<!-- Step 1: Plugins & Themes -->
+			<div class="wizard-step" id="wizard-step-1">
+				<h2>🔌 What plugins and themes would you like?</h2>
+				<p>Enter the URLs or WordPress.org slugs for plugins and themes you want to install.</p>
+
+				<div class="wizard-step-categories">
+					<div class="wizard-category">
+						<h3>🔌 Plugins</h3>
+						<div class="wizard-url-input-group">
+							<div class="wizard-form-group">
+								<input type="text" id="plugin-url-input" placeholder="e.g., woocommerce, jetpack, or github URL..." />
+								<button type="button" id="add-plugin-btn">Add Plugin</button>
+							</div>
+							<small>Enter WordPress.org plugin slug (e.g., "woocommerce") or full GitHub URL</small>
+						</div>
+						<div class="wizard-selected-items">
+							<h4>Selected Plugins</h4>
+							<div id="wizard-selected-plugins"></div>
+						</div>
+					</div>
+
+					<div class="wizard-category">
+						<h3>🎨 Themes</h3>
+						<div class="wizard-url-input-group">
+							<div class="wizard-form-group">
+								<input type="text" id="theme-url-input" placeholder="e.g., twentytwentyfour, or github URL..." />
+								<button type="button" id="add-theme-btn">Add Theme</button>
+							</div>
+							<small>Enter WordPress.org theme slug (e.g., "twentytwentyfour") or full GitHub URL</small>
+						</div>
+						<div class="wizard-selected-items">
+							<h4>Selected Themes</h4>
+							<div id="wizard-selected-themes"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Step 2: Content & Setup -->
+			<div class="wizard-step" id="wizard-step-2" style="display: none;">
+				<h2>📁 What content and setup do you need?</h2>
+				<p>Choose additional features like user accounts, file uploads, or advanced configuration.</p>
+
+				<div class="wizard-step-categories">
+					<div class="wizard-category">
+						<h3>📁 Content & Files</h3>
+						<div class="wizard-step-grid" id="wizard-content-steps"></div>
+					</div>
+					<div class="wizard-category">
+						<h3>⚙️ Site Configuration</h3>
+						<div class="wizard-step-grid" id="wizard-config-steps"></div>
+					</div>
+					<div class="wizard-category">
+						<h3>🛠️ Advanced Features</h3>
+						<div class="wizard-step-grid" id="wizard-advanced-steps"></div>
+					</div>
+				</div>
+
+				<div class="wizard-selected-steps">
+					<h3>Selected Features</h3>
+					<div id="wizard-selected-list-2"></div>
+				</div>
+			</div>
+
+			<!-- Step 3: Configure -->
+			<div class="wizard-step" id="wizard-step-3" style="display: none;">
+				<h2>⚙️ Configure Your Steps</h2>
+				<p>Let's set up the details for each step you've selected.</p>
+
+				<div id="wizard-configuration-area">
+					<!-- Step configurations will be inserted here -->
+				</div>
+			</div>
+
+			<!-- Step 4: Name & Launch -->
+			<div class="wizard-step" id="wizard-step-4" style="display: none;">
+				<h2>✓ Name your blueprint and apply!</h2>
+				<p>Give your blueprint a title and we'll add everything to the blueprint builder.</p>
+
+				<div class="wizard-form-group">
+					<label for="wizard-title">What title do you want to give this blueprint?</label>
+					<input type="text" id="wizard-title" placeholder="My WordPress Setup" />
+					<small>This helps you identify your blueprint later</small>
+				</div>
+
+				<div class="wizard-summary">
+					<div class="wizard-summary-section">
+						<h3>📋 Summary</h3>
+						<div id="wizard-summary-all"></div>
+					</div>
+					<div class="wizard-summary-section">
+						<h3>🗂️ Blueprint Preview</h3>
+						<textarea id="wizard-final-blueprint" readonly></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="wizard-navigation">
+			<button id="wizard-prev" disabled>← Previous</button>
+			<div id="wizard-step-info">
+				<span id="wizard-current-step">1</span> of <span id="wizard-total-steps">4</span>
+			</div>
+			<button id="wizard-next">Next →</button>
+			<button id="wizard-finish" style="display: none;">✓ Apply to Builder</button>
 		</div>
 	</div>
 

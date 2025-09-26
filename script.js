@@ -1352,4 +1352,664 @@ addEventListener('DOMContentLoaded', function () {
 		loadCombinedExamples();
 	});
 	document.getElementById('filter').value = '';
+
+	// Wizard Mode Implementation
+	const wizardState = {
+		currentStep: 1,
+		totalSteps: 4,
+		selectedSteps: [],
+		selectedPlugins: [],
+		selectedThemes: [],
+		projectTitle: '',
+		projectDescription: '',
+		stepConfigurations: {}
+	};
+
+	const stepCategories = {
+		plugin: ['installPlugin'],
+		theme: ['installTheme'],
+		content: ['uploadFile', 'writeFile', 'cp', 'mkdir', 'importWxr', 'unzipFile'],
+		config: ['defineWpConfigConsts', 'createUser', 'enableMultisite', 'setLandingPage', 'setSiteOptions'],
+		advanced: ['runPHP', 'runSQL', 'runShell', 'addFilter', 'importFriendFeeds']
+	};
+
+	// Step 2 categories (separate from step 1)
+	const step2SelectedSteps = [];
+
+	function initWizard() {
+		populateWizardSteps();
+		updateWizardProgress();
+		setupWizardEventListeners();
+	}
+
+	function populateWizardSteps() {
+		// Step 1 now uses URL inputs, so we only populate Step 2
+		// Populate Step 2: Content, Config, Advanced
+		['content', 'config', 'advanced'].forEach(category => {
+			const container = document.getElementById(`wizard-${category}-steps`);
+			if (!container) return;
+
+			stepCategories[category].forEach(stepName => {
+				if (customSteps[stepName]) {
+					const card = createWizardStepCard(stepName, customSteps[stepName], 2);
+					container.appendChild(card);
+				}
+			});
+		});
+
+		// Initialize plugin and theme lists
+		updateWizardPluginList();
+		updateWizardThemeList();
+	}
+
+	function createWizardStepCard(stepName, stepData, wizardStep) {
+		const card = document.createElement('div');
+		card.className = 'wizard-step-card';
+		card.dataset.step = stepName;
+		card.dataset.wizardStep = wizardStep;
+
+		const title = document.createElement('h4');
+		title.textContent = stepData.name || stepName;
+		card.appendChild(title);
+
+		if (stepData.description) {
+			const description = document.createElement('p');
+			description.textContent = stepData.description;
+			card.appendChild(description);
+		}
+
+		card.addEventListener('click', () => toggleWizardStep(stepName, card, wizardStep));
+
+		return card;
+	}
+
+	function toggleWizardStep(stepName, card, wizardStep) {
+		if (wizardStep === 1) {
+			const isSelected = wizardState.selectedSteps.includes(stepName);
+			if (isSelected) {
+				wizardState.selectedSteps = wizardState.selectedSteps.filter(s => s !== stepName);
+				card.classList.remove('selected');
+				delete wizardState.stepConfigurations[stepName];
+			} else {
+				wizardState.selectedSteps.push(stepName);
+				card.classList.add('selected');
+			}
+			updateWizardSelectedList();
+		} else if (wizardStep === 2) {
+			const isSelected = step2SelectedSteps.includes(stepName);
+			if (isSelected) {
+				step2SelectedSteps.splice(step2SelectedSteps.indexOf(stepName), 1);
+				card.classList.remove('selected');
+				delete wizardState.stepConfigurations[stepName];
+			} else {
+				step2SelectedSteps.push(stepName);
+				card.classList.add('selected');
+			}
+			updateWizardSelectedList2();
+		}
+	}
+
+	function updateWizardPluginList() {
+		const container = document.getElementById('wizard-selected-plugins');
+		container.innerHTML = '';
+
+		if (wizardState.selectedPlugins.length === 0) {
+			container.innerHTML = '<div class="empty-state">No plugins added yet</div>';
+			return;
+		}
+
+		wizardState.selectedPlugins.forEach((pluginUrl, index) => {
+			const item = document.createElement('div');
+			item.className = 'wizard-url-item';
+
+			item.innerHTML = `
+				<span class="url-text">${pluginUrl}</span>
+				<span class="remove" onclick="removeWizardPlugin(${index})">×</span>
+			`;
+
+			container.appendChild(item);
+		});
+	}
+
+	function updateWizardThemeList() {
+		const container = document.getElementById('wizard-selected-themes');
+		container.innerHTML = '';
+
+		if (wizardState.selectedThemes.length === 0) {
+			container.innerHTML = '<div class="empty-state">No themes added yet</div>';
+			return;
+		}
+
+		wizardState.selectedThemes.forEach((themeUrl, index) => {
+			const item = document.createElement('div');
+			item.className = 'wizard-url-item';
+
+			item.innerHTML = `
+				<span class="url-text">${themeUrl}</span>
+				<span class="remove" onclick="removeWizardTheme(${index})">×</span>
+			`;
+
+			container.appendChild(item);
+		});
+	}
+
+	function addWizardPlugin() {
+		const input = document.getElementById('plugin-url-input');
+		const url = input.value.trim();
+
+		if (url && !wizardState.selectedPlugins.includes(url)) {
+			wizardState.selectedPlugins.push(url);
+			input.value = '';
+			updateWizardPluginList();
+		}
+	}
+
+	function addWizardTheme() {
+		const input = document.getElementById('theme-url-input');
+		const url = input.value.trim();
+
+		if (url && !wizardState.selectedThemes.includes(url)) {
+			wizardState.selectedThemes.push(url);
+			input.value = '';
+			updateWizardThemeList();
+		}
+	}
+
+	function removeWizardPlugin(index) {
+		wizardState.selectedPlugins.splice(index, 1);
+		updateWizardPluginList();
+	}
+
+	function removeWizardTheme(index) {
+		wizardState.selectedThemes.splice(index, 1);
+		updateWizardThemeList();
+	}
+
+	function updateWizardSelectedList2() {
+		const container = document.getElementById('wizard-selected-list-2');
+		container.innerHTML = '';
+
+		if (step2SelectedSteps.length === 0) {
+			container.innerHTML = '<p style="color: var(--text-muted); font-style: italic;">No additional features selected</p>';
+			return;
+		}
+
+		step2SelectedSteps.forEach(stepName => {
+			const item = document.createElement('div');
+			item.className = 'wizard-selected-item';
+
+			const stepData = customSteps[stepName];
+			const name = stepData?.name || stepName;
+
+			item.innerHTML = `
+				<span>${name}</span>
+				<span class="remove" onclick="removeWizardStep('${stepName}', 2)">×</span>
+			`;
+
+			container.appendChild(item);
+		});
+	}
+
+	function removeWizardStep(stepName, wizardStep) {
+		if (wizardStep === 1) {
+			wizardState.selectedSteps = wizardState.selectedSteps.filter(s => s !== stepName);
+			updateWizardSelectedList();
+		} else if (wizardStep === 2) {
+			step2SelectedSteps.splice(step2SelectedSteps.indexOf(stepName), 1);
+			updateWizardSelectedList2();
+		}
+
+		delete wizardState.stepConfigurations[stepName];
+
+		// Update the card visual state
+		const card = document.querySelector(`[data-step="${stepName}"][data-wizard-step="${wizardStep}"]`);
+		if (card) card.classList.remove('selected');
+	}
+
+	function goToWizardStep(stepNumber) {
+		// Hide current step
+		document.getElementById(`wizard-step-${wizardState.currentStep}`).style.display = 'none';
+
+		// Update current step
+		wizardState.currentStep = stepNumber;
+
+		// Show new step
+		document.getElementById(`wizard-step-${wizardState.currentStep}`).style.display = 'block';
+
+		// Update progress indicators
+		updateWizardProgress();
+
+		// Update navigation
+		updateWizardNavigation();
+
+		// Handle step-specific logic
+		if (stepNumber === 3) {
+			generateStepConfigurations();
+		} else if (stepNumber === 4) {
+			generateWizardSummary();
+		}
+	}
+
+	function updateWizardProgress() {
+		document.querySelectorAll('.wizard-step-indicator').forEach((indicator, index) => {
+			const stepNum = index + 1;
+			indicator.classList.remove('active', 'completed');
+
+			if (stepNum < wizardState.currentStep) {
+				indicator.classList.add('completed');
+			} else if (stepNum === wizardState.currentStep) {
+				indicator.classList.add('active');
+			}
+		});
+
+		document.getElementById('wizard-current-step').textContent = wizardState.currentStep;
+	}
+
+	function updateWizardNavigation() {
+		const prevBtn = document.getElementById('wizard-prev');
+		const nextBtn = document.getElementById('wizard-next');
+		const finishBtn = document.getElementById('wizard-finish');
+
+		prevBtn.disabled = wizardState.currentStep === 1;
+
+		if (wizardState.currentStep === wizardState.totalSteps) {
+			nextBtn.style.display = 'none';
+			finishBtn.style.display = 'inline-flex';
+		} else {
+			nextBtn.style.display = 'inline-flex';
+			finishBtn.style.display = 'none';
+		}
+	}
+
+	function generateStepConfigurations() {
+		const container = document.getElementById('wizard-configuration-area');
+		container.innerHTML = '';
+
+		const allSelectedSteps = [...wizardState.selectedSteps, ...step2SelectedSteps];
+
+		if (allSelectedSteps.length === 0) {
+			container.innerHTML = '<p style="color: var(--text-muted); font-style: italic;">No items to configure. All set!</p>';
+			return;
+		}
+
+		allSelectedSteps.forEach(stepName => {
+			const stepData = customSteps[stepName];
+			if (!stepData || !stepData.vars) return;
+
+			const configCard = document.createElement('div');
+			configCard.className = 'wizard-config-step';
+
+			const title = document.createElement('h4');
+			// Use description if available, fallback to stepName for title
+			title.textContent = stepData.description || stepName;
+			configCard.appendChild(title);
+
+			const form = document.createElement('div');
+			form.className = 'wizard-form-group';
+
+			// Handle both array and object formats for vars
+			const varsArray = Array.isArray(stepData.vars) ? stepData.vars : Object.entries(stepData.vars).map(([name, config]) => ({ name, ...config }));
+
+			varsArray.forEach(varConfig => {
+				const varName = varConfig.name;
+				const formGroup = document.createElement('div');
+				formGroup.className = 'wizard-form-group';
+
+				const label = document.createElement('label');
+				label.textContent = varConfig.description || varConfig.label || varName;
+				formGroup.appendChild(label);
+
+				let input;
+				if (varConfig.type === 'textarea') {
+					input = document.createElement('textarea');
+				} else if (varConfig.type === 'select') {
+					input = document.createElement('select');
+					if (varConfig.options) {
+						varConfig.options.forEach(option => {
+							const optElement = document.createElement('option');
+							optElement.value = option;
+							optElement.textContent = option;
+							input.appendChild(optElement);
+						});
+					}
+				} else {
+					input = document.createElement('input');
+					input.type = varConfig.type || 'text';
+				}
+
+				input.name = varName;
+				input.placeholder = varConfig.placeholder || '';
+				input.value = varConfig.default || '';
+
+				if (varConfig.description) {
+					const description = document.createElement('small');
+					description.textContent = varConfig.description;
+					formGroup.appendChild(description);
+				}
+
+				formGroup.appendChild(input);
+				form.appendChild(formGroup);
+
+				// Store configuration
+				if (!wizardState.stepConfigurations[stepName]) {
+					wizardState.stepConfigurations[stepName] = {};
+				}
+				wizardState.stepConfigurations[stepName][varName] = input.value;
+
+				// Update configuration on change
+				input.addEventListener('input', () => {
+					wizardState.stepConfigurations[stepName][varName] = input.value;
+				});
+			});
+
+			configCard.appendChild(form);
+			container.appendChild(configCard);
+		});
+	}
+
+	function generateWizardSummary() {
+		// Update summary
+		const summarySection = document.getElementById('wizard-summary-all');
+		let summaryContent = '';
+
+		if (wizardState.selectedPlugins.length > 0) {
+			summaryContent += '<p><strong>🔌 Plugins:</strong></p><ul>';
+			wizardState.selectedPlugins.forEach(pluginUrl => {
+				summaryContent += `<li><code>${pluginUrl}</code></li>`;
+			});
+			summaryContent += '</ul>';
+		}
+
+		if (wizardState.selectedThemes.length > 0) {
+			summaryContent += '<p><strong>🎨 Themes:</strong></p><ul>';
+			wizardState.selectedThemes.forEach(themeUrl => {
+				summaryContent += `<li><code>${themeUrl}</code></li>`;
+			});
+			summaryContent += '</ul>';
+		}
+
+		if (step2SelectedSteps.length > 0) {
+			summaryContent += '<p><strong>📁 Additional Features:</strong></p><ul>';
+			step2SelectedSteps.forEach(stepName => {
+				const stepData = customSteps[stepName];
+				summaryContent += `<li>${stepData?.name || stepName}</li>`;
+			});
+			summaryContent += '</ul>';
+		}
+
+		if (wizardState.selectedPlugins.length === 0 && wizardState.selectedThemes.length === 0 && step2SelectedSteps.length === 0) {
+			summaryContent = '<p style="color: var(--text-muted); font-style: italic;">A basic WordPress installation with no additional plugins or features.</p>';
+		}
+
+		summarySection.innerHTML = summaryContent;
+
+		// Generate and display final blueprint
+		const finalBlueprint = generateFinalBlueprint();
+		document.getElementById('wizard-final-blueprint').value = JSON.stringify(finalBlueprint, null, 2);
+	}
+
+	function generateFinalBlueprint() {
+		const blueprint = {
+			landingPage: '/wp-admin/',
+			steps: []
+		};
+
+		if (wizardState.projectTitle) {
+			blueprint.meta = {
+				title: wizardState.projectTitle
+			};
+			if (wizardState.projectDescription) {
+				blueprint.meta.description = wizardState.projectDescription;
+			}
+		}
+
+		// Add plugin installations
+		wizardState.selectedPlugins.forEach(pluginUrl => {
+			blueprint.steps.push({
+				step: 'installPlugin',
+				vars: {
+					url: pluginUrl
+				}
+			});
+		});
+
+		// Add theme installations
+		wizardState.selectedThemes.forEach(themeUrl => {
+			blueprint.steps.push({
+				step: 'installTheme',
+				vars: {
+					url: themeUrl
+				}
+			});
+		});
+
+		// Add step 2 selections
+		step2SelectedSteps.forEach(stepName => {
+			const stepConfig = {
+				step: stepName
+			};
+
+			if (wizardState.stepConfigurations[stepName]) {
+				const vars = {};
+				Object.keys(wizardState.stepConfigurations[stepName]).forEach(varName => {
+					const value = wizardState.stepConfigurations[stepName][varName];
+					if (value !== '' && value !== null && value !== undefined) {
+						vars[varName] = value;
+					}
+				});
+
+				if (Object.keys(vars).length > 0) {
+					stepConfig.vars = vars;
+				}
+			}
+
+			blueprint.steps.push(stepConfig);
+		});
+
+		return blueprint;
+	}
+
+	function setupWizardEventListeners() {
+		// Wizard toggle
+		document.getElementById('wizard-mode-toggle').addEventListener('click', () => {
+			document.getElementById('wizard-container').style.display = 'flex';
+			document.body.style.overflow = 'hidden';
+
+			// Focus on plugin input for immediate use
+			setTimeout(() => {
+				document.getElementById('plugin-url-input').focus();
+			}, 100);
+		});
+
+		// Prevent form submission in wizard
+		document.getElementById('wizard-container').addEventListener('submit', (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+		});
+
+		// Prevent Enter key from submitting forms in wizard
+		document.getElementById('wizard-container').addEventListener('keydown', (e) => {
+			if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+				e.preventDefault();
+				e.stopPropagation();
+
+				// Handle specific inputs
+				if (e.target.id === 'plugin-url-input') {
+					addWizardPlugin();
+				} else if (e.target.id === 'theme-url-input') {
+					addWizardTheme();
+				}
+			}
+		});
+
+		// Close wizard
+		document.getElementById('wizard-close').addEventListener('click', () => {
+			// Auto-populate steps before closing
+			applyWizardToMainInterface();
+
+			document.getElementById('wizard-container').style.display = 'none';
+			document.body.style.overflow = '';
+		});
+
+		// Navigation buttons
+		document.getElementById('wizard-prev').addEventListener('click', () => {
+			if (wizardState.currentStep > 1) {
+				goToWizardStep(wizardState.currentStep - 1);
+			}
+		});
+
+		document.getElementById('wizard-next').addEventListener('click', () => {
+			// Validate current step before proceeding
+			if (validateWizardStep()) {
+				if (wizardState.currentStep < wizardState.totalSteps) {
+					goToWizardStep(wizardState.currentStep + 1);
+				}
+			}
+		});
+
+		document.getElementById('wizard-finish').addEventListener('click', () => {
+			finishWizard();
+		});
+
+		// Progress indicator clicks
+		document.querySelectorAll('.wizard-step-indicator').forEach((indicator, index) => {
+			indicator.addEventListener('click', () => {
+				const targetStep = index + 1;
+				if (targetStep <= wizardState.currentStep || targetStep === wizardState.currentStep + 1) {
+					goToWizardStep(targetStep);
+				}
+			});
+		});
+
+		// Plugin/Theme input handlers
+		document.getElementById('add-plugin-btn').addEventListener('click', addWizardPlugin);
+		document.getElementById('add-theme-btn').addEventListener('click', addWizardTheme);
+
+		// Additional safety: prevent form submission on these specific inputs
+		['plugin-url-input', 'theme-url-input'].forEach(inputId => {
+			const input = document.getElementById(inputId);
+			input.addEventListener('keydown', (e) => {
+				if (e.key === 'Enter') {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					return false;
+				}
+			});
+			input.addEventListener('keypress', (e) => {
+				if (e.key === 'Enter') {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					return false;
+				}
+			});
+			input.addEventListener('keyup', (e) => {
+				if (e.key === 'Enter') {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					if (inputId === 'plugin-url-input') {
+						addWizardPlugin();
+					} else if (inputId === 'theme-url-input') {
+						addWizardTheme();
+					}
+					return false;
+				}
+			});
+		});
+
+		// Form inputs
+		document.getElementById('wizard-title').addEventListener('input', (e) => {
+			wizardState.projectTitle = e.target.value;
+		});
+	}
+
+	function validateWizardStep() {
+		// All steps are optional - users can proceed without making any selections
+		return true;
+	}
+
+	function applyWizardToMainInterface() {
+		const finalBlueprint = generateFinalBlueprint();
+
+		// Apply the blueprint to the main interface
+		document.getElementById('title').value = wizardState.projectTitle || '';
+
+		// Clear current steps
+		document.getElementById('blueprint-steps').innerHTML = '<div id="draghint">Click or drag the steps to add them here.</div>';
+
+		// Add wizard steps to main interface
+		finalBlueprint.steps.forEach(stepConfig => {
+			if (customSteps[stepConfig.step]) {
+				const stepElement = createStep(customSteps[stepConfig.step].name || stepConfig.step, customSteps[stepConfig.step]);
+
+				// Apply configurations
+				if (stepConfig.vars) {
+					Object.keys(stepConfig.vars).forEach(varName => {
+						const input = stepElement.querySelector(`[name="${varName}"]`);
+						if (input) {
+							if (input.type === 'checkbox') {
+								input.checked = stepConfig.vars[varName];
+							} else {
+								input.value = stepConfig.vars[varName];
+							}
+						}
+					});
+				}
+
+				document.getElementById('blueprint-steps').appendChild(stepElement);
+			}
+		});
+
+		// Update the blueprint display
+		document.getElementById('blueprint-compiled').value = JSON.stringify(finalBlueprint, null, '\t');
+		loadCombinedExamples();
+	}
+
+	function finishWizard() {
+		// Apply the wizard selections to the main interface
+		applyWizardToMainInterface();
+
+		// Close wizard
+		document.getElementById('wizard-container').style.display = 'none';
+		document.body.style.overflow = '';
+
+		// Reset wizard state
+		resetWizardState();
+	}
+
+	function resetWizardState() {
+		wizardState.currentStep = 1;
+		wizardState.selectedSteps = [];
+		wizardState.selectedPlugins = [];
+		wizardState.selectedThemes = [];
+		step2SelectedSteps.length = 0;
+		wizardState.projectTitle = '';
+		wizardState.projectDescription = '';
+		wizardState.stepConfigurations = {};
+
+		// Reset UI
+		document.getElementById('wizard-title').value = '';
+		document.getElementById('plugin-url-input').value = '';
+		document.getElementById('theme-url-input').value = '';
+		document.querySelectorAll('.wizard-step-card').forEach(card => {
+			card.classList.remove('selected');
+		});
+		updateWizardPluginList();
+		updateWizardThemeList();
+		updateWizardSelectedList2();
+		updateWizardProgress();
+		updateWizardNavigation();
+
+		// Show first step
+		document.querySelectorAll('.wizard-step').forEach((step, index) => {
+			step.style.display = index === 0 ? 'block' : 'none';
+		});
+	}
+
+	// Make wizard functions globally accessible
+	window.removeWizardStep = removeWizardStep;
+	window.removeWizardPlugin = removeWizardPlugin;
+	window.removeWizardTheme = removeWizardTheme;
+
+	// Initialize wizard
+	initWizard();
 });
