@@ -77,18 +77,30 @@
   --shadow-md: light-dark(0 4px 6px -1px rgb(0 0 0 / 0.1), 0 4px 6px -1px rgb(0 0 0 / 0.4));
   --shadow-lg: light-dark(0 10px 15px -3px rgb(0 0 0 / 0.1), 0 10px 15px -3px rgb(0 0 0 / 0.4));
 
+  --remove-link-color: light-dark(var(--danger-600), var(--danger-400));
+  --example-text-color: light-dark(var(--gray-700), var(--gray-300));
+  --example-border-color: light-dark(var(--gray-300), var(--gray-600));
+
   --step-background: light-dark(var(--primary-50), var(--primary-900));
   --step-hover-background: light-dark(var(--primary-100), var(--primary-800));
   --builtin-step-background: light-dark(var(--success-50), var(--success-900));
   --builtin-step-hover-background: light-dark(var(--success-100), var(--success-800));
+  --builtin-step-border: light-dark(var(--success-200), var(--success-700));
   --mine-step-background: light-dark(var(--warning-50), var(--warning-900));
   --mine-step-hover-background: light-dark(var(--warning-100), var(--warning-800));
+  --mine-step-border: light-dark(var(--warning-200), var(--warning-700));
 
   --button-background: light-dark(#ffffff, var(--gray-800));
   --button-hover-background: light-dark(var(--gray-50), var(--gray-700));
   --button-border: light-dark(var(--gray-300), var(--gray-600));
   --primary-button-background: var(--primary-600);
   --primary-button-hover: var(--primary-700);
+
+  --download-button-background: light-dark(var(--success-100), var(--success-800));
+  --download-button-border: light-dark(var(--success-300), var(--success-600));
+  --download-button-hover-background: light-dark(var(--success-200), var(--success-700));
+  --download-button-hover-border: light-dark(var(--success-400), var(--success-500));
+  --download-button-hover-text: light-dark(var(--success-800), var(--success-100));
 
   /* Typography */
   --font-size-xs: 0.75rem;
@@ -438,7 +450,7 @@ textarea#blueprint:focus, textarea#blueprint-compiled:focus {
 
 .step.builtin {
   background-color: var(--builtin-step-background);
-  border-color: var(--success-200);
+  border-color: var(--builtin-step-border);
 }
 
 #step-library .step.builtin {
@@ -447,7 +459,7 @@ textarea#blueprint:focus, textarea#blueprint-compiled:focus {
 
 .step.mine {
   background-color: var(--mine-step-background);
-  border-color: var(--warning-200);
+  border-color: var(--mine-step-border);
 }
 
 #step-library .step.hidden,
@@ -695,7 +707,7 @@ button:hover,
   background-color: var(--button-hover-background);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
-  border-color: var(--primary-300);
+  border-color: light-dark(var(--primary-300), var(--primary-600));
 }
 
 button.save-step {
@@ -761,9 +773,9 @@ button.save-step:hover {
 }
 #copy-playground-link-top:hover,
 #copy-playground-link:hover {
-  background-color: var(--primary-100);
-  color: var(--primary-700);
-  border-color: var(--primary-300);
+  background-color: light-dark(var(--primary-100), var(--primary-900));
+  color: light-dark(var(--primary-700), var(--primary-200));
+  border-color: light-dark(var(--primary-300), var(--primary-600));
   transform: translateY(-1px);
 }
 
@@ -793,28 +805,28 @@ button.save-step:hover {
   color: var(--text-color);
   margin-top: var(--spacing-3);
   padding: var(--spacing-4) var(--spacing-6);
-  background-color: var(--success-100);
-  border-color: var(--success-300);
+  background-color: var(--download-button-background);
+  border-color: var(--download-button-border);
   font-weight: var(--font-weight-medium);
 }
 
 #download-blueprint:hover {
-  background-color: var(--success-200);
-  border-color: var(--success-400);
-  color: var(--success-800);
+  background-color: var(--download-button-hover-background);
+  border-color: var(--download-button-hover-border);
+  color: var(--download-button-hover-text);
 }
 
 .step.builtin:hover,.step.builtin:focus {
   background-color: var(--builtin-step-hover-background);
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
-  border-color: var(--success-300);
+  border-color: var(--builtin-step-border);
 }
 .step.mine:hover,.step.mine:focus {
   background-color: var(--mine-step-hover-background);
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
-  border-color: var(--warning-300);
+  border-color: var(--mine-step-border);
 }
 
 #view-source iframe {
@@ -870,8 +882,8 @@ button.save-step:hover {
 
 #draghint:hover {
   border-color: var(--primary-400);
-  background: var(--primary-50);
-  color: var(--primary-700);
+  background: light-dark(var(--primary-50), var(--primary-950));
+  color: light-dark(var(--primary-700), var(--primary-300));
 }
 
 #top-buttons {
@@ -1126,9 +1138,9 @@ body.split-view-right #playground-iframe {
 }
 
 #wizard-close:hover {
-  background: var(--danger-100);
-  border-color: var(--danger-300);
-  color: var(--danger-700);
+  background: light-dark(var(--danger-100), var(--danger-900));
+  border-color: light-dark(var(--danger-300), var(--danger-600));
+  color: light-dark(var(--danger-700), var(--danger-300));
 }
 
 #wizard-content {
@@ -1235,7 +1247,7 @@ body.split-view-right #playground-iframe {
 
 .wizard-step-card.selected {
   border-color: var(--primary-500);
-  background: var(--primary-50);
+  background: light-dark(var(--primary-50), var(--primary-950));
   box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
 }
 
@@ -1272,8 +1284,8 @@ body.split-view-right #playground-iframe {
 }
 
 .wizard-selected-item {
-  background: var(--primary-100);
-  color: var(--primary-800);
+  background: light-dark(var(--primary-100), var(--primary-900));
+  color: light-dark(var(--primary-800), var(--primary-100));
   padding: var(--spacing-2) var(--spacing-3);
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
@@ -1285,12 +1297,12 @@ body.split-view-right #playground-iframe {
 
 .wizard-selected-item .remove {
   cursor: pointer;
-  color: var(--primary-600);
+  color: light-dark(var(--primary-600), var(--primary-300));
   font-weight: var(--font-weight-bold);
 }
 
 .wizard-selected-item .remove:hover {
-  color: var(--danger-600);
+  color: light-dark(var(--danger-600), var(--danger-400));
 }
 
 .wizard-summary {
@@ -1448,8 +1460,8 @@ body.split-view-right #playground-iframe {
 }
 
 .wizard-url-item {
-  background: var(--primary-100);
-  color: var(--primary-800);
+  background: light-dark(var(--primary-100), var(--primary-900));
+  color: light-dark(var(--primary-800), var(--primary-100));
   padding: var(--spacing-2) var(--spacing-3);
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
@@ -1474,7 +1486,7 @@ body.split-view-right #playground-iframe {
 
 .wizard-url-item .remove {
   cursor: pointer;
-  color: var(--primary-600);
+  color: light-dark(var(--primary-600), var(--primary-300));
   font-weight: var(--font-weight-bold);
   padding: var(--spacing-1);
   border-radius: var(--radius-sm);
@@ -1482,8 +1494,8 @@ body.split-view-right #playground-iframe {
 }
 
 .wizard-url-item .remove:hover {
-  color: var(--danger-600);
-  background: var(--danger-100);
+  color: light-dark(var(--danger-600), var(--danger-400));
+  background: light-dark(var(--danger-100), var(--danger-900));
 }
 
 .wizard-selected-items .empty-state {
