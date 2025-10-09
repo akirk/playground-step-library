@@ -748,6 +748,13 @@ addEventListener('DOMContentLoaded', function () {
 		loadCombinedExamples();
 	});
 
+	// Handle blueprint version radio button changes
+	document.querySelectorAll('input[name="blueprint-version"]').forEach(function (radio) {
+		radio.addEventListener('change', function () {
+			transformJson();
+		});
+	});
+
 	function compressState(steps) {
 		const state = {
 			steps
@@ -912,7 +919,8 @@ addEventListener('DOMContentLoaded', function () {
 		// Use the PlaygroundStepLibrary to compile the blueprint
 		const compiler = new PlaygroundStepLibrary();
 		const inputData = Object.assign(userDefined, JSON.parse(jsonInput));
-		const outputData = compiler.compile(inputData);
+		const useV2 = document.querySelector('input[name="blueprint-version"]:checked')?.value === 'v2';
+		const outputData = compiler.compile(inputData, {}, useV2);
 
 		// Extract query params from compiled steps (for the original web UI functionality)
 		if (outputData.steps) {
