@@ -1,11 +1,12 @@
 import { stepsRegistry } from './steps-registry.js';
-import type { 
-    StepVariable, 
-    StepFunction, 
+import type {
+    StepVariable,
+    StepFunction,
     BlueprintStep,
     StepLibraryBlueprint
 } from '../steps/types.js';
 import type { Blueprint, StepDefinition } from '@wp-playground/blueprints';
+import { transpileToV2, shouldTranspileToV2 } from './v2-transpiler.js';
 
 interface CustomStepDefinition {
     (step: BlueprintStep, inputData?: any): any[];
@@ -53,10 +54,27 @@ class PlaygroundStepLibrary {
     }
 
     /**
-     * Compile a blueprint by transforming custom steps into native steps
+     * Compile a blueprint and optionally transpile to v2 format
+     * @param blueprint The blueprint to compile
+     * @param options Compilation options
+     * @param toV2 If true, transpile the result to Blueprint v2 format
+     * @returns Compiled blueprint (v1 or v2 depending on toV2 parameter)
+     */
+    compile(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}, toV2: boolean = false): Blueprint | any {
+        const compiledV1 = this.compileToV1(blueprint, options);
+
+        if (toV2) {
+            return transpileToV2(compiledV1);
+        }
+
+        return compiledV1;
+    }
+
+    /**
+     * Compile a blueprint by transforming custom steps into native steps (v1 format)
      * Uses the transformJson logic from script.js adapted for TypeScript
      */
-    compile(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}): Blueprint {
+    private compileToV1(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}): Blueprint {
         let inputData: StepLibraryBlueprint;
 
         if (typeof blueprint === 'string') {
