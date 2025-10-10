@@ -964,6 +964,9 @@ addEventListener('DOMContentLoaded', function () {
 				queries.push('storage=device');
 				break;
 		}
+		if (useV2) {
+			queries.push('experimental-blueprints-v2-runner=yes');
+		}
 		let hash = '#' + (JSON.stringify(outputData).replace(/%/g, '%25'));
 		if (hash.includes(' ') || hash.includes('<') || hash.includes('>')) {
 			useBlueprintURLParam = true;
