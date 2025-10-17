@@ -3,18 +3,53 @@
 
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>WordPress Playground Step Library</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Inter&display=swap" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script type="module" src="script.js"></script>
+	<script>
+		addEventListener('DOMContentLoaded', function() {
+			// Options toggle
+			document.getElementById('toggle-further-options').addEventListener('click', function() {
+				const details = document.getElementById('further-options');
+				if (details.open) {
+					details.removeAttribute('open');
+				} else {
+					details.setAttribute('open', '');
+				}
+			});
+
+			// Mobile step library toggle
+			const mobileButton = document.getElementById('mobile-show-steps');
+			const stepLibraryHolder = document.getElementById('step-library-holder');
+			const filterHolder = document.getElementById('filter-holder');
+
+			// Toggle step library
+			if (mobileButton) {
+				mobileButton.addEventListener('click', function() {
+					stepLibraryHolder.classList.add('mobile-visible');
+				});
+			}
+
+			// Close on back button click (via ::before pseudo-element)
+			if (filterHolder) {
+				filterHolder.addEventListener('click', function(e) {
+					if (window.innerWidth <= 734 && e.target === filterHolder) {
+						stepLibraryHolder.classList.remove('mobile-visible');
+					}
+				});
+			}
+		});
+	</script>
 </head>
 
 <body>
 	<header>
-		<h1>WordPress Playground Step Library</h1>
-		<div>
+		<div class="header-row">
+			<h1>WordPress Playground Step Library</h1>
 			<span id="top-buttons">
 				<button id="clear">Clear Steps</button>
 				<select id="examples">
@@ -26,21 +61,66 @@
 					<option value="right">Preview Right</option>
 				</select>
 				<button id="wizard-mode-toggle">🪄 Wizard Mode</button>
+				<span id="options-wrapper">
+					<button id="toggle-further-options">⚙️ Options</button>
+					<details id="further-options">
+						<summary style="display:none;">Further Options</summary>
+						<div>
+							<label>Blueprint Title: <input type="text" id="title" name="title" placeholder="Title"></label>
+							<label><input type="checkbox" id="phpExtensionBundles" value="kitchen-sink">Use all <a
+									href="https://wordpress.github.io/wordpress-playground/blueprints/data-format#php-extensions"
+									target="_blank">available PHP extensions</a></label>
+							<label>WordPress <select id="wp-version">
+									<option value="latest">latest</option>
+									<option value="6.4">6.4</option>
+									<option value="6.5">6.5</option>
+									<option value="6.6">6.6</option>
+									<option value="beta">beta</option>
+									<option value="nightly">nightly</option>
+								</select></label>
+							<label>PHP <select id="php-version">
+									<option value="latest">latest</option>
+									<option value="7.4">7.4</option>
+									<option value="8.0">8.0</option>
+									<option value="8.1">8.1</option>
+									<option value="8.2">8.2</option>
+									<option value="8.3">8.3</option>
+								</select></label>
+							<label><a href="https://wordpress.github.io/wordpress-playground/developers/apis/query-api/"
+									target="_blank">Environment Mode:</a>
+								<select id="mode">
+									<option value="browser-full-screen">Fake Browser (full screen)</option>
+									<option value="browser">Fake Browser</option>
+									<option value="seamless">Seamless</option>
+								</select></label>
+							<label>Storage <select id="storage">
+									<option value="none">None (Changes get lost)</option>
+									<option value="browser">Browser</option>
+									<option value="device">Device</option>
+								</select></label>
+							<label>Playground <select id="playground">
+									<option value="playground.wordpress.net">playground.wordpress.net</option>
+									<option value="http://127.0.0.1:5400/website-server">http://127.0.0.1:5400/website-server</option>
+								</select></label>
+							<label><input type="checkbox" id="base64" value="true">base64 encode blueprint</label>
+							<label>Autosave <input type="text" id="autosave" placeholder="Enter a name"
+									pattern="[a-z0-9][a-z0-9-]+"></label>
+						</div>
+					</details>
+				</span>
 				<a href="#" id="playground-link-top" target="_blank">Launch in Playground</a>
 				<button id="copy-playground-link-top">⧉</button>
 			</span>
-			<p>Drag or click the steps to create a <a
-				href="https://wordpress.github.io/wordpress-playground/blueprints/"
-				target="_blank">blueprint</a> for <a href="https://wordpress.github.io/wordpress-playground/"
-				target="_blank">WordPress Playground</a>.<br><a
-				href="https://github.com/akirk/playground-step-library/#contributing">Create your own steps!</a></p>
 		</div>
+		<p>Drag or click the steps to create a <a
+			href="https://wordpress.github.io/wordpress-playground/blueprints/"
+			target="_blank">blueprint</a> for <a href="https://wordpress.github.io/wordpress-playground/"
+			target="_blank">WordPress Playground</a>. You can <a
+			href="https://github.com/akirk/playground-step-library/#contributing">create and submit your own steps!</a></p>
 	</header>
 	<div id="split-view-wrapper">
 		<div id="blueprint-builder">
 			<div id="steps-holder">
-				<div id="title-holder"><label>Give it a title: <input type="text" id="title" name="title"
-							placeholder="Title"></label></div>
 				<div id="steps-group">
 					<div id="step-library-holder">
 						<div id="filter-holder"><input type="text" id="filter" placeholder="Filter"> <label><input
@@ -50,56 +130,13 @@
 					<div id="blueprint-steps">
 						<div id="draghint">Click or drag the steps to add them here.</div>
 					</div>
+					<button id="mobile-show-steps" class="mobile-only">+ Add Steps</button>
 				</div>
-				<details id="further-options">
-					<summary>Further Options</summary>
-					<div>
-						<label><input type="checkbox" id="phpExtensionBundles" value="kitchen-sink">Use all <a
-								href="https://wordpress.github.io/wordpress-playground/blueprints/data-format#php-extensions"
-								target="_blank">available PHP extensions</a></label>
-						<label>WordPress <select id="wp-version">
-								<option value="latest">latest</option>
-								<option value="6.4">6.4</option>
-								<option value="6.5">6.5</option>
-								<option value="6.6">6.6</option>
-								<option value="beta">beta</option>
-								<option value="nightly">nightly</option>
-							</select></label>
-						<label>PHP <select id="php-version">
-								<option value="latest">latest</option>
-								<option value="7.4">7.4</option>
-								<option value="8.0">8.0</option>
-								<option value="8.1">8.1</option>
-								<option value="8.2">8.2</option>
-								<option value="8.3">8.3</option>
-							</select></label>
-						<label><a href="https://wordpress.github.io/wordpress-playground/developers/apis/query-api/"
-								target="_blank">Environment Mode:</a>
-							<select id="mode">
-								<option value="browser-full-screen">Fake Browser (full screen)</option>
-								<option value="browser">Fake Browser</option>
-								<option value="seamless">Seamless</option>
-							</select></label>
-						<label>Storage <select id="storage">
-								<option value="none">None (Changes get lost)</option>
-								<option value="browser">Browser</option>
-								<option value="device">Device</option>
-							</select></label>
-						<label>Playground <select id="playground">
-								<option value="playground.wordpress.net">playground.wordpress.net</option>
-								<option value="http://127.0.0.1:5400/website-server">http://127.0.0.1:5400/website-server</option>
-							</select></label>
-						<label><input type="checkbox" id="base64" value="true">base64 encode blueprint</label>
-						<label>Autosave <input type="text" id="autosave" placeholder="Enter a name"
-								pattern="[a-z0-9][a-z0-9-]+"></label>
-					</div>
-				</details>
-
 			</div>
 			<div class="arrow">→</div>
 			<div id="blueprint-compiled-holder">
 				<div>Transformed Blueprint</div>
-				<textarea id="blueprint-compiled"></textarea><br>
+				<textarea id="blueprint-compiled"></textarea>
 				<div id="blueprint-version-selector">
 					<label><input type="radio" name="blueprint-version" value="v1" checked> Blueprint v1</label>
 					<label><input type="radio" name="blueprint-version" value="v2"> Blueprint v2</label>

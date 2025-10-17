@@ -25,13 +25,6 @@ addEventListener('DOMContentLoaded', function () {
 		span.className = 'stepname';
 		span.innerText = name;
 		div.appendChild(span);
-		if (data.description) {
-			const info = document.createElement('div');
-			info.className = 'info';
-			info.innerText = data.description;
-			span.appendChild(info);
-			step.title = data.description;
-		}
 		if (data.mine) {
 			step.classList.add('mine');
 			const options = document.createElement('details');
@@ -98,6 +91,14 @@ addEventListener('DOMContentLoaded', function () {
 		remove.href = '';
 		remove.innerText = '✕';
 		div.appendChild(remove);
+
+		if (data.description) {
+			const info = document.createElement('div');
+			info.className = 'info';
+			info.innerText = data.description;
+			step.appendChild(info);
+			step.title = data.description;
+		}
 
 		const vars = document.createElement('table');
 		vars.className = 'vars';
@@ -352,6 +353,12 @@ addEventListener('DOMContentLoaded', function () {
 		stepClone.querySelectorAll('input,textarea').forEach(fixMouseCursor);
 		loadCombinedExamples();
 		stepClone.querySelector('input,textarea')?.focus();
+
+		// Hide the mobile step library overlay after adding a step
+		const stepLibraryHolder = document.getElementById('step-library-holder');
+		if (stepLibraryHolder) {
+			stepLibraryHolder.classList.remove('mobile-visible');
+		}
 	}
 
 	document.addEventListener('keyup', (event) => {
@@ -879,7 +886,12 @@ addEventListener('DOMContentLoaded', function () {
 		if (combinedExamples.steps.length > 0) {
 			const draghint = document.getElementById('draghint');
 			if (draghint) {
-				draghint.remove();
+				draghint.style.display = 'none';
+			}
+		} else {
+			const draghint = document.getElementById('draghint');
+			if (draghint) {
+				draghint.style.display = '';
 			}
 		}
 
