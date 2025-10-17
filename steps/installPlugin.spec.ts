@@ -88,6 +88,23 @@ describe('installPlugin', () => {
         expect(Array.isArray(result)).toBe(true);
     });
 
+    it('should handle GitHub PR URLs', () => {
+        const step: InstallPluginStep = {
+            step: 'installPlugin',
+            url: 'https://github.com/akirk/friends/pull/559'
+        };
+
+        const result = installPlugin(step);
+
+        expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('installPlugin');
+        expect(result[0].pluginData.resource).toBe('git:directory');
+        expect(result[0].pluginData.url).toBe('https://github.com/akirk/friends');
+        expect(result[0].pluginData.ref).toBe('refs/pull/559/head');
+        expect(result[0].options.activate).toBe(true);
+    });
+
     it('should add permalink structure when permalink flag is true', () => {
         const step: InstallPluginStep = {
             step: 'installPlugin',
@@ -153,7 +170,7 @@ describe('installPlugin', () => {
     });
 
     it('should have correct metadata', () => {
-        expect(installPlugin.description).toBe('Install a plugin via WordPress.org or Github.');
+        expect(installPlugin.description).toBe('Install a plugin via WordPress.org or Github (branches, releases, PRs).');
         expect(installPlugin.builtin).toBe(true);
         expect(Array.isArray(installPlugin.vars)).toBe(true);
         expect(installPlugin.vars).toHaveLength(3);

@@ -4,6 +4,26 @@ import type { StepFunction, InstallPluginStep } from './types.js';
 
 
 export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPluginStep) => {
+	// Check for GitHub PR URL
+	const prTest = /^https:\/\/github.com\/(?<org>[^\/]+)\/(?<repo>[^\/]+)\/pull\/(?<prNumber>\d+)/.exec(step.url);
+	if (prTest) {
+		const { org, repo, prNumber } = prTest.groups!;
+		// GitHub allows fetching PR branches using refs/pull/{number}/head
+		// This works even for forked PRs
+		const repoUrl = `https://github.com/${org}/${repo}`;
+		return [{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "git:directory",
+				"url": repoUrl,
+				"ref": `refs/pull/${prNumber}/head`
+			},
+			"options": {
+				"activate": true
+			}
+		}];
+	}
+
 	let urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec(step.url);
 	if (urlTest) {
 		const releaseMatch = step.url.match(/\/releases\/download\/(?<version>[^\/]+)\/(?<asset>[^\/]+)$/);
@@ -56,13 +76,13 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 	return steps;
 };
 
-installPlugin.description = "Install a plugin via WordPress.org or Github.";
+installPlugin.description = "Install a plugin via WordPress.org or Github (branches, releases, PRs).";
 installPlugin.builtin = true;
 installPlugin.vars = Object.entries({
 	url: {
 		description: "URL of the plugin or WordPress.org slug.",
 		required: true,
-		samples: ["hello-dolly", 'https://wordpress.org/plugins/friends', 'woocommerce', 'create-block-theme', "https://github.com/akirk/blueprint-recorder", "https://github.com/Automattic/wordpress-activitypub/tree/trunk"]
+		samples: ["hello-dolly", 'https://wordpress.org/plugins/friends', 'woocommerce', 'create-block-theme', "https://github.com/akirk/blueprint-recorder", "https://github.com/Automattic/wordpress-activitypub/tree/trunk", "https://github.com/akirk/friends/pull/559"]
 	},
 	prs: {
 		description: "Add support for submitting Github Requests.",
