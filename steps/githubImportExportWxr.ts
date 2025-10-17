@@ -10,8 +10,8 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 		return [];
 	}
 	const repo = repoTest[1] + "/" + repoTest[2];
-	const branch = step.branch || "main";
-	if ( ! /^[a-z0-9-]+$/.test( branch ) ) {
+	const branch = step.branch;
+	if ( branch && ! /^[a-z0-9_-]+$/.test( branch ) ) {
 		return [];
 	}
 	const filename = step.filename || "export.xml";
@@ -19,12 +19,15 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 	let steps: any[] = [];
 	const siteOptions: Record<string, string> = {
 		"wordpress_export_to_server__file": filename,
-		"wordpress_export_to_server__owner_repo_branch": repo + "/" + branch,
+		"wordpress_export_to_server__owner_repo_branch": repo + ( branch ? "/" + branch : "" ),
 	}
 	if ( step.targetUrl ) {
 		siteOptions["wordpress_export_to_server__export_home"] = step.targetUrl;
 	}
 	steps = steps.concat(deleteAllPosts({ step: 'deleteAllPosts' }));
+
+	const branchSuffix = branch ? '-' + branch : '';
+
 	steps = steps.concat([
 	{
 		"step": "setSiteOptions",
@@ -33,17 +36,26 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 	{
 		"step": "defineWpConfigConsts",
 		"consts": {
-			"UPLOADS": "wp-content/" + repo + "-" + branch
+			"UPLOADS": "wp-content/" + repo.replace( '/', '-' ) + branchSuffix
 		}
-	},
-	{
+	}]);
+
+	const unzipStep: any = {
 		"step": "unzip",
 		"zipFile": {
-			"resource": "url",
-			"url": `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`,
+			"resource": "git:directory",
+			"url": `https://github.com/${repo}`
 		},
 		"extractToPath": "/wordpress/wp-content"
-	},
+	};
+
+	if ( branch ) {
+		unzipStep.zipFile.ref = branch;
+	}
+
+	steps.push(unzipStep);
+
+	steps = steps.concat([
 	{
 		"step": "writeFile",
 		"path": "/wordpress/wp-content/mu-plugins/wordpress-export-to-server.php",
@@ -55,15 +67,16 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 	{
 		"step": "installPlugin",
 		"pluginZipFile": {
-			"resource": "url",
-			"url": "https://github-proxy.com/proxy/?repo=humanmade/WordPress-Importer"
+			"resource": "git:directory",
+			"url": "https://github.com/humanmade/WordPress-Importer",
+			"ref": "master"
 		}
 	},
 	{
 		"step": "runPHP",
 		"code": `
 		<?php require '/wordpress/wp-load.php';
-		$path = realpath( '/wordpress/wp-content/${repoTest[2]}-${branch}/${filename}' );
+		$path = realpath( '/wordpress/wp-content/${repoTest[2]}${branchSuffix}/${filename}' );
 		$logger = new WP_Importer_Logger_CLI();
 		$logger->min_level = 'info';
 		$options = array( 'fetch_attachments' => false, 'default_author' => 1 );
@@ -79,7 +92,7 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 		'ghexport-pr-action': 'create',
 		'ghexport-content-type': 'custom-paths',
 		'ghexport-repo-root': '/',
-		'ghexport-playground-root': '/wordpress/wp-content/' + repoTest[2] + '-' + branch,
+		'ghexport-playground-root': '/wordpress/wp-content/' + repoTest[2] + branchSuffix,
 		'ghexport-path': '.',
 		'ghexport-allow-include-zip': 'no',
 	};

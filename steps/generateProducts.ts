@@ -1,41 +1,5 @@
 import type { StepFunction, GenerateProductsStep } from './types.js';
 import { installPlugin } from './installPlugin.js';
-import { githubPlugin } from './githubPlugin.js';
-
-/**
- * Converts GitHub URLs to github-proxy URLs
- * Supports:
- * - https://github.com/owner/repo/releases/latest -> https://github-proxy.com/proxy/?repo=owner/repo&releases=latest
- * - https://github.com/owner/repo/releases/tag/v1.0.0 -> https://github-proxy.com/proxy/?repo=owner/repo&releases=v1.0.0
- * - https://github.com/owner/repo -> uses githubPlugin for branch-based installs
- */
-function convertGitHubUrl(url: string): { type: 'releases' | 'branch', url: string } {
-	// Check for releases/latest URL
-	const releasesLatestMatch = /^https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/releases\/latest\/?$/.exec(url);
-	if (releasesLatestMatch) {
-		const [, org, repo] = releasesLatestMatch;
-		return {
-			type: 'releases',
-			url: `https://github-proxy.com/proxy/?repo=${org}/${repo}&releases=latest`
-		};
-	}
-	
-	// Check for releases/tag URL
-	const releasesTagMatch = /^https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/releases\/tag\/([^\/]+)\/?$/.exec(url);
-	if (releasesTagMatch) {
-		const [, org, repo, tag] = releasesTagMatch;
-		return {
-			type: 'releases',
-			url: `https://github-proxy.com/proxy/?repo=${org}/${repo}&releases=${tag}`
-		};
-	}
-	
-	// Default to branch-based (handled by githubPlugin)
-	return {
-		type: 'branch',
-		url: url
-	};
-}
 
 export const generateProducts: StepFunction<GenerateProductsStep> = (step: GenerateProductsStep, blueprint: any) => {
 	const productCount = step.count || 10;
@@ -220,10 +184,6 @@ error_log( "Generated " . count( $term_ids ) . " product categories" );
 
 	let steps: any[] = [];
 
-	// Convert GitHub URL using utility function
-	const githubUrl = 'https://github.com/woocommerce/wc-smooth-generator/releases/tag/1.2.2';
-	const convertedUrl = convertGitHubUrl(githubUrl);
-
 	// Check if WooCommerce is already installed
 	let hasWoocommercePlugin = false;
 	let hasSmoothGeneratorPlugin = false;
@@ -231,9 +191,7 @@ error_log( "Generated " . count( $term_ids ) . " product categories" );
 		if (blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'woocommerce') {
 			hasWoocommercePlugin = true;
 		}
-		// Check for both the original URL and converted URL patterns
-		if ((blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === convertedUrl.url) ||
-			(blueprint.steps[i].step === 'githubPlugin' && blueprint.steps[i]?.vars?.url === githubUrl)) {
+		if (blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'https://github.com/woocommerce/wc-smooth-generator/releases/download/1.2.2/wc-smooth-generator.zip') {
 			hasSmoothGeneratorPlugin = true;
 		}
 	}
@@ -245,61 +203,15 @@ error_log( "Generated " . count( $term_ids ) . " product categories" );
 
 	// Install WC Smooth Generator plugin if not present
 	if (!hasSmoothGeneratorPlugin) {
-		if (convertedUrl.type === 'releases') {
-			// Use installPlugin directly for releases URLs - without activation
-			steps.push({
-				"step": "installPlugin",
-				"pluginData": {
-					"resource": "url",
-					"url": convertedUrl.url
-				},
-				"options": {
-					"activate": false
-				}
-			});
-		} else {
-			// Use githubPlugin for branch-based URLs (already doesn't activate)
-			steps = steps.concat(githubPlugin({ step: 'githubPlugin', url: convertedUrl.url }));
-		}
-		
-		// Add separate activation step for all cases
 		steps.push({
-			"step": "runPHP",
-			"code": `<?php 
-try {
-	require_once '/wordpress/wp-load.php'; 
-	error_log("Attempting to activate WC Smooth Generator plugin...");
-	$plugins = array(
-		'wc-smooth-generator/wc-smooth-generator.php',
-		'woocommerce-smooth-generator/wc-smooth-generator.php', 
-		'wc-smooth-generator-main/wc-smooth-generator.php',
-		'wc-smooth-generator-trunk/wc-smooth-generator.php'
-	);
-	foreach ($plugins as $plugin) {
-		if (file_exists('/wordpress/wp-content/plugins/' . $plugin)) {
-			error_log("Found plugin file: " . $plugin);
-			try {
-				$result = activate_plugin($plugin);
-				if (is_wp_error($result)) {
-					error_log("Failed to activate " . $plugin . ": " . $result->get_error_message());
-				} else {
-					error_log("Successfully activated WC Smooth Generator plugin: " . $plugin);
-					break;
-				}
-			} catch (Exception $e) {
-				error_log("Exception during activation of " . $plugin . ": " . $e->getMessage());
-			} catch (Error $e) {
-				error_log("Fatal error during activation of " . $plugin . ": " . $e->getMessage());
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "url",
+				"url": "https://github.com/woocommerce/wc-smooth-generator/releases/download/1.2.2/wc-smooth-generator.zip"
+			},
+			"options": {
+				"activate": true
 			}
-		} else {
-			error_log("Plugin file not found: " . $plugin);
-		}
-	}
-} catch (Exception $e) {
-	error_log("Exception in activation step: " . $e->getMessage());
-} catch (Error $e) {
-	error_log("Fatal error in activation step: " . $e->getMessage());
-} ?>`
 		});
 	}
 

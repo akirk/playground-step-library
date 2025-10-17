@@ -23,8 +23,8 @@ add_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {
 		{
 			"step": "unzip",
 			"zipFile": {
-				"resource": "url",
-				"url": "https://github-proxy.com/proxy/?repo=akirk/pheditor&branch=main",
+				"resource": "git:directory",
+				"url": "https://github.com/akirk/pheditor"
 			},
 			"extractToPath": "/wordpress/"
 		}
