@@ -9,27 +9,19 @@ export const githubPluginRelease: StepFunction<GithubPluginReleaseStep> = (step:
 	const repo = repoTest[1] + "/" + repoTest[2];
 	const tag = step.release;
 	const filename = step.filename;
-	const dir = filename.replace( /\.zip$/, '' ).replace( /[^a-z0-9-]+/g, '-' ).toLowerCase();
-	const options = {
-		activate: true,
-	};
 
-	const outSteps = [
+	return [
 		{
-			"step": "unzip",
-			"zipFile": {
+			"step": "installPlugin",
+			"pluginData": {
 				"resource": "url",
-				"url": `https://github-proxy.com/proxy/?repo=${repo}&release=${tag}&asset=${filename}`
+				"url": `https://github.com/${repo}/releases/download/${tag}/${filename}`
 			},
-			"extractToPath": "/wordpress/wp-content/plugins/" + dir
-		},
-		{
-			"step": "activatePlugin",
-			"pluginPath": "/wordpress/wp-content/plugins/" + dir
+			"options": {
+				"activate": true
+			}
 		}
 	];
-
-	return outSteps;
 };
 
 githubPluginRelease.description = "Install a specific plugin release from a Github repository.";
@@ -39,11 +31,11 @@ githubPluginRelease.vars = Object.entries({
 		samples: [ "ryanwelcher/interactivity-api-todomvc" ]
 	},
 	release: {
-		description: "The release slug.",
+		description: "The release tag.",
 		samples: [ "v0.1.3" ]
 	},
 	filename: {
 		description: "Which filename to use.",
-		samples: [ " to-do-mvc.zip " ]
+		samples: [ "to-do-mvc.zip" ]
 	}
 }).map(([name, varConfig]) => ({ name, ...varConfig }));

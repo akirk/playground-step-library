@@ -7,57 +7,45 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 		return [];
 	}
 	const repo = urlTest.groups!.org + "/" + urlTest.groups!.repo;
-	const branch = urlTest.groups!.branch || "main";
-	if ( ! /^[a-z0-9-]+$/.test( branch ) ) {
+	const branch = urlTest.groups!.branch;
+	if ( branch && ! /^[a-z0-9_-]+$/.test( branch ) ) {
 		return [];
 	}
-	let url = `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`;
+	const repoUrl = `https://github.com/${repo}`;
 	const directory = ( urlTest.groups!.directory || "" ).replace( /\/+$/, '' ).replace( /^\/+/, '' );
-	let dirBasename;
-	if ( directory ) {
-		url += '&directory=' + directory;
-		dirBasename = directory.split( '/' ).pop();
-	}
 
 	const outStep = {
 		"step": "installTheme",
 		"themeData": {
-			"resource": "url",
-			url
-		},
+			"resource": "git:directory",
+			"url": repoUrl
+		} as any,
 		options: {
 			activate: true,
 		}
 	} as any;
+
+	if ( branch ) {
+		outStep.themeData.ref = branch;
+	}
+
+	if ( directory ) {
+		outStep.themeData.path = directory;
+	}
 
 	if ( step.prs ) {
 		outStep.queryParams = {
 			'gh-ensure-auth': 'yes',
 			'ghexport-repo-url': 'https://github.com/' + repo,
 			'ghexport-content-type': 'theme',
-			'ghexport-theme': urlTest.groups!.repo + '-' + branch,
-			'ghexport-playground-root': '/wordpress/wp-content/themes/' + urlTest.groups!.repo + '-' + branch,
+			'ghexport-theme': urlTest.groups!.repo,
+			'ghexport-playground-root': '/wordpress/wp-content/themes/' + urlTest.groups!.repo,
 			'ghexport-pr-action': 'create',
 			'ghexport-allow-include-zip': 'no',
 		};
 	}
 
-	const outSteps = [ outStep ];
-	if ( directory && directory !== dirBasename ) {
-		// if its a subsub directory, move the lowest directory into wp-content/themes
-		outSteps[0].options.activate = false;
-		outSteps.push({
-			"step": "mv",
-			"fromPath": "/wordpress/wp-content/themes/" + directory,
-			"toPath": "/wordpress/wp-content/themes/" + dirBasename
-		});
-		outSteps.push({
-			"step": "activateTheme",
-			"themeFolderName": dirBasename
-		});
-	}
-
-	return outSteps;
+	return [ outStep ];
 };
 
 githubTheme.description = "Install a theme from a Github repository.";

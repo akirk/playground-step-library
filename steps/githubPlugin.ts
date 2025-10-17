@@ -7,62 +7,45 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 		return [];
 	}
 	const repo = urlTest.groups!.org + "/" + urlTest.groups!.repo;
-	const branch = urlTest.groups!.branch || "main";
-	if ( ! /^[a-z0-9-]+$/.test( branch ) ) {
+	const branch = urlTest.groups!.branch;
+	if ( branch && ! /^[a-z0-9_-]+$/.test( branch ) ) {
 		return [];
 	}
-	let url = `https://github-proxy.com/proxy/?repo=${repo}&branch=${branch}`;
+	const repoUrl = `https://github.com/${repo}`;
 	const directory = ( urlTest.groups!.directory || '' ).replace( /\/+$/, '' ).replace( /^\/+/, '' );
-	let dirBasename;
-	if ( directory ) {
-		url += '&directory=' + directory;
-		dirBasename = directory.split( '/' ).pop();
-	}
 
 	const outStep = {
 		"step": "installPlugin",
 		"pluginData": {
-			"resource": "url",
-			url
-		},
+			"resource": "git:directory",
+			"url": repoUrl
+		} as any,
 		options: {
-			activate: false,
+			activate: true,
 		}
 	} as any;
+
+	if ( branch ) {
+		outStep.pluginData.ref = branch;
+	}
+
+	if ( directory ) {
+		outStep.pluginData.path = directory;
+	}
 
 	if ( step.prs ) {
 		outStep.queryParams = {
 			'gh-ensure-auth': 'yes',
 			'ghexport-repo-url': 'https://github.com/' + repo,
 			'ghexport-content-type': 'plugin',
-			'ghexport-plugin': urlTest.groups?.repo + '-' + branch,
-			'ghexport-playground-root': '/wordpress/wp-content/plugins/' + urlTest.groups?.repo + '-' + branch,
+			'ghexport-plugin': urlTest.groups?.repo,
+			'ghexport-playground-root': '/wordpress/wp-content/plugins/' + urlTest.groups?.repo,
 			'ghexport-pr-action': 'create',
 			'ghexport-allow-include-zip': 'no',
 		};
 	}
 
-	const outSteps = [ outStep ];
-	if ( directory && directory !== dirBasename ) {
-		// if its a subsub directory, move the lowest directory into wp-content/plugins
-		outSteps.push( {
-			"step": "mv",
-			"fromPath": "/wordpress/wp-content/plugins/" + directory,
-			"toPath": "/wordpress/wp-content/plugins/" + dirBasename
-		} );
-		outSteps.push( {
-			"step": "activatePlugin",
-			"pluginPath": "/wordpress/wp-content/plugins/" + dirBasename
-		} );
-	} else {
-		false && outSteps.push( {
-			"step": "activatePlugin",
-			"pluginPath": "/wordpress/wp-content/plugins/" + (urlTest?.groups?.repo || 'unknown') + '-' + branch + '/' + (urlTest?.groups?.repo || 'unknown') + '.php'
-		} );
-
-	}
-
-	return outSteps;
+	return [ outStep ];
 };
 
 githubPlugin.description = "Install a plugin from a Github repository.";
