@@ -165,6 +165,10 @@ addEventListener('DOMContentLoaded', function () {
 						input.required = true;
 					}
 					td.appendChild(input);
+					const codeEditorButton = document.createElement('button');
+					codeEditorButton.innerText = 'Code Editor';
+					codeEditorButton.className = 'code-editor';
+					td.appendChild(codeEditorButton);
 					if ('samples' in v) {
 						input.value = v.samples[0];
 						if (v.samples.length > 1) {
@@ -187,10 +191,6 @@ addEventListener('DOMContentLoaded', function () {
 							td.appendChild(examples);
 						}
 					}
-					const codeEditorButton = document.createElement('button');
-					codeEditorButton.innerText = 'Code Editor';
-					codeEditorButton.className = 'code-editor';
-					td.appendChild(codeEditorButton);
 				} else if (v.type === 'button') {
 					const button = document.createElement('button');
 					button.textContent = v.label;
