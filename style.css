@@ -181,12 +181,12 @@ header {
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 header h1 {
   margin: 0;
-  flex-shrink: 0;
+  flex-shrink: 1;
   min-width: 0;
 }
 
@@ -535,12 +535,16 @@ textarea#blueprint:focus, textarea#blueprint-compiled:focus {
 
 .step td > textarea {
   vertical-align: top;
-  width: 27em;
-  height: 3em;
+  width: 100%;
+  max-width: 400px;
+  min-height: 3em;
+  box-sizing: border-box;
 }
 
 .step td > input[type=text] {
-  width: 27em;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
 }
 
 .step td > label {
@@ -548,14 +552,13 @@ textarea#blueprint:focus, textarea#blueprint-compiled:focus {
 }
 
 .step .examples {
-  margin-left: 30em;
-  margin-top: -2.7em;
-  font-size: 13px;
+  margin-top: var(--spacing-2);
+  font-size: var(--font-size-xs);
 }
 
 .step .examples[open] {
   margin-left: 0;
-  margin-top: 0;
+  margin-top: var(--spacing-2);
 }
 
 .step .remove {
@@ -655,12 +658,25 @@ button.save-step,
   display: block;
 }
 
+table.vars {
+  width: 100%;
+  border-collapse: collapse;
+}
+
 table.vars tr td:first-child {
-  font-weight: bold;
-  width: 5em;
+  font-weight: var(--font-weight-semibold);
+  width: auto;
+  min-width: 80px;
+  max-width: 120px;
   vertical-align: top;
-  line-height: 1.3;
-  padding: .5em .5em .5em 0;
+  line-height: var(--line-height-normal);
+  padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) 0;
+  white-space: nowrap;
+}
+
+table.vars tr td:last-child {
+  width: 100%;
+  padding: var(--spacing-3) 0;
 }
 
 button,
@@ -937,7 +953,10 @@ button.save-step:hover {
 }
 
 button.code-editor {
-  margin-left: 1em;
+  margin-left: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-xs);
+  vertical-align: middle;
 }
 
 #autoredirecting {
