@@ -24,7 +24,8 @@ add_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {
 			"step": "unzip",
 			"zipFile": {
 				"resource": "git:directory",
-				"url": "https://github.com/akirk/pheditor"
+				"url": "https://github.com/akirk/pheditor",
+				"ref": "HEAD"
 			},
 			"extractToPath": "/wordpress/"
 		}

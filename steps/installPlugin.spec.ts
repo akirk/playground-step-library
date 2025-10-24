@@ -50,19 +50,34 @@ describe('installPlugin', () => {
 
         const result = installPlugin(step);
 
-        // Since this calls githubPlugin, we just verify it's handled differently
         expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('installPlugin');
+        expect(result[0].pluginData.resource).toBe('git:directory');
+        expect(result[0].pluginData.url).toBe('https://github.com/akirk/blueprint-recorder');
+        expect(result[0].pluginData.path).toBeUndefined();
+        expect(result[0].pluginData.ref).toBe('HEAD');
+        expect(result[0].pluginData.refType).toBeUndefined();
+        expect(result[0].options.activate).toBe(true);
     });
 
     it('should handle GitHub URLs without https prefix', () => {
         const step: InstallPluginStep = {
             step: 'installPlugin',
-            url: 'github.com/user/repo'
+            url: 'akirk/blueprint-recorder'
         };
 
         const result = installPlugin(step);
 
         expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('installPlugin');
+        expect(result[0].pluginData.resource).toBe('git:directory');
+        expect(result[0].pluginData.url).toBe('https://github.com/akirk/blueprint-recorder');
+        expect(result[0].pluginData.path).toBeUndefined();
+        expect(result[0].pluginData.ref).toBe('HEAD');
+        expect(result[0].pluginData.refType).toBeUndefined();
+        expect(result[0].options.activate).toBe(true);
     });
 
     it('should handle GitHub release download URLs', () => {
@@ -86,6 +101,33 @@ describe('installPlugin', () => {
         const result = installPlugin(step);
 
         expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('installPlugin');
+        expect(result[0].pluginData.resource).toBe('git:directory');
+        expect(result[0].pluginData.url).toBe('https://github.com/Automattic/wordpress-activitypub');
+        expect(result[0].pluginData.path).toBeUndefined();
+        expect(result[0].pluginData.ref).toBe('trunk');
+        expect(result[0].pluginData.refType).toBe('branch');
+        expect(result[0].options.activate).toBe(true);
+    });
+
+    it('should handle GitHub branch/directory URLs with subdirectory', () => {
+        const step: InstallPluginStep = {
+            step: 'installPlugin',
+            url: 'https://github.com/WordPress/gutenberg/tree/trunk/packages/components'
+        };
+
+        const result = installPlugin(step);
+
+        expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('installPlugin');
+        expect(result[0].pluginData.resource).toBe('git:directory');
+        expect(result[0].pluginData.url).toBe('https://github.com/WordPress/gutenberg');
+        expect(result[0].pluginData.path).toBe('packages/components');
+        expect(result[0].pluginData.ref).toBe('trunk');
+        expect(result[0].pluginData.refType).toBe('branch');
+        expect(result[0].options.activate).toBe(true);
     });
 
     it('should handle GitHub PR URLs', () => {
@@ -102,6 +144,8 @@ describe('installPlugin', () => {
         expect(result[0].pluginData.resource).toBe('git:directory');
         expect(result[0].pluginData.url).toBe('https://github.com/akirk/friends');
         expect(result[0].pluginData.ref).toBe('refs/pull/559/head');
+        expect(result[0].pluginData.refType).toBe('refname');
+        expect(result[0].pluginData.path).toBeUndefined();
         expect(result[0].options.activate).toBe(true);
     });
 

@@ -18,7 +18,8 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 		"step": "installTheme",
 		"themeData": {
 			"resource": "git:directory",
-			"url": repoUrl
+			"url": repoUrl,
+			"ref": branch || "HEAD"
 		} as any,
 		options: {
 			activate: true,
@@ -26,7 +27,7 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 	} as any;
 
 	if ( branch ) {
-		outStep.themeData.ref = branch;
+		outStep.themeData.refType = "branch";
 	}
 
 	if ( directory ) {

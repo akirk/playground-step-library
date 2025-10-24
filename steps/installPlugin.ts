@@ -16,7 +16,8 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 			"pluginData": {
 				"resource": "git:directory",
 				"url": repoUrl,
-				"ref": `refs/pull/${prNumber}/head`
+				"ref": `refs/pull/${prNumber}/head`,
+				"refType": "refname"
 			},
 			"options": {
 				"activate": true

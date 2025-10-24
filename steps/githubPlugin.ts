@@ -18,7 +18,8 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 		"step": "installPlugin",
 		"pluginData": {
 			"resource": "git:directory",
-			"url": repoUrl
+			"url": repoUrl,
+			"ref": branch || "HEAD"
 		} as any,
 		options: {
 			activate: true,
@@ -26,7 +27,7 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 	} as any;
 
 	if ( branch ) {
-		outStep.pluginData.ref = branch;
+		outStep.pluginData.refType = "branch";
 	}
 
 	if ( directory ) {

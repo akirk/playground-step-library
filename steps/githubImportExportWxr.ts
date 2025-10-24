@@ -44,13 +44,14 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 		"step": "unzip",
 		"zipFile": {
 			"resource": "git:directory",
-			"url": `https://github.com/${repo}`
+			"url": `https://github.com/${repo}`,
+			"ref": branch || "HEAD"
 		},
 		"extractToPath": "/wordpress/wp-content"
 	};
 
 	if ( branch ) {
-		unzipStep.zipFile.ref = branch;
+		unzipStep.zipFile.refType = "branch";
 	}
 
 	steps.push(unzipStep);
@@ -69,7 +70,8 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 		"pluginZipFile": {
 			"resource": "git:directory",
 			"url": "https://github.com/humanmade/WordPress-Importer",
-			"ref": "master"
+			"ref": "master",
+			"refType": "branch"
 		}
 	},
 	{
