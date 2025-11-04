@@ -381,8 +381,10 @@ addEventListener('DOMContentLoaded', function () {
 				insertStep(event.target);
 				return false;
 			}
-			if (event.target.closest('#filter') && document.getElementById('step-library').querySelectorAll('.step:not(.hidden)').length === 1) {
-				insertStep(document.getElementById('step-library').querySelector('.step:not(.hidden)'));
+			if (event.target.closest('#filter')) {
+				if (document.getElementById('step-library').querySelectorAll('.step:not(.hidden)').length === 1) {
+					insertStep(document.getElementById('step-library').querySelector('.step:not(.hidden)'));
+				}
 				return false;
 			}
 			if (event.target.closest('input')) {
