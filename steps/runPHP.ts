@@ -17,6 +17,9 @@ runPHP.vars = Object.entries({
 		description: "The code to run",
 		type: "textarea",
 		required: true,
-		samples: [""]
+		samples: [
+			"<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress",
+			"<?php error_log( 'Debug message from WordPress Playground' );"
+		]
 	}
 }).map(([name, varConfig]) => ({ name, ...varConfig }));

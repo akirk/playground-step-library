@@ -1,6 +1,6 @@
 # `installPlugin` Step
 
-Install a plugin via WordPress.org or Github.
+Install a plugin via WordPress.org or Github (branches, releases, PRs).
 
 ## Type
 🔧 **Built-in Step**

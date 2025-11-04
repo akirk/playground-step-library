@@ -4,9 +4,9 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 📊 Overview
 
-- **Total Steps**: 44
+- **Total Steps**: 46
 - **Built-in Steps**: 8
-- **Custom Steps**: 36
+- **Custom Steps**: 38
 
 ## 🚀 Quick Start
 
@@ -34,7 +34,7 @@ Built-in steps are core WordPress Playground steps that are enhanced with additi
 
 - [`defineWpConfigConst`](steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
 - [`importWxr`](steps/importWxr.md) - Import a WXR from a URL.
-- [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Github.
+- [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Github (branches, releases, PRs).
 - [`installTheme`](steps/installTheme.md) - Install a theme via WordPress.org or Github.
 - [`login`](steps/login.md) - Login to the site.
 - [`runPHP`](steps/runPHP.md) - Run code in the context of WordPress.
@@ -66,6 +66,7 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`githubTheme`](steps/githubTheme.md) - Install a theme from a Github repository.
 - [`importFriendFeeds`](steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.
 - [`importWordPressComExport`](steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
+- [`installAdminer`](steps/installAdminer.md) - Install Adminer with auto login link.
 - [`installPhEditor`](steps/installPhEditor.md) - Install phEditor. Password: admin
 - [`installPhpLiteAdmin`](steps/installPhpLiteAdmin.md) - Provide phpLiteAdmin. Password: admin
 - [`jetpackOfflineMode`](steps/jetpackOfflineMode.md) - Start Jetpack in Offline mode.
@@ -80,6 +81,7 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`setTT4Homepage`](steps/setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
 - [`showAdminNotice`](steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
+- [`generateProducts`](steps/generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 
 ## 🔗 Cross-References
 
@@ -103,4 +105,4 @@ To add a new step:
 
 ---
 
-*This documentation was auto-generated on 2025-09-08.*
+*This documentation was auto-generated on 2025-11-04.*

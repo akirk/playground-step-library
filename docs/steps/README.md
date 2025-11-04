@@ -3,9 +3,9 @@
 Browse detailed documentation for each WordPress Playground step.
 
 ## 📊 Quick Stats
-- **44** total steps
+- **46** total steps
 - **8** built-in steps  
-- **36** custom steps
+- **38** custom steps
 
 ## 🔧 Built-in Steps
 Enhanced core WordPress Playground steps with additional functionality.
@@ -13,7 +13,7 @@ Enhanced core WordPress Playground steps with additional functionality.
 - [`defineWpConfigConst`](./defineWpConfigConst.md) - Define a wp-config PHP constant.
 - [`enableMultisite`](./enableMultisite.md) - Enable WordPress Multisite functionality.
 - [`importWxr`](./importWxr.md) - Import a WXR from a URL.
-- [`installPlugin`](./installPlugin.md) - Install a plugin via WordPress.org or Github.
+- [`installPlugin`](./installPlugin.md) - Install a plugin via WordPress.org or Github (branches, releases, PRs).
 - [`installTheme`](./installTheme.md) - Install a theme via WordPress.org or Github.
 - [`login`](./login.md) - Login to the site.
 - [`runPHP`](./runPHP.md) - Run code in the context of WordPress.
@@ -38,12 +38,14 @@ Extended functionality beyond core WordPress Playground capabilities.
 - [`disableWelcomeGuides`](./disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - [`doAction`](./doAction.md) - Execute a custom action.
 - [`fakeHttpResponse`](./fakeHttpResponse.md) - Fake a wp_remote_request() response.
+- [`generateProducts`](./generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 - [`githubImportExportWxr`](./githubImportExportWxr.md) - Provide useful additional info.
 - [`githubPlugin`](./githubPlugin.md) - Install a plugin from a Github repository.
 - [`githubPluginRelease`](./githubPluginRelease.md) - Install a specific plugin release from a Github repository.
 - [`githubTheme`](./githubTheme.md) - Install a theme from a Github repository.
 - [`importFriendFeeds`](./importFriendFeeds.md) - Add subscriptions to the Friends plugin.
 - [`importWordPressComExport`](./importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
+- [`installAdminer`](./installAdminer.md) - Install Adminer with auto login link.
 - [`installPhEditor`](./installPhEditor.md) - Install phEditor. Password: admin
 - [`installPhpLiteAdmin`](./installPhpLiteAdmin.md) - Provide phpLiteAdmin. Password: admin
 - [`jetpackOfflineMode`](./jetpackOfflineMode.md) - Start Jetpack in Offline mode.
@@ -66,4 +68,4 @@ Extended functionality beyond core WordPress Playground capabilities.
 
 ---
 
-*This documentation was auto-generated on 2025-09-08*
+*This documentation was auto-generated on 2025-11-04*

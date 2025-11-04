@@ -320,13 +320,13 @@ Returns information about all available custom steps.
 - Returns: Object with step names as keys and step info as values
 ## Custom Steps
 
-This library provides **44** total steps (8 built-in enhanced steps + 36 custom steps):
+This library provides **46** total steps (8 built-in enhanced steps + 38 custom steps):
 
 ### Built-in Enhanced Steps
 - [`defineWpConfigConst`](docs/steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
 - [`enableMultisite`](docs/steps/enableMultisite.md) - Enable WordPress Multisite functionality.
 - [`importWxr`](docs/steps/importWxr.md) - Import a WXR from a URL.
-- [`installPlugin`](docs/steps/installPlugin.md) - Install a plugin via WordPress.org or Github.
+- [`installPlugin`](docs/steps/installPlugin.md) - Install a plugin via WordPress.org or Github (branches, releases, PRs).
 - [`installTheme`](docs/steps/installTheme.md) - Install a theme via WordPress.org or Github.
 - [`login`](docs/steps/login.md) - Login to the site.
 - [`runPHP`](docs/steps/runPHP.md) - Run code in the context of WordPress.
@@ -349,12 +349,14 @@ This library provides **44** total steps (8 built-in enhanced steps + 36 custom 
 - [`disableWelcomeGuides`](docs/steps/disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - [`doAction`](docs/steps/doAction.md) - Execute a custom action.
 - [`fakeHttpResponse`](docs/steps/fakeHttpResponse.md) - Fake a wp_remote_request() response.
+- [`generateProducts`](docs/steps/generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 - [`githubImportExportWxr`](docs/steps/githubImportExportWxr.md) - Provide useful additional info.
 - [`githubPlugin`](docs/steps/githubPlugin.md) - Install a plugin from a Github repository.
 - [`githubPluginRelease`](docs/steps/githubPluginRelease.md) - Install a specific plugin release from a Github repository.
 - [`githubTheme`](docs/steps/githubTheme.md) - Install a theme from a Github repository.
 - [`importFriendFeeds`](docs/steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.
 - [`importWordPressComExport`](docs/steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
+- [`installAdminer`](docs/steps/installAdminer.md) - Install Adminer with auto login link.
 - [`installPhEditor`](docs/steps/installPhEditor.md) - Install phEditor. Password: admin
 - [`installPhpLiteAdmin`](docs/steps/installPhpLiteAdmin.md) - Provide phpLiteAdmin. Password: admin
 - [`jetpackOfflineMode`](docs/steps/jetpackOfflineMode.md) - Start Jetpack in Offline mode.
@@ -370,4 +372,4 @@ This library provides **44** total steps (8 built-in enhanced steps + 36 custom 
 - [`showAdminNotice`](docs/steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](docs/steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 
-*This list was automatically generated on 2025-09-08.*
+*This list was automatically generated on 2025-11-04.*

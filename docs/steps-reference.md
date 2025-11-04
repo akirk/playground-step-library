@@ -22,6 +22,7 @@ This document provides detailed information about all available steps, including
 - [`doAction`](#doaction)
 - [`enableMultisite`](#enablemultisite)
 - [`fakeHttpResponse`](#fakehttpresponse)
+- [`generateProducts`](#generateproducts)
 - [`githubImportExportWxr`](#githubimportexportwxr)
 - [`githubPlugin`](#githubplugin)
 - [`githubPluginRelease`](#githubpluginrelease)
@@ -29,6 +30,7 @@ This document provides detailed information about all available steps, including
 - [`importFriendFeeds`](#importfriendfeeds)
 - [`importWordPressComExport`](#importwordpresscomexport)
 - [`importWxr`](#importwxr)
+- [`installAdminer`](#installadminer)
 - [`installPhEditor`](#installpheditor)
 - [`installPhpLiteAdmin`](#installphpliteadmin)
 - [`installPlugin`](#installplugin)
@@ -481,6 +483,36 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## `generateProducts`
+
+**Type**: Custom Step  
+**Description**: Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `count` | number | ❌ No | Number of products to generate |
+| `orders` | number | ❌ No | Number of orders to generate (optional) |
+| `customers` | number | ❌ No | Number of customers to generate (optional) |
+| `coupons` | number | ❌ No | Number of coupons to generate (optional) |
+| `categories` | number | ❌ No | Number of product categories to generate (optional) |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "generateProducts",
+          "count": "10",
+          "orders": "5",
+          "customers": "3",
+          "coupons": "2",
+          "categories": "3"
+    }
+```
+
+
+---
+
 ## `githubImportExportWxr`
 
 **Type**: Custom Step  
@@ -541,7 +573,7 @@ This document provides detailed information about all available steps, including
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `repo` | string | ❌ No | The plugin resides in this GitHub repository. |
-| `release` | string | ❌ No | The release slug. |
+| `release` | string | ❌ No | The release tag. |
 | `filename` | string | ❌ No | Which filename to use. |
 
 
@@ -552,7 +584,7 @@ This document provides detailed information about all available steps, including
           "step": "githubPluginRelease",
           "repo": "ryanwelcher/interactivity-api-todomvc",
           "release": "v0.1.3",
-          "filename": " to-do-mvc.zip "
+          "filename": "to-do-mvc.zip"
     }
 ```
 
@@ -653,6 +685,24 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## `installAdminer`
+
+**Type**: Custom Step  
+**Description**: Install Adminer with auto login link.
+
+*No parameters defined.*
+
+### Example Usage
+
+```json
+    {
+          "step": "installAdminer"
+    }
+```
+
+
+---
+
 ## `installPhEditor`
 
 **Type**: Custom Step  
@@ -692,7 +742,7 @@ This document provides detailed information about all available steps, including
 ## `installPlugin`
 
 **Type**: Built-in Step  
-**Description**: Install a plugin via WordPress.org or Github.
+**Description**: Install a plugin via WordPress.org or Github (branches, releases, PRs).
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -1083,4 +1133,4 @@ This document provides detailed information about all available steps, including
 
 ---
 
-*Generated automatically on 2025-09-08.*
+*Generated automatically on 2025-11-04.*

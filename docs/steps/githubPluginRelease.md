@@ -10,7 +10,7 @@ Install a specific plugin release from a Github repository.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `repo` | string | ❌ No | The plugin resides in this GitHub repository. |
-| `release` | string | ❌ No | The release slug. |
+| `release` | string | ❌ No | The release tag. |
 | `filename` | string | ❌ No | Which filename to use. |
 
 
@@ -22,7 +22,7 @@ Install a specific plugin release from a Github repository.
           "step": "githubPluginRelease",
           "repo": "ryanwelcher/interactivity-api-todomvc",
           "release": "v0.1.3",
-          "filename": " to-do-mvc.zip "
+          "filename": "to-do-mvc.zip"
     }
 ```
 
@@ -35,7 +35,7 @@ Install a specific plugin release from a Github repository.
           "step": "githubPluginRelease",
           "repo": "ryanwelcher/interactivity-api-todomvc",
           "release": "v0.1.3",
-          "filename": " to-do-mvc.zip "
+          "filename": "to-do-mvc.zip"
     }
   ]
 }
@@ -53,7 +53,7 @@ const blueprint = {
           "step": "githubPluginRelease",
           "repo": "ryanwelcher/interactivity-api-todomvc",
           "release": "v0.1.3",
-          "filename": " to-do-mvc.zip "
+          "filename": "to-do-mvc.zip"
     }
   ]
 };
