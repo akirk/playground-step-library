@@ -695,7 +695,11 @@ addEventListener('DOMContentLoaded', function () {
 
 	document.getElementById('clear').addEventListener('click', function () {
 		document.getElementById('title').value = '';
-		blueprintSteps.innerHTML = '';
+		blueprintSteps.textContent = '';
+		const draghint = document.createElement('div');
+		draghint.id = 'draghint';
+		draghint.textContent = 'Click or drag the steps to add them here.';
+		blueprintSteps.appendChild(draghint);
 		document.getElementById('examples').value = 'Examples';
 		loadCombinedExamples();
 	});
@@ -2210,6 +2214,7 @@ addEventListener('DOMContentLoaded', function () {
 			stepsData.title = titleInput.value;
 		}
 
+		console.log('captureCurrentSteps returning:', stepsData);
 		return stepsData;
 	}
 
@@ -2602,7 +2607,7 @@ addEventListener('DOMContentLoaded', function () {
 		if (!currentHistorySelection) {
 			return;
 		}
-		restoreSteps( currentHistorySelection.steps );
+		restoreSteps( currentHistorySelection.steps, currentHistorySelection.label );
 		historyModal.close();
 	} );
 
@@ -2618,7 +2623,8 @@ addEventListener('DOMContentLoaded', function () {
 	} );
 
 
-	function restoreSteps(stepsData) {
+	function restoreSteps(stepsData, label) {
+		console.log('restoreSteps called with:', stepsData, 'label:', label);
 		if (!stepsData || !stepsData.steps) {
 			return;
 		}
@@ -2633,9 +2639,9 @@ addEventListener('DOMContentLoaded', function () {
 		draghint.textContent = 'Click or drag the steps to add them here.';
 		blueprintStepsContainer.appendChild( draghint );
 
-		const titleInput = document.getElementById( 'title' );
-		if (titleInput) {
-			titleInput.value = stepsData.title || '';
+		if (label) {
+			console.log('Setting title to label:', label);
+			document.getElementById( 'title' ).value = label;
 		}
 
 		const missingSteps = [];
