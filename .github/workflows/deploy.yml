@@ -41,7 +41,10 @@ jobs:
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
-        
+
+      - name: Remove node_modules before upload
+        run: rm -rf node_modules examples/node_modules
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
