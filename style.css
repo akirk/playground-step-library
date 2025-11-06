@@ -293,6 +293,7 @@ a:any-link:hover {
   margin-top: var(--spacing-8);
   flex-wrap: wrap;
   gap: var(--spacing-16) var(--spacing-4);
+  align-items: flex-start;
 }
 
 .arrow {
@@ -366,13 +367,22 @@ a:any-link:hover {
   flex: 3 1 0;
 }
 
-#blueprint-holder,
-#blueprint-compiled-holder {
-  flex: 1 1 0;
+#blueprint-holder {
+  flex: 0 0 auto;
   background: var(--surface-elevated);
   border-radius: var(--radius-xl);
   padding: var(--spacing-6);
   border: 1px solid var(--border-subtle);
+}
+
+#blueprint-compiled-holder {
+  flex: 0 0 auto;
+  background: var(--surface-elevated);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-6);
+  border: 1px solid var(--border-subtle);
+  height: auto;
+  max-height: fit-content;
 }
 
 #blueprint-holder > div,
@@ -1841,7 +1851,7 @@ body.split-view-right #playground-iframe {
   font-size: 0.875rem;
   transition: all 0.2s;
   white-space: nowrap;
-  display: flex;
+  display: none;
   align-items: center;
   gap: var(--spacing-2);
 }
