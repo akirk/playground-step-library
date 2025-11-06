@@ -98,6 +98,7 @@ addProduct.vars = Object.entries({
 	description: {
 		description: "The description of the product",
 		type: "textarea",
+		language: "markup",
 		required: true,
 		samples: ["<p>This is a great product!</p>", "<p>High quality item with excellent features.</p>"]
 	},
@@ -131,6 +132,7 @@ addProduct.vars = Object.entries({
 	productDescription: {
 		description: "The description of the product (deprecated: use 'description')",
 		type: "textarea",
+		language: "markup",
 		required: false,
 		samples: ["<p>This is a great product!</p>", "<p>High quality item with excellent features.</p>"],
 		deprecated: true

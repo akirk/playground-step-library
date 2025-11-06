@@ -37,6 +37,7 @@ addPage.vars = Object.entries({
 	content: {
 		description: "The HTML content of the page",
 		type: "textarea",
+		language: "markup",
 		required: true,
 		samples: ["<p>Hello World</p>"]
 	},
@@ -50,6 +51,7 @@ addPage.vars = Object.entries({
 	postContent: {
 		description: "The HTML content of the page (deprecated: use 'content')",
 		type: "textarea",
+		language: "markup",
 		required: false,
 		samples: ["<p>Hello World</p>"],
 		deprecated: true

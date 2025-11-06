@@ -57,6 +57,7 @@ addFilter.vars = Object.entries({
 	code: {
 		description: "Code for the filter",
 		type: "textarea",
+		language: "php",
 		required: true,
 		samples: [ "'__return_false'", "'__return_true'", "function ( $a, $b ) {\nreturn $a;\n}" ]
 	},

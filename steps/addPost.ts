@@ -49,6 +49,7 @@ addPost.vars = Object.entries({
 	content: {
 		description: "The HTML content of the post",
 		type: "textarea",
+		language: "markup",
 		required: true,
 		samples: ["<p>Hello World</p>"]
 	},
@@ -78,6 +79,7 @@ addPost.vars = Object.entries({
 	postContent: {
 		description: "The HTML content of the post (deprecated: use 'content')",
 		type: "textarea",
+		language: "markup",
 		required: false,
 		samples: ["<p>Hello World</p>"],
 		deprecated: true

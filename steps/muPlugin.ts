@@ -21,6 +21,7 @@ muPlugin.vars = Object.entries({
 	code: {
 		description: "Code for your mu-plugin",
 		type: "textarea",
+		language: "php",
 		required: true,
 		samples: [ '' ]
 	}
