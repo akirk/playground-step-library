@@ -2205,6 +2205,11 @@ addEventListener('DOMContentLoaded', function () {
 			previewMode: document.getElementById( 'preview-mode' ).value
 		};
 
+		const titleInput = document.getElementById( 'title' );
+		if (titleInput && titleInput.value) {
+			stepsData.title = titleInput.value;
+		}
+
 		return stepsData;
 	}
 
@@ -2627,6 +2632,11 @@ addEventListener('DOMContentLoaded', function () {
 		draghint.id = 'draghint';
 		draghint.textContent = 'Click or drag the steps to add them here.';
 		blueprintStepsContainer.appendChild( draghint );
+
+		const titleInput = document.getElementById( 'title' );
+		if (titleInput) {
+			titleInput.value = stepsData.title || '';
+		}
 
 		const missingSteps = [];
 
