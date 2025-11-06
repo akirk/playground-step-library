@@ -2010,6 +2010,35 @@ body.split-view-right #playground-iframe {
   background: light-dark(var(--danger-50), var(--danger-900));
 }
 
+.history-entry-details {
+  margin-top: var(--spacing-2);
+  font-size: 0.75rem;
+}
+
+.history-entry-details summary {
+  cursor: pointer;
+  color: var(--text-subtle);
+  padding: var(--spacing-1) 0;
+  user-select: none;
+}
+
+.history-entry-details summary:hover {
+  color: light-dark(var(--primary-600), var(--primary-400));
+}
+
+.history-steps-list {
+  margin: var(--spacing-1) 0 0 0;
+  padding-left: var(--spacing-5);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.history-steps-list li {
+  margin-bottom: var(--spacing-1);
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+}
+
 #history-detail-column {
   display: flex;
   flex-direction: column;
