@@ -1063,7 +1063,7 @@ select {
 }
 
 .ace-status-bar .status-warning:hover::before {
-  content: '▶ Resume Compilation';
+  content: '▶ Resume (changes will be lost!)';
 }
 
 .ace-status-bar .status-mode {

@@ -93,14 +93,13 @@ addEventListener('DOMContentLoaded', function () {
 
 		const textarea = document.getElementById('blueprint-compiled');
 		const currentValue = textarea.value;
-		const cursorPosition = textarea.selectionStart;
 		const wrapper = document.getElementById('blueprint-compiled-wrapper');
 		const wrapperHeight = wrapper.offsetHeight;
 
-		initializeAceEditor(textarea, currentValue, wrapperHeight, cursorPosition);
+		initializeAceEditor(textarea, currentValue, wrapperHeight);
 	}
 
-	function initializeAceEditor(textarea, currentValue, textareaHeight, cursorPosition) {
+	function initializeAceEditor(textarea, currentValue, textareaHeight) {
 		loadAceEditor().then(() => {
 			const wrapper = document.getElementById('blueprint-compiled-wrapper');
 
@@ -127,15 +126,6 @@ addEventListener('DOMContentLoaded', function () {
 				highlightActiveLine: true,
 				highlightGutterLine: true
 			});
-
-			// Convert textarea cursor position to Ace editor row/column
-			if (cursorPosition !== undefined) {
-				const lines = currentValue.substring(0, cursorPosition).split('\n');
-				const row = lines.length - 1;
-				const col = lines[lines.length - 1].length;
-				blueprintAceEditor.moveCursorTo(row, col);
-				blueprintAceEditor.clearSelection();
-			}
 
 			const blueprintStatus = document.getElementById('blueprint-status');
 			blueprintStatus.classList.add('active');
@@ -946,9 +936,10 @@ addEventListener('DOMContentLoaded', function () {
 		}
 		if (event.target.id === 'copy-playground-link') {
 			navigator.clipboard.writeText(document.getElementById('playground-link').href);
-			event.target.innerText = 'Copied!';
+			const originalHTML = event.target.innerHTML;
+			event.target.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 			setTimeout(function () {
-				event.target.innerText = '⧉';
+				event.target.innerHTML = originalHTML;
 			}, 2000);
 			return false;
 		}
@@ -1268,30 +1259,45 @@ addEventListener('DOMContentLoaded', function () {
 	}
 
 	function transformJson() {
-		let jsonInput = blueprint;
 		const queries = [];
 		let useBlueprintURLParam = false;
-
-		// Prepare compilation options from UI elements
-		const userDefined = {
-			'landingPage': '/',
-			'features': {}
-		};
-		if (document.getElementById('phpExtensionBundles').checked) {
-			userDefined.phpExtensionBundles = ['kitchen-sink'];
-		}
-		if ('latest' !== document.getElementById('wp-version').value || 'latest' !== document.getElementById('php-version').value) {
-			userDefined.preferredVersions = {
-				wp: document.getElementById('wp-version').value,
-				php: document.getElementById('php-version').value
-			};
-		}
-
-		// Use the PlaygroundStepLibrary to compile the blueprint
-		const compiler = new PlaygroundStepLibrary();
-		const inputData = Object.assign(userDefined, JSON.parse(jsonInput));
+		let outputData;
 		const useV2 = document.querySelector('input[name="blueprint-version"]:checked')?.value === 'v2';
-		const outputData = compiler.compile(inputData, {}, useV2);
+
+
+		// If in manual edit mode, use the manually edited blueprint directly
+		if (isManualEditMode) {
+			try {
+				const manualBlueprint = getBlueprintValue();
+				outputData = JSON.parse(manualBlueprint);
+			} catch (e) {
+				console.error('Invalid JSON in manual edit mode:', e);
+				alert('Invalid JSON in blueprint. Please fix syntax errors before launching.');
+				return;
+			}
+		} else {
+			let jsonInput = blueprint;
+
+			// Prepare compilation options from UI elements
+			const userDefined = {
+				'landingPage': '/',
+				'features': {}
+			};
+			if (document.getElementById('phpExtensionBundles').checked) {
+				userDefined.phpExtensionBundles = ['kitchen-sink'];
+			}
+			if ('latest' !== document.getElementById('wp-version').value || 'latest' !== document.getElementById('php-version').value) {
+				userDefined.preferredVersions = {
+					wp: document.getElementById('wp-version').value,
+					php: document.getElementById('php-version').value
+				};
+			}
+
+			// Use the PlaygroundStepLibrary to compile the blueprint
+			const compiler = new PlaygroundStepLibrary();
+			const inputData = Object.assign(userDefined, JSON.parse(jsonInput));
+			outputData = compiler.compile(inputData, {}, useV2);
+		}
 
 		// Extract query params from compiled steps (for the original web UI functionality)
 		if (outputData.steps) {
@@ -2401,6 +2407,25 @@ addEventListener('DOMContentLoaded', function () {
 
 	blueprintTextarea.addEventListener('click', function() {
 		initBlueprintAceEditor();
+	});
+
+	// Intercept playground link clicks to regenerate URL if in manual edit mode
+	document.getElementById('playground-link').addEventListener('click', function(e) {
+		if (isManualEditMode) {
+			e.preventDefault();
+			transformJson();
+			// Allow the click to proceed after transformJson updates the href
+			setTimeout(() => {
+				window.open(document.getElementById('playground-link').href, '_blank');
+			}, 0);
+		}
+	});
+
+	// Intercept copy button to regenerate URL if in manual edit mode
+	document.getElementById('copy-playground-link').addEventListener('click', function(e) {
+		if (isManualEditMode) {
+			transformJson();
+		}
 	});
 
 	// History functionality
