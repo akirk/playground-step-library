@@ -336,6 +336,7 @@ a:any-link:hover {
 
 #filter-holder label {
   white-space: nowrap;
+  line-height: 2.5;
 }
 
 #step-library {
@@ -383,6 +384,7 @@ a:any-link:hover {
   border: 1px solid var(--border-subtle);
   height: auto;
   max-height: fit-content;
+  position: relative;
 }
 
 #blueprint-holder > div,
@@ -752,7 +754,23 @@ button.save-step:hover {
   width: 8em;
 }
 
-#playground-link,
+/* Safari-specific fix for select height */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-3) center;
+  background-size: 1em;
+  padding-right: var(--spacing-8);
+  height: auto;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+}
+
+#playground-link {
   background-color: var(--primary-button-background);
   color: white;
   border-color: var(--primary-button-background);
@@ -760,7 +778,7 @@ button.save-step:hover {
   padding: var(--spacing-4) var(--spacing-6);
 }
 
-#playground-link:hover,
+#playground-link:hover {
   background-color: var(--primary-button-hover);
   border-color: var(--primary-button-hover);
   color: white;
@@ -800,13 +818,7 @@ button.save-step:hover {
   transform: translateY(-1px);
 }
 
-  display: none;
-  font-size: 13.3px;
-}
-  display: none;
-}
-
-#playground-link:any-link,
+#playground-link:any-link {
   color: white;
 }
 
@@ -1011,8 +1023,9 @@ button.save-step:hover {
 /* Ace Status Bar */
 .ace-status-bar {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: 16px;
   padding: 4px 12px;
   padding-right: 28px;
   background: light-dark(#f8f9fa, #252525);
@@ -1025,14 +1038,40 @@ button.save-step:hover {
 
 .ace-status-bar .status-info {
   font-variant-numeric: tabular-nums;
-  flex: 1;
+  flex-shrink: 0;
+}
+
+.ace-status-bar .status-warning {
+  color: light-dark(var(--warning-700), var(--warning-300));
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+}
+
+.ace-status-bar .status-warning::before {
+  content: '⏸ Compilation Paused';
+}
+
+.ace-status-bar .status-warning:hover {
+  background-color: light-dark(rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.2));
+  color: light-dark(rgb(21, 128, 61), rgb(134, 239, 172));
+}
+
+.ace-status-bar .status-warning:hover::before {
+  content: '▶ Resume Compilation';
 }
 
 .ace-status-bar .status-mode {
   text-transform: uppercase;
   font-weight: 600;
   color: light-dark(#495057, #adb5bd);
-  margin-left: 16px;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 #code-editor-status {
@@ -1281,9 +1320,6 @@ body.split-view-bottom #title-holder {
   margin-top: 0;
 }
 
-  display: inline-block;
-}
-
 body.split-view-right #blueprint-steps .step a.view-source {
   display: none;
 }
@@ -1296,9 +1332,6 @@ body.split-view-right #blueprint-compiled-holder {
 body.split-view-right #blueprint-builder {
   flex-direction: column;
   width: 100%;
-}
-
-  display: inline-block;
 }
 
 body.split-view-right #blueprint-steps .step a.view-source {
@@ -1883,7 +1916,9 @@ body.split-view-right #playground-iframe {
   position: relative;
   height: 520px !important;
   width: 100%;
+  max-width: 100%;
   display: block;
+  overflow: hidden;
 }
 
 #blueprint-compiled-ace {
@@ -1928,15 +1963,7 @@ body.split-view-right #playground-iframe {
 
 /* Manual Edit Mode Banner */
 #manual-edit-banner {
-  background: light-dark(var(--warning-100), var(--warning-900));
-  border: 2px solid light-dark(var(--warning-400), var(--warning-600));
-  border-radius: var(--radius-md);
-  padding: var(--spacing-3) var(--spacing-4);
-  margin-bottom: var(--spacing-3);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-3);
+  display: none !important;
 }
 
 #manual-edit-banner span {
@@ -2016,7 +2043,7 @@ body.split-view-right #playground-iframe {
 #history-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: var(--spacing-4);
   padding: var(--spacing-4) var(--spacing-5);
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
@@ -2026,6 +2053,35 @@ body.split-view-right #playground-iframe {
   margin: 0;
   font-size: 1.5rem;
   color: var(--text-color);
+}
+
+#history-import-export-buttons {
+  display: flex;
+  gap: var(--spacing-2);
+  margin-left: auto;
+}
+
+#history-import-export-buttons button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--surface-elevated);
+  color: var(--text-color);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#history-import-export-buttons button:hover {
+  background: light-dark(var(--gray-100), var(--gray-800));
+  border-color: light-dark(var(--primary-300), var(--primary-600));
+}
+
+#history-import-export-buttons button svg {
+  flex-shrink: 0;
 }
 
 #history-close {
@@ -2038,6 +2094,7 @@ body.split-view-right #playground-iframe {
   line-height: 1;
   transition: color 0.2s;
   border-radius: var(--radius-md);
+  margin-left: var(--spacing-2);
 }
 
 #history-close:hover {
@@ -2199,6 +2256,12 @@ body.split-view-right #playground-iframe {
   overflow: hidden;
 }
 
+#history-blueprint-wrapper {
+  position: relative;
+  height: calc(100% - 80px);
+  min-height: 300px;
+}
+
 #history-blueprint-view {
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   font-size: 0.875rem;
@@ -2211,13 +2274,32 @@ body.split-view-right #playground-iframe {
   overflow-y: auto;
   width: 100%;
   box-sizing: border-box;
-  height: calc(100% - 80px);
+  flex: 1;
+  line-height: 1.5;
+}
+
+#history-blueprint-ace {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 24px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  border-bottom: none;
+}
+
+#history-blueprint-status {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
 }
 
 #history-actions {
   display: flex;
   gap: var(--spacing-2);
-  margin-top: var(--spacing-4);
   padding-top: var(--spacing-4);
   border-top: 1px solid var(--border-color);
   flex-shrink: 0;
@@ -2361,6 +2443,27 @@ body.split-view-right #playground-iframe {
     position: relative;
   }
 
+  #history-header {
+    flex-wrap: wrap;
+  }
+
+  #history-import-export-buttons {
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    margin-top: var(--spacing-2);
+  }
+
+  #history-import-export-buttons button {
+    flex: 1;
+    font-size: 0.8125rem;
+    padding: var(--spacing-2);
+  }
+
+  #history-close {
+    order: 2;
+  }
+
   #history-list-column {
     border-right: none;
     border-bottom: none;
@@ -2411,9 +2514,5 @@ body.split-view-right #playground-iframe {
 
   #history-mobile-delete-btn {
     display: block;
-  }
-
-  #history-blueprint-view {
-    height: calc(100% - 200px);
   }
 }
