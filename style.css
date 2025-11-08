@@ -933,6 +933,28 @@ select {
   align-items: center;
 }
 
+#further-options .version-selectors,
+#further-options .mode-storage-selectors {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-4);
+  margin-top: 0;
+}
+
+.info-icon {
+  cursor: help;
+  color: var(--primary-500);
+  margin-left: var(--spacing-1);
+  font-size: var(--font-size-sm);
+  opacity: 0.8;
+  transition: all 0.2s ease;
+}
+
+.info-icon:hover {
+  opacity: 1;
+  color: var(--primary-400);
+}
+
 #draghint {
   margin: var(--spacing-8) var(--spacing-6);
   padding: var(--spacing-8);
@@ -1312,7 +1334,7 @@ button.code-editor {
 /* Split view styles */
 body.split-view-right #blueprint-builder {
   margin-top: 0;
-  flex-direction: column;
+  flex-direction: row;
   width: 100%;
 }
 body.split-view-right #title-holder,
@@ -1324,17 +1346,120 @@ body.split-view-right #blueprint-steps .step a.view-source {
   display: none;
 }
 
-body.split-view-right #blueprint-compiled-holder {
-  display: none;
-}
-
 /* Apply mobile-like styles when in right split view (narrow layout) */
 body.split-view-right #blueprint-builder {
-  flex-direction: column;
+  display: flex;
+  padding: var(--spacing-4);
+  gap: var(--spacing-4);
+  box-sizing: border-box;
+}
+
+body.split-view-right #title-holder {
+  margin: 0;
+  padding: var(--spacing-3);
+}
+
+body.split-view-right .arrow {
+  display: none !important;
+}
+
+body.split-view-right #steps-holder {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
+
+body.split-view-right #steps-group {
+  flex-direction: column;
+  position: relative;
+}
+
+body.split-view-right #step-library-holder {
+  width: 100%;
+  display: none;
+  max-height: 600px;
+}
+
+body.split-view-right #step-library-holder.mobile-visible {
+  display: block;
+}
+
+body.split-view-right #filter-holder {
+  position: relative;
+}
+
+body.split-view-right #filter-holder::before {
+  content: '← Back';
+  position: absolute;
+  left: var(--spacing-4);
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-600);
+  padding: var(--spacing-2);
+  z-index: 10;
+  background: var(--surface-elevated);
+}
+
+body.split-view-right #filter-holder input[type="text"] {
+  margin-left: 6em;
+}
+
+body.split-view-right #blueprint-steps {
+  width: 100%;
+  min-height: 200px;
+  max-height: none;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+body.split-view-right #blueprint-steps .step {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 body.split-view-right #blueprint-steps .step a.view-source {
+  display: none;
+}
+
+body.split-view-right #mobile-show-steps {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-4);
+  background: var(--primary-500);
+  color: white;
+  border: 1px solid var(--primary-500);
+  font-weight: var(--font-weight-semibold);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+}
+
+body.split-view-right #mobile-show-steps:hover {
+  background: var(--primary-600);
+}
+
+body.split-view-right #blueprint-compiled-holder {
+  width: 100%;
+  margin: 0;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+}
+
+body.split-view-right #step-library {
+  min-height: auto;
+}
+
+body.split-view-right #blueprint-compiled {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+body.split-view-right #blueprint-version-selector {
   display: none;
 }
 
@@ -1348,6 +1473,7 @@ body.split-view-bottom #split-view-wrapper,
 body.split-view-right #split-view-wrapper {
   position: relative;
   height: calc(100vh - 100px); /* Account for header height */
+  overflow: auto;
 }
 
 /* Bottom split view */
@@ -1371,14 +1497,15 @@ body.split-view-bottom #split-view-container {
   z-index: 5;
 }
 
-/* Right split view */
+/* Right split view - container positioning */
 body.split-view-right #blueprint-builder {
   position: absolute;
   top: 0;
   left: 0;
+  bottom: 0;
   width: 50%;
-  height: 100%;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 body.split-view-right #split-view-container {

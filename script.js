@@ -1283,8 +1283,11 @@ addEventListener('DOMContentLoaded', function () {
 				'landingPage': '/',
 				'features': {}
 			};
-			if (document.getElementById('phpExtensionBundles').checked) {
-				userDefined.phpExtensionBundles = ['kitchen-sink'];
+			if (!document.getElementById('networking').checked) {
+				userDefined.features.networking = false;
+			}
+			if (document.getElementById('wp-cli').checked) {
+				userDefined.extraLibraries = ['wp-cli'];
 			}
 			if ('latest' !== document.getElementById('wp-version').value || 'latest' !== document.getElementById('php-version').value) {
 				userDefined.preferredVersions = {
