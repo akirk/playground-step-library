@@ -616,7 +616,8 @@ addEventListener('DOMContentLoaded', function () {
 	});
 
 	function insertStep(step) {
-		const stepClone = step.closest('.step').cloneNode(true);
+		const stepElement = step.closest('.step');
+		const stepClone = stepElement.cloneNode(true);
 		stepClone.removeAttribute('id');
 		blueprintSteps.appendChild(stepClone);
 		stepClone.classList.remove('dragging');
@@ -624,6 +625,14 @@ addEventListener('DOMContentLoaded', function () {
 		stepClone.querySelectorAll('input,textarea').forEach(fixMouseCursor);
 		loadCombinedExamples();
 		stepClone.querySelector('input,textarea')?.focus();
+
+		if (window.goatcounter && stepElement.dataset.step) {
+			window.goatcounter.count({
+				path: 'step-used/' + stepElement.dataset.step,
+				title: 'Step Used: ' + stepElement.dataset.step,
+				event: true
+			});
+		}
 
 		// Hide the mobile step library overlay after adding a step
 		const stepLibraryHolder = document.getElementById('step-library-holder');
@@ -1038,6 +1047,13 @@ addEventListener('DOMContentLoaded', function () {
 	});
 
 	document.getElementById('download-blueprint').addEventListener('click', function () {
+		if (window.goatcounter) {
+			window.goatcounter.count({
+				path: 'download-blueprint',
+				title: 'Download Blueprint',
+				event: true
+			});
+		}
 		const blueprintContent = getBlueprintValue();
 		const title = document.getElementById('title').value || 'blueprint';
 		const filename = title.replace( /[^a-z0-9]/gi, '-' ).toLowerCase() + '.json';
@@ -2414,6 +2430,13 @@ addEventListener('DOMContentLoaded', function () {
 
 	// Intercept playground link clicks to regenerate URL if in manual edit mode
 	document.getElementById('playground-link').addEventListener('click', function(e) {
+		if (window.goatcounter) {
+			window.goatcounter.count({
+				path: 'launch-playground',
+				title: 'Launch in Playground',
+				event: true
+			});
+		}
 		if (isManualEditMode) {
 			e.preventDefault();
 			transformJson();
@@ -2426,6 +2449,13 @@ addEventListener('DOMContentLoaded', function () {
 
 	// Intercept copy button to regenerate URL if in manual edit mode
 	document.getElementById('copy-playground-link').addEventListener('click', function(e) {
+		if (window.goatcounter) {
+			window.goatcounter.count({
+				path: 'copy-link',
+				title: 'Copy Playground Link',
+				event: true
+			});
+		}
 		if (isManualEditMode) {
 			transformJson();
 		}
