@@ -948,11 +948,29 @@ select {
   font-size: var(--font-size-sm);
   opacity: 0.8;
   transition: all 0.2s ease;
+  text-decoration: none;
 }
 
 .info-icon:hover {
   opacity: 1;
   color: var(--primary-400);
+}
+
+.alpha-badge {
+  font-size: 0.65em;
+  padding: 0.1em 0.3em;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  color: light-dark(var(--primary-600), var(--primary-400));
+  font-weight: normal;
+  vertical-align: super;
+  margin-left: 0.3em;
+  text-decoration: none !important;
+  display: inline-block;
+}
+
+.alpha-badge:hover {
+  text-decoration: none !important;
 }
 
 #draghint {
