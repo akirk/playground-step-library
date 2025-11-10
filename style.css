@@ -2646,12 +2646,16 @@ body.split-view-right #playground-iframe {
 /* Responsive adjustments for history modal */
 @media (max-width: 768px) {
   #history-modal {
-    width: 95vw;
-    max-height: 90vh;
+    width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    margin: 0;
   }
 
   #history-modal-content {
-    height: 90vh;
+    height: 100vh;
   }
 
   #history-body {
@@ -2661,6 +2665,20 @@ body.split-view-right #playground-iframe {
 
   #history-header {
     flex-wrap: wrap;
+    padding: var(--spacing-3);
+  }
+
+  #history-header h2 {
+    font-size: 1.25rem;
+    order: 1;
+    flex: 1 1 auto;
+  }
+
+  #history-close {
+    order: 2;
+    flex-shrink: 0;
+    padding: var(--spacing-2);
+    font-size: 1.25rem;
   }
 
   #history-import-export-buttons {
@@ -2668,22 +2686,52 @@ body.split-view-right #playground-iframe {
     width: 100%;
     margin-left: 0;
     margin-top: var(--spacing-2);
+    display: flex;
+    gap: var(--spacing-2);
   }
 
   #history-import-export-buttons button {
     flex: 1;
-    font-size: 0.8125rem;
+    font-size: 0.7rem;
     padding: var(--spacing-2);
+    gap: var(--spacing-1);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  #history-close {
-    order: 2;
+  #history-import-export-buttons button svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  #history-settings {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3);
+  }
+
+  #history-settings label {
+    font-size: var(--font-size-sm);
+  }
+
+  #history-search {
+    max-width: 100%;
+    width: 100%;
   }
 
   #history-list-column {
     border-right: none;
     border-bottom: none;
     max-height: none;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  #history-list {
+    padding: var(--spacing-3);
   }
 
   #history-detail-column {
@@ -2730,5 +2778,26 @@ body.split-view-right #playground-iframe {
 
   #history-mobile-delete-btn {
     display: block;
+  }
+}
+
+/* Extra small screens - icon-only buttons */
+@media (max-width: 480px) {
+  #history-import-export-buttons button {
+    padding: var(--spacing-3);
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+    font-size: 0;
+    line-height: 0;
+  }
+
+  #history-import-export-buttons button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  #history-header h2 {
+    font-size: 1.125rem;
   }
 }

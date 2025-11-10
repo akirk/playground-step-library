@@ -19,6 +19,11 @@ addEventListener('DOMContentLoaded', function () {
 	const showCallbacks = {};
 	let isManualEditMode = false;
 
+	function getAceTheme() {
+		const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+		return isDark ? 'ace/theme/monokai' : 'ace/theme/textmate';
+	}
+
 	async function loadAceEditor() {
 		if (aceLoaded) {
 			return;
@@ -39,11 +44,32 @@ addEventListener('DOMContentLoaded', function () {
 			};
 
 			await loadScript('vendor/ace/ace.js');
+			await loadScript('vendor/ace/theme-textmate.js');
+			await loadScript('vendor/ace/theme-monokai.js');
 			ace.config.set('basePath', 'vendor/ace');
 			aceLoaded = true;
 		})();
 
 		return aceLoading;
+	}
+
+	function updateAllAceEditorThemes() {
+		const theme = getAceTheme();
+		if (blueprintAceEditor) {
+			blueprintAceEditor.setTheme(theme);
+		}
+		if (historyBlueprintAceEditor) {
+			historyBlueprintAceEditor.setTheme(theme);
+		}
+		if (aceEditor) {
+			aceEditor.setTheme(theme);
+		}
+	}
+
+	if (window.matchMedia) {
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+			updateAllAceEditorThemes();
+		});
 	}
 
 	function updateAceStatusBar(editor, statusElement, modeName, showManualEditWarning = false) {
@@ -114,7 +140,7 @@ addEventListener('DOMContentLoaded', function () {
 			textarea.style.display = 'none';
 
 			blueprintAceEditor = ace.edit(container);
-			blueprintAceEditor.setTheme('ace/theme/textmate');
+			blueprintAceEditor.setTheme(getAceTheme());
 			blueprintAceEditor.session.setMode('ace/mode/json');
 			blueprintAceEditor.setFontSize(14);
 			blueprintAceEditor.setShowPrintMargin(false);
@@ -243,7 +269,7 @@ addEventListener('DOMContentLoaded', function () {
 			textarea.style.display = 'none';
 
 			historyBlueprintAceEditor = ace.edit(container);
-			historyBlueprintAceEditor.setTheme('ace/theme/textmate');
+			historyBlueprintAceEditor.setTheme(getAceTheme());
 			historyBlueprintAceEditor.session.setMode('ace/mode/json');
 			historyBlueprintAceEditor.setFontSize(14);
 			historyBlueprintAceEditor.setShowPrintMargin(false);
@@ -784,7 +810,7 @@ addEventListener('DOMContentLoaded', function () {
 
 						aceEditor = ace.edit(editorContainer, {
 							mode: `ace/mode/${aceMode}`,
-							theme: 'ace/theme/textmate',
+							theme: getAceTheme(),
 							fontSize: 14,
 							showPrintMargin: false,
 							wrap: true,
