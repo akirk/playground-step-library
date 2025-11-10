@@ -350,6 +350,13 @@
 				</div>
 				<button id="history-close">✕</button>
 			</div>
+			<div id="history-settings">
+				<label>
+					<input type="checkbox" id="auto-save-on-launch" checked>
+					Automatically save blueprints when launching
+				</label>
+				<input type="text" id="history-search" placeholder="Search blueprints...">
+			</div>
 			<div id="history-body">
 				<div id="history-list-column">
 					<div id="history-list"></div>
@@ -373,11 +380,13 @@
 				</div>
 			</div>
 		</div>
-		<div id="history-toast" style="display: none;">
-			<span id="history-toast-message"></span>
-			<button id="history-toast-undo" style="display: none;">Undo</button>
-		</div>
 	</dialog>
+
+	<div id="history-toast" style="display: none;">
+		<span id="history-toast-message"></span>
+		<button id="history-toast-undo" style="display: none;">Undo</button>
+		<button id="history-toast-close">✕</button>
+	</div>
 </body>
 
 </html>

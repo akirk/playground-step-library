@@ -2211,6 +2211,47 @@ body.split-view-right #playground-iframe {
   flex-shrink: 0;
 }
 
+#history-settings {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  padding: var(--spacing-3) var(--spacing-5);
+  border-bottom: 1px solid var(--border-color);
+  background: light-dark(var(--gray-50), var(--gray-800));
+}
+
+#history-settings label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+#history-settings input[type="checkbox"] {
+  cursor: pointer;
+}
+
+#history-search {
+  flex: 1;
+  max-width: 300px;
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--surface-color);
+  color: var(--text-color);
+  font-size: var(--font-size-sm);
+}
+
+#history-search:focus {
+  outline: none;
+  border-color: light-dark(var(--primary-500), var(--primary-400));
+  box-shadow: 0 0 0 3px light-dark(rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.2));
+}
+
 #history-close {
   background: none;
   border: none;
@@ -2300,8 +2341,21 @@ body.split-view-right #playground-iframe {
   white-space: nowrap;
 }
 
-.history-entry-delete {
+.history-entry-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
   flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.history-entry:hover .history-entry-actions {
+  opacity: 1;
+}
+
+.history-entry-rename,
+.history-entry-delete {
   background: transparent;
   border: none;
   color: light-dark(var(--gray-500), var(--gray-400));
@@ -2311,11 +2365,11 @@ body.split-view-right #playground-iframe {
   font-size: 1rem;
   line-height: 1;
   transition: all 0.2s;
-  opacity: 0;
 }
 
-.history-entry:hover .history-entry-delete {
-  opacity: 1;
+.history-entry-rename:hover {
+  color: light-dark(var(--primary-600), var(--primary-400));
+  background: light-dark(var(--primary-50), var(--primary-900));
 }
 
 .history-entry-delete:hover {
@@ -2484,7 +2538,7 @@ body.split-view-right #playground-iframe {
 
 /* History Toast Notification */
 #history-toast {
-  position: absolute;
+  position: fixed;
   bottom: 24px;
   right: 24px;
   background: light-dark(var(--success-600), var(--success-700));
@@ -2492,8 +2546,7 @@ body.split-view-right #playground-iframe {
   padding: var(--spacing-3) var(--spacing-4);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  z-index: 10;
-  animation: slideInUp 0.3s ease-out, fadeOut 0.3s ease-in 2.7s;
+  z-index: 10000;
   pointer-events: auto;
 }
 
@@ -2532,6 +2585,23 @@ body.split-view-right #playground-iframe {
 #history-toast-undo:hover {
   background: rgba(255, 255, 255, 0.3);
   border-color: rgba(255, 255, 255, 0.5);
+}
+
+#history-toast-close {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 0;
+  margin-left: var(--spacing-3);
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+#history-toast-close:hover {
+  opacity: 1;
 }
 
 @keyframes slideInUp {
