@@ -2522,6 +2522,7 @@ body.split-view-right #playground-iframe {
 #history-launch-btn:hover {
   background: light-dark(var(--primary-600), var(--primary-700));
   border-color: light-dark(var(--primary-600), var(--primary-700));
+  color: white;
 }
 
 #history-restore-btn {

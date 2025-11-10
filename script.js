@@ -3174,15 +3174,14 @@ addEventListener('DOMContentLoaded', function () {
 			return;
 		}
 
-		const blueprintString = JSON.stringify( currentHistorySelection.compiledBlueprint, null, 2 );
-		setBlueprintValue(blueprintString);
+		const playground = document.getElementById('playground').value;
+		const blueprintString = JSON.stringify( currentHistorySelection.compiledBlueprint );
+		const href = (playground.substr(0, 7) === 'http://' ? playground : 'https://' + playground) + '/?blueprint-url=data:application/json;base64,' + encodeURIComponent(encodeStringAsBase64(blueprintString));
 
 		cleanupHistoryBlueprintAceEditor();
 		historyModal.close();
 
-		setTimeout( function() {
-			document.getElementById( 'playground-link' ).click();
-		}, 100 );
+		window.open(href, '_blank');
 	} );
 
 	document.getElementById( 'history-restore-btn' ).addEventListener( 'click', function() {
@@ -3358,7 +3357,10 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		isManualEditMode = false;
-		manualEditBanner.style.display = 'none';
+		const manualEditBanner = document.getElementById('manual-edit-banner');
+		if (manualEditBanner) {
+			manualEditBanner.style.display = 'none';
+		}
 
 		const blueprintStepsContainer = document.getElementById( 'blueprint-steps' );
 		blueprintStepsContainer.textContent = '';
