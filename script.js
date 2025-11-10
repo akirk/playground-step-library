@@ -2603,7 +2603,7 @@ addEventListener('DOMContentLoaded', function () {
 		const options = {
 			wpVersion: document.getElementById( 'wp-version' ).value,
 			phpVersion: document.getElementById( 'php-version' ).value,
-			phpExtensionBundles: document.getElementById( 'phpExtensionBundles' ).checked,
+			phpExtensionBundles: document.getElementById( 'phpExtensionBundles' )?.checked || false,
 			mode: document.getElementById( 'mode' ).value,
 			storage: document.getElementById( 'storage' ).value,
 			autosave: document.getElementById( 'autosave' ).value,
@@ -3054,6 +3054,11 @@ addEventListener('DOMContentLoaded', function () {
 		setTimeout( function() {
 			deleteHistoryEntry( entryId );
 		}, 300 );
+	} );
+
+	document.getElementById( 'history-save-current-btn' ).addEventListener( 'click', function() {
+		saveToHistoryWithName();
+		renderHistoryList();
 	} );
 
 	document.getElementById( 'history-export-all-btn' ).addEventListener( 'click', function() {

@@ -63,7 +63,7 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 	if (plugin.match(/^https?:/)) {
 		steps[0].pluginData = {
 			resource: "url",
-			url: 'https://playground.wordpress.net/cors-proxy.php?' + plugin
+			url: plugin
 		} as any;
 	}
 	if (step?.permalink) {

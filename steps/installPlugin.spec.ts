@@ -39,7 +39,7 @@ describe('installPlugin', () => {
         const result = installPlugin(step);
 
         expect(result[0].pluginData.resource).toBe('url');
-        expect(result[0].pluginData.url).toBe('https://playground.wordpress.net/cors-proxy.php?https://external-site.com/plugin.zip');
+        expect(result[0].pluginData.url).toBe('https://external-site.com/plugin.zip');
     });
 
     it('should handle GitHub repository URLs', () => {
@@ -199,7 +199,7 @@ describe('installPlugin', () => {
 
         // Note: Same regex bug as above - extracts 'http:' as slug
         expect(result[0].pluginData.resource).toBe('url');
-        expect(result[0].pluginData.url).toBe('https://playground.wordpress.net/cors-proxy.php?http://external-site.com/plugin.zip');
+        expect(result[0].pluginData.url).toBe('http://external-site.com/plugin.zip');
     });
 
     it('should extract slug from complex WordPress.org URLs', () => {

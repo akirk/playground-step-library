@@ -75,7 +75,7 @@ describe('installTheme', () => {
         // Note: Same regex issue as installPlugin - extracts 'https:' as slug
         // but since theme.match(/^https?:/) is true, it gets treated as external URL
         expect(result[0].themeData.resource).toBe('url');
-        expect(result[0].themeData.url).toBe('https://playground.wordpress.net/cors-proxy.php?https://external-site.com/theme.zip');
+        expect(result[0].themeData.url).toBe('https://external-site.com/theme.zip');
     });
 
     it('should handle HTTP URLs with cors-proxy', () => {
@@ -88,7 +88,7 @@ describe('installTheme', () => {
 
         // Note: Same regex bug - extracts 'http:' as slug
         expect(result[0].themeData.resource).toBe('url');
-        expect(result[0].themeData.url).toBe('https://playground.wordpress.net/cors-proxy.php?http://external-site.com/theme.zip');
+        expect(result[0].themeData.url).toBe('http://external-site.com/theme.zip');
     });
 
     it('should return empty array when url is empty', () => {

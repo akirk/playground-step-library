@@ -18,7 +18,7 @@ export const addMedia: StepFunction<AddMediaStep> = (step: AddMediaStep) => {
 			"step": "unzip",
 			"zipFile": {
                 "resource": "url",
-                "url": 'https://playground.wordpress.net/cors-proxy.php?' + step.downloadUrl,
+                "url": step.downloadUrl,
 	            "caption": "Downloading " + step.downloadUrl,
             },
             "extractToPath": "/tmp/media"

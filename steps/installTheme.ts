@@ -35,7 +35,7 @@ export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeS
 	if (theme.match(/^https?:/)) {
 		steps[0].themeData = {
 			resource: "url",
-			url: 'https://playground.wordpress.net/cors-proxy.php?' + theme
+			url: theme
 		} as any;
 	}
 
