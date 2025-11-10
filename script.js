@@ -3178,9 +3178,6 @@ addEventListener('DOMContentLoaded', function () {
 		const blueprintString = JSON.stringify( currentHistorySelection.compiledBlueprint );
 		const href = (playground.substr(0, 7) === 'http://' ? playground : 'https://' + playground) + '/?blueprint-url=data:application/json;base64,' + encodeURIComponent(encodeStringAsBase64(blueprintString));
 
-		cleanupHistoryBlueprintAceEditor();
-		historyModal.close();
-
 		window.open(href, '_blank');
 	} );
 
