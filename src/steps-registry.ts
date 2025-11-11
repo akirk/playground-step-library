@@ -46,6 +46,7 @@ import { setLanguage } from '../steps/setLanguage.js';
 import { setSiteName } from '../steps/setSiteName.js';
 import { generateProducts } from '../steps/generateProducts.js';
 import { blockExamples } from '../steps/blockExamples.js';
+import { debug } from '../steps/debug.js';
 
 /**
  * Registry of all available steps using ES6 object property shorthand
@@ -100,4 +101,5 @@ export const stepsRegistry = {
     enableMultisite,
     generateProducts,
     blockExamples,
+    debug,
 };

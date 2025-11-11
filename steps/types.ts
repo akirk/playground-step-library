@@ -373,4 +373,10 @@ export interface BlockExamplesStep extends BlueprintStep {
 	postId?: number;
 	landingPage?: boolean;
 }
+export interface DebugStep extends BlueprintStep {
+	wpDebug?: boolean;
+	wpDebugDisplay?: boolean;
+	scriptDebug?: boolean;
+	queryMonitor?: boolean;
+}
 

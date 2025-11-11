@@ -681,7 +681,8 @@ table.vars tr td:first-child {
   min-width: 80px;
   max-width: 120px;
   vertical-align: top;
-  line-height: var(--line-height-normal);
+  line-height: var(--line-height-loose);
+  font-size: 90%;
   padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) 0;
   white-space: nowrap;
 }
