@@ -129,8 +129,8 @@ try {
 `;
 
 	const caption = pluginSlug
-		? `blockExamples: ${pluginSlug}`
-		: `blockExamples`;
+		? `blockExamples: Adding blocks from ${pluginSlug} to ${postTitle}`
+		: `blockExamples: Adding blocks to ${postTitle}`;
 
 	const result = [
 		{

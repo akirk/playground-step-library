@@ -1148,6 +1148,11 @@ addEventListener('DOMContentLoaded', function () {
 		loadCombinedExamples();
 	});
 
+	// Handle title input changes
+	document.getElementById('title').addEventListener('input', function () {
+		loadCombinedExamples();
+	});
+
 	// Handle blueprint version radio button changes
 	document.querySelectorAll('input[name="blueprint-version"]').forEach(function (radio) {
 		radio.addEventListener('change', function () {
@@ -1342,6 +1347,20 @@ addEventListener('DOMContentLoaded', function () {
 			const compiler = new PlaygroundStepLibrary();
 			const inputData = Object.assign(userDefined, JSON.parse(jsonInput));
 			outputData = compiler.compile(inputData, {}, useV2);
+		}
+
+		// Add metadata indicating compilation by step library (only if there are steps)
+		if (outputData.steps && outputData.steps.length > 0) {
+			if (!outputData.meta) {
+				outputData.meta = {};
+			}
+			// Ensure meta has a title (required by schema)
+			if (!outputData.meta.title) {
+				const titleInput = document.getElementById('title');
+				const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
+				outputData.meta.title = blueprintTitle || generateLabel();
+			}
+			outputData.meta.$generator = 'https://github.com/akirk/playground-step-library';
 		}
 
 		// Extract query params from compiled steps (for the original web UI functionality)

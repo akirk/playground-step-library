@@ -238,12 +238,6 @@ class PlaygroundStepLibrary {
         // Perform deduplication based on PHP comments
         outputData.steps = this.deduplicateSteps(outputData.steps!);
 
-        // Add metadata indicating compilation by step library
-        if (!outputData.meta) {
-            (outputData as any).meta = {};
-        }
-        (outputData as any).meta.$generator = 'https://github.com/akirk/playground-step-library';
-
         // Clean up output data
         if ((outputData as any).landingPage === '/') {
             delete (outputData as any).landingPage;
