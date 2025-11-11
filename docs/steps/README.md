@@ -3,9 +3,9 @@
 Browse detailed documentation for each WordPress Playground step.
 
 ## 📊 Quick Stats
-- **46** total steps
+- **47** total steps
 - **8** built-in steps  
-- **38** custom steps
+- **39** custom steps
 
 ## 🔧 Built-in Steps
 Enhanced core WordPress Playground steps with additional functionality.
@@ -29,6 +29,7 @@ Extended functionality beyond core WordPress Playground capabilities.
 - [`addPage`](./addPage.md) - Add a page with title and content.
 - [`addPost`](./addPost.md) - Add a post with title, content, type, status, and date.
 - [`addProduct`](./addProduct.md) - Add a WooCommerce product (will install WooCommerce if not present)
+- [`blockExamples`](./blockExamples.md) - Creates a post with all block examples from registered blocks
 - [`blueprintExtractor`](./blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
 - [`blueprintRecorder`](./blueprintRecorder.md) - Record steps made and compile a new blueprint.
 - [`changeAdminColorScheme`](./changeAdminColorScheme.md) - Useful to combine with a login step.
@@ -68,4 +69,4 @@ Extended functionality beyond core WordPress Playground capabilities.
 
 ---
 
-*This documentation was auto-generated on 2025-11-04*
+*This documentation was auto-generated on 2025-11-11*

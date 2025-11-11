@@ -349,7 +349,8 @@ export type StepLibraryStepDefinition =
 	MuPluginStep |
 	BlueprintRecorderStep |
 	BlueprintExtractorStep |
-	GithubImportExportWxrStep;
+	GithubImportExportWxrStep |
+	BlockExamplesStep;
 
 // Extended Blueprint type that supports both builtin and Step Library custom steps
 export interface StepLibraryBlueprintDeclaration extends Omit<WPBlueprintDeclaration, 'steps'> {
@@ -363,5 +364,13 @@ export interface GenerateProductsStep extends BlueprintStep {
 	customers?: number;
 	coupons?: number;
 	categories?: number;
+}
+
+export interface BlockExamplesStep extends BlueprintStep {
+	pluginSlug?: string;
+	postTitle?: string;
+	limit?: number;
+	postId?: number;
+	landingPage?: boolean;
 }
 

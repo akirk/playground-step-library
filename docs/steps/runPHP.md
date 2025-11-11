@@ -18,7 +18,7 @@ Run code in the context of WordPress.
 ```json
     {
           "step": "runPHP",
-          "code": ""
+          "code": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
     }
 ```
 
@@ -29,7 +29,7 @@ Run code in the context of WordPress.
   "steps": [
         {
           "step": "runPHP",
-          "code": ""
+          "code": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
     }
   ]
 }
@@ -45,7 +45,7 @@ const blueprint = {
   steps: [
         {
           "step": "runPHP",
-          "code": ""
+          "code": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
     }
   ]
 };

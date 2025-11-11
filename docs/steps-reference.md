@@ -11,6 +11,7 @@ This document provides detailed information about all available steps, including
 - [`addPage`](#addpage)
 - [`addPost`](#addpost)
 - [`addProduct`](#addproduct)
+- [`blockExamples`](#blockexamples)
 - [`blueprintExtractor`](#blueprintextractor)
 - [`blueprintRecorder`](#blueprintrecorder)
 - [`changeAdminColorScheme`](#changeadmincolorscheme)
@@ -225,6 +226,36 @@ This document provides detailed information about all available steps, including
           "salePrice": "15.99",
           "sku": "PROD-001",
           "status": "publish"
+    }
+```
+
+
+---
+
+## `blockExamples`
+
+**Type**: Custom Step  
+**Description**: Creates a post with all block examples from registered blocks
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `pluginSlug` | text | ❌ No | Limit to a specific plugin slug (leave empty for all plugins) |
+| `postTitle` | text | ❌ No | Title of the post to create |
+| `limit` | text | ❌ No | Maximum number of blocks to include (leave empty for no limit) |
+| `postId` | text | ❌ No | Post ID to use (defaults to 1000) |
+| `landingPage` | text | ❌ No | Set landing page to the post editor (set to false to disable) |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "blockExamples",
+          "pluginSlug": "",
+          "postTitle": "Block Examples",
+          "limit": "",
+          "postId": "1000",
+          "landingPage": "true"
     }
 ```
 
@@ -932,7 +963,7 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "runPHP",
-          "code": ""
+          "code": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
     }
 ```
 
@@ -1133,4 +1164,4 @@ This document provides detailed information about all available steps, including
 
 ---
 
-*Generated automatically on 2025-11-04.*
+*Generated automatically on 2025-11-11.*

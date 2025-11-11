@@ -320,7 +320,7 @@ Returns information about all available custom steps.
 - Returns: Object with step names as keys and step info as values
 ## Custom Steps
 
-This library provides **46** total steps (8 built-in enhanced steps + 38 custom steps):
+This library provides **47** total steps (8 built-in enhanced steps + 39 custom steps):
 
 ### Built-in Enhanced Steps
 - [`defineWpConfigConst`](docs/steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
@@ -340,6 +340,7 @@ This library provides **46** total steps (8 built-in enhanced steps + 38 custom 
 - [`addPage`](docs/steps/addPage.md) - Add a page with title and content.
 - [`addPost`](docs/steps/addPost.md) - Add a post with title, content, type, status, and date.
 - [`addProduct`](docs/steps/addProduct.md) - Add a WooCommerce product (will install WooCommerce if not present)
+- [`blockExamples`](docs/steps/blockExamples.md) - Creates a post with all block examples from registered blocks
 - [`blueprintExtractor`](docs/steps/blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
 - [`blueprintRecorder`](docs/steps/blueprintRecorder.md) - Record steps made and compile a new blueprint.
 - [`changeAdminColorScheme`](docs/steps/changeAdminColorScheme.md) - Useful to combine with a login step.
@@ -372,4 +373,4 @@ This library provides **46** total steps (8 built-in enhanced steps + 38 custom 
 - [`showAdminNotice`](docs/steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](docs/steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 
-*This list was automatically generated on 2025-11-04.*
+*This list was automatically generated on 2025-11-11.*
