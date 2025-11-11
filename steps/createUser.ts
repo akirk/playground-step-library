@@ -28,7 +28,10 @@ export const createUser: StepFunction<CreateUserStep> = (step: CreateUserStep) =
 	const steps: any[] = [
 		{
 			"step": "runPHP",
-			code
+			code,
+			"progress": {
+				"caption": `createUser: ${username}`
+			}
 		}
 	];
 	

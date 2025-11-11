@@ -65,7 +65,10 @@ add_action('admin_footer', function() {
 		{
 			"step": "writeFile",
 			"path": `/wordpress/wp-content/mu-plugins/show-admin-notice-${step.stepIndex}.php`,
-			"data": php
+			"data": php,
+			"progress": {
+				"caption": `Setting up admin notice: ${step.text.substring(0, 50)}${step.text.length > 50 ? '...' : ''}`
+			}
 		}
 	];
 	(steps as any).landingPage = '/wp-admin/';

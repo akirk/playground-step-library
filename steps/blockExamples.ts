@@ -128,10 +128,17 @@ try {
 }
 `;
 
+	const caption = pluginSlug
+		? `blockExamples: ${pluginSlug}`
+		: `blockExamples`;
+
 	const result = [
 		{
 			"step": "runPHP",
-			code
+			code,
+			"progress": {
+				"caption": caption
+			}
 		}
 	] as any;
 

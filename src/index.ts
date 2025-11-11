@@ -200,6 +200,19 @@ class PlaygroundStepLibrary {
 			for (let i = 0; i < outSteps.length; i++) {
 				const processedStep = { ...outSteps[i] } as any;
 
+				// Preserve or add progress caption from original step
+				if (step.progress) {
+					if (!processedStep.progress) {
+						processedStep.progress = {};
+					}
+					if (step.progress.caption) {
+						processedStep.progress.caption = step.progress.caption;
+					}
+					if (step.progress.weight !== undefined) {
+						processedStep.progress.weight = step.progress.weight;
+					}
+				}
+
 				// Handle query params (removed from node environment)
 				if (typeof processedStep.queryParams === 'object') {
 					delete processedStep.queryParams;
@@ -207,7 +220,7 @@ class PlaygroundStepLibrary {
 
 				// Variable substitution
 				Object.keys(step).forEach(key => {
-						if (key === 'step' || key === 'stepIndex') return;
+						if (key === 'step' || key === 'stepIndex' || key === 'progress') return;
 
 						this.performVariableSubstitution(processedStep, key, step[key]);
 						});
@@ -224,6 +237,12 @@ class PlaygroundStepLibrary {
 
         // Perform deduplication based on PHP comments
         outputData.steps = this.deduplicateSteps(outputData.steps!);
+
+        // Add metadata indicating compilation by step library
+        if (!outputData.meta) {
+            (outputData as any).meta = {};
+        }
+        (outputData as any).meta.$generator = 'https://github.com/akirk/playground-step-library';
 
         // Clean up output data
         if ((outputData as any).landingPage === '/') {

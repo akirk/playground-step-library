@@ -4,6 +4,9 @@ export const setTT4Homepage: StepFunction<SetTT4HomepageStep> = (step: SetTT4Hom
 	return [
 		{
 			"step": "runPHP",
+			"progress": {
+				"caption": "Setting up Twenty Twenty-Four homepage"
+			},
 			"code": `
 <?php require_once '/wordpress/wp-load.php';
 $term = get_term_by('slug', 'twentytwentyfour', 'wp_theme');

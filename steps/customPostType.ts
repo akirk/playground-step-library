@@ -10,7 +10,10 @@ export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPos
 		{
 			"step": "writeFile",
 			"path": "/wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
-			"data": `<?php add_action( 'init', function() { register_post_type('${step.slug}', array('public' => ${step.public !== false ? 'true' : 'false'}, 'label' => '${step.name}', 'supports' => ${step.supports ? JSON.stringify(step.supports) : "array( 'title', 'editor' )"})); } ); ?>`
+			"data": `<?php add_action( 'init', function() { register_post_type('${step.slug}', array('public' => ${step.public !== false ? 'true' : 'false'}, 'label' => '${step.name}', 'supports' => ${step.supports ? JSON.stringify(step.supports) : "array( 'title', 'editor' )"})); } ); ?>`,
+			"progress": {
+				"caption": `customPostType: ${step.name}`
+			}
 		}
 	];
 	return steps;

@@ -43,7 +43,10 @@ export const importFriendFeeds: StepFunction<ImportFriendFeedsStep> = (step: Imp
 if ( class_exists('Friends\\Import')) {
 Friends\\Import::opml("${opml}");
 }
-	`
+	`,
+			"progress": {
+				"caption": "Importing feeds to Friends plugin"
+			}
 		}
 	];
 	let hasFriendsPlugin = false;

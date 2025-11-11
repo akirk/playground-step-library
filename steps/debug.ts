@@ -34,7 +34,14 @@ export const debug: StepFunction<DebugStep> = (step: DebugStep, blueprint: any) 
 			}
 		}
 		if ( !hasQueryMonitorPlugin ) {
-			steps.push( ...installPlugin( { step: 'installPlugin', url: 'query-monitor' } ) );
+			const queryMonitorSteps = installPlugin( { step: 'installPlugin', url: 'query-monitor' } );
+			// Add caption to show debug step is installing Query Monitor
+			if ( queryMonitorSteps.length > 0 && queryMonitorSteps[0].step === 'installPlugin' ) {
+				queryMonitorSteps[0].progress = {
+					caption: 'debug: Installing Query Monitor'
+				};
+			}
+			steps.push( ...queryMonitorSteps );
 		}
 	}
 

@@ -19,6 +19,9 @@ export const githubPluginRelease: StepFunction<GithubPluginReleaseStep> = (step:
 			},
 			"options": {
 				"activate": true
+			},
+			"progress": {
+				"caption": `Installing ${filename} from ${repo} (${tag})`
 			}
 		}
 	];

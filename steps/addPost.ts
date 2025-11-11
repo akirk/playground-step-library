@@ -34,7 +34,10 @@ $page_id = wp_insert_post( $page_args );`;
 	return [
 		{
 			"step": "runPHP",
-			code
+			code,
+			"progress": {
+				"caption": `addPost: ${postTitle}`
+			}
 		}
 	];
 };

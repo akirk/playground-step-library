@@ -11,6 +11,7 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 		// GitHub allows fetching PR branches using refs/pull/{number}/head
 		// This works even for forked PRs
 		const repoUrl = `https://github.com/${org}/${repo}`;
+		const caption = `Installing plugin from ${org}/${repo} PR #${prNumber}`;
 		return [{
 			"step": "installPlugin",
 			"pluginData": {
@@ -21,6 +22,9 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 			},
 			"options": {
 				"activate": true
+			},
+			"progress": {
+				"caption": caption
 			}
 		}];
 	}
@@ -65,6 +69,17 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 			resource: "url",
 			url: plugin
 		} as any;
+		try {
+			const urlObj = new URL(plugin);
+			const filename = urlObj.pathname.split('/').pop() || 'plugin';
+			(steps[0] as any).progress = {
+				caption: `Installing plugin: ${filename} from ${urlObj.hostname}`
+			};
+		} catch (e) {
+			(steps[0] as any).progress = {
+				caption: `Installing plugin from ${plugin}`
+			};
+		}
 	}
 	if (step?.permalink) {
 		steps.unshift({

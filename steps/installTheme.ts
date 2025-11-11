@@ -29,6 +29,9 @@ export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeS
 			},
 			"options": {
 				"activate": true
+			},
+			"progress": {
+				"caption": `Installing theme: ${theme}`
 			}
 		}
 	];

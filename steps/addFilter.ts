@@ -42,7 +42,10 @@ export const addFilter: StepFunction<AddFilterStep> = (step: AddFilterStep) => {
 		{
 			"step": "writeFile",
 			"path": `/wordpress/wp-content/mu-plugins/addFilter-${step.stepIndex || 0}.php`,
-			"data": code
+			"data": code,
+			"progress": {
+				"caption": `addFilter: ${step.filter}`
+			}
 		}
 	];
 };

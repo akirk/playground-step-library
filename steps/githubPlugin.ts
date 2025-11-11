@@ -46,6 +46,10 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 		};
 	}
 
+	outStep.progress = {
+		caption: `Installing plugin from GitHub: ${repo}${branch ? ' (' + branch + ')' : ''}`
+	};
+
 	return [ outStep ];
 };
 

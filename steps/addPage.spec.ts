@@ -15,7 +15,10 @@ describe('addPage', () => {
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({
       step: 'runPHP',
-      code: expect.stringContaining("'post_title'   => 'Test Page'")
+      code: expect.stringContaining("'post_title'   => 'Test Page'"),
+      progress: {
+        caption: 'addPage: Test Page'
+      }
     });
     expect(result[0].code).toContain("'post_content' => '<p>Test content</p>'");
     expect(result[0].code).toContain("'post_type'    => 'page'");
@@ -34,7 +37,10 @@ describe('addPage', () => {
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({
       step: 'runPHP',
-      code: expect.stringContaining("'post_title'   => 'Test Page'")
+      code: expect.stringContaining("'post_title'   => 'Test Page'"),
+      progress: {
+        caption: 'addPage: Test Page'
+      }
     });
     expect(result[0].code).toContain("'post_content' => '<p>Test content</p>'");
     expect(result[0].code).toContain("'post_type'    => 'page'");

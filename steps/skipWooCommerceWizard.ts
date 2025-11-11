@@ -5,7 +5,10 @@ export const skipWooCommerceWizard: StepFunction<SkipWooCommerceWizardStep> = (s
 	let steps = [
 		{
 			"step": "runPHP",
-			"code": "<?php require '/wordpress/wp-load.php'; update_option( 'woocommerce_onboarding_profile', [ 'completed' => true ] );"
+			"code": "<?php require '/wordpress/wp-load.php'; update_option( 'woocommerce_onboarding_profile', [ 'completed' => true ] );",
+			"progress": {
+				"caption": "Skipping WooCommerce setup wizard"
+			}
 		},
 		{
 			"step": "mkdir",

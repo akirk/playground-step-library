@@ -16,6 +16,10 @@ import type {
 
 export interface BlueprintStep {
     step: string;
+    progress?: {
+        caption?: string;
+        weight?: number;
+    };
     [key: string]: any;
 }
 

@@ -15,7 +15,10 @@ export const doAction: StepFunction<DoActionStep> = (step: DoActionStep) => {
 	return [
 		{
 			"step": "runPHP",
-			"code": "<?php do_action( '" + step.action + "'" + params.join( ',' ) + " ); ?>"
+			"code": "<?php do_action( '" + step.action + "'" + params.join( ',' ) + " ); ?>",
+			"progress": {
+				"caption": `doAction: ${step.action}`
+			}
 		}
 	];
 };

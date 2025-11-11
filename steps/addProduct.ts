@@ -82,7 +82,10 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 
 	steps.push({
 		"step": "runPHP",
-		"code": code
+		"code": code,
+		"progress": {
+			"caption": `addProduct: ${productTitle}`
+		}
 	});
 
 	return steps;

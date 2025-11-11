@@ -46,6 +46,10 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 		};
 	}
 
+	outStep.progress = {
+		caption: `Installing theme from GitHub: ${repo}${branch ? ' (' + branch + ')' : ''}`
+	};
+
 	return [ outStep ];
 };
 

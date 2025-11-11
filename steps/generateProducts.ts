@@ -215,9 +215,19 @@ error_log( "Generated " . count( $term_ids ) . " product categories" );
 		});
 	}
 
+	const parts = [];
+	if (productCount > 0) parts.push(`${productCount} products`);
+	if (orderCount > 0) parts.push(`${orderCount} orders`);
+	if (customerCount > 0) parts.push(`${customerCount} customers`);
+	if (couponCount > 0) parts.push(`${couponCount} coupons`);
+	if (categoryCount > 0) parts.push(`${categoryCount} categories`);
+
 	steps.push({
 		"step": "runPHP",
-		"code": code
+		"code": code,
+		"progress": {
+			"caption": `generateProducts: ${parts.join(', ')}`
+		}
 	});
 
 	return steps;

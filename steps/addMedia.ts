@@ -36,6 +36,9 @@ export const addMedia: StepFunction<AddMediaStep> = (step: AddMediaStep) => {
 	}
 	steps.push( {
 		"step": "runPHP",
+		"progress": {
+			"caption": "Importing media to library"
+		},
 		"code": `<?php
 // DEDUP_STRATEGY: keep_last
 require_once '/wordpress/wp-load.php';
