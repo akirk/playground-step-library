@@ -2474,7 +2474,6 @@ addEventListener('DOMContentLoaded', function () {
 	});
 
 	// Intercept playground link clicks to regenerate URL if in manual edit mode
-	let lastAutoSavedEntryId = null;
 	document.getElementById('playground-link').addEventListener('click', function(e) {
 		if (window.goatcounter) {
 			window.goatcounter.count({
@@ -2484,20 +2483,10 @@ addEventListener('DOMContentLoaded', function () {
 			});
 		}
 
-		// Auto-save before launching if enabled
-		const autoSaveEnabled = getAutoSaveSetting();
-		if (autoSaveEnabled) {
-			const blueprintString = getBlueprintValue();
-			if (blueprintString && blueprintString.trim()) {
-				const titleInput = document.getElementById('title');
-				const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
-				const title = blueprintTitle || generateLabel();
-				const entryId = addToHistoryWithId(title);
-				if (entryId) {
-					lastAutoSavedEntryId = entryId;
-					showAutoSaveToast();
-				}
-			}
+		// Show save prompt only if blueprint hasn't been saved yet
+		const blueprintString = getBlueprintValue();
+		if (blueprintString && blueprintString.trim() && !isBlueprintAlreadySaved()) {
+			showSavePromptToast();
 		}
 
 		if (isManualEditMode) {
@@ -2700,53 +2689,58 @@ addEventListener('DOMContentLoaded', function () {
 		}, 5000 );
 	}
 
-	const AUTO_SAVE_STORAGE_KEY = 'auto-save-on-launch-enabled';
 
-	function getAutoSaveSetting() {
+	function isBlueprintAlreadySaved() {
+		const blueprintString = getBlueprintValue();
+		if (!blueprintString || !blueprintString.trim()) {
+			return true;
+		}
+
+		let compiledBlueprint;
 		try {
-			const stored = localStorage.getItem( AUTO_SAVE_STORAGE_KEY );
-			return stored === null ? true : stored === 'true';
+			compiledBlueprint = JSON.parse( blueprintString );
 		} catch (e) {
 			return true;
 		}
-	}
 
-	function setAutoSaveSetting(enabled) {
-		try {
-			localStorage.setItem( AUTO_SAVE_STORAGE_KEY, enabled ? 'true' : 'false' );
-		} catch (e) {
-			console.error( 'Failed to save auto-save setting:', e );
+		const history = getHistory();
+		if (history.length === 0) {
+			return false;
 		}
+
+		const lastEntry = history[0];
+		const lastBlueprintString = JSON.stringify( lastEntry.compiledBlueprint );
+		const currentBlueprintString = JSON.stringify( compiledBlueprint );
+		return lastBlueprintString === currentBlueprintString;
 	}
 
-	function showAutoSaveToast() {
+	function showSavePromptToast() {
 		const toast = document.getElementById( 'history-toast' );
 		const toastMessage = document.getElementById( 'history-toast-message' );
 		const undoBtn = document.getElementById( 'history-toast-undo' );
 
-		toastMessage.textContent = 'Blueprint saved';
+		toastMessage.textContent = 'Save this blueprint?';
+		undoBtn.textContent = 'Save';
 		undoBtn.style.display = 'inline-block';
 		toast.style.display = 'block';
 
 		undoBtn.onclick = function() {
-			if (lastAutoSavedEntryId) {
-				const history = getHistory();
-				const index = history.findIndex( entry => entry.id === lastAutoSavedEntryId );
-				if (index !== -1) {
-					history.splice( index, 1 );
-					saveHistory( history );
-					renderHistory();
-					lastAutoSavedEntryId = null;
-				}
+			const titleInput = document.getElementById( 'title' );
+			const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
+			const title = blueprintTitle || generateLabel();
+			const entryId = addToHistoryWithId( title );
+			if (entryId) {
+				showHistoryToast( 'Blueprint saved' );
 			}
-			hideAutoSaveToast();
+			hideSavePromptToast();
 		};
 	}
 
-	function hideAutoSaveToast() {
+	function hideSavePromptToast() {
 		const toast = document.getElementById( 'history-toast' );
 		toast.style.display = 'none';
-		lastAutoSavedEntryId = null;
+		const undoBtn = document.getElementById( 'history-toast-undo' );
+		undoBtn.textContent = 'Undo';
 	}
 
 	function captureCurrentSteps() {
@@ -3268,12 +3262,6 @@ addEventListener('DOMContentLoaded', function () {
 		e.target.value = '';
 	} );
 
-	// Auto-save on launch setting
-	const autoSaveCheckbox = document.getElementById( 'auto-save-on-launch' );
-	autoSaveCheckbox.checked = getAutoSaveSetting();
-	autoSaveCheckbox.addEventListener( 'change', function() {
-		setAutoSaveSetting( this.checked );
-	} );
 
 	// History search
 	document.getElementById( 'history-search' ).addEventListener( 'input', function() {
@@ -3282,7 +3270,7 @@ addEventListener('DOMContentLoaded', function () {
 
 	// Toast close button
 	document.getElementById( 'history-toast-close' ).addEventListener( 'click', function() {
-		hideAutoSaveToast();
+		hideSavePromptToast();
 	} );
 
 	function exportAllBlueprints() {
