@@ -2782,7 +2782,7 @@ addEventListener('DOMContentLoaded', function () {
 	function saveToHistoryWithName() {
 		const compiledBlueprint = getBlueprintValue();
 		if (!compiledBlueprint || !compiledBlueprint.trim()) {
-			showHistoryToast('Cannot save empty blueprint');
+			showToast('Cannot save empty blueprint');
 			return;
 		}
 
@@ -2798,7 +2798,7 @@ addEventListener('DOMContentLoaded', function () {
 			} else {
 				const success = addToHistory(blueprintTitle);
 				if (success) {
-					showHistoryToast('Saved');
+					showToast('Saved');
 				}
 			}
 		} else {
@@ -2847,7 +2847,7 @@ addEventListener('DOMContentLoaded', function () {
 				if (titleInput) {
 					titleInput.value = title;
 				}
-				showHistoryToast('Updated');
+				showToast('Updated');
 				renderHistoryList();
 			}
 
@@ -2886,7 +2886,7 @@ addEventListener('DOMContentLoaded', function () {
 				if (titleInput) {
 					titleInput.value = title;
 				}
-				showHistoryToast('Saved');
+				showToast('Saved');
 				renderHistoryList();
 			}
 
@@ -2929,7 +2929,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
-	function showHistoryToast(message) {
+	function showToast(message) {
 		const toast = document.getElementById('history-toast');
 		const toastMessage = document.getElementById('history-toast-message');
 		const undoBtn = document.getElementById('history-toast-undo');
@@ -2947,30 +2947,35 @@ addEventListener('DOMContentLoaded', function () {
 		}, 3000);
 	}
 
-	function showHistoryToastWithUndo(message, undoCallback) {
-		const toast = document.getElementById('history-toast');
-		const toastMessage = document.getElementById('history-toast-message');
-		const undoBtn = document.getElementById('history-toast-undo');
+	function showMyBlueprintsToast(message, undoCallback) {
+		const toast = document.getElementById('undo-toast');
+		const toastMessage = document.getElementById('undo-toast-message');
+		const undoBtn = document.getElementById('undo-toast-undo');
 
 		toastMessage.textContent = message;
-		undoBtn.textContent = 'Undo';
-		undoBtn.style.display = 'inline-block';
+
+		if (undoCallback) {
+			undoBtn.textContent = 'Undo';
+			undoBtn.style.display = 'inline-block';
+			undoBtn.onclick = function () {
+				clearTimeout(deleteUndoTimeout);
+				toast.style.display = 'none';
+				undoCallback();
+			};
+		} else {
+			undoBtn.style.display = 'none';
+		}
+
 		toast.style.display = 'flex';
 
 		if (deleteUndoTimeout) {
 			clearTimeout(deleteUndoTimeout);
 		}
 
-		undoBtn.onclick = function () {
-			clearTimeout(deleteUndoTimeout);
-			toast.style.display = 'none';
-			undoCallback();
-		};
-
 		deleteUndoTimeout = setTimeout(function () {
 			toast.style.display = 'none';
 			lastDeletedEntry = null;
-		}, 5000);
+		}, undoCallback ? 5000 : 3000);
 	}
 
 
@@ -3031,13 +3036,13 @@ addEventListener('DOMContentLoaded', function () {
 				saveHistory(updatedHistory);
 				const entryId = addToHistoryWithId(blueprintTitle);
 				if (entryId) {
-					showHistoryToast('Updated');
+					showToast('Updated');
 					renderHistoryList();
 				}
 			} else if (blueprintTitle) {
 				const entryId = addToHistoryWithId(blueprintTitle);
 				if (entryId) {
-					showHistoryToast('Saved');
+					showToast('Saved');
 					renderHistoryList();
 				}
 			} else {
@@ -3397,7 +3402,7 @@ addEventListener('DOMContentLoaded', function () {
 			currentHistorySelection.title = newTitle.trim();
 		}
 
-		showHistoryToast('Renamed to "' + newTitle.trim() + '"');
+		showMyBlueprintsToast('Renamed to "' + newTitle.trim() + '"');
 	}
 
 	function deleteHistoryEntry(entryId) {
@@ -3426,7 +3431,7 @@ addEventListener('DOMContentLoaded', function () {
 
 		renderHistoryList();
 
-		showHistoryToastWithUndo('Deleted "' + entry.title + '"', function () {
+		showMyBlueprintsToast('Deleted "' + entry.title + '"', function () {
 			undoDelete();
 		});
 	}
@@ -3446,7 +3451,7 @@ addEventListener('DOMContentLoaded', function () {
 
 		lastDeletedEntry = null;
 		renderHistoryList();
-		showHistoryToast('Restored');
+		showMyBlueprintsToast('Restored');
 	}
 
 	function selectHistoryEntry(entryId) {
@@ -3519,7 +3524,7 @@ addEventListener('DOMContentLoaded', function () {
 		downloadAnchor.setAttribute('download', filename);
 		downloadAnchor.click();
 
-		showHistoryToast('Downloaded');
+		showMyBlueprintsToast('Downloaded');
 	});
 
 	document.getElementById('history-launch-btn').addEventListener('click', function () {
@@ -3588,10 +3593,19 @@ addEventListener('DOMContentLoaded', function () {
 		hideSavePromptToast();
 	});
 
+	// Undo toast close button
+	document.getElementById('undo-toast-close').addEventListener('click', function () {
+		const toast = document.getElementById('undo-toast');
+		toast.style.display = 'none';
+		if (deleteUndoTimeout) {
+			clearTimeout(deleteUndoTimeout);
+		}
+	});
+
 	function exportAllBlueprints() {
 		const history = getHistory();
 		if (history.length === 0) {
-			showHistoryToast('No blueprints to export');
+			showMyBlueprintsToast('No blueprints to export');
 			return;
 		}
 
@@ -3620,7 +3634,7 @@ addEventListener('DOMContentLoaded', function () {
 		downloadAnchor.setAttribute('download', filename);
 		downloadAnchor.click();
 
-		showHistoryToast('Exported ' + history.length + ' blueprint' + (history.length === 1 ? '' : 's'));
+		showMyBlueprintsToast('Exported ' + history.length + ' blueprint' + (history.length === 1 ? '' : 's'));
 	}
 
 	function importBlueprints(file) {
@@ -3637,7 +3651,7 @@ addEventListener('DOMContentLoaded', function () {
 				} else if (importData.stepConfig && importData.compiledBlueprint) {
 					blueprintsToImport = [importData];
 				} else {
-					showHistoryToast('Invalid file format');
+					showMyBlueprintsToast('Invalid file format');
 					return;
 				}
 
@@ -3686,11 +3700,11 @@ addEventListener('DOMContentLoaded', function () {
 				if (skippedCount > 0) {
 					message += ' (' + skippedCount + ' skipped)';
 				}
-				showHistoryToast(message);
+				showMyBlueprintsToast(message);
 
 			} catch (error) {
 				console.error('Import error:', error);
-				showHistoryToast('Failed to import: Invalid JSON');
+				showMyBlueprintsToast('Failed to import: Invalid JSON');
 			}
 		};
 		reader.readAsText(file);
@@ -3758,7 +3772,7 @@ addEventListener('DOMContentLoaded', function () {
 		});
 
 		if (missingSteps.length > 0) {
-			showHistoryToast('Warning: ' + missingSteps.length + ' step(s) not found: ' + missingSteps.join(', '));
+			showMyBlueprintsToast('Warning: ' + missingSteps.length + ' step(s) not found: ' + missingSteps.join(', '));
 		}
 
 		if (stepsData.options) {
