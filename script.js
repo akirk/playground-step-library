@@ -927,11 +927,12 @@ addEventListener('DOMContentLoaded', function () {
 			return;
 		}
 
-		if (event.target.closest('#step-library') && event.target.closest('.step').classList.contains('mine')) {
+		const stepElement = event.target.closest('.step');
+	if (event.target.closest('#step-library') && stepElement && stepElement.classList.contains('mine')) {
 			if (event.target.classList.contains('delete')) {
-				const name = event.target.closest('.step').dataset.id;
+				const name = stepElement.dataset.id;
 				if (confirm('Are you sure you want to delete the step ' + name + '?')) {
-					event.target.closest('.step').remove();
+					stepElement.remove();
 					mySteps[name] = undefined;
 					localStorage.setItem('mySteps', JSON.stringify(mySteps));
 					loadCombinedExamples();
@@ -939,7 +940,7 @@ addEventListener('DOMContentLoaded', function () {
 				return false;
 			}
 			if (event.target.classList.contains('rename')) {
-				const name = event.target.closest('.step').dataset.id;
+				const name = stepElement.dataset.id;
 				const newName = prompt('Enter a new name for the step:', name);
 				if (newName) {
 					const data = mySteps[name];
