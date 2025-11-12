@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.13",
-    "@wp-playground/blueprints": "^2.0.16",
+    "@wp-playground/blueprints": "^3.0.21",
     "typescript": "^5.0.0",
     "vite": "^7.1.5",
     "vitest": "^3.2.4"

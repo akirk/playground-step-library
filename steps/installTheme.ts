@@ -1,5 +1,5 @@
 import { githubTheme } from './githubTheme.js';
-import type { StepFunction, InstallThemeStep} from './types.js';
+import type { StepFunction, InstallThemeStep } from './types.js';
 
 
 export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeStep) => {
@@ -57,7 +57,6 @@ installTheme.vars = Object.entries({
 		description: "Add support for submitting Github Requests.",
 		show: function (step: any) {
 			const url = step.querySelector('input[name=url]')?.value;
-			console.log(url, url.match(/^https:\/\/github.com\//));
 			return url && url.match(/^https:\/\/github.com\//);
 		},
 		type: "boolean",
