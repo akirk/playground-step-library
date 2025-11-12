@@ -989,19 +989,7 @@ addEventListener('DOMContentLoaded', function () {
 			const docsLink = dialog.querySelector('#view-source-docs');
 			const docsUrl = `https://github.com/akirk/playground-step-library/blob/main/docs/steps/${stepName}.md`;
 			docsLink.href = docsUrl;
-
-			// Check if documentation exists by making a HEAD request
-			fetch(docsUrl, { method: 'HEAD' })
-				.then(response => {
-					if (response.ok) {
-						docsLink.style.display = '';
-					} else {
-						docsLink.style.display = 'none';
-					}
-				})
-				.catch(() => {
-					docsLink.style.display = 'none';
-				});
+			docsLink.style.display = '';
 
 			// Load Ace editor and fetch the source file
 			Promise.all([loadAceEditor(), fetch(sourceUrl)])
