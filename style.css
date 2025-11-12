@@ -913,7 +913,7 @@ select {
   max-width: 90vw;
   width: 1000px;
   max-height: 90vh;
-  background: var(--gray-900);
+  background: var(--surface-color);
   color: var(--text-color);
 }
 
@@ -933,6 +933,32 @@ select {
   flex: 1;
 }
 
+#view-source-docs {
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--surface-elevated);
+  color: var(--text-color);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  text-decoration: none;
+  font-size: var(--font-size-base);
+}
+
+#view-source-docs svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+#view-source-docs:hover {
+  background: light-dark(var(--gray-100), var(--gray-800));
+  border-color: light-dark(var(--gray-400), var(--gray-600));
+}
 
 #view-source-editor {
   width: 100%;

@@ -981,7 +981,27 @@ addEventListener('DOMContentLoaded', function () {
 		if (event.target.classList.contains('view-source')) {
 			event.preventDefault();
 			const sourceUrl = event.target.href;
-			dialog.querySelector('h2').innerText = sourceUrl.split('/').slice(-1)[0];
+			const fileName = sourceUrl.split('/').slice(-1)[0];
+			const stepName = fileName.replace(/\.ts$/, '');
+			dialog.querySelector('h2').innerText = fileName;
+
+			// Set documentation link
+			const docsLink = dialog.querySelector('#view-source-docs');
+			const docsUrl = `docs/steps/${stepName}.md`;
+			docsLink.href = docsUrl;
+
+			// Check if documentation exists by making a HEAD request
+			fetch(docsUrl, { method: 'HEAD' })
+				.then(response => {
+					if (response.ok) {
+						docsLink.style.display = '';
+					} else {
+						docsLink.style.display = 'none';
+					}
+				})
+				.catch(() => {
+					docsLink.style.display = 'none';
+				});
 
 			// Load Ace editor and fetch the source file
 			Promise.all([loadAceEditor(), fetch(sourceUrl)])
