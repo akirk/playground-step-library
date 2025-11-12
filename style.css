@@ -859,7 +859,6 @@ select {
 .step:hover,
 .step:focus {
   background-color: var(--step-hover-background);
-  transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
 
@@ -894,13 +893,11 @@ select {
 
 .step.builtin:hover,.step.builtin:focus {
   background-color: var(--builtin-step-hover-background);
-  transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
   border-color: var(--builtin-step-border);
 }
 .step.mine:hover,.step.mine:focus {
   background-color: var(--mine-step-hover-background);
-  transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
   border-color: var(--mine-step-border);
 }
