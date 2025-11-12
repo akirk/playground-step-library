@@ -94,10 +94,37 @@ describe('PlaygroundStepLibrary', () => {
           }
         ]
       };
-      
+
       const jsonString = JSON.stringify(blueprint);
       const compiled = compiler.compile(jsonString);
       expect(compiled.steps).toHaveLength(1);
+    });
+
+    it('should extract queryParams from steps and store them separately', () => {
+      const blueprint = {
+        steps: [
+          {
+            step: 'installPlugin',
+            url: 'https://github.com/akirk/friends/pull/559',
+            prs: true
+          }
+        ]
+      };
+
+      const compiled = compiler.compile(blueprint);
+
+      // queryParams should be removed from the compiled steps
+      expect(compiled.steps).toHaveLength(1);
+      expect(compiled.steps[0].queryParams).toBeUndefined();
+
+      // But they should be accessible via getLastQueryParams()
+      const queryParams = compiler.getLastQueryParams();
+      expect(queryParams['gh-ensure-auth']).toBe('yes');
+      expect(queryParams['ghexport-repo-url']).toBe('https://github.com/akirk/friends');
+      expect(queryParams['ghexport-plugin']).toBe('friends');
+      expect(queryParams['ghexport-playground-root']).toBe('/wordpress/wp-content/plugins/friends');
+      expect(queryParams['ghexport-pr-action']).toBe('create');
+      expect(queryParams['ghexport-allow-include-zip']).toBe('no');
     });
   });
 

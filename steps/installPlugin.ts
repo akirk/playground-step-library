@@ -12,7 +12,7 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 		// This works even for forked PRs
 		const repoUrl = `https://github.com/${org}/${repo}`;
 		const caption = `Installing plugin from ${org}/${repo} PR #${prNumber}`;
-		return [{
+		const outStep = {
 			"step": "installPlugin",
 			"pluginData": {
 				"resource": "git:directory",
@@ -26,7 +26,21 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 			"progress": {
 				"caption": caption
 			}
-		}];
+		} as any;
+
+		if (step.prs) {
+			outStep.queryParams = {
+				'gh-ensure-auth': 'yes',
+				'ghexport-repo-url': repoUrl,
+				'ghexport-content-type': 'plugin',
+				'ghexport-plugin': repo,
+				'ghexport-playground-root': `/wordpress/wp-content/plugins/${repo}`,
+				'ghexport-pr-action': 'create',
+				'ghexport-allow-include-zip': 'no',
+			};
+		}
+
+		return [outStep];
 	}
 
 	let urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec(step.url);

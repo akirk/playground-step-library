@@ -41,6 +41,7 @@ interface StepInfo {
  */
 class PlaygroundStepLibrary {
     private customSteps: Record<string, CustomStepDefinition> = {};
+    private lastQueryParams: Record<string, string> = {};
 
     constructor() {
         this.loadCustomSteps();
@@ -61,6 +62,7 @@ class PlaygroundStepLibrary {
      * @returns Compiled blueprint (v1 or v2 depending on toV2 parameter)
      */
     compile(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}, toV2: boolean = false): Blueprint | any {
+        this.lastQueryParams = {};
         const compiledV1 = this.compileToV1(blueprint, options);
 
         if (toV2) {
@@ -68,6 +70,15 @@ class PlaygroundStepLibrary {
         }
 
         return compiledV1;
+    }
+
+    /**
+     * Get query parameters extracted from the last compilation
+     * These are meant to be added to the playground URL, not the blueprint itself
+     * @returns Object containing query parameter key-value pairs
+     */
+    getLastQueryParams(): Record<string, string> {
+        return { ...this.lastQueryParams };
     }
 
     /**
@@ -213,8 +224,11 @@ class PlaygroundStepLibrary {
 					}
 				}
 
-				// Handle query params (removed from node environment)
+				// Extract and store query params, then remove them from the step
 				if (typeof processedStep.queryParams === 'object') {
+					for (const key in processedStep.queryParams) {
+						this.lastQueryParams[key] = processedStep.queryParams[key];
+					}
 					delete processedStep.queryParams;
 				}
 

@@ -282,6 +282,34 @@ describe('installPlugin', () => {
         expect(result[0].options.activate).toBe(true);
     });
 
+    it('should handle GitHub PR URLs with prs flag and add GitHub export parameters', () => {
+        const step: InstallPluginStep = {
+            step: 'installPlugin',
+            url: 'https://github.com/akirk/friends/pull/559',
+            prs: true
+        };
+
+        const result = installPlugin(step);
+
+        expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('installPlugin');
+        expect(result[0].pluginData.resource).toBe('git:directory');
+        expect(result[0].pluginData.url).toBe('https://github.com/akirk/friends');
+        expect(result[0].pluginData.ref).toBe('refs/pull/559/head');
+        expect(result[0].pluginData.refType).toBe('refname');
+        expect(result[0].pluginData.path).toBeUndefined();
+        expect(result[0].options.activate).toBe(true);
+        expect(result[0].queryParams).toBeDefined();
+        expect(result[0].queryParams['gh-ensure-auth']).toBe('yes');
+        expect(result[0].queryParams['ghexport-repo-url']).toBe('https://github.com/akirk/friends');
+        expect(result[0].queryParams['ghexport-content-type']).toBe('plugin');
+        expect(result[0].queryParams['ghexport-plugin']).toBe('friends');
+        expect(result[0].queryParams['ghexport-playground-root']).toBe('/wordpress/wp-content/plugins/friends');
+        expect(result[0].queryParams['ghexport-pr-action']).toBe('create');
+        expect(result[0].queryParams['ghexport-allow-include-zip']).toBe('no');
+    });
+
     it('should add permalink structure when permalink flag is true', () => {
         const step: InstallPluginStep = {
             step: 'installPlugin',

@@ -928,7 +928,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		const stepElement = event.target.closest('.step');
-	if (event.target.closest('#step-library') && stepElement && stepElement.classList.contains('mine')) {
+		if (event.target.closest('#step-library') && stepElement && stepElement.classList.contains('mine')) {
 			if (event.target.classList.contains('delete')) {
 				const name = stepElement.dataset.id;
 				if (confirm('Are you sure you want to delete the step ' + name + '?')) {
@@ -1504,6 +1504,15 @@ addEventListener('DOMContentLoaded', function () {
 			const compiler = new PlaygroundStepLibrary();
 			const inputData = Object.assign(userDefined, JSON.parse(jsonInput));
 			outputData = compiler.compile(inputData, {}, useV2);
+
+			// Extract query params from the compiler
+			const extractedQueryParams = compiler.getLastQueryParams();
+			for (const key in extractedQueryParams) {
+				if (key === 'gh-ensure-auth') {
+					useBlueprintURLParam = true;
+				}
+				queries.push(key + '=' + encodeURIComponent(extractedQueryParams[key]));
+			}
 		}
 
 		// Add metadata indicating compilation by step library (only if there are steps)
@@ -1520,20 +1529,6 @@ addEventListener('DOMContentLoaded', function () {
 			outputData.meta.author = 'https://github.com/akirk/playground-step-library';
 		}
 
-		// Extract query params from compiled steps (for the original web UI functionality)
-		if (outputData.steps) {
-			outputData.steps.forEach(function (step) {
-				if (typeof step.queryParams === 'object') {
-					for (let j in step.queryParams) {
-						if ('gh-ensure-auth' === j) {
-							useBlueprintURLParam = true;
-						}
-						queries.push(j + '=' + encodeURIComponent(step.queryParams[j]));
-					}
-					delete step.queryParams;
-				}
-			});
-		}
 
 		if (!isManualEditMode) {
 			setBlueprintValue(JSON.stringify(outputData, null, 2));
