@@ -2787,18 +2787,144 @@ addEventListener('DOMContentLoaded', function () {
 
 		const titleInput = document.getElementById('title');
 		const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
-		const defaultTitle = blueprintTitle || generateLabel();
-		const customTitle = prompt('Enter a name for this blueprint:', defaultTitle);
 
-		if (customTitle === null) {
-			return;
+		if (blueprintTitle) {
+			const history = getHistory();
+			const existingEntry = history.find(entry => entry.title === blueprintTitle);
+
+			if (existingEntry) {
+				showSaveBlueprintDialog(blueprintTitle, true);
+			} else {
+				const success = addToHistory(blueprintTitle);
+				if (success) {
+					showHistoryToast('Saved');
+				}
+			}
+		} else {
+			const defaultTitle = generateLabel();
+			showSaveBlueprintDialog(defaultTitle, false);
+		}
+	}
+
+	function showSaveBlueprintDialog(defaultName, isOverwrite) {
+		const dialog = document.getElementById('save-blueprint-dialog');
+		const messageDiv = document.getElementById('save-blueprint-message');
+		const nameInput = document.getElementById('save-blueprint-name');
+		const nameLabel = document.getElementById('save-blueprint-label');
+		const overwriteBtn = document.getElementById('save-blueprint-overwrite');
+		const renameBtn = document.getElementById('save-blueprint-rename');
+		const saveBtn = document.getElementById('save-blueprint-save');
+		const cancelBtn = document.getElementById('save-blueprint-cancel');
+
+		nameInput.value = defaultName;
+
+		if (isOverwrite) {
+			messageDiv.textContent = `A blueprint with this name already exists. Do you want to overwrite it or choose a new name?`;
+			messageDiv.style.display = 'block';
+			nameLabel.style.display = 'none';
+			overwriteBtn.style.display = 'inline-block';
+			renameBtn.style.display = 'inline-block';
+			saveBtn.style.display = 'none';
+		} else {
+			messageDiv.textContent = '';
+			messageDiv.style.display = 'none';
+			nameLabel.style.display = 'block';
+			overwriteBtn.style.display = 'none';
+			renameBtn.style.display = 'none';
+			saveBtn.style.display = 'inline-block';
 		}
 
-		const title = customTitle.trim() || defaultTitle;
-		const success = addToHistory(title);
+		const handleOverwrite = function () {
+			const title = defaultName;
+			const history = getHistory();
+			const updatedHistory = history.filter(entry => entry.title !== title);
+			saveHistory(updatedHistory);
 
-		if (success) {
-			showHistoryToast('Saved');
+			const success = addToHistory(title);
+			if (success) {
+				const titleInput = document.getElementById('title');
+				if (titleInput) {
+					titleInput.value = title;
+				}
+				showHistoryToast('Updated');
+				renderHistoryList();
+			}
+
+			dialog.close();
+			cleanup();
+		};
+
+		const handleRename = function () {
+			messageDiv.textContent = '';
+			messageDiv.style.display = 'none';
+			nameLabel.style.display = 'block';
+			overwriteBtn.style.display = 'none';
+			renameBtn.style.display = 'none';
+			saveBtn.style.display = 'inline-block';
+			nameInput.select();
+		};
+
+		const handleSave = function () {
+			const title = nameInput.value.trim();
+			if (!title) {
+				return;
+			}
+
+			const history = getHistory();
+			const existingEntry = history.find(entry => entry.title === title);
+
+			if (existingEntry) {
+				showSaveBlueprintDialog(title, true);
+				cleanup();
+				return;
+			}
+
+			const success = addToHistory(title);
+			if (success) {
+				const titleInput = document.getElementById('title');
+				if (titleInput) {
+					titleInput.value = title;
+				}
+				showHistoryToast('Saved');
+				renderHistoryList();
+			}
+
+			dialog.close();
+			cleanup();
+		};
+
+		const handleCancel = function () {
+			dialog.close();
+			cleanup();
+		};
+
+		const handleKeyDown = function (e) {
+			if (e.key === 'Enter' && nameLabel.style.display !== 'none') {
+				e.preventDefault();
+				handleSave();
+			} else if (e.key === 'Escape') {
+				e.preventDefault();
+				handleCancel();
+			}
+		};
+
+		const cleanup = function () {
+			overwriteBtn.removeEventListener('click', handleOverwrite);
+			renameBtn.removeEventListener('click', handleRename);
+			saveBtn.removeEventListener('click', handleSave);
+			cancelBtn.removeEventListener('click', handleCancel);
+			nameInput.removeEventListener('keydown', handleKeyDown);
+		};
+
+		overwriteBtn.addEventListener('click', handleOverwrite);
+		renameBtn.addEventListener('click', handleRename);
+		saveBtn.addEventListener('click', handleSave);
+		cancelBtn.addEventListener('click', handleCancel);
+		nameInput.addEventListener('keydown', handleKeyDown);
+
+		dialog.showModal();
+		if (!isOverwrite) {
+			nameInput.select();
 		}
 	}
 
@@ -2809,7 +2935,7 @@ addEventListener('DOMContentLoaded', function () {
 
 		toastMessage.textContent = message;
 		undoBtn.style.display = 'none';
-		toast.style.display = 'block';
+		toast.style.display = 'flex';
 
 		if (deleteUndoTimeout) {
 			clearTimeout(deleteUndoTimeout);
@@ -2826,8 +2952,9 @@ addEventListener('DOMContentLoaded', function () {
 		const undoBtn = document.getElementById('history-toast-undo');
 
 		toastMessage.textContent = message;
+		undoBtn.textContent = 'Undo';
 		undoBtn.style.display = 'inline-block';
-		toast.style.display = 'block';
+		toast.style.display = 'flex';
 
 		if (deleteUndoTimeout) {
 			clearTimeout(deleteUndoTimeout);
@@ -2875,20 +3002,47 @@ addEventListener('DOMContentLoaded', function () {
 		const toastMessage = document.getElementById('history-toast-message');
 		const undoBtn = document.getElementById('history-toast-undo');
 
-		toastMessage.textContent = 'Save this blueprint?';
-		undoBtn.textContent = 'Save';
+		const titleInput = document.getElementById('title');
+		const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
+
+		const history = getHistory();
+		const existingEntry = blueprintTitle ? history.find(entry => entry.title === blueprintTitle) : null;
+
+		if (existingEntry) {
+			toastMessage.textContent = `Update "${blueprintTitle}"?`;
+			undoBtn.textContent = 'Update';
+		} else if (blueprintTitle) {
+			toastMessage.textContent = `Save as "${blueprintTitle}"?`;
+			undoBtn.textContent = 'Save';
+		} else {
+			toastMessage.textContent = 'Save this blueprint?';
+			undoBtn.textContent = 'Save';
+		}
+
 		undoBtn.style.display = 'inline-block';
-		toast.style.display = 'block';
+		toast.style.display = 'flex';
 
 		undoBtn.onclick = function () {
-			const titleInput = document.getElementById('title');
-			const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
-			const title = blueprintTitle || generateLabel();
-			const entryId = addToHistoryWithId(title);
-			if (entryId) {
-				showHistoryToast('Blueprint saved');
-			}
 			hideSavePromptToast();
+
+			if (existingEntry) {
+				const updatedHistory = history.filter(entry => entry.title !== blueprintTitle);
+				saveHistory(updatedHistory);
+				const entryId = addToHistoryWithId(blueprintTitle);
+				if (entryId) {
+					showHistoryToast('Updated');
+					renderHistoryList();
+				}
+			} else if (blueprintTitle) {
+				const entryId = addToHistoryWithId(blueprintTitle);
+				if (entryId) {
+					showHistoryToast('Saved');
+					renderHistoryList();
+				}
+			} else {
+				const defaultTitle = generateLabel();
+				showSaveBlueprintDialog(defaultTitle, false);
+			}
 		};
 	}
 

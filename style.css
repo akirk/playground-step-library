@@ -229,6 +229,70 @@ dialog h2 {
   margin-bottom: var(--spacing-4);
 }
 
+#save-blueprint-dialog {
+  max-width: 500px;
+}
+
+#save-blueprint-message {
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-4);
+  line-height: var(--line-height-normal);
+}
+
+#save-blueprint-dialog label {
+  display: block;
+  margin-bottom: var(--spacing-4);
+  color: var(--text-color);
+}
+
+#save-blueprint-name {
+  display: block;
+  width: 100%;
+  margin-top: var(--spacing-2);
+  padding: var(--spacing-2);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text-color);
+  font-size: var(--font-size-base);
+}
+
+.dialog-buttons {
+  display: flex;
+  gap: var(--spacing-3);
+  justify-content: flex-end;
+  margin-top: var(--spacing-6);
+  flex-wrap: wrap;
+}
+
+.dialog-buttons button {
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  transition: all var(--transition-fast) var(--transition-ease);
+}
+
+.dialog-buttons button.primary {
+  background: var(--primary-button-background);
+  color: white;
+  border: none;
+}
+
+.dialog-buttons button.primary:hover {
+  background: var(--primary-button-hover);
+}
+
+.dialog-buttons button:not(.primary) {
+  background: var(--surface);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.dialog-buttons button:not(.primary):hover {
+  background: var(--surface-hover);
+}
+
 header p {
   line-height: var(--line-height-normal);
   color: var(--text-muted);
@@ -2665,6 +2729,11 @@ body.split-view-right #playground-iframe {
   box-shadow: var(--shadow-lg);
   z-index: 10000;
   pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  white-space: nowrap;
+  max-width: max-content;
 }
 
 #history-toast-message {
