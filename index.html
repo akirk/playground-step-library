@@ -301,10 +301,11 @@
 	</div>
 
 	<dialog id="view-source">
-		<h2></h2>
+		<div id="view-source-header">
+			<h2></h2>
+			<button id="view-source-close" class="dialog-close-btn">✕</button>
+		</div>
 		<div id="view-source-editor"></div>
-		<br>
-		<button id="view-source-close">Close</button>
 	</dialog>
 
 	<dialog id="save-step">
@@ -350,7 +351,7 @@
 					</button>
 					<input type="file" id="history-import-file" accept=".json" style="display: none;" />
 				</div>
-				<button id="history-close">✕</button>
+				<button id="history-close" class="dialog-close-btn">✕</button>
 			</div>
 			<div id="history-settings">
 				<input type="text" id="history-search" placeholder="Search blueprints...">

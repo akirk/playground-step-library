@@ -905,11 +905,40 @@ select {
   border-color: var(--mine-step-border);
 }
 
+#view-source {
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  max-width: 90vw;
+  width: 1000px;
+  max-height: 90vh;
+  background: var(--gray-900);
+  color: var(--text-color);
+}
+
+#view-source-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4) var(--spacing-5);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+#view-source-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--text-color);
+  flex: 1;
+}
+
+
 #view-source-editor {
-  width: 800px;
+  width: 100%;
   height: 600px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
+  border: none;
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
 }
 
 #blueprint-compiled {
@@ -2305,7 +2334,7 @@ body.split-view-right #playground-iframe {
   box-shadow: 0 0 0 3px light-dark(rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.2));
 }
 
-#history-close {
+.dialog-close-btn {
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -2313,12 +2342,12 @@ body.split-view-right #playground-iframe {
   cursor: pointer;
   padding: var(--spacing-2);
   line-height: 1;
-  transition: color 0.2s;
+  transition: all 0.2s;
   border-radius: var(--radius-md);
   margin-left: var(--spacing-2);
 }
 
-#history-close:hover {
+.dialog-close-btn:hover {
   color: var(--text-color);
   background: light-dark(var(--gray-100), var(--gray-800));
 }
