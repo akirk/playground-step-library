@@ -369,11 +369,7 @@ addEventListener('DOMContentLoaded', function () {
 
 		const viewSource = document.createElement('a');
 		viewSource.className = 'view-source';
-		if (data.builtin) {
-			viewSource.href = 'steps/builtin/' + name + '.js';
-		} else {
-			viewSource.href = 'steps/' + name + '.js';
-		}
+		viewSource.href = 'steps/' + name + '.ts';
 		viewSource.innerText = 'View Source';
 		viewSource.target = 'source-iframe';
 		div.appendChild(viewSource);

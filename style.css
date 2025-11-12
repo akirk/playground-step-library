@@ -534,7 +534,7 @@ textarea#blueprint:focus, textarea#blueprint-compiled:focus {
 
 .step .info {
   font-size: var(--font-size-xs);
-  color: var(--text-subtle);
+  color: light-dark(var(--text-subtle), var(--text-muted));
   margin-top: var(--spacing-1);
   padding: 0 var(--spacing-4) 0 0;
   line-height: var(--line-height-normal);
@@ -670,6 +670,14 @@ button.save-step,
   display: block;
 }
 
+a.view-source {
+  color: light-dark(var(--link-color), var(--primary-200));
+}
+
+a.view-source:hover {
+  color: light-dark(var(--link-hover), var(--primary-100));
+}
+
 table.vars {
   width: 100%;
   border-collapse: collapse;
@@ -738,7 +746,7 @@ button.save-step {
   padding: 0;
   box-shadow: none;
   font-size: var(--font-size-sm);
-  color: var(--link-color);
+  color: light-dark(var(--link-color), var(--primary-200));
   text-decoration: underline;
   font-weight: var(--font-weight-medium);
   transition: all var(--transition-fast) var(--transition-ease);
@@ -747,7 +755,7 @@ button.save-step {
 button.save-step:hover {
   background-color: transparent;
   text-decoration: none;
-  color: var(--link-hover);
+  color: light-dark(var(--link-hover), var(--primary-100));
   transform: translateY(-1px);
 }
 
