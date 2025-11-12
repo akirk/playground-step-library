@@ -38,12 +38,15 @@ jobs:
         
       - name: Build project
         run: npm run build
-        
+
+      - name: Cleanup unused Ace editor modes
+        run: node scripts/cleanup-ace-modes.js
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Remove node_modules before upload
-        run: rm -rf node_modules examples/node_modules
+      - name: Remove unnecessary files before upload
+        run: rm -rf node_modules examples
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
