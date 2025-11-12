@@ -105,7 +105,11 @@
 									<option value="playground.wordpress.net">playground.wordpress.net</option>
 									<option value="http://127.0.0.1:5400/website-server">http://127.0.0.1:5400/website-server</option>
 								</select></label>
-							<label><input type="checkbox" id="base64" value="true">base64 encode blueprint</label>
+							<label>Blueprint encoding <select id="encoding-format">
+									<option value="auto">Auto (hash or base64)</option>
+									<option value="hash">URL hash</option>
+									<option value="base64">Base64</option>
+								</select></label>
 							<label>Site slug (saves site in Playground) <input type="text" id="autosave" placeholder="my-site-name"
 									pattern="[a-z0-9][a-z0-9-]+"></label>
 						</div>
@@ -155,6 +159,7 @@
 					<label><input type="radio" name="blueprint-version" value="v1" checked> Blueprint v1</label>
 					<label><input type="radio" name="blueprint-version" value="v2"> Blueprint v2<a href="https://github.com/Automattic/WordPress-extension-proposals/blob/trunk/wep-1-blueprint-v2-schema/proposal.md" target="_blank" class="alpha-badge" onclick="event.stopPropagation();">alpha</a></label>
 				</div>
+				<details id="blueprint-size-warning" class="blueprint-warning" style="display: none;"></details>
 				<div id="playground-link-holder">
 					<a href="#" id="playground-link" target="_blank">Launch in Playground</a>
 					<button id="copy-playground-link"><svg width="16" height="16" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M768 832a128 128 0 0 1-128 128H192A128 128 0 0 1 64 832V384a128 128 0 0 1 128-128v64a64 64 0 0 0-64 64v448a64 64 0 0 0 64 64h448a64 64 0 0 0 64-64h64z"/><path fill="currentColor" d="M384 128a64 64 0 0 0-64 64v448a64 64 0 0 0 64 64h448a64 64 0 0 0 64-64V192a64 64 0 0 0-64-64H384zm0-64h448a128 128 0 0 1 128 128v448a128 128 0 0 1-128 128H384a128 128 0 0 1-128-128V192A128 128 0 0 1 384 64z"/></svg></button>

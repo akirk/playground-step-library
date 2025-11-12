@@ -897,6 +897,59 @@ select {
   margin-bottom: var(--spacing-4);
 }
 
+.blueprint-warning {
+  display: block;
+  width: 23em;
+  box-sizing: border-box;
+  padding: var(--spacing-3);
+  margin-top: var(--spacing-3);
+  margin-bottom: var(--spacing-3);
+  background-color: light-dark(#fff3cd, #3a2f1a);
+  border: 1px solid light-dark(#ffc107, #8a7a3a);
+  border-radius: 4px;
+  color: light-dark(#856404, #e8d89e);
+  font-size: 14px;
+}
+
+.blueprint-warning summary {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  cursor: pointer;
+  list-style: none;
+}
+
+.blueprint-warning summary::-webkit-details-marker {
+  display: none;
+}
+
+.blueprint-warning svg {
+  flex-shrink: 0;
+  color: light-dark(#ff9800, #ffa726);
+}
+
+.blueprint-warning .warning-text {
+  flex: 1;
+}
+
+.blueprint-warning .warning-size {
+  font-weight: 600;
+}
+
+.blueprint-warning p {
+  margin: var(--spacing-3) 0 0 0;
+  padding-left: calc(16px + var(--spacing-2));
+  line-height: 1.5;
+}
+
+.blueprint-warning code {
+  background-color: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1));
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
 #playground-link-holder {
   display: flex;
   width: 100%;
