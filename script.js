@@ -175,7 +175,7 @@ addEventListener('DOMContentLoaded', function () {
 			blueprintAceEditor.commands.addCommand({
 				name: 'closeEditorAndResume',
 				bindKey: { win: 'Esc', mac: 'Esc' },
-				exec: function() {
+				exec: function () {
 					if (blueprintAceEditor) {
 						const aceContainer = document.getElementById('blueprint-compiled-ace');
 						if (aceContainer) {
@@ -197,7 +197,7 @@ addEventListener('DOMContentLoaded', function () {
 			updateBlueprintStatus();
 
 			// Handle click on status warning to resume compilation
-			blueprintStatus.addEventListener('click', function(e) {
+			blueprintStatus.addEventListener('click', function (e) {
 				if (e.target.id === 'resume-compilation-status') {
 					if (blueprintAceEditor) {
 						const aceContainer = document.getElementById('blueprint-compiled-ace');
@@ -987,7 +987,7 @@ addEventListener('DOMContentLoaded', function () {
 
 			// Set documentation link
 			const docsLink = dialog.querySelector('#view-source-docs');
-			const docsUrl = `docs/steps/${stepName}.md`;
+			const docsUrl = `https://github.com/akirk/playground-step-library/blob/main/docs/steps/${stepName}.md`;
 			docsLink.href = docsUrl;
 
 			// Check if documentation exists by making a HEAD request
@@ -1206,11 +1206,11 @@ addEventListener('DOMContentLoaded', function () {
 		}
 		const blueprintContent = getBlueprintValue();
 		const title = document.getElementById('title').value || 'blueprint';
-		const filename = title.replace( /[^a-z0-9]/gi, '-' ).toLowerCase() + '.json';
-		const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent( blueprintContent );
-		const downloadAnchor = document.createElement( 'a' );
-		downloadAnchor.setAttribute( 'href', dataStr );
-		downloadAnchor.setAttribute( 'download', filename );
+		const filename = title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.json';
+		const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(blueprintContent);
+		const downloadAnchor = document.createElement('a');
+		downloadAnchor.setAttribute('href', dataStr);
+		downloadAnchor.setAttribute('download', filename);
 		downloadAnchor.click();
 	});
 
@@ -1503,8 +1503,8 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		if (!isManualEditMode) {
-		setBlueprintValue(JSON.stringify(outputData, null, 2));
-	}
+			setBlueprintValue(JSON.stringify(outputData, null, 2));
+		}
 
 		if (document.getElementById('autosave').value) {
 			queries.push('site-slug=' + encodeURIComponent(document.getElementById('autosave').value.replace(/[^a-z0-9-]/gi, '')));
@@ -1612,7 +1612,7 @@ addEventListener('DOMContentLoaded', function () {
 		};
 
 		// Apply migrations to each step
-		state.steps = state.steps.map(function(step) {
+		state.steps = state.steps.map(function (step) {
 			if (!step.vars || !variableMigrations[step.step]) {
 				return step;
 			}
@@ -1621,7 +1621,7 @@ addEventListener('DOMContentLoaded', function () {
 			const migratedVars = {};
 
 			// Copy existing vars and apply migrations
-			Object.keys(step.vars).forEach(function(varName) {
+			Object.keys(step.vars).forEach(function (varName) {
 				if (migrations[varName]) {
 					// Migrate old variable name to new name
 					const newVarName = migrations[varName];
@@ -2589,16 +2589,16 @@ addEventListener('DOMContentLoaded', function () {
 	// Manual Edit Mode functionality
 	const blueprintTextarea = document.getElementById('blueprint-compiled');
 
-	blueprintTextarea.addEventListener('focus', function() {
+	blueprintTextarea.addEventListener('focus', function () {
 		initBlueprintAceEditor();
 	});
 
-	blueprintTextarea.addEventListener('click', function() {
+	blueprintTextarea.addEventListener('click', function () {
 		initBlueprintAceEditor();
 	});
 
 	// Intercept playground link clicks to regenerate URL if in manual edit mode
-	document.getElementById('playground-link').addEventListener('click', function(e) {
+	document.getElementById('playground-link').addEventListener('click', function (e) {
 		if (window.goatcounter) {
 			window.goatcounter.count({
 				path: 'launch-playground',
@@ -2624,7 +2624,7 @@ addEventListener('DOMContentLoaded', function () {
 	});
 
 	// Intercept copy button to regenerate URL if in manual edit mode
-	document.getElementById('copy-playground-link').addEventListener('click', function(e) {
+	document.getElementById('copy-playground-link').addEventListener('click', function (e) {
 		if (window.goatcounter) {
 			window.goatcounter.count({
 				path: 'copy-link',
@@ -2644,19 +2644,19 @@ addEventListener('DOMContentLoaded', function () {
 
 	function getHistory() {
 		try {
-			const history = localStorage.getItem( HISTORY_STORAGE_KEY );
-			return history ? JSON.parse( history ) : [];
+			const history = localStorage.getItem(HISTORY_STORAGE_KEY);
+			return history ? JSON.parse(history) : [];
 		} catch (e) {
-			console.error( 'Failed to load history:', e );
+			console.error('Failed to load history:', e);
 			return [];
 		}
 	}
 
 	function saveHistory(history) {
 		try {
-			localStorage.setItem( HISTORY_STORAGE_KEY, JSON.stringify( history ) );
+			localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
 		} catch (e) {
-			console.error( 'Failed to save history:', e );
+			console.error('Failed to save history:', e);
 		}
 	}
 
@@ -2668,9 +2668,9 @@ addEventListener('DOMContentLoaded', function () {
 
 		let compiledBlueprint;
 		try {
-			compiledBlueprint = JSON.parse( blueprintString );
+			compiledBlueprint = JSON.parse(blueprintString);
 		} catch (e) {
-			console.error( 'Failed to parse blueprint:', e );
+			console.error('Failed to parse blueprint:', e);
 			return false;
 		}
 
@@ -2687,12 +2687,12 @@ addEventListener('DOMContentLoaded', function () {
 			stepConfig: stepConfig
 		};
 
-		history.unshift( entry );
+		history.unshift(entry);
 		if (history.length > MAX_HISTORY_ENTRIES) {
-			history.splice( MAX_HISTORY_ENTRIES );
+			history.splice(MAX_HISTORY_ENTRIES);
 		}
 
-		saveHistory( history );
+		saveHistory(history);
 		updateHistoryButtonVisibility();
 		return true;
 	}
@@ -2705,9 +2705,9 @@ addEventListener('DOMContentLoaded', function () {
 
 		let compiledBlueprint;
 		try {
-			compiledBlueprint = JSON.parse( blueprintString );
+			compiledBlueprint = JSON.parse(blueprintString);
 		} catch (e) {
-			console.error( 'Failed to parse blueprint:', e );
+			console.error('Failed to parse blueprint:', e);
 			return null;
 		}
 
@@ -2720,8 +2720,8 @@ addEventListener('DOMContentLoaded', function () {
 		// Check if the most recent entry is identical (avoid duplicate saves)
 		if (history.length > 0) {
 			const lastEntry = history[0];
-			const lastBlueprintString = JSON.stringify( lastEntry.compiledBlueprint );
-			const currentBlueprintString = JSON.stringify( compiledBlueprint );
+			const lastBlueprintString = JSON.stringify(lastEntry.compiledBlueprint);
+			const currentBlueprintString = JSON.stringify(compiledBlueprint);
 			if (lastBlueprintString === currentBlueprintString) {
 				return null;
 			}
@@ -2736,12 +2736,12 @@ addEventListener('DOMContentLoaded', function () {
 			stepConfig: stepConfig
 		};
 
-		history.unshift( entry );
+		history.unshift(entry);
 		if (history.length > MAX_HISTORY_ENTRIES) {
-			history.splice( MAX_HISTORY_ENTRIES );
+			history.splice(MAX_HISTORY_ENTRIES);
 		}
 
-		saveHistory( history );
+		saveHistory(history);
 		updateHistoryButtonVisibility();
 		return entryId;
 	}
@@ -2749,68 +2749,68 @@ addEventListener('DOMContentLoaded', function () {
 	function saveToHistoryWithName() {
 		const compiledBlueprint = getBlueprintValue();
 		if (!compiledBlueprint || !compiledBlueprint.trim()) {
-			showHistoryToast( 'Cannot save empty blueprint' );
+			showHistoryToast('Cannot save empty blueprint');
 			return;
 		}
 
-		const titleInput = document.getElementById( 'title' );
+		const titleInput = document.getElementById('title');
 		const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
 		const defaultTitle = blueprintTitle || generateLabel();
-		const customTitle = prompt( 'Enter a name for this blueprint:', defaultTitle );
+		const customTitle = prompt('Enter a name for this blueprint:', defaultTitle);
 
 		if (customTitle === null) {
 			return;
 		}
 
 		const title = customTitle.trim() || defaultTitle;
-		const success = addToHistory( title );
+		const success = addToHistory(title);
 
 		if (success) {
-			showHistoryToast( 'Saved' );
+			showHistoryToast('Saved');
 		}
 	}
 
 	function showHistoryToast(message) {
-		const toast = document.getElementById( 'history-toast' );
-		const toastMessage = document.getElementById( 'history-toast-message' );
-		const undoBtn = document.getElementById( 'history-toast-undo' );
+		const toast = document.getElementById('history-toast');
+		const toastMessage = document.getElementById('history-toast-message');
+		const undoBtn = document.getElementById('history-toast-undo');
 
 		toastMessage.textContent = message;
 		undoBtn.style.display = 'none';
 		toast.style.display = 'block';
 
 		if (deleteUndoTimeout) {
-			clearTimeout( deleteUndoTimeout );
+			clearTimeout(deleteUndoTimeout);
 		}
 
-		deleteUndoTimeout = setTimeout( function() {
+		deleteUndoTimeout = setTimeout(function () {
 			toast.style.display = 'none';
-		}, 3000 );
+		}, 3000);
 	}
 
 	function showHistoryToastWithUndo(message, undoCallback) {
-		const toast = document.getElementById( 'history-toast' );
-		const toastMessage = document.getElementById( 'history-toast-message' );
-		const undoBtn = document.getElementById( 'history-toast-undo' );
+		const toast = document.getElementById('history-toast');
+		const toastMessage = document.getElementById('history-toast-message');
+		const undoBtn = document.getElementById('history-toast-undo');
 
 		toastMessage.textContent = message;
 		undoBtn.style.display = 'inline-block';
 		toast.style.display = 'block';
 
 		if (deleteUndoTimeout) {
-			clearTimeout( deleteUndoTimeout );
+			clearTimeout(deleteUndoTimeout);
 		}
 
-		undoBtn.onclick = function() {
-			clearTimeout( deleteUndoTimeout );
+		undoBtn.onclick = function () {
+			clearTimeout(deleteUndoTimeout);
 			toast.style.display = 'none';
 			undoCallback();
 		};
 
-		deleteUndoTimeout = setTimeout( function() {
+		deleteUndoTimeout = setTimeout(function () {
 			toast.style.display = 'none';
 			lastDeletedEntry = null;
-		}, 5000 );
+		}, 5000);
 	}
 
 
@@ -2822,7 +2822,7 @@ addEventListener('DOMContentLoaded', function () {
 
 		let compiledBlueprint;
 		try {
-			compiledBlueprint = JSON.parse( blueprintString );
+			compiledBlueprint = JSON.parse(blueprintString);
 		} catch (e) {
 			return true;
 		}
@@ -2833,37 +2833,37 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		const lastEntry = history[0];
-		const lastBlueprintString = JSON.stringify( lastEntry.compiledBlueprint );
-		const currentBlueprintString = JSON.stringify( compiledBlueprint );
+		const lastBlueprintString = JSON.stringify(lastEntry.compiledBlueprint);
+		const currentBlueprintString = JSON.stringify(compiledBlueprint);
 		return lastBlueprintString === currentBlueprintString;
 	}
 
 	function showSavePromptToast() {
-		const toast = document.getElementById( 'history-toast' );
-		const toastMessage = document.getElementById( 'history-toast-message' );
-		const undoBtn = document.getElementById( 'history-toast-undo' );
+		const toast = document.getElementById('history-toast');
+		const toastMessage = document.getElementById('history-toast-message');
+		const undoBtn = document.getElementById('history-toast-undo');
 
 		toastMessage.textContent = 'Save this blueprint?';
 		undoBtn.textContent = 'Save';
 		undoBtn.style.display = 'inline-block';
 		toast.style.display = 'block';
 
-		undoBtn.onclick = function() {
-			const titleInput = document.getElementById( 'title' );
+		undoBtn.onclick = function () {
+			const titleInput = document.getElementById('title');
 			const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
 			const title = blueprintTitle || generateLabel();
-			const entryId = addToHistoryWithId( title );
+			const entryId = addToHistoryWithId(title);
 			if (entryId) {
-				showHistoryToast( 'Blueprint saved' );
+				showHistoryToast('Blueprint saved');
 			}
 			hideSavePromptToast();
 		};
 	}
 
 	function hideSavePromptToast() {
-		const toast = document.getElementById( 'history-toast' );
+		const toast = document.getElementById('history-toast');
 		toast.style.display = 'none';
-		const undoBtn = document.getElementById( 'history-toast-undo' );
+		const undoBtn = document.getElementById('history-toast-undo');
 		undoBtn.textContent = 'Undo';
 	}
 
@@ -2872,23 +2872,23 @@ addEventListener('DOMContentLoaded', function () {
 			steps: []
 		};
 
-		document.querySelectorAll( '#blueprint-steps .step' ).forEach( function(stepBlock) {
-			const stepData = getStepData( stepBlock );
+		document.querySelectorAll('#blueprint-steps .step').forEach(function (stepBlock) {
+			const stepData = getStepData(stepBlock);
 			if (stepData) {
-				stepsData.steps.push( stepData );
+				stepsData.steps.push(stepData);
 			}
-		} );
+		});
 
 		const options = {
-			wpVersion: document.getElementById( 'wp-version' ).value,
-			phpVersion: document.getElementById( 'php-version' ).value,
-			phpExtensionBundles: document.getElementById( 'phpExtensionBundles' )?.checked || false,
-			mode: document.getElementById( 'mode' ).value,
-			storage: document.getElementById( 'storage' ).value,
-			autosave: document.getElementById( 'autosave' ).value,
-			playground: document.getElementById( 'playground' ).value,
-			base64: document.getElementById( 'base64' ).checked,
-			previewMode: document.getElementById( 'preview-mode' ).value
+			wpVersion: document.getElementById('wp-version').value,
+			phpVersion: document.getElementById('php-version').value,
+			phpExtensionBundles: document.getElementById('phpExtensionBundles')?.checked || false,
+			mode: document.getElementById('mode').value,
+			storage: document.getElementById('storage').value,
+			autosave: document.getElementById('autosave').value,
+			playground: document.getElementById('playground').value,
+			base64: document.getElementById('base64').checked,
+			previewMode: document.getElementById('preview-mode').value
 		};
 
 		const defaults = {
@@ -2903,15 +2903,15 @@ addEventListener('DOMContentLoaded', function () {
 			previewMode: ''
 		};
 
-		const isAllDefaults = Object.keys( options ).every( function(key) {
+		const isAllDefaults = Object.keys(options).every(function (key) {
 			return options[key] === defaults[key];
-		} );
+		});
 
 		if (!isAllDefaults) {
 			stepsData.options = options;
 		}
 
-		const titleInput = document.getElementById( 'title' );
+		const titleInput = document.getElementById('title');
 		if (titleInput && titleInput.value) {
 			stepsData.title = titleInput.value;
 		}
@@ -2920,43 +2920,43 @@ addEventListener('DOMContentLoaded', function () {
 	}
 
 	function generateLabel() {
-		const stepBlocks = document.querySelectorAll( '#blueprint-steps .step' );
+		const stepBlocks = document.querySelectorAll('#blueprint-steps .step');
 		const stepCount = stepBlocks.length;
 		const stepTypes = new Set();
 		const plugins = [];
 		const themes = [];
 		const otherSteps = new Set();
 
-		stepBlocks.forEach( function(block) {
-			const stepType = block.dataset.step || block.querySelector( '[name="step"]' )?.value;
+		stepBlocks.forEach(function (block) {
+			const stepType = block.dataset.step || block.querySelector('[name="step"]')?.value;
 			if (stepType) {
-				stepTypes.add( stepType );
+				stepTypes.add(stepType);
 
 				if (stepType === 'installPlugin') {
-					const pluginSlug = block.querySelector( '[name="pluginZipFile"]' )?.value ||
-					                   block.querySelector( '[name="slug"]' )?.value ||
-					                   block.querySelector( '[name="url"]' )?.value;
+					const pluginSlug = block.querySelector('[name="pluginZipFile"]')?.value ||
+						block.querySelector('[name="slug"]')?.value ||
+						block.querySelector('[name="url"]')?.value;
 					if (pluginSlug && pluginSlug.trim()) {
-						const name = pluginSlug.split( '/' ).pop().replace( /\.zip$/, '' ).replace( /-/g, ' ' );
-						plugins.push( name );
+						const name = pluginSlug.split('/').pop().replace(/\.zip$/, '').replace(/-/g, ' ');
+						plugins.push(name);
 					} else {
-						otherSteps.add( stepType );
+						otherSteps.add(stepType);
 					}
 				} else if (stepType === 'installTheme') {
-					const themeSlug = block.querySelector( '[name="themeZipFile"]' )?.value ||
-					                  block.querySelector( '[name="slug"]' )?.value ||
-					                  block.querySelector( '[name="url"]' )?.value;
+					const themeSlug = block.querySelector('[name="themeZipFile"]')?.value ||
+						block.querySelector('[name="slug"]')?.value ||
+						block.querySelector('[name="url"]')?.value;
 					if (themeSlug && themeSlug.trim()) {
-						const name = themeSlug.split( '/' ).pop().replace( /\.zip$/, '' ).replace( /-/g, ' ' );
-						themes.push( name );
+						const name = themeSlug.split('/').pop().replace(/\.zip$/, '').replace(/-/g, ' ');
+						themes.push(name);
 					} else {
-						otherSteps.add( stepType );
+						otherSteps.add(stepType);
 					}
 				} else {
-					otherSteps.add( stepType );
+					otherSteps.add(stepType);
 				}
 			}
-		} );
+		});
 
 		if (stepTypes.size === 0 || stepCount === 0) {
 			return 'Empty Blueprint';
@@ -2966,38 +2966,38 @@ addEventListener('DOMContentLoaded', function () {
 
 		if (plugins.length > 0) {
 			const pluginLabel = plugins.length === 1 ? 'Plugin' : 'Plugins';
-			const pluginNames = plugins.slice( 0, 2 ).join( ', ' );
-			parts.push( pluginLabel + ' (' + pluginNames + ')' );
+			const pluginNames = plugins.slice(0, 2).join(', ');
+			parts.push(pluginLabel + ' (' + pluginNames + ')');
 		}
 
 		if (themes.length > 0) {
 			const themeName = themes[0];
-			parts.push( 'Theme (' + themeName + ')' );
+			parts.push('Theme (' + themeName + ')');
 		}
 
 		if (otherSteps.size > 0) {
-			const otherArray = Array.from( otherSteps );
+			const otherArray = Array.from(otherSteps);
 			if (otherArray.length <= 2) {
-				parts.push( otherArray.join( ', ' ) );
+				parts.push(otherArray.join(', '));
 			} else {
-				parts.push( otherArray.length + ' more step' + (otherArray.length !== 1 ? 's' : '') );
+				parts.push(otherArray.length + ' more step' + (otherArray.length !== 1 ? 's' : ''));
 			}
 		}
 
 		if (parts.length > 0) {
-			return parts.join( ' + ' );
+			return parts.join(' + ');
 		}
 
 		return 'Empty Blueprint';
 	}
 
 	function formatDate(isoString) {
-		const date = new Date( isoString );
+		const date = new Date(isoString);
 		const now = new Date();
 		const diffMs = now - date;
-		const diffMins = Math.floor( diffMs / 60000 );
-		const diffHours = Math.floor( diffMs / 3600000 );
-		const diffDays = Math.floor( diffMs / 86400000 );
+		const diffMins = Math.floor(diffMs / 60000);
+		const diffHours = Math.floor(diffMs / 3600000);
+		const diffDays = Math.floor(diffMs / 86400000);
 
 		if (diffMins < 1) {
 			return 'Just now';
@@ -3015,18 +3015,18 @@ addEventListener('DOMContentLoaded', function () {
 	}
 
 	// Save to History button
-	document.getElementById( 'save-to-history-btn' ).addEventListener( 'click', function() {
+	document.getElementById('save-to-history-btn').addEventListener('click', function () {
 		saveToHistoryWithName();
-	} );
+	});
 
 	// History modal functionality
-	const historyModal = document.getElementById( 'history-modal' );
-	const historyButton = document.getElementById( 'history-button' );
-	const historyClose = document.getElementById( 'history-close' );
-	const historyList = document.getElementById( 'history-list' );
-	const historyDetailEmpty = document.getElementById( 'history-detail-empty' );
-	const historyDetailContent = document.getElementById( 'history-detail-content' );
-	const historyBlueprintView = document.getElementById( 'history-blueprint-view' );
+	const historyModal = document.getElementById('history-modal');
+	const historyButton = document.getElementById('history-button');
+	const historyClose = document.getElementById('history-close');
+	const historyList = document.getElementById('history-list');
+	const historyDetailEmpty = document.getElementById('history-detail-empty');
+	const historyDetailContent = document.getElementById('history-detail-content');
+	const historyBlueprintView = document.getElementById('history-blueprint-view');
 
 	function updateHistoryButtonVisibility() {
 		const history = getHistory();
@@ -3039,182 +3039,182 @@ addEventListener('DOMContentLoaded', function () {
 
 	updateHistoryButtonVisibility();
 
-	historyButton.addEventListener( 'click', function() {
+	historyButton.addEventListener('click', function () {
 		renderHistoryList();
 		historyModal.showModal();
-	} );
+	});
 
-	historyClose.addEventListener( 'click', function() {
+	historyClose.addEventListener('click', function () {
 		cleanupHistoryBlueprintAceEditor();
 		historyModal.close();
 		currentHistorySelection = null;
-	} );
+	});
 
-	historyModal.addEventListener( 'click', function(e) {
+	historyModal.addEventListener('click', function (e) {
 		if (e.target === historyModal) {
 			cleanupHistoryBlueprintAceEditor();
 			historyModal.close();
 			currentHistorySelection = null;
 		}
-	} );
+	});
 
 	let lastDeletedEntry = null;
 	let deleteUndoTimeout = null;
 
 	function renderHistoryList() {
 		const history = getHistory();
-		const searchTerm = document.getElementById( 'history-search' ).value.toLowerCase();
+		const searchTerm = document.getElementById('history-search').value.toLowerCase();
 		historyList.textContent = '';
 
-		const filteredHistory = history.filter( function(entry) {
+		const filteredHistory = history.filter(function (entry) {
 			if (!searchTerm) {
 				return true;
 			}
-			const titleMatch = entry.title.toLowerCase().includes( searchTerm );
-			const blueprintJSON = JSON.stringify( entry.compiledBlueprint ).toLowerCase();
-			const blueprintMatch = blueprintJSON.includes( searchTerm );
+			const titleMatch = entry.title.toLowerCase().includes(searchTerm);
+			const blueprintJSON = JSON.stringify(entry.compiledBlueprint).toLowerCase();
+			const blueprintMatch = blueprintJSON.includes(searchTerm);
 			return titleMatch || blueprintMatch;
-		} );
+		});
 
 		if (history.length === 0) {
-			const emptyDiv = document.createElement( 'div' );
+			const emptyDiv = document.createElement('div');
 			emptyDiv.className = 'history-empty';
 			emptyDiv.textContent = 'No saved blueprints yet.';
-			historyList.appendChild( emptyDiv );
+			historyList.appendChild(emptyDiv);
 			return;
 		}
 
 		if (filteredHistory.length === 0) {
-			const emptyDiv = document.createElement( 'div' );
+			const emptyDiv = document.createElement('div');
 			emptyDiv.className = 'history-empty';
 			emptyDiv.textContent = 'No blueprints match your search.';
-			historyList.appendChild( emptyDiv );
+			historyList.appendChild(emptyDiv);
 			return;
 		}
 
-		filteredHistory.forEach( function(entry, index) {
-			const entryElement = document.createElement( 'div' );
+		filteredHistory.forEach(function (entry, index) {
+			const entryElement = document.createElement('div');
 			entryElement.className = 'history-entry';
 			entryElement.dataset.id = entry.id;
 
-			const contentWrapper = document.createElement( 'div' );
+			const contentWrapper = document.createElement('div');
 			contentWrapper.className = 'history-entry-content';
 
-			const timeElement = document.createElement( 'div' );
+			const timeElement = document.createElement('div');
 			timeElement.className = 'history-entry-time';
-			timeElement.textContent = formatDate( entry.date );
-			timeElement.title = new Date( entry.date ).toLocaleString();
+			timeElement.textContent = formatDate(entry.date);
+			timeElement.title = new Date(entry.date).toLocaleString();
 
-			const labelElement = document.createElement( 'div' );
+			const labelElement = document.createElement('div');
 			labelElement.className = 'history-entry-label';
 			labelElement.textContent = entry.title;
 
-			contentWrapper.appendChild( timeElement );
-			contentWrapper.appendChild( labelElement );
+			contentWrapper.appendChild(timeElement);
+			contentWrapper.appendChild(labelElement);
 
 			const blueprint = entry.compiledBlueprint;
 
 			if (blueprint && blueprint.steps && blueprint.steps.length > 0) {
-				const detailsElement = document.createElement( 'details' );
+				const detailsElement = document.createElement('details');
 				detailsElement.className = 'history-entry-details';
 
-				const summaryElement = document.createElement( 'summary' );
+				const summaryElement = document.createElement('summary');
 				summaryElement.textContent = blueprint.steps.length + ' step' + (blueprint.steps.length !== 1 ? 's' : '');
-				summaryElement.addEventListener( 'click', function(e) {
+				summaryElement.addEventListener('click', function (e) {
 					e.stopPropagation();
-				} );
+				});
 
-				const stepsList = document.createElement( 'ol' );
+				const stepsList = document.createElement('ol');
 				stepsList.className = 'history-steps-list';
 
-				blueprint.steps.forEach( function(step) {
-					const stepItem = document.createElement( 'li' );
+				blueprint.steps.forEach(function (step) {
+					const stepItem = document.createElement('li');
 					stepItem.textContent = step.step || 'Unknown step';
-					stepsList.appendChild( stepItem );
-				} );
+					stepsList.appendChild(stepItem);
+				});
 
-				detailsElement.appendChild( summaryElement );
-				detailsElement.appendChild( stepsList );
-				contentWrapper.appendChild( detailsElement );
+				detailsElement.appendChild(summaryElement);
+				detailsElement.appendChild(stepsList);
+				contentWrapper.appendChild(detailsElement);
 			}
 
-			const actionsWrapper = document.createElement( 'div' );
+			const actionsWrapper = document.createElement('div');
 			actionsWrapper.className = 'history-entry-actions';
 
-			const renameBtn = document.createElement( 'button' );
+			const renameBtn = document.createElement('button');
 			renameBtn.className = 'history-entry-rename';
 			renameBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 			renameBtn.title = 'Rename';
-			renameBtn.addEventListener( 'click', function(e) {
+			renameBtn.addEventListener('click', function (e) {
 				e.stopPropagation();
-				renameHistoryEntry( entry.id );
-			} );
+				renameHistoryEntry(entry.id);
+			});
 
-			const deleteBtn = document.createElement( 'button' );
+			const deleteBtn = document.createElement('button');
 			deleteBtn.className = 'history-entry-delete';
 			deleteBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.1709 4C9.58273 2.83481 10.694 2 12.0002 2C13.3064 2 14.4177 2.83481 14.8295 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M20.5001 6H3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M18.8332 8.5L18.3732 15.3991C18.1962 18.054 18.1077 19.3815 17.2427 20.1907C16.3777 21 15.0473 21 12.3865 21H11.6132C8.95235 21 7.62195 21 6.75694 20.1907C5.89194 19.3815 5.80344 18.054 5.62644 15.3991L5.1665 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9.5 11L10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14.5 11L14 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
 			deleteBtn.title = 'Delete';
-			deleteBtn.addEventListener( 'click', function(e) {
+			deleteBtn.addEventListener('click', function (e) {
 				e.stopPropagation();
-				deleteHistoryEntry( entry.id );
-			} );
+				deleteHistoryEntry(entry.id);
+			});
 
-			actionsWrapper.appendChild( renameBtn );
-			actionsWrapper.appendChild( deleteBtn );
+			actionsWrapper.appendChild(renameBtn);
+			actionsWrapper.appendChild(deleteBtn);
 
-			entryElement.appendChild( contentWrapper );
-			entryElement.appendChild( actionsWrapper );
+			entryElement.appendChild(contentWrapper);
+			entryElement.appendChild(actionsWrapper);
 
-			contentWrapper.addEventListener( 'click', function(e) {
-				if (!e.target.closest( 'details' ) && !e.target.closest( 'summary' )) {
-					selectHistoryEntry( entry.id );
+			contentWrapper.addEventListener('click', function (e) {
+				if (!e.target.closest('details') && !e.target.closest('summary')) {
+					selectHistoryEntry(entry.id);
 				}
-			} );
+			});
 
-			contentWrapper.addEventListener( 'dblclick', function() {
-				renameHistoryEntry( entry.id );
-			} );
+			contentWrapper.addEventListener('dblclick', function () {
+				renameHistoryEntry(entry.id);
+			});
 
-			historyList.appendChild( entryElement );
+			historyList.appendChild(entryElement);
 
 			if (index === 0 && !currentHistorySelection && window.innerWidth > 768) {
-				selectHistoryEntry( entry.id );
+				selectHistoryEntry(entry.id);
 			}
-		} );
+		});
 	}
 
 	function renameHistoryEntry(entryId) {
 		const history = getHistory();
-		const entry = history.find( function(e) {
+		const entry = history.find(function (e) {
 			return e.id === entryId;
-		} );
+		});
 
 		if (!entry) {
 			return;
 		}
 
-		const newTitle = prompt( 'Enter new name:', entry.title );
+		const newTitle = prompt('Enter new name:', entry.title);
 
 		if (newTitle === null || newTitle.trim() === '') {
 			return;
 		}
 
 		entry.title = newTitle.trim();
-		saveHistory( history );
+		saveHistory(history);
 		renderHistoryList();
 
 		if (currentHistorySelection && currentHistorySelection.id === entryId) {
 			currentHistorySelection.title = newTitle.trim();
 		}
 
-		showHistoryToast( 'Renamed to "' + newTitle.trim() + '"' );
+		showHistoryToast('Renamed to "' + newTitle.trim() + '"');
 	}
 
 	function deleteHistoryEntry(entryId) {
 		const history = getHistory();
-		const entry = history.find( function(e) {
+		const entry = history.find(function (e) {
 			return e.id === entryId;
-		} );
+		});
 
 		if (!entry) {
 			return;
@@ -3222,10 +3222,10 @@ addEventListener('DOMContentLoaded', function () {
 
 		lastDeletedEntry = entry;
 
-		const filtered = history.filter( function(e) {
+		const filtered = history.filter(function (e) {
 			return e.id !== entryId;
-		} );
-		saveHistory( filtered );
+		});
+		saveHistory(filtered);
 		updateHistoryButtonVisibility();
 
 		if (currentHistorySelection && currentHistorySelection.id === entryId) {
@@ -3236,9 +3236,9 @@ addEventListener('DOMContentLoaded', function () {
 
 		renderHistoryList();
 
-		showHistoryToastWithUndo( 'Deleted "' + entry.title + '"', function() {
+		showHistoryToastWithUndo('Deleted "' + entry.title + '"', function () {
 			undoDelete();
-		} );
+		});
 	}
 
 	function undoDelete() {
@@ -3247,23 +3247,23 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		const history = getHistory();
-		history.push( lastDeletedEntry );
-		history.sort( function(a, b) {
-			return new Date( b.date ) - new Date( a.date );
-		} );
-		saveHistory( history );
+		history.push(lastDeletedEntry);
+		history.sort(function (a, b) {
+			return new Date(b.date) - new Date(a.date);
+		});
+		saveHistory(history);
 		updateHistoryButtonVisibility();
 
 		lastDeletedEntry = null;
 		renderHistoryList();
-		showHistoryToast( 'Restored' );
+		showHistoryToast('Restored');
 	}
 
 	function selectHistoryEntry(entryId) {
 		const history = getHistory();
-		const entry = history.find( function(e) {
+		const entry = history.find(function (e) {
 			return e.id === entryId;
-		} );
+		});
 
 		if (!entry) {
 			return;
@@ -3271,15 +3271,15 @@ addEventListener('DOMContentLoaded', function () {
 
 		currentHistorySelection = entry;
 
-		document.querySelectorAll( '.history-entry' ).forEach( function(el) {
-			el.classList.remove( 'selected' );
-		} );
-		document.querySelector( '.history-entry[data-id="' + entryId + '"]' ).classList.add( 'selected' );
+		document.querySelectorAll('.history-entry').forEach(function (el) {
+			el.classList.remove('selected');
+		});
+		document.querySelector('.history-entry[data-id="' + entryId + '"]').classList.add('selected');
 
 		historyDetailEmpty.style.display = 'none';
 		historyDetailContent.style.display = 'block';
 
-		const blueprintString = JSON.stringify( entry.compiledBlueprint, null, 2 );
+		const blueprintString = JSON.stringify(entry.compiledBlueprint, null, 2);
 		historyBlueprintView.value = blueprintString;
 
 		if (historyBlueprintAceEditor) {
@@ -3290,129 +3290,129 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		if (window.innerWidth <= 768) {
-			document.getElementById( 'history-detail-column' ).classList.add( 'mobile-visible' );
+			document.getElementById('history-detail-column').classList.add('mobile-visible');
 		}
 	}
 
-	const historyDetailColumn = document.getElementById( 'history-detail-column' );
-	const historyMobileBackBtn = document.getElementById( 'history-mobile-back-btn' );
+	const historyDetailColumn = document.getElementById('history-detail-column');
+	const historyMobileBackBtn = document.getElementById('history-mobile-back-btn');
 
-	historyMobileBackBtn.addEventListener( 'click', function() {
-		historyDetailColumn.classList.remove( 'mobile-visible' );
-	} );
+	historyMobileBackBtn.addEventListener('click', function () {
+		historyDetailColumn.classList.remove('mobile-visible');
+	});
 
-	document.getElementById( 'history-copy-btn' ).addEventListener( 'click', function() {
+	document.getElementById('history-copy-btn').addEventListener('click', function () {
 		if (!currentHistorySelection) {
 			return;
 		}
-		const blueprintString = JSON.stringify( currentHistorySelection.compiledBlueprint, null, 2 );
-		navigator.clipboard.writeText( blueprintString ).then( function() {
-			const btn = document.getElementById( 'history-copy-btn' );
+		const blueprintString = JSON.stringify(currentHistorySelection.compiledBlueprint, null, 2);
+		navigator.clipboard.writeText(blueprintString).then(function () {
+			const btn = document.getElementById('history-copy-btn');
 			const originalText = btn.textContent;
 			btn.textContent = '✓ Copied!';
-			setTimeout( function() {
+			setTimeout(function () {
 				btn.textContent = originalText;
-			}, 2000 );
-		} );
-	} );
+			}, 2000);
+		});
+	});
 
-	document.getElementById( 'history-download-btn' ).addEventListener( 'click', function() {
+	document.getElementById('history-download-btn').addEventListener('click', function () {
 		if (!currentHistorySelection) {
 			return;
 		}
 
-		const blueprintString = JSON.stringify( currentHistorySelection.compiledBlueprint, null, 2 );
-		const filename = currentHistorySelection.title.replace( /[^a-z0-9]/gi, '-' ).toLowerCase() + '.json';
-		const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent( blueprintString );
-		const downloadAnchor = document.createElement( 'a' );
-		downloadAnchor.setAttribute( 'href', dataStr );
-		downloadAnchor.setAttribute( 'download', filename );
+		const blueprintString = JSON.stringify(currentHistorySelection.compiledBlueprint, null, 2);
+		const filename = currentHistorySelection.title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.json';
+		const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(blueprintString);
+		const downloadAnchor = document.createElement('a');
+		downloadAnchor.setAttribute('href', dataStr);
+		downloadAnchor.setAttribute('download', filename);
 		downloadAnchor.click();
 
-		showHistoryToast( 'Downloaded' );
-	} );
+		showHistoryToast('Downloaded');
+	});
 
-	document.getElementById( 'history-launch-btn' ).addEventListener( 'click', function() {
+	document.getElementById('history-launch-btn').addEventListener('click', function () {
 		if (!currentHistorySelection) {
 			return;
 		}
 
 		const playground = document.getElementById('playground').value;
-		const blueprintString = JSON.stringify( currentHistorySelection.compiledBlueprint );
+		const blueprintString = JSON.stringify(currentHistorySelection.compiledBlueprint);
 		const href = (playground.substr(0, 7) === 'http://' ? playground : 'https://' + playground) + '/?blueprint-url=data:application/json;base64,' + encodeURIComponent(encodeStringAsBase64(blueprintString));
 
 		window.open(href, '_blank');
-	} );
+	});
 
-	document.getElementById( 'history-restore-btn' ).addEventListener( 'click', function() {
+	document.getElementById('history-restore-btn').addEventListener('click', function () {
 		if (!currentHistorySelection) {
 			return;
 		}
-		restoreSteps( currentHistorySelection.stepConfig, currentHistorySelection.title );
+		restoreSteps(currentHistorySelection.stepConfig, currentHistorySelection.title);
 
 		cleanupHistoryBlueprintAceEditor();
 		historyModal.close();
-	} );
+	});
 
-	document.getElementById( 'history-mobile-delete-btn' ).addEventListener( 'click', function() {
+	document.getElementById('history-mobile-delete-btn').addEventListener('click', function () {
 		if (!currentHistorySelection) {
 			return;
 		}
 		const entryId = currentHistorySelection.id;
-		historyDetailColumn.classList.remove( 'mobile-visible' );
-		setTimeout( function() {
-			deleteHistoryEntry( entryId );
-		}, 300 );
-	} );
+		historyDetailColumn.classList.remove('mobile-visible');
+		setTimeout(function () {
+			deleteHistoryEntry(entryId);
+		}, 300);
+	});
 
-	document.getElementById( 'history-save-current-btn' ).addEventListener( 'click', function() {
+	document.getElementById('history-save-current-btn').addEventListener('click', function () {
 		saveToHistoryWithName();
 		renderHistoryList();
-	} );
+	});
 
-	document.getElementById( 'history-export-all-btn' ).addEventListener( 'click', function() {
+	document.getElementById('history-export-all-btn').addEventListener('click', function () {
 		exportAllBlueprints();
-	} );
+	});
 
-	document.getElementById( 'history-import-btn' ).addEventListener( 'click', function() {
-		document.getElementById( 'history-import-file' ).click();
-	} );
+	document.getElementById('history-import-btn').addEventListener('click', function () {
+		document.getElementById('history-import-file').click();
+	});
 
-	document.getElementById( 'history-import-file' ).addEventListener( 'change', function(e) {
+	document.getElementById('history-import-file').addEventListener('change', function (e) {
 		const file = e.target.files[0];
 		if (file) {
-			importBlueprints( file );
+			importBlueprints(file);
 		}
 		e.target.value = '';
-	} );
+	});
 
 
 	// History search
-	document.getElementById( 'history-search' ).addEventListener( 'input', function() {
+	document.getElementById('history-search').addEventListener('input', function () {
 		renderHistoryList();
-	} );
+	});
 
 	// Toast close button
-	document.getElementById( 'history-toast-close' ).addEventListener( 'click', function() {
+	document.getElementById('history-toast-close').addEventListener('click', function () {
 		hideSavePromptToast();
-	} );
+	});
 
 	function exportAllBlueprints() {
 		const history = getHistory();
 		if (history.length === 0) {
-			showHistoryToast( 'No blueprints to export' );
+			showHistoryToast('No blueprints to export');
 			return;
 		}
 
 		const now = new Date();
-		const blueprintsForExport = history.map( function(entry) {
+		const blueprintsForExport = history.map(function (entry) {
 			return {
 				title: entry.title,
 				date: entry.date,
 				compiledBlueprint: entry.compiledBlueprint,
 				stepConfig: entry.stepConfig
 			};
-		} );
+		});
 
 		const exportData = {
 			version: 1,
@@ -3420,33 +3420,33 @@ addEventListener('DOMContentLoaded', function () {
 			blueprints: blueprintsForExport
 		};
 
-		const dateStr = now.toISOString().split( 'T' )[0];
+		const dateStr = now.toISOString().split('T')[0];
 		const filename = 'blueprints-' + dateStr + '.json';
 
-		const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent( JSON.stringify( exportData, null, 2 ) );
-		const downloadAnchor = document.createElement( 'a' );
-		downloadAnchor.setAttribute( 'href', dataStr );
-		downloadAnchor.setAttribute( 'download', filename );
+		const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportData, null, 2));
+		const downloadAnchor = document.createElement('a');
+		downloadAnchor.setAttribute('href', dataStr);
+		downloadAnchor.setAttribute('download', filename);
 		downloadAnchor.click();
 
-		showHistoryToast( 'Exported ' + history.length + ' blueprint' + (history.length === 1 ? '' : 's') );
+		showHistoryToast('Exported ' + history.length + ' blueprint' + (history.length === 1 ? '' : 's'));
 	}
 
 	function importBlueprints(file) {
 		const reader = new FileReader();
-		reader.onload = function(e) {
+		reader.onload = function (e) {
 			try {
-				const importData = JSON.parse( e.target.result );
+				const importData = JSON.parse(e.target.result);
 				let blueprintsToImport = [];
 
-				if (Array.isArray( importData )) {
+				if (Array.isArray(importData)) {
 					blueprintsToImport = importData;
-				} else if (importData.blueprints && Array.isArray( importData.blueprints )) {
+				} else if (importData.blueprints && Array.isArray(importData.blueprints)) {
 					blueprintsToImport = importData.blueprints;
 				} else if (importData.stepConfig && importData.compiledBlueprint) {
-					blueprintsToImport = [ importData ];
+					blueprintsToImport = [importData];
 				} else {
-					showHistoryToast( 'Invalid file format' );
+					showHistoryToast('Invalid file format');
 					return;
 				}
 
@@ -3454,17 +3454,17 @@ addEventListener('DOMContentLoaded', function () {
 				let importedCount = 0;
 				let skippedCount = 0;
 
-				blueprintsToImport.forEach( function(blueprint) {
+				blueprintsToImport.forEach(function (blueprint) {
 					if (!blueprint.compiledBlueprint || !blueprint.stepConfig) {
 						skippedCount++;
 						return;
 					}
 
-					const blueprintStr = JSON.stringify( blueprint.compiledBlueprint );
-					const isDuplicate = history.some( function(existingEntry) {
-						return JSON.stringify( existingEntry.compiledBlueprint ) === blueprintStr &&
-						       existingEntry.date === blueprint.date;
-					} );
+					const blueprintStr = JSON.stringify(blueprint.compiledBlueprint);
+					const isDuplicate = history.some(function (existingEntry) {
+						return JSON.stringify(existingEntry.compiledBlueprint) === blueprintStr &&
+							existingEntry.date === blueprint.date;
+					});
 
 					if (isDuplicate) {
 						skippedCount++;
@@ -3479,15 +3479,15 @@ addEventListener('DOMContentLoaded', function () {
 						stepConfig: blueprint.stepConfig
 					};
 
-					history.unshift( entry );
+					history.unshift(entry);
 					importedCount++;
-				} );
+				});
 
 				if (history.length > MAX_HISTORY_ENTRIES) {
-					history.splice( MAX_HISTORY_ENTRIES );
+					history.splice(MAX_HISTORY_ENTRIES);
 				}
 
-				saveHistory( history );
+				saveHistory(history);
 				renderHistoryList();
 				updateHistoryButtonVisibility();
 
@@ -3495,14 +3495,14 @@ addEventListener('DOMContentLoaded', function () {
 				if (skippedCount > 0) {
 					message += ' (' + skippedCount + ' skipped)';
 				}
-				showHistoryToast( message );
+				showHistoryToast(message);
 
 			} catch (error) {
-				console.error( 'Import error:', error );
-				showHistoryToast( 'Failed to import: Invalid JSON' );
+				console.error('Import error:', error);
+				showHistoryToast('Failed to import: Invalid JSON');
 			}
 		};
-		reader.readAsText( file );
+		reader.readAsText(file);
 	}
 
 	function restoreSteps(stepsData, title) {
@@ -3516,37 +3516,37 @@ addEventListener('DOMContentLoaded', function () {
 			manualEditBanner.style.display = 'none';
 		}
 
-		const blueprintStepsContainer = document.getElementById( 'blueprint-steps' );
+		const blueprintStepsContainer = document.getElementById('blueprint-steps');
 		blueprintStepsContainer.textContent = '';
-		const draghint = document.createElement( 'div' );
+		const draghint = document.createElement('div');
 		draghint.id = 'draghint';
 		draghint.textContent = 'Click or drag the steps to add them here.';
-		blueprintStepsContainer.appendChild( draghint );
+		blueprintStepsContainer.appendChild(draghint);
 
 		if (title) {
-			document.getElementById( 'title' ).value = title;
+			document.getElementById('title').value = title;
 		}
 
 		const missingSteps = [];
 
-		stepsData.steps.forEach( function(stepData) {
-			const sourceStep = document.querySelector( '#step-library .step[data-step="' + stepData.step + '"]' );
+		stepsData.steps.forEach(function (stepData) {
+			const sourceStep = document.querySelector('#step-library .step[data-step="' + stepData.step + '"]');
 			if (!sourceStep) {
-				console.warn( 'Step not found in library:', stepData.step );
-				missingSteps.push( stepData.step );
+				console.warn('Step not found in library:', stepData.step);
+				missingSteps.push(stepData.step);
 				return;
 			}
 
-			const stepBlock = sourceStep.cloneNode( true );
-			stepBlock.removeAttribute( 'id' );
-			stepBlock.classList.remove( 'dragging' );
-			stepBlock.classList.remove( 'hidden' );
-			document.getElementById( 'blueprint-steps' ).appendChild( stepBlock );
+			const stepBlock = sourceStep.cloneNode(true);
+			stepBlock.removeAttribute('id');
+			stepBlock.classList.remove('dragging');
+			stepBlock.classList.remove('hidden');
+			document.getElementById('blueprint-steps').appendChild(stepBlock);
 
 			// Restore vars
 			if (stepData.vars) {
 				for (const key in stepData.vars) {
-					const input = stepBlock.querySelector( '[name="' + key + '"]' );
+					const input = stepBlock.querySelector('[name="' + key + '"]');
 					if (input) {
 						if (input.type === 'checkbox') {
 							input.checked = stepData.vars[key];
@@ -3559,45 +3559,45 @@ addEventListener('DOMContentLoaded', function () {
 
 			// Restore count if present
 			if (stepData.count) {
-				const countInput = stepBlock.querySelector( '[name="count"]' );
+				const countInput = stepBlock.querySelector('[name="count"]');
 				if (countInput) {
 					countInput.value = stepData.count;
 				}
 			}
-		} );
+		});
 
 		if (missingSteps.length > 0) {
-			showHistoryToast( 'Warning: ' + missingSteps.length + ' step(s) not found: ' + missingSteps.join( ', ' ) );
+			showHistoryToast('Warning: ' + missingSteps.length + ' step(s) not found: ' + missingSteps.join(', '));
 		}
 
 		if (stepsData.options) {
 			const opts = stepsData.options;
 			if (opts.wpVersion) {
-				document.getElementById( 'wp-version' ).value = opts.wpVersion;
+				document.getElementById('wp-version').value = opts.wpVersion;
 			}
 			if (opts.phpVersion) {
-				document.getElementById( 'php-version' ).value = opts.phpVersion;
+				document.getElementById('php-version').value = opts.phpVersion;
 			}
 			if (opts.phpExtensionBundles !== undefined) {
-				document.getElementById( 'phpExtensionBundles' ).checked = opts.phpExtensionBundles;
+				document.getElementById('phpExtensionBundles').checked = opts.phpExtensionBundles;
 			}
 			if (opts.mode) {
-				document.getElementById( 'mode' ).value = opts.mode;
+				document.getElementById('mode').value = opts.mode;
 			}
 			if (opts.storage) {
-				document.getElementById( 'storage' ).value = opts.storage;
+				document.getElementById('storage').value = opts.storage;
 			}
 			if (opts.autosave) {
-				document.getElementById( 'autosave' ).value = opts.autosave;
+				document.getElementById('autosave').value = opts.autosave;
 			}
 			if (opts.playground) {
-				document.getElementById( 'playground' ).value = opts.playground;
+				document.getElementById('playground').value = opts.playground;
 			}
 			if (opts.base64 !== undefined) {
-				document.getElementById( 'base64' ).checked = opts.base64;
+				document.getElementById('base64').checked = opts.base64;
 			}
 			if (opts.previewMode) {
-				document.getElementById( 'preview-mode' ).value = opts.previewMode;
+				document.getElementById('preview-mode').value = opts.previewMode;
 			}
 		}
 
