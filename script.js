@@ -1047,6 +1047,83 @@ addEventListener('DOMContentLoaded', function () {
 		loadCombinedExamples();
 	});
 
+	function detectUrlType(url) {
+		if (!url || typeof url !== 'string') {
+			return null;
+		}
+
+		const trimmedUrl = url.trim();
+
+		if (/^https?:\/\/wordpress\.org\/plugins\/.+/.test(trimmedUrl)) {
+			return 'plugin';
+		}
+		if (/^https?:\/\/wordpress\.org\/themes\/.+/.test(trimmedUrl)) {
+			return 'theme';
+		}
+		if (/^https?:\/\/github\.com\/.+\/.+/.test(trimmedUrl)) {
+			return 'plugin';
+		}
+		if (/^https?:\/\/.+\.(zip|tar\.gz|tgz)(\?.*)?$/.test(trimmedUrl)) {
+			return 'plugin';
+		}
+		if (/^https?:\/\/.+/.test(trimmedUrl)) {
+			return 'plugin';
+		}
+
+		return null;
+	}
+
+	function addStepFromUrl(url) {
+		const urlType = detectUrlType(url);
+		if (!urlType) {
+			return false;
+		}
+
+		const stepType = urlType === 'theme' ? 'installTheme' : 'installPlugin';
+		const stepData = customSteps[stepType];
+
+		if (!stepData) {
+			return false;
+		}
+
+		const draghint = blueprintSteps.querySelector('#draghint');
+		if (draghint) {
+			draghint.remove();
+		}
+
+		const stepElement = createStep(stepType, stepData);
+		blueprintSteps.appendChild(stepElement);
+		stepElement.querySelectorAll('input,textarea').forEach(fixMouseCursor);
+
+		const urlInput = stepElement.querySelector('input[name="url"]');
+		if (urlInput) {
+			urlInput.value = url;
+		}
+
+		loadCombinedExamples();
+		return true;
+	}
+
+	window.addEventListener('paste', (event) => {
+		if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+			return;
+		}
+
+		const pastedText = event.clipboardData.getData('text');
+		const urls = pastedText.split('\n').map(line => line.trim()).filter(line => line);
+
+		let addedAny = false;
+		for (const url of urls) {
+			if (addStepFromUrl(url)) {
+				addedAny = true;
+			}
+		}
+
+		if (addedAny) {
+			event.preventDefault();
+		}
+	});
+
 	function getDragAfterElement(container, y) {
 		const draggableElements = [...container.querySelectorAll('.step')];
 
