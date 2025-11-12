@@ -17,6 +17,7 @@ This document provides detailed information about all available steps, including
 - [`changeAdminColorScheme`](#changeadmincolorscheme)
 - [`createUser`](#createuser)
 - [`customPostType`](#customposttype)
+- [`debug`](#debug)
 - [`defineWpConfigConst`](#definewpconfigconst)
 - [`deleteAllPosts`](#deleteallposts)
 - [`disableWelcomeGuides`](#disablewelcomeguides)
@@ -374,6 +375,34 @@ This document provides detailed information about all available steps, including
           "name": "Books",
           "supports": "['title', 'editor']",
           "public": "true"
+    }
+```
+
+
+---
+
+## `debug`
+
+**Type**: Custom Step  
+**Description**: Configure WordPress debug settings and optionally install Query Monitor plugin.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `wpDebug` | boolean | ❌ No | Enable WordPress debug mode (WP_DEBUG) |
+| `wpDebugDisplay` | boolean | ❌ No | Display errors in HTML output (WP_DEBUG_DISPLAY). Only applies when wpDebug is enabled. |
+| `scriptDebug` | boolean | ❌ No | Use non-minified JavaScript and CSS files (SCRIPT_DEBUG) |
+| `queryMonitor` | boolean | ❌ No | Install Query Monitor plugin for debugging database queries, hooks, and performance |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "debug",
+          "wpDebug": false,
+          "wpDebugDisplay": false,
+          "scriptDebug": false,
+          "queryMonitor": false
     }
 ```
 
@@ -1164,4 +1193,4 @@ This document provides detailed information about all available steps, including
 
 ---
 
-*Generated automatically on 2025-11-11.*
+*Generated automatically on 2025-11-12.*

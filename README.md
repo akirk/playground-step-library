@@ -320,7 +320,7 @@ Returns information about all available custom steps.
 - Returns: Object with step names as keys and step info as values
 ## Custom Steps
 
-This library provides **47** total steps (8 built-in enhanced steps + 39 custom steps):
+This library provides **48** total steps (8 built-in enhanced steps + 40 custom steps):
 
 ### Built-in Enhanced Steps
 - [`defineWpConfigConst`](docs/steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
@@ -346,6 +346,7 @@ This library provides **47** total steps (8 built-in enhanced steps + 39 custom 
 - [`changeAdminColorScheme`](docs/steps/changeAdminColorScheme.md) - Useful to combine with a login step.
 - [`createUser`](docs/steps/createUser.md) - Create a new user.
 - [`customPostType`](docs/steps/customPostType.md) - Register a custom post type.
+- [`debug`](docs/steps/debug.md) - Configure WordPress debug settings and optionally install Query Monitor plugin.
 - [`deleteAllPosts`](docs/steps/deleteAllPosts.md) - Delete all posts, pages, attachments, revisions and menu items.
 - [`disableWelcomeGuides`](docs/steps/disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - [`doAction`](docs/steps/doAction.md) - Execute a custom action.
@@ -373,4 +374,4 @@ This library provides **47** total steps (8 built-in enhanced steps + 39 custom 
 - [`showAdminNotice`](docs/steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](docs/steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 
-*This list was automatically generated on 2025-11-11.*
+*This list was automatically generated on 2025-11-12.*

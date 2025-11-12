@@ -4,9 +4,9 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 📊 Overview
 
-- **Total Steps**: 47
+- **Total Steps**: 48
 - **Built-in Steps**: 8
-- **Custom Steps**: 39
+- **Custom Steps**: 40
 
 ## 🚀 Quick Start
 
@@ -83,6 +83,7 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 - [`generateProducts`](steps/generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 - [`blockExamples`](steps/blockExamples.md) - Creates a post with all block examples from registered blocks
+- [`debug`](steps/debug.md) - Configure WordPress debug settings and optionally install Query Monitor plugin.
 
 ## 🔗 Cross-References
 
@@ -106,4 +107,4 @@ To add a new step:
 
 ---
 
-*This documentation was auto-generated on 2025-11-11.*
+*This documentation was auto-generated on 2025-11-12.*

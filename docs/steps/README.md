@@ -3,9 +3,9 @@
 Browse detailed documentation for each WordPress Playground step.
 
 ## 📊 Quick Stats
-- **47** total steps
+- **48** total steps
 - **8** built-in steps  
-- **39** custom steps
+- **40** custom steps
 
 ## 🔧 Built-in Steps
 Enhanced core WordPress Playground steps with additional functionality.
@@ -35,6 +35,7 @@ Extended functionality beyond core WordPress Playground capabilities.
 - [`changeAdminColorScheme`](./changeAdminColorScheme.md) - Useful to combine with a login step.
 - [`createUser`](./createUser.md) - Create a new user.
 - [`customPostType`](./customPostType.md) - Register a custom post type.
+- [`debug`](./debug.md) - Configure WordPress debug settings and optionally install Query Monitor plugin.
 - [`deleteAllPosts`](./deleteAllPosts.md) - Delete all posts, pages, attachments, revisions and menu items.
 - [`disableWelcomeGuides`](./disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - [`doAction`](./doAction.md) - Execute a custom action.
@@ -69,4 +70,4 @@ Extended functionality beyond core WordPress Playground capabilities.
 
 ---
 
-*This documentation was auto-generated on 2025-11-11*
+*This documentation was auto-generated on 2025-11-12*

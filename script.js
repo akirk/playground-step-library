@@ -1140,12 +1140,26 @@ addEventListener('DOMContentLoaded', function () {
 	}
 
 	window.addEventListener('paste', (event) => {
-		if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+		const pastedText = event.clipboardData.getData('text');
+		const urls = pastedText.split('\n').map(line => line.trim()).filter(line => line);
+
+		let hasUrl = false;
+		for (const url of urls) {
+			if (detectUrlType(url)) {
+				hasUrl = true;
+				break;
+			}
+		}
+
+		if (!hasUrl) {
 			return;
 		}
 
-		const pastedText = event.clipboardData.getData('text');
-		const urls = pastedText.split('\n').map(line => line.trim()).filter(line => line);
+		if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+			if (event.target.id !== 'filter') {
+				return;
+			}
+		}
 
 		let addedAny = false;
 		for (const url of urls) {
