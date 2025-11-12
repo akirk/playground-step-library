@@ -905,9 +905,11 @@ select {
   border-color: var(--mine-step-border);
 }
 
-#view-source iframe {
+#view-source-editor {
   width: 800px;
   height: 600px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
 }
 
 #blueprint-compiled {

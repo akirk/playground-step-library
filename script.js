@@ -14,6 +14,7 @@ addEventListener('DOMContentLoaded', function () {
 	let aceEditor = null;
 	let blueprintAceEditor = null;
 	let historyBlueprintAceEditor = null;
+	let viewSourceAceEditor = null;
 	let aceLoaded = false;
 	let aceLoading = null;
 	const showCallbacks = {};
@@ -63,6 +64,9 @@ addEventListener('DOMContentLoaded', function () {
 		}
 		if (aceEditor) {
 			aceEditor.setTheme(theme);
+		}
+		if (viewSourceAceEditor) {
+			viewSourceAceEditor.setTheme(theme);
 		}
 	}
 
@@ -371,7 +375,6 @@ addEventListener('DOMContentLoaded', function () {
 		viewSource.className = 'view-source';
 		viewSource.href = 'steps/' + name + '.ts';
 		viewSource.innerText = 'View Source';
-		viewSource.target = 'source-iframe';
 		div.appendChild(viewSource);
 
 		const saveStep = document.createElement('button');
@@ -976,17 +979,45 @@ addEventListener('DOMContentLoaded', function () {
 		}
 		dialog = document.getElementById('view-source');
 		if (event.target.classList.contains('view-source')) {
-			dialog.querySelector('h2').innerText = event.target.href.split('/').slice(event.target.href.includes('builtin') ? -3 : -2).join('/');
-			dialog.showModal();
-		} else {
-			dialog.close();
-			if (!event.target.closest('#code-editor')) {
-				document.getElementById('code-editor').close();
-			}
+			event.preventDefault();
+			const sourceUrl = event.target.href;
+			dialog.querySelector('h2').innerText = sourceUrl.split('/').slice(-1)[0];
+
+			// Load Ace editor and fetch the source file
+			Promise.all([loadAceEditor(), fetch(sourceUrl)])
+				.then(([_, response]) => {
+					if (!response.ok) {
+						throw new Error('Failed to load source file');
+					}
+					return response.text();
+				})
+				.then(sourceCode => {
+					// Initialize Ace editor if not already done
+					if (!viewSourceAceEditor) {
+						viewSourceAceEditor = ace.edit('view-source-editor');
+						viewSourceAceEditor.setTheme(getAceTheme());
+						viewSourceAceEditor.session.setMode('ace/mode/typescript');
+						viewSourceAceEditor.setFontSize(14);
+						viewSourceAceEditor.setShowPrintMargin(false);
+						viewSourceAceEditor.setReadOnly(true);
+						viewSourceAceEditor.session.setUseWrapMode(true);
+					}
+
+					// Set the source code
+					viewSourceAceEditor.setValue(sourceCode, -1);
+					dialog.showModal();
+				})
+				.catch(error => {
+					console.error('Error loading source:', error);
+					alert('Failed to load source file: ' + error.message);
+				});
 		}
 
 		if (event.target.tagName === 'BUTTON' && event.target.closest('#save-step')) {
 			return saveMyStep();
+		}
+		if (event.target.id === 'view-source-close') {
+			return document.getElementById('view-source').close();
 		}
 		if (event.target.tagName === 'BUTTON' && event.target.closest('#code-editor')) {
 			if (aceEditor) {
