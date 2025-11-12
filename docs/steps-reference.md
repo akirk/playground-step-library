@@ -240,11 +240,12 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `pluginSlug` | text | ❌ No | Limit to a specific plugin slug (leave empty for all plugins) |
+| `blockNamespace` | text | ❌ No | Limit to a specific plugin slug (leave empty for all plugins) |
 | `postTitle` | text | ❌ No | Title of the post to create |
 | `limit` | text | ❌ No | Maximum number of blocks to include (leave empty for no limit) |
 | `postId` | text | ❌ No | Post ID to use (defaults to 1000) |
-| `landingPage` | text | ❌ No | Set landing page to the post editor (set to false to disable) |
+| `excludeCore` | boolean | ❌ No | Exclude core WordPress blocks |
+| `landingPage` | boolean | ❌ No | Set landing page to the post editor |
 
 
 ### Example Usage
@@ -252,10 +253,11 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "blockExamples",
-          "pluginSlug": "",
+          "blockNamespace": "",
           "postTitle": "Block Examples",
           "limit": "",
           "postId": "1000",
+          "excludeCore": "false",
           "landingPage": "true"
     }
 ```
@@ -388,10 +390,10 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `wpDebug` | boolean | ❌ No | Enable WordPress debug mode (WP_DEBUG) |
-| `wpDebugDisplay` | boolean | ❌ No | Display errors in HTML output (WP_DEBUG_DISPLAY). Only applies when wpDebug is enabled. |
-| `scriptDebug` | boolean | ❌ No | Use non-minified JavaScript and CSS files (SCRIPT_DEBUG) |
-| `queryMonitor` | boolean | ❌ No | Install Query Monitor plugin for debugging database queries, hooks, and performance |
+| `wpDebug` | boolean | ❌ No | Enable WordPress debug mode |
+| `wpDebugDisplay` | boolean | ❌ No | Display errors in HTML output. Only applies when the above is enabled. |
+| `scriptDebug` | boolean | ❌ No | Use non-minified JavaScript and CSS files. |
+| `queryMonitor` | boolean | ❌ No | Install Query Monitor plugin. |
 
 
 ### Example Usage
@@ -705,7 +707,6 @@ This document provides detailed information about all available steps, including
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of a WordPress.com export ZIP file |
-| `corsProxy` | boolean | ✅ Yes | Use a cors proxy for the request |
 
 
 ### Example Usage
@@ -713,8 +714,7 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "importWordPressComExport",
-          "url": "",
-          "corsProxy": "true"
+          "url": ""
     }
 ```
 
@@ -729,7 +729,6 @@ This document provides detailed information about all available steps, including
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of a WXR file |
-| `corsProxy` | boolean | ✅ Yes | Use a cors proxy for the request |
 
 
 ### Example Usage
@@ -737,8 +736,7 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "importWxr",
-          "url": "",
-          "corsProxy": "true"
+          "url": ""
     }
 ```
 

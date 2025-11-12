@@ -28,16 +28,16 @@ describe('blockExamples', () => {
 		expect(result[0].code).toContain('My Custom Block Examples');
 	});
 
-	it('should filter by plugin slug', () => {
+	it('should filter by block namespace', () => {
 		const step: BlockExamplesStep = {
 			step: 'blockExamples',
-			pluginSlug: 'gutenberg'
+			blockNamespace: 'gutenberg'
 		};
 
 		const result = blockExamples(step);
 
 		expect(result[0].code).toContain('gutenberg');
-		expect(result[0].code).toContain("$plugin_slug = 'gutenberg'");
+		expect(result[0].code).toContain("$block_namespace = 'gutenberg'");
 	});
 
 	it('should always use draft status', () => {
@@ -113,5 +113,49 @@ describe('blockExamples', () => {
 
 		expect(result[0].code).toContain('$post_id = 5000');
 		expect(result.landingPage).toBe('/wp-admin/post.php?post=5000&action=edit');
+	});
+
+	it('should not exclude core blocks by default', () => {
+		const step: BlockExamplesStep = {
+			step: 'blockExamples'
+		};
+
+		const result = blockExamples(step);
+
+		expect(result[0].code).toContain('$exclude_core = false');
+	});
+
+	it('should exclude core blocks when excludeCore is true', () => {
+		const step: BlockExamplesStep = {
+			step: 'blockExamples',
+			excludeCore: true
+		};
+
+		const result = blockExamples(step);
+
+		expect(result[0].code).toContain('$exclude_core = true');
+		expect(result[0].code).toContain("if ( $exclude_core && 0 === stripos( $block_name, 'core/' ) ) {");
+	});
+
+	it('should exclude core blocks when excludeCore is string "true"', () => {
+		const step: BlockExamplesStep = {
+			step: 'blockExamples',
+			excludeCore: 'true'
+		};
+
+		const result = blockExamples(step);
+
+		expect(result[0].code).toContain('$exclude_core = true');
+	});
+
+	it('should include limit parameter', () => {
+		const step: BlockExamplesStep = {
+			step: 'blockExamples',
+			limit: 10
+		};
+
+		const result = blockExamples(step);
+
+		expect(result[0].code).toContain('$limit = 10');
 	});
 });

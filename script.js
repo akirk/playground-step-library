@@ -430,11 +430,17 @@ addEventListener('DOMContentLoaded', function () {
 				let input;
 				const tr = document.createElement('tr');
 				let td = document.createElement('td');
-				td.innerText = v.name || '';
-				tr.appendChild(td);
 
-				td = document.createElement('td');
+				if (v.type !== 'boolean') {
+					td.className = 'label';
+					td.innerText = v.name || '';
+					tr.appendChild(td);
+					td = document.createElement('td');
+					td.className = 'field';
+				}
+
 				if (v.type === 'boolean') {
+					td.colSpan = 2;
 					const input = document.createElement('input');
 					input.name = v.name;
 					input.type = 'checkbox';
@@ -636,7 +642,11 @@ addEventListener('DOMContentLoaded', function () {
 
 	document.addEventListener('keydown', (event) => {
 		if (event.key === 'Escape') {
-			document.getElementById('view-source').close();
+			const viewSourceDialog = document.getElementById('view-source');
+			if (viewSourceDialog.open) {
+				document.body.classList.remove('dialog-open');
+			}
+			viewSourceDialog.close();
 		}
 	});
 
@@ -1009,10 +1019,29 @@ addEventListener('DOMContentLoaded', function () {
 						viewSourceAceEditor.setShowPrintMargin(false);
 						viewSourceAceEditor.setReadOnly(true);
 						viewSourceAceEditor.session.setUseWrapMode(true);
+
+						const viewSourceStatus = document.getElementById('view-source-status');
+						viewSourceStatus.classList.add('active');
+
+						const updateViewSourceStatus = () => {
+							updateAceStatusBar(viewSourceAceEditor, viewSourceStatus, 'TypeScript (Read-only)');
+						};
+
+						viewSourceAceEditor.getSession().selection.on('changeCursor', updateViewSourceStatus);
+						viewSourceAceEditor.getSession().selection.on('changeSelection', updateViewSourceStatus);
 					}
 
 					// Set the source code
 					viewSourceAceEditor.setValue(sourceCode, -1);
+
+					// Update status bar
+					const viewSourceStatus = document.getElementById('view-source-status');
+					const updateViewSourceStatus = () => {
+						updateAceStatusBar(viewSourceAceEditor, viewSourceStatus, 'TypeScript (Read-only)');
+					};
+					updateViewSourceStatus();
+
+					document.body.classList.add('dialog-open');
 					dialog.showModal();
 				})
 				.catch(error => {
@@ -1025,6 +1054,7 @@ addEventListener('DOMContentLoaded', function () {
 			return saveMyStep();
 		}
 		if (event.target.id === 'view-source-close') {
+			document.body.classList.remove('dialog-open');
 			return document.getElementById('view-source').close();
 		}
 		if (event.target.tagName === 'BUTTON' && event.target.closest('#code-editor')) {
@@ -1486,7 +1516,7 @@ addEventListener('DOMContentLoaded', function () {
 				const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
 				outputData.meta.title = blueprintTitle || generateLabel();
 			}
-			outputData.meta.$generator = 'https://github.com/akirk/playground-step-library';
+			outputData.meta.author = 'https://github.com/akirk/playground-step-library';
 		}
 
 		// Extract query params from compiled steps (for the original web UI functionality)
@@ -3043,11 +3073,13 @@ addEventListener('DOMContentLoaded', function () {
 
 	historyButton.addEventListener('click', function () {
 		renderHistoryList();
+		document.body.classList.add('dialog-open');
 		historyModal.showModal();
 	});
 
 	historyClose.addEventListener('click', function () {
 		cleanupHistoryBlueprintAceEditor();
+		document.body.classList.remove('dialog-open');
 		historyModal.close();
 		currentHistorySelection = null;
 	});
@@ -3055,6 +3087,7 @@ addEventListener('DOMContentLoaded', function () {
 	historyModal.addEventListener('click', function (e) {
 		if (e.target === historyModal) {
 			cleanupHistoryBlueprintAceEditor();
+			document.body.classList.remove('dialog-open');
 			historyModal.close();
 			currentHistorySelection = null;
 		}
@@ -3353,6 +3386,7 @@ addEventListener('DOMContentLoaded', function () {
 		restoreSteps(currentHistorySelection.stepConfig, currentHistorySelection.title);
 
 		cleanupHistoryBlueprintAceEditor();
+		document.body.classList.remove('dialog-open');
 		historyModal.close();
 	});
 

@@ -10,7 +10,6 @@ Import a WXR from a URL.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of a WXR file |
-| `corsProxy` | boolean | ✅ Yes | Use a cors proxy for the request |
 
 
 ## Examples
@@ -19,8 +18,7 @@ Import a WXR from a URL.
 ```json
     {
           "step": "importWxr",
-          "url": "",
-          "corsProxy": "true"
+          "url": ""
     }
 ```
 
@@ -31,8 +29,7 @@ Import a WXR from a URL.
   "steps": [
         {
           "step": "importWxr",
-          "url": "",
-          "corsProxy": "true"
+          "url": ""
     }
   ]
 }
@@ -48,8 +45,7 @@ const blueprint = {
   steps: [
         {
           "step": "importWxr",
-          "url": "",
-          "corsProxy": "true"
+          "url": ""
     }
   ]
 };

@@ -9,11 +9,12 @@ Creates a post with all block examples from registered blocks
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `pluginSlug` | text | ❌ No | Limit to a specific plugin slug (leave empty for all plugins) |
+| `blockNamespace` | text | ❌ No | Limit to a specific plugin slug (leave empty for all plugins) |
 | `postTitle` | text | ❌ No | Title of the post to create |
 | `limit` | text | ❌ No | Maximum number of blocks to include (leave empty for no limit) |
 | `postId` | text | ❌ No | Post ID to use (defaults to 1000) |
-| `landingPage` | text | ❌ No | Set landing page to the post editor (set to false to disable) |
+| `excludeCore` | boolean | ❌ No | Exclude core WordPress blocks |
+| `landingPage` | boolean | ❌ No | Set landing page to the post editor |
 
 
 ## Examples
@@ -22,10 +23,11 @@ Creates a post with all block examples from registered blocks
 ```json
     {
           "step": "blockExamples",
-          "pluginSlug": "",
+          "blockNamespace": "",
           "postTitle": "Block Examples",
           "limit": "",
           "postId": "1000",
+          "excludeCore": "false",
           "landingPage": "true"
     }
 ```
@@ -34,10 +36,11 @@ Creates a post with all block examples from registered blocks
 ```json
 {
   "step": "blockExamples",
-  "pluginSlug": "gutenberg",
+  "blockNamespace": "gutenberg",
   "postTitle": "Plugin Blocks Showcase",
   "limit": "10",
   "postId": "2000",
+  "excludeCore": "true",
   "landingPage": "false"
 }
 ```
@@ -49,10 +52,11 @@ Creates a post with all block examples from registered blocks
   "steps": [
         {
           "step": "blockExamples",
-          "pluginSlug": "",
+          "blockNamespace": "",
           "postTitle": "Block Examples",
           "limit": "",
           "postId": "1000",
+          "excludeCore": "false",
           "landingPage": "true"
     }
   ]
@@ -69,10 +73,11 @@ const blueprint = {
   steps: [
         {
           "step": "blockExamples",
-          "pluginSlug": "",
+          "blockNamespace": "",
           "postTitle": "Block Examples",
           "limit": "",
           "postId": "1000",
+          "excludeCore": "false",
           "landingPage": "true"
     }
   ]

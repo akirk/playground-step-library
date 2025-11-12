@@ -1,5 +1,12 @@
 :root {
   color-scheme: light dark;
+}
+
+body.dialog-open {
+  overflow: hidden;
+}
+
+:root {
 
   /* Modern Color Palette */
   --primary-50: #eff6ff;
@@ -559,6 +566,10 @@ textarea#blueprint:focus, textarea#blueprint-compiled:focus {
   box-sizing: border-box;
 }
 
+.step td > label > input[type=checkbox] {
+  margin-right: .7em;
+}
+
 .step td > label {
   display: inline-block;
 }
@@ -683,7 +694,7 @@ table.vars {
   border-collapse: collapse;
 }
 
-table.vars tr td:first-child {
+table.vars tr td.label {
   font-weight: var(--font-weight-semibold);
   width: auto;
   min-width: 80px;
@@ -695,7 +706,7 @@ table.vars tr td:first-child {
   white-space: nowrap;
 }
 
-table.vars tr td:last-child {
+table.vars tr td.field {
   width: 100%;
   padding: var(--spacing-3) 0;
 }

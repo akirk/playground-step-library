@@ -10,7 +10,6 @@ Import a WordPress.com export file (WXR in a ZIP)
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of a WordPress.com export ZIP file |
-| `corsProxy` | boolean | ✅ Yes | Use a cors proxy for the request |
 
 
 ## Examples
@@ -19,8 +18,7 @@ Import a WordPress.com export file (WXR in a ZIP)
 ```json
     {
           "step": "importWordPressComExport",
-          "url": "",
-          "corsProxy": "true"
+          "url": ""
     }
 ```
 
@@ -31,8 +29,7 @@ Import a WordPress.com export file (WXR in a ZIP)
   "steps": [
         {
           "step": "importWordPressComExport",
-          "url": "",
-          "corsProxy": "true"
+          "url": ""
     }
   ]
 }
@@ -48,8 +45,7 @@ const blueprint = {
   steps: [
         {
           "step": "importWordPressComExport",
-          "url": "",
-          "corsProxy": "true"
+          "url": ""
     }
   ]
 };

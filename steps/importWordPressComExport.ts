@@ -2,7 +2,6 @@ import type { StepFunction, ImportWordPressComExportStep} from './types.js';
 
 
 export const importWordPressComExport: StepFunction<ImportWordPressComExportStep> = (step: ImportWordPressComExportStep) => {
-	const url = step.corsProxy ? 'https://playground.wordpress.net/cors-proxy.php?' + step.url : step.url;
 	return [
 		{
 			"step": "mkdir",
@@ -12,7 +11,7 @@ export const importWordPressComExport: StepFunction<ImportWordPressComExportStep
 			"step": "unzip",
 			"zipFile": {
 				"resource": "url",
-				url
+				"url": step.url
 			},
 			"extractToPath": "/tmp"
 		},
@@ -44,11 +43,5 @@ importWordPressComExport.vars = Object.entries({
 		description: "URL of a WordPress.com export ZIP file",
 		required: true,
 		samples: [""]
-	},
-	corsProxy: {
-		description: "Use a cors proxy for the request",
-		required: true,
-		type: "boolean",
-		samples: ["true", "false"]
 	}
 }).map(([name, varConfig]) => ({ name, ...varConfig }));

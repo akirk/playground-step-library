@@ -13,35 +13,35 @@ export const debug: StepFunction<DebugStep> = (step: DebugStep, blueprint: any) 
 		WP_DEBUG: wpDebug
 	};
 
-	if ( wpDebug ) {
+	if (wpDebug) {
 		consts.WP_DEBUG_DISPLAY = wpDebugDisplay;
 	}
 
-	if ( scriptDebug ) {
+	if (scriptDebug) {
 		consts.SCRIPT_DEBUG = true;
 	}
 
-	steps.push( {
+	steps.push({
 		step: 'defineWpConfigConsts',
 		consts: consts
-	} );
+	});
 
-	if ( queryMonitor ) {
+	if (queryMonitor) {
 		let hasQueryMonitorPlugin = false;
-		for ( const i in blueprint.steps ) {
-			if ( blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'query-monitor' ) {
+		for (const i in blueprint.steps) {
+			if (blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'query-monitor') {
 				hasQueryMonitorPlugin = true;
 			}
 		}
-		if ( !hasQueryMonitorPlugin ) {
-			const queryMonitorSteps = installPlugin( { step: 'installPlugin', url: 'query-monitor' } );
+		if (!hasQueryMonitorPlugin) {
+			const queryMonitorSteps = installPlugin({ step: 'installPlugin', url: 'query-monitor' });
 			// Add caption to show debug step is installing Query Monitor
-			if ( queryMonitorSteps.length > 0 && queryMonitorSteps[0].step === 'installPlugin' ) {
+			if (queryMonitorSteps.length > 0 && queryMonitorSteps[0].step === 'installPlugin') {
 				queryMonitorSteps[0].progress = {
 					caption: 'debug: Installing Query Monitor'
 				};
 			}
-			steps.push( ...queryMonitorSteps );
+			steps.push(...queryMonitorSteps);
 		}
 	}
 
@@ -49,26 +49,26 @@ export const debug: StepFunction<DebugStep> = (step: DebugStep, blueprint: any) 
 };
 
 debug.description = "Configure WordPress debug settings and optionally install Query Monitor plugin.";
-debug.vars = Object.entries( {
+debug.vars = Object.entries({
 	wpDebug: {
-		description: "Enable WordPress debug mode (WP_DEBUG)",
+		description: "Enable WordPress debug mode",
 		type: "boolean",
 		required: false
 	},
 	wpDebugDisplay: {
-		description: "Display errors in HTML output (WP_DEBUG_DISPLAY). Only applies when wpDebug is enabled.",
+		description: "Display errors in HTML output. Only applies when the above is enabled.",
 		type: "boolean",
 		required: false,
-		show: ( step: DebugStep ) => step.wpDebug !== false
+		show: (step: DebugStep) => step.wpDebug !== false
 	},
 	scriptDebug: {
-		description: "Use non-minified JavaScript and CSS files (SCRIPT_DEBUG)",
+		description: "Use non-minified JavaScript and CSS files.",
 		type: "boolean",
 		required: false
 	},
 	queryMonitor: {
-		description: "Install Query Monitor plugin for debugging database queries, hooks, and performance",
+		description: "Install Query Monitor plugin.",
 		type: "boolean",
 		required: false
 	}
-} ).map( ( [name, varConfig] ) => ( { name, ...varConfig } ) );
+}).map(([name, varConfig]) => ({ name, ...varConfig }));

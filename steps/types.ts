@@ -241,7 +241,6 @@ export interface GithubThemeStep extends BlueprintStep {
 
 export interface ImportWordPressComExportStep extends BlueprintStep {
     url: string;
-    corsProxy: boolean;
 }
 
 export interface ImportWxrStep extends BlueprintStep {
@@ -250,7 +249,6 @@ export interface ImportWxrStep extends BlueprintStep {
 
 export interface ImportWxrFromUrlStep extends BlueprintStep {
     url: string;
-    corsProxy: boolean;
 }
 
 export interface ImportFriendFeedsStep extends BlueprintStep {
@@ -371,10 +369,12 @@ export interface GenerateProductsStep extends BlueprintStep {
 }
 
 export interface BlockExamplesStep extends BlueprintStep {
+	blockNamespace?: string;
 	pluginSlug?: string;
 	postTitle?: string;
 	limit?: number;
 	postId?: number;
+	excludeCore?: boolean | string;
 	landingPage?: boolean;
 }
 export interface DebugStep extends BlueprintStep {
