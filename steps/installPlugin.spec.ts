@@ -111,6 +111,139 @@ describe('installPlugin', () => {
         expect(result[0].options.activate).toBe(true);
     });
 
+    it('should handle GitHub URLs with uppercase branch names', () => {
+        const step: InstallPluginStep = {
+            step: 'installPlugin',
+            url: 'https://github.com/akirk/friends/tree/BRANCHNAME'
+        };
+
+        const result = installPlugin(step);
+
+        expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('installPlugin');
+        expect(result[0].pluginData.resource).toBe('git:directory');
+        expect(result[0].pluginData.url).toBe('https://github.com/akirk/friends');
+        expect(result[0].pluginData.path).toBeUndefined();
+        expect(result[0].pluginData.ref).toBe('BRANCHNAME');
+        expect(result[0].pluginData.refType).toBe('branch');
+        expect(result[0].options.activate).toBe(true);
+    });
+
+    it('should handle GitHub URLs with branch names containing slashes', () => {
+        const step: InstallPluginStep = {
+            step: 'installPlugin',
+            url: 'https://github.com/akirk/friends/tree/feature/new-thing'
+        };
+
+        const result = installPlugin(step);
+
+        expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('installPlugin');
+        expect(result[0].pluginData.resource).toBe('git:directory');
+        expect(result[0].pluginData.url).toBe('https://github.com/akirk/friends');
+        expect(result[0].pluginData.path).toBeUndefined();
+        expect(result[0].pluginData.ref).toBe('feature/new-thing');
+        expect(result[0].pluginData.refType).toBe('branch');
+        expect(result[0].options.activate).toBe(true);
+    });
+
+    it('should handle GitHub URLs with branch containing slash and directory using double-slash separator', () => {
+        const step: InstallPluginStep = {
+            step: 'installPlugin',
+            url: 'https://github.com/akirk/friends/tree/feature/branch//some/directory'
+        };
+
+        const result = installPlugin(step);
+
+        expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('installPlugin');
+        expect(result[0].pluginData.resource).toBe('git:directory');
+        expect(result[0].pluginData.url).toBe('https://github.com/akirk/friends');
+        expect(result[0].pluginData.path).toBe('some/directory');
+        expect(result[0].pluginData.ref).toBe('feature/branch');
+        expect(result[0].pluginData.refType).toBe('branch');
+        expect(result[0].options.activate).toBe(true);
+    });
+
+    it('should handle GitHub URLs with branch names with trailing slash', () => {
+        const step: InstallPluginStep = {
+            step: 'installPlugin',
+            url: 'https://github.com/akirk/friends/tree/feature/'
+        };
+
+        const result = installPlugin(step);
+
+        expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('installPlugin');
+        expect(result[0].pluginData.resource).toBe('git:directory');
+        expect(result[0].pluginData.url).toBe('https://github.com/akirk/friends');
+        expect(result[0].pluginData.path).toBeUndefined();
+        expect(result[0].pluginData.ref).toBe('feature');
+        expect(result[0].pluginData.refType).toBe('branch');
+        expect(result[0].options.activate).toBe(true);
+    });
+
+    it('should handle GitHub URLs with two-part branch names', () => {
+        const step: InstallPluginStep = {
+            step: 'installPlugin',
+            url: 'https://github.com/akirk/friends/tree/feature/br'
+        };
+
+        const result = installPlugin(step);
+
+        expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('installPlugin');
+        expect(result[0].pluginData.resource).toBe('git:directory');
+        expect(result[0].pluginData.url).toBe('https://github.com/akirk/friends');
+        expect(result[0].pluginData.path).toBeUndefined();
+        expect(result[0].pluginData.ref).toBe('feature/br');
+        expect(result[0].pluginData.refType).toBe('branch');
+        expect(result[0].options.activate).toBe(true);
+    });
+
+    it('should handle GitHub URLs with two-part branch names with trailing slash', () => {
+        const step: InstallPluginStep = {
+            step: 'installPlugin',
+            url: 'https://github.com/akirk/friends/tree/feature/br/'
+        };
+
+        const result = installPlugin(step);
+
+        expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('installPlugin');
+        expect(result[0].pluginData.resource).toBe('git:directory');
+        expect(result[0].pluginData.url).toBe('https://github.com/akirk/friends');
+        expect(result[0].pluginData.path).toBeUndefined();
+        expect(result[0].pluginData.ref).toBe('feature/br');
+        expect(result[0].pluginData.refType).toBe('branch');
+        expect(result[0].options.activate).toBe(true);
+    });
+
+    it('should handle GitHub URLs with simple branch and directory using double-slash', () => {
+        const step: InstallPluginStep = {
+            step: 'installPlugin',
+            url: 'https://github.com/akirk/friends/tree/feature//br'
+        };
+
+        const result = installPlugin(step);
+
+        expect(Array.isArray(result)).toBe(true);
+        expect(result).toHaveLength(1);
+        expect(result[0].step).toBe('installPlugin');
+        expect(result[0].pluginData.resource).toBe('git:directory');
+        expect(result[0].pluginData.url).toBe('https://github.com/akirk/friends');
+        expect(result[0].pluginData.path).toBe('br');
+        expect(result[0].pluginData.ref).toBe('feature');
+        expect(result[0].pluginData.refType).toBe('branch');
+        expect(result[0].options.activate).toBe(true);
+    });
+
     it('should handle GitHub branch/directory URLs with subdirectory', () => {
         const step: InstallPluginStep = {
             step: 'installPlugin',

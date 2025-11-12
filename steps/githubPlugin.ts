@@ -2,17 +2,39 @@ import type { StepFunction, GithubPluginStep} from './types.js';
 
 
 export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginStep) => {
-	const urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.url );
+	const urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branchAndDir>.+))?$/.exec( step.url );
 	if ( !urlTest ) {
 		return [];
 	}
 	const repo = urlTest.groups!.org + "/" + urlTest.groups!.repo;
-	const branch = urlTest.groups!.branch;
-	if ( branch && ! /^[a-z0-9_-]+$/.test( branch ) ) {
-		return [];
+
+	let branch = urlTest.groups!.branchAndDir;
+	let directory = '';
+
+	if ( branch ) {
+		branch = branch.replace( /\/+$/, '' );
+
+		const doubleSlashIndex = branch.indexOf( '//' );
+		if ( doubleSlashIndex !== -1 ) {
+			directory = branch.substring( doubleSlashIndex + 2 );
+			branch = branch.substring( 0, doubleSlashIndex );
+		} else {
+			const firstSlashIndex = branch.indexOf( '/' );
+			if ( firstSlashIndex !== -1 ) {
+				const potentialDir = branch.substring( firstSlashIndex + 1 );
+				if ( potentialDir.includes( '/' ) ) {
+					directory = potentialDir;
+					branch = branch.substring( 0, firstSlashIndex );
+				}
+			}
+		}
+
+		if ( ! /^[a-zA-Z0-9_.\/-]+$/.test( branch ) ) {
+			return [];
+		}
 	}
+
 	const repoUrl = `https://github.com/${repo}`;
-	const directory = ( urlTest.groups!.directory || '' ).replace( /\/+$/, '' ).replace( /^\/+/, '' );
 
 	const outStep = {
 		"step": "installPlugin",
