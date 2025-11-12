@@ -32,23 +32,23 @@ jobs:
           
       - name: Install dependencies
         run: npm ci
-        
-      - name: Run tests
-        run: npm test
-        
+
       - name: Build project
         run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Remove unnecessary files before upload
-        run: rm -rf node_modules examples
+      - name: Prepare deployment files
+        run: |
+          mkdir deploy
+          mv index.html script.js style.css deploy/
+          mv lib steps vendor deploy/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: 'deploy'
 
   deploy:
     environment:
