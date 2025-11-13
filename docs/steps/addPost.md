@@ -96,8 +96,3 @@ The following parameters are deprecated but still supported for backward compati
 - `postType` → Use `type` instead
 - `postStatus` → Use `status` instead
 
-
-
----
-
-*This documentation was auto-generated from the step definition.*

@@ -18,6 +18,29 @@ class StepDocumentationGenerator {
     constructor() {
         this.compiler = new PlaygroundStepLibrary();
         this.steps = this.compiler.getAvailableSteps();
+        this.filesUpdated = 0;
+        this.filesSkipped = 0;
+    }
+
+    /**
+     * Write file only if content has changed
+     */
+    writeFileIfChanged(filepath, content) {
+        let shouldWrite = true;
+
+        if (fs.existsSync(filepath)) {
+            const existingContent = fs.readFileSync(filepath, 'utf8');
+            if (existingContent === content) {
+                shouldWrite = false;
+                this.filesSkipped++;
+            }
+        }
+
+        if (shouldWrite) {
+            fs.writeFileSync(filepath, content);
+            this.filesUpdated++;
+            console.log(`✅ Updated ${filepath}`);
+        }
     }
 
     /**
@@ -37,29 +60,27 @@ class StepDocumentationGenerator {
         if (!fs.existsSync('docs/steps')) fs.mkdirSync('docs/steps');
 
         // Write main steps documentation
-        fs.writeFileSync('docs/README.md', docs.readme);
-        console.log('✅ Generated docs/README.md');
+        this.writeFileIfChanged('docs/README.md', docs.readme);
 
         // Write steps list
-        fs.writeFileSync('docs/steps-reference.md', docs.stepsList);
-        console.log('✅ Generated docs/steps-reference.md');
+        this.writeFileIfChanged('docs/steps-reference.md', docs.stepsList);
 
         // Write individual step docs
         Object.entries(docs.individualDocs).forEach(([stepName, content]) => {
             const filename = `docs/steps/${stepName}.md`;
-            fs.writeFileSync(filename, content);
+            this.writeFileIfChanged(filename, content);
         });
 
         // Generate navigation index
         const navIndex = this.generateNavigationIndex();
-        fs.writeFileSync('docs/steps/README.md', navIndex);
-        console.log('✅ Generated docs/steps/README.md (navigation index)');
+        this.writeFileIfChanged('docs/steps/README.md', navIndex);
 
         // Update main README with custom steps list
         this.updateMainReadmeWithSteps();
-        console.log('✅ Updated main README.md with custom steps list');
 
-        console.log(`✅ Generated ${Object.keys(docs.individualDocs).length} individual step docs`);
+        console.log(`\n📊 Summary:`);
+        console.log(`   ${this.filesUpdated} files updated`);
+        console.log(`   ${this.filesSkipped} files unchanged`);
         console.log('\n🎉 Documentation generation complete!');
 
         return docs;
@@ -100,10 +121,6 @@ ${customSteps.map(([name, info]) =>
 
 - [← Back to Main Documentation](../README.md)
 - [Complete Steps Reference](../steps-reference.md) - All steps in one page
-
----
-
-*This documentation was auto-generated on ${new Date().toISOString().split('T')[0]}*
 `;
     }
 
@@ -179,10 +196,6 @@ To add a new step:
 2. Define the step function with proper metadata
 3. Run \`npm run docs:generate\` to update documentation
 4. Test your step with \`npm test\`
-
----
-
-*This documentation was auto-generated on ${new Date().toISOString().split('T')[0]}.*
 `;
     }
 
@@ -207,8 +220,6 @@ ${stepEntries.map(([name]) => `- [\`${name}\`](#${name.toLowerCase()})`).join('\
         stepEntries.forEach(([stepName, stepInfo]) => {
             content += this.generateStepSection(stepName, stepInfo) + '\n---\n\n';
         });
-
-        content += `*Generated automatically on ${new Date().toISOString().split('T')[0]}.*`;
 
         return content;
     }
@@ -277,12 +288,7 @@ const blueprint = {
 const compiled = compiler.compile(blueprint);
 \`\`\`
 
-${deprecationNotices}
-
----
-
-*This documentation was auto-generated from the step definition.*
-`;
+${deprecationNotices}`;
     }
 
     /**
@@ -482,17 +488,11 @@ ${builtinSteps.map(([name, info]) =>
 ### Custom Steps
 ${customSteps.map(([name, info]) =>
             `- [\`${name}\`](docs/steps/${name}.md) - ${info.description || 'No description available'}`
-        ).join('\n')}
+        ).join('\n')}`;
 
-*This list was automatically generated on ${new Date().toISOString().split('T')[0]}.*`;
-
-        // Remove all existing custom steps sections (more comprehensive regex)
-        const customStepsRegex = /(\n## Custom Steps[\s\S]*?)(?=\n## [^C]|\n### Built-in Enhanced Steps[\s\S]*?\*This list was automatically generated[\s\S]*?\*|$)/g;
+        // Remove all existing custom steps sections
+        const customStepsRegex = /\n## Custom Steps[\s\S]*?(?=\n## [^C]|$)/g;
         readmeContent = readmeContent.replace(customStepsRegex, '');
-
-        // Also remove any leftover fragments
-        readmeContent = readmeContent.replace(/\n### Built-in Enhanced Steps[\s\S]*?\*This list was automatically generated[\s\S]*?\*/g, '');
-        readmeContent = readmeContent.replace(/\n### Custom Steps[\s\S]*?\*This list was automatically generated[\s\S]*?\*/g, '');
 
         // Clean up any extra whitespace at the end
         readmeContent = readmeContent.trim();
@@ -500,7 +500,7 @@ ${customSteps.map(([name, info]) =>
         // Append the new custom steps section at the end
         readmeContent = readmeContent + stepsSection;
 
-        fs.writeFileSync(readmePath, readmeContent);
+        this.writeFileIfChanged(readmePath, readmeContent);
     }
 }
 

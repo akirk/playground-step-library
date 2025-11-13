@@ -68,8 +68,3 @@ The following parameters are deprecated but still supported for backward compati
 - `postTitle` → Use `title` instead
 - `postContent` → Use `content` instead
 
-
-
----
-
-*This documentation was auto-generated from the step definition.*

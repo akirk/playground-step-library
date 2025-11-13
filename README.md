@@ -373,5 +373,3 @@ This library provides **48** total steps (8 built-in enhanced steps + 40 custom 
 - [`setTT4Homepage`](docs/steps/setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
 - [`showAdminNotice`](docs/steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](docs/steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
-
-*This list was automatically generated on 2025-11-13.*

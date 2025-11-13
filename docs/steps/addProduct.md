@@ -97,8 +97,3 @@ The following parameters are deprecated but still supported for backward compati
 - `productSku` → Use `sku` instead
 - `productStatus` → Use `status` instead
 
-
-
----
-
-*This documentation was auto-generated from the step definition.*

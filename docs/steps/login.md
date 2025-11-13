@@ -61,8 +61,3 @@ const blueprint = {
 const compiled = compiler.compile(blueprint);
 ```
 
-
-
----
-
-*This documentation was auto-generated from the step definition.*

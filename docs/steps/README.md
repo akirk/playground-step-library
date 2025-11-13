@@ -67,7 +67,3 @@ Extended functionality beyond core WordPress Playground capabilities.
 
 - [← Back to Main Documentation](../README.md)
 - [Complete Steps Reference](../steps-reference.md) - All steps in one page
-
----
-
-*This documentation was auto-generated on 2025-11-13*

@@ -104,7 +104,3 @@ To add a new step:
 2. Define the step function with proper metadata
 3. Run `npm run docs:generate` to update documentation
 4. Test your step with `npm test`
-
----
-
-*This documentation was auto-generated on 2025-11-13.*
