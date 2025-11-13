@@ -10,7 +10,8 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of the plugin or WordPress.org slug. |
-| `prs` | boolean | ❌ No | Add support for submitting Github Requests. |
+| `auth` | boolean | ❌ No | Ask for GitHub authentication (needed for private repos). |
+| `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
 | `permalink` | boolean | ❌ No | Requires a permalink structure |
 
 
@@ -21,9 +22,21 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
     {
           "step": "installPlugin",
           "url": "hello-dolly",
+          "auth": "false",
           "prs": "false",
           "permalink": false
     }
+```
+
+### Advanced Usage
+```json
+{
+  "step": "installPlugin",
+  "url": "https://wordpress.org/plugins/friends",
+  "auth": "true",
+  "prs": "true",
+  "permalink": false
+}
 ```
 
 ## Usage in Blueprint
@@ -34,6 +47,7 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
         {
           "step": "installPlugin",
           "url": "hello-dolly",
+          "auth": "false",
           "prs": "false",
           "permalink": false
     }
@@ -52,6 +66,7 @@ const blueprint = {
         {
           "step": "installPlugin",
           "url": "hello-dolly",
+          "auth": "false",
           "prs": "false",
           "permalink": false
     }

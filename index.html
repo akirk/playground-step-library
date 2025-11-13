@@ -14,12 +14,22 @@
 	<script>
 		addEventListener('DOMContentLoaded', function() {
 			// Options toggle
-			document.getElementById('toggle-further-options').addEventListener('click', function() {
+			document.getElementById('toggle-further-options').addEventListener('click', function(e) {
 				const details = document.getElementById('further-options');
 				if (details.open) {
 					details.removeAttribute('open');
 				} else {
 					details.setAttribute('open', '');
+				}
+				e.stopPropagation();
+			});
+
+			// Close dropdown when clicking outside
+			document.addEventListener('click', function(e) {
+				const details = document.getElementById('further-options');
+				const toggleButton = document.getElementById('toggle-further-options');
+				if (details.open && !details.contains(e.target) && !toggleButton.contains(e.target)) {
+					details.removeAttribute('open');
 				}
 			});
 
@@ -112,6 +122,7 @@
 								</select></label>
 							<label>Site slug (saves site in Playground) <input type="text" id="autosave" placeholder="my-site-name"
 									pattern="[a-z0-9][a-z0-9-]+"></label>
+							<label><input type="checkbox" id="exclude-meta" value="true">Exclude meta header from blueprint</label>
 						</div>
 					</details>
 				</span>

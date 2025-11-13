@@ -611,7 +611,8 @@ This document provides detailed information about all available steps, including
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `url` | string | ❌ No | Github URL of the plugin. |
-| `prs` | boolean | ❌ No | Add support for submitting Github Requests. |
+| `auth` | boolean | ❌ No | Ask for GitHub authentication (needed for private repos). |
+| `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
 
 
 ### Example Usage
@@ -620,6 +621,7 @@ This document provides detailed information about all available steps, including
     {
           "step": "githubPlugin",
           "url": "https://github.com/akirk/blueprint-recorder",
+          "auth": "false",
           "prs": "false"
     }
 ```
@@ -805,7 +807,8 @@ This document provides detailed information about all available steps, including
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of the plugin or WordPress.org slug. |
-| `prs` | boolean | ❌ No | Add support for submitting Github Requests. |
+| `auth` | boolean | ❌ No | Ask for GitHub authentication (needed for private repos). |
+| `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
 | `permalink` | boolean | ❌ No | Requires a permalink structure |
 
 
@@ -815,6 +818,7 @@ This document provides detailed information about all available steps, including
     {
           "step": "installPlugin",
           "url": "hello-dolly",
+          "auth": "false",
           "prs": "false",
           "permalink": false
     }
@@ -1191,4 +1195,4 @@ This document provides detailed information about all available steps, including
 
 ---
 
-*Generated automatically on 2025-11-12.*
+*Generated automatically on 2025-11-13.*

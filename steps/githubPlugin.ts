@@ -56,20 +56,25 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 		outStep.pluginData.path = directory;
 	}
 
+	if ( step.auth || step.prs ) {
+		outStep.queryParams = outStep.queryParams || {};
+		outStep.queryParams['gh-ensure-auth'] = 'yes';
+	}
+
 	if ( step.prs ) {
-		outStep.queryParams = {
-			'gh-ensure-auth': 'yes',
+		outStep.queryParams = outStep.queryParams || {};
+		Object.assign(outStep.queryParams, {
 			'ghexport-repo-url': 'https://github.com/' + repo,
 			'ghexport-content-type': 'plugin',
 			'ghexport-plugin': urlTest.groups?.repo,
 			'ghexport-playground-root': '/wordpress/wp-content/plugins/' + urlTest.groups?.repo,
 			'ghexport-pr-action': 'create',
 			'ghexport-allow-include-zip': 'no',
-		};
+		});
 	}
 
 	outStep.progress = {
-		caption: `Installing plugin from GitHub: ${repo}${branch ? ' (' + branch + ')' : ''}`
+		caption: `Installing plugin from GitHub: ${repo}`
 	};
 
 	return [ outStep ];
@@ -81,8 +86,13 @@ githubPlugin.vars = Object.entries({
 		description: "Github URL of the plugin.",
 		samples: [ "https://github.com/akirk/blueprint-recorder" ]
 	},
+	auth: {
+		description: "Ask for GitHub authentication (needed for private repos).",
+		type: "boolean",
+		samples: [ "false", "true" ]
+	},
 	prs: {
-		description: "Add support for submitting Github Requests.",
+		description: "Add support for submitting GitHub Pull Requests.",
 		type: "boolean",
 		samples: [ "false", "true" ]
 	}

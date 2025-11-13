@@ -979,12 +979,29 @@ addEventListener('DOMContentLoaded', function () {
 			loadCombinedExamples();
 			return;
 		}
-		if (event.target.id === 'copy-playground-link') {
+		const copyButton = event.target.closest('#copy-playground-link');
+		if (copyButton) {
 			navigator.clipboard.writeText(document.getElementById('playground-link').href);
-			const originalHTML = event.target.innerHTML;
-			event.target.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+			const originalContent = copyButton.cloneNode(true);
+			copyButton.textContent = '';
+			const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+			svg.setAttribute('width', '16');
+			svg.setAttribute('height', '16');
+			svg.setAttribute('viewBox', '0 0 24 24');
+			svg.setAttribute('fill', 'none');
+			const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+			path.setAttribute('d', 'M5 13l4 4L19 7');
+			path.setAttribute('stroke', 'currentColor');
+			path.setAttribute('stroke-width', '2');
+			path.setAttribute('stroke-linecap', 'round');
+			path.setAttribute('stroke-linejoin', 'round');
+			svg.appendChild(path);
+			copyButton.appendChild(svg);
 			setTimeout(function () {
-				event.target.innerHTML = originalHTML;
+				copyButton.textContent = '';
+				while (originalContent.firstChild) {
+					copyButton.appendChild(originalContent.firstChild);
+				}
 			}, 2000);
 			return false;
 		}
@@ -1310,6 +1327,11 @@ addEventListener('DOMContentLoaded', function () {
 		loadCombinedExamples();
 	});
 
+	// Handle exclude-meta checkbox changes
+	document.getElementById('exclude-meta').addEventListener('change', function () {
+		loadCombinedExamples();
+	});
+
 	// Handle blueprint version radio button changes
 	document.querySelectorAll('input[name="blueprint-version"]').forEach(function (radio) {
 		radio.addEventListener('change', function () {
@@ -1335,6 +1357,9 @@ addEventListener('DOMContentLoaded', function () {
 		}
 		if (document.getElementById('preview-mode').value) {
 			state.previewMode = document.getElementById('preview-mode').value;
+		}
+		if (document.getElementById('exclude-meta').checked) {
+			state.excludeMeta = true;
 		}
 		const json = JSON.stringify(state);
 
@@ -1508,15 +1533,12 @@ addEventListener('DOMContentLoaded', function () {
 			// Extract query params from the compiler
 			const extractedQueryParams = compiler.getLastQueryParams();
 			for (const key in extractedQueryParams) {
-				if (key === 'gh-ensure-auth') {
-					useBlueprintURLParam = true;
-				}
 				queries.push(key + '=' + encodeURIComponent(extractedQueryParams[key]));
 			}
 		}
 
 		// Add metadata indicating compilation by step library (only if there are steps)
-		if (outputData.steps && outputData.steps.length > 0) {
+		if (outputData.steps && outputData.steps.length > 0 && !document.getElementById('exclude-meta').checked) {
 			if (!outputData.meta) {
 				outputData.meta = {};
 			}
@@ -1527,6 +1549,11 @@ addEventListener('DOMContentLoaded', function () {
 				outputData.meta.title = blueprintTitle || generateLabel();
 			}
 			outputData.meta.author = 'https://github.com/akirk/playground-step-library';
+		}
+
+		// If exclude-meta is checked, remove the meta property entirely
+		if (document.getElementById('exclude-meta').checked && outputData.meta) {
+			delete outputData.meta;
 		}
 
 
@@ -1566,7 +1593,7 @@ addEventListener('DOMContentLoaded', function () {
 		let hash = '#' + (JSON.stringify(outputData).replace(/%/g, '%25'));
 
 		if (encodingFormat === 'auto') {
-			if (hash.includes(' ') || hash.includes('<') || hash.includes('>')) {
+			if (hash.length > 2000) {
 				useBlueprintURLParam = true;
 			}
 		} else if (encodingFormat === 'base64') {
@@ -1760,6 +1787,9 @@ addEventListener('DOMContentLoaded', function () {
 		}
 		if (state.previewMode) {
 			document.getElementById('preview-mode').value = state.previewMode;
+		}
+		if (state.excludeMeta !== undefined) {
+			document.getElementById('exclude-meta').checked = state.excludeMeta;
 		}
 		if (!(state.steps || []).length) {
 			return;

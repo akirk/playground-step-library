@@ -214,6 +214,7 @@ export interface AddFilterStep extends BlueprintStep {
 
 export interface GithubPluginStep extends BlueprintStep {
     url: string;
+    auth?: boolean;
     prs?: boolean;
 }
 
@@ -225,6 +226,7 @@ export interface GithubPluginReleaseStep extends BlueprintStep {
 
 export interface InstallPluginStep extends BlueprintStep {
     url: string;
+    auth?: boolean;
     prs?: boolean;
     permalink?: boolean;
 }
