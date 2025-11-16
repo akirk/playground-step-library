@@ -952,6 +952,7 @@ select {
 
 #playground-link-holder {
   display: flex;
+  align-items: center;
   width: 100%;
   gap: var(--spacing-3);
   margin-top: var(--spacing-4);
@@ -1017,6 +1018,69 @@ select {
   color: light-dark(var(--primary-700), var(--primary-200));
   border-color: light-dark(var(--primary-300), var(--primary-600));
   transform: translateY(-1px);
+}
+
+/* More Options Dropdown */
+#more-options-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+#more-options-button {
+  border: none;
+  background: none;
+  padding: var(--spacing-2);
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all var(--transition-fast) var(--transition-ease);
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+#more-options-button:hover {
+  background-color: light-dark(var(--gray-100), var(--gray-800));
+  color: var(--text-color);
+}
+
+#more-options-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  min-width: 200px;
+  margin-top: 4px;
+}
+
+#more-options-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--spacing-3) var(--spacing-4);
+  border: none;
+  background: none;
+  cursor: pointer;
+  white-space: nowrap;
+  color: var(--text-color);
+  transition: all var(--transition-fast) var(--transition-ease);
+  font-size: var(--font-size-sm);
+}
+
+#more-options-menu button:hover {
+  background: light-dark(var(--primary-50), var(--primary-950));
+  color: light-dark(var(--primary-700), var(--primary-200));
+}
+
+#more-options-menu button svg {
+  vertical-align: middle;
+  margin-right: var(--spacing-2);
 }
 
 .step.builtin:hover,.step.builtin:focus {

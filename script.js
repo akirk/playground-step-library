@@ -20,6 +20,45 @@ addEventListener('DOMContentLoaded', function () {
 	const showCallbacks = {};
 	let isManualEditMode = false;
 
+	const stepAliases = {
+		'installPlugin': 'plugin',
+		'installTheme': 'theme',
+		'login': 'login',
+		'addPage': 'page',
+		'setSiteOption': 'opt',
+		'setSiteOptions': 'opts',
+		'runPHP': 'php',
+		'runSQL': 'sql',
+		'setLandingPage': 'landing',
+		'createUser': 'user',
+		'defineWpConfigConsts': 'const'
+	};
+
+	const stepAliasesReverse = Object.fromEntries(
+		Object.entries(stepAliases).map(([k, v]) => [v, k])
+	);
+
+	function minimalEncode(str) {
+		return str
+			.replace(/%/g, '%25')
+			.replace(/&/g, '%26')
+			.replace(/=/g, '%3D')
+			.replace(/#/g, '%23')
+			.replace(/\?/g, '%3F')
+			.replace(/\s/g, '%20');
+	}
+
+	function shortenUrl(url) {
+		return url.replace(/^https?:\/\//, '');
+	}
+
+	function expandUrl(url) {
+		if (!url.match(/^https?:\/\//)) {
+			return 'https://' + url;
+		}
+		return url;
+	}
+
 	function getAceTheme() {
 		const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 		return isDark ? 'ace/theme/monokai' : 'ace/theme/textmate';
@@ -1246,7 +1285,7 @@ addEventListener('DOMContentLoaded', function () {
 		loadCombinedExamples();
 	});
 
-	document.getElementById('download-blueprint').addEventListener('click', function () {
+	function downloadBlueprint() {
 		if (window.goatcounter) {
 			window.goatcounter.count({
 				path: 'download-blueprint',
@@ -1262,7 +1301,7 @@ addEventListener('DOMContentLoaded', function () {
 		downloadAnchor.setAttribute('href', dataStr);
 		downloadAnchor.setAttribute('download', filename);
 		downloadAnchor.click();
-	});
+	}
 
 	window.addEventListener('popstate', function (event) {
 		if (event.state) {
@@ -1889,10 +1928,72 @@ addEventListener('DOMContentLoaded', function () {
 		});
 		loadCombinedExamples();
 	}
-	function autoredirect() {
+
+	function parseQueryParamsForBlueprint() {
+		const urlParams = new URLSearchParams(window.location.search);
+		const redirParam = urlParams.get('redir');
+
+		if (!redirParam) {
+			return null;
+		}
+
+		const stepMap = {};
+		const paramMap = {};
+
+		for (const [key, value] of urlParams.entries()) {
+			if (key === 'redir') {
+				continue;
+			}
+
+			const arrayMatch = key.match(/^(\w+)\[(\d+)\]$/);
+			if (arrayMatch) {
+				const paramName = arrayMatch[1];
+				const index = parseInt(arrayMatch[2], 10);
+
+				if (!paramMap[paramName]) {
+					paramMap[paramName] = {};
+				}
+				paramMap[paramName][index] = value;
+			}
+		}
+
+		if (paramMap.step) {
+			const indices = Object.keys(paramMap.step).sort((a, b) => parseInt(a) - parseInt(b));
+
+			const steps = indices.map(index => {
+				const stepAlias = paramMap.step[index];
+				const stepName = stepAliasesReverse[stepAlias] || stepAlias;
+				const stepVars = {};
+
+				for (const [paramName, values] of Object.entries(paramMap)) {
+					if (paramName !== 'step' && values[index] !== undefined) {
+						let value = values[index];
+						if (paramName === 'url' || paramName.includes('url') || paramName.includes('Url')) {
+							value = expandUrl(value);
+						}
+						stepVars[paramName] = value;
+					}
+				}
+
+				return {
+					step: stepName,
+					vars: stepVars
+				};
+			});
+
+			return {
+				steps: steps,
+				redir: parseInt(redirParam, 10)
+			};
+		}
+
+		return null;
+	}
+
+	function autoredirect(delay = 5) {
 		document.getElementById('autoredirecting').showModal();
 		document.getElementById('autoredirect-title').textContent = document.getElementById('title').value;
-		let seconds = 5;
+		let seconds = delay;
 		document.getElementById('autoredirecting-seconds').innerText = seconds + ' second' + (seconds === 1 ? '' : 's');
 		const interval = setInterval(function () {
 			seconds--;
@@ -1938,7 +2039,13 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	})();
 
-	if (location.hash) {
+	const queryParamBlueprint = parseQueryParamsForBlueprint();
+	if (queryParamBlueprint) {
+		restoreState({ steps: queryParamBlueprint.steps });
+		if (!document.getElementById('preview-mode').value && !pageAccessedByReload) {
+			autoredirect(queryParamBlueprint.redir);
+		}
+	} else if (location.hash) {
 		restoreState(uncompressState(location.hash.replace(/^#+/, '')));
 		if (!document.getElementById('preview-mode').value && blueprintSteps.querySelectorAll('.step').length && !pageAccessedByReload) {
 			autoredirect();
@@ -2761,6 +2868,143 @@ addEventListener('DOMContentLoaded', function () {
 		}
 		if (isManualEditMode) {
 			transformJson();
+		}
+	});
+
+	function generateRedirectUrl(delay = 1) {
+		const steps = blueprintSteps.querySelectorAll('.step');
+		console.log('Found steps:', steps.length);
+
+		if (steps.length === 0) {
+			console.error('No steps found');
+			return null;
+		}
+
+		const params = [];
+		params.push('redir=' + delay);
+
+		steps.forEach((stepElement, index) => {
+			const stepName = stepElement.dataset.step;
+			const stepAlias = stepAliases[stepName] || stepName;
+			console.log(`Step ${index}:`, stepName, '->', stepAlias);
+			params.push(`step[${index}]=` + stepAlias);
+
+			const inputs = stepElement.querySelectorAll('input, textarea, select');
+			inputs.forEach(input => {
+				const varName = input.name;
+				if (varName) {
+					let value;
+					if (input.type === 'checkbox') {
+						if (input.checked) {
+							value = 'true';
+						} else {
+							return;
+						}
+					} else {
+						value = input.value;
+					}
+					if (value && value !== 'false') {
+						let encodedValue = value;
+						if (varName === 'url' || varName.includes('url') || varName.includes('Url')) {
+							encodedValue = shortenUrl(value);
+						}
+						encodedValue = minimalEncode(encodedValue);
+						console.log(`  ${varName}[${index}] = ${encodedValue}`);
+						params.push(`${varName}[${index}]=` + encodedValue);
+					}
+				}
+			});
+		});
+
+		const baseUrl = window.location.origin + window.location.pathname;
+		const fullUrl = `${baseUrl}?${params.join('&')}`;
+		console.log('Generated URL:', fullUrl);
+		return fullUrl;
+	}
+
+	const moreOptionsButton = document.getElementById('more-options-button');
+	const moreOptionsMenu = document.getElementById('more-options-menu');
+
+	moreOptionsButton.addEventListener('click', function (e) {
+		e.stopPropagation();
+		const isVisible = moreOptionsMenu.style.display === 'block';
+		moreOptionsMenu.style.display = isVisible ? 'none' : 'block';
+	});
+
+	document.addEventListener('click', function (e) {
+		if (!moreOptionsMenu.contains(e.target) && e.target !== moreOptionsButton) {
+			moreOptionsMenu.style.display = 'none';
+		}
+	});
+
+	document.getElementById('download-blueprint-menu').addEventListener('click', function () {
+		moreOptionsMenu.style.display = 'none';
+		downloadBlueprint();
+	});
+
+	document.getElementById('copy-redirect-url-menu').addEventListener('click', function (e) {
+		console.log('Copy redirect URL menu clicked');
+
+		if (window.goatcounter) {
+			window.goatcounter.count({
+				path: 'copy-redirect-url',
+				title: 'Copy Redirect URL',
+				event: true
+			});
+		}
+
+		try {
+			const redirectUrl = generateRedirectUrl();
+			console.log('Redirect URL result:', redirectUrl);
+
+			if (!redirectUrl) {
+				console.error('No steps found');
+				return;
+			}
+
+			const button = e.currentTarget;
+			const originalContent = button.cloneNode(true);
+
+			if (!navigator.clipboard) {
+				console.error('Clipboard API not available');
+				const textarea = document.createElement('textarea');
+				textarea.value = redirectUrl;
+				textarea.style.position = 'fixed';
+				textarea.style.opacity = '0';
+				document.body.appendChild(textarea);
+				textarea.select();
+				try {
+					document.execCommand('copy');
+					button.textContent = '✓ Copied!';
+					setTimeout(() => {
+						button.textContent = '';
+						while (originalContent.firstChild) {
+							button.appendChild(originalContent.firstChild);
+						}
+						moreOptionsMenu.style.display = 'none';
+					}, 1500);
+				} catch (err) {
+					console.error('execCommand failed:', err);
+				}
+				document.body.removeChild(textarea);
+				return;
+			}
+
+			navigator.clipboard.writeText(redirectUrl).then(() => {
+				console.log('Successfully copied to clipboard');
+				button.textContent = '✓ Copied!';
+				setTimeout(() => {
+					button.textContent = '';
+					while (originalContent.firstChild) {
+						button.appendChild(originalContent.firstChild);
+					}
+					moreOptionsMenu.style.display = 'none';
+				}, 1500);
+			}).catch(err => {
+				console.error('Clipboard write failed:', err);
+			});
+		} catch (err) {
+			console.error('Error in copy-redirect-url handler:', err);
 		}
 	});
 
