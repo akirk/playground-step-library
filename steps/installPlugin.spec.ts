@@ -310,43 +310,10 @@ describe('installPlugin', () => {
         expect(result[0].queryParams['ghexport-allow-include-zip']).toBe('no');
     });
 
-    it('should handle GitHub PR URLs with auth flag and add gh-ensure-auth parameter', () => {
-        const step: InstallPluginStep = {
-            step: 'installPlugin',
-            url: 'https://github.com/akirk/friends/pull/559',
-            auth: true
-        };
-
-        const result = installPlugin(step);
-
-        expect(Array.isArray(result)).toBe(true);
-        expect(result).toHaveLength(1);
-        expect(result[0].queryParams).toBeDefined();
-        expect(result[0].queryParams['gh-ensure-auth']).toBe('yes');
-        expect(result[0].queryParams['ghexport-repo-url']).toBeUndefined();
-    });
-
-    it('should handle GitHub repository URLs with auth flag', () => {
+    it('should handle GitHub repository URLs with prs flag', () => {
         const step: InstallPluginStep = {
             step: 'installPlugin',
             url: 'https://github.com/akirk/friends',
-            auth: true
-        };
-
-        const result = installPlugin(step);
-
-        expect(Array.isArray(result)).toBe(true);
-        expect(result).toHaveLength(1);
-        expect(result[0].queryParams).toBeDefined();
-        expect(result[0].queryParams['gh-ensure-auth']).toBe('yes');
-        expect(result[0].queryParams['ghexport-repo-url']).toBeUndefined();
-    });
-
-    it('should handle GitHub repository URLs with both auth and prs flags', () => {
-        const step: InstallPluginStep = {
-            step: 'installPlugin',
-            url: 'https://github.com/akirk/friends',
-            auth: true,
             prs: true
         };
 
@@ -428,18 +395,13 @@ describe('installPlugin', () => {
         expect(installPlugin.description).toBe('Install a plugin via WordPress.org or Github (branches, releases, PRs).');
         expect(installPlugin.builtin).toBe(true);
         expect(Array.isArray(installPlugin.vars)).toBe(true);
-        expect(installPlugin.vars).toHaveLength(4);
+        expect(installPlugin.vars).toHaveLength(3);
 
         const urlVar = installPlugin.vars.find(v => v.name === 'url');
         expect(urlVar).toBeDefined();
         expect(urlVar.description).toBe('URL of the plugin or WordPress.org slug.');
         expect(Array.isArray(urlVar.samples)).toBe(true);
         expect(urlVar.samples.length).toBeGreaterThan(0);
-
-        const authVar = installPlugin.vars.find(v => v.name === 'auth');
-        expect(authVar).toBeDefined();
-        expect(authVar.type).toBe('boolean');
-        expect(typeof authVar.show).toBe('function');
 
         const prsVar = installPlugin.vars.find(v => v.name === 'prs');
         expect(prsVar).toBeDefined();

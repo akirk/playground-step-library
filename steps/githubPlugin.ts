@@ -56,13 +56,9 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 		outStep.pluginData.path = directory;
 	}
 
-	if ( step.auth || step.prs ) {
-		outStep.queryParams = outStep.queryParams || {};
-		outStep.queryParams['gh-ensure-auth'] = 'yes';
-	}
-
 	if ( step.prs ) {
 		outStep.queryParams = outStep.queryParams || {};
+		outStep.queryParams['gh-ensure-auth'] = 'yes';
 		Object.assign(outStep.queryParams, {
 			'ghexport-repo-url': 'https://github.com/' + repo,
 			'ghexport-content-type': 'plugin',
@@ -85,11 +81,6 @@ githubPlugin.vars = Object.entries({
 	url: {
 		description: "Github URL of the plugin.",
 		samples: [ "https://github.com/akirk/blueprint-recorder" ]
-	},
-	auth: {
-		description: "Ask for GitHub authentication (needed for private repos).",
-		type: "boolean",
-		samples: [ "false", "true" ]
 	},
 	prs: {
 		description: "Add support for submitting GitHub Pull Requests.",

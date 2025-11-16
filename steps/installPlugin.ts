@@ -28,13 +28,9 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 			}
 		} as any;
 
-		if (step.auth || step.prs) {
-			outStep.queryParams = outStep.queryParams || {};
-			outStep.queryParams['gh-ensure-auth'] = 'yes';
-		}
-
 		if (step.prs) {
 			outStep.queryParams = outStep.queryParams || {};
+			outStep.queryParams['gh-ensure-auth'] = 'yes';
 			Object.assign(outStep.queryParams, {
 				'ghexport-repo-url': repoUrl,
 				'ghexport-content-type': 'plugin',
@@ -63,7 +59,6 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 		return githubPlugin({
 			step: 'githubPlugin',
 			url: step.url,
-			auth: step.auth,
 			prs: step.prs
 		});
 	}
@@ -119,15 +114,6 @@ installPlugin.vars = Object.entries({
 		description: "URL of the plugin or WordPress.org slug.",
 		required: true,
 		samples: ["hello-dolly", 'https://wordpress.org/plugins/friends', 'woocommerce', 'create-block-theme', "https://github.com/akirk/blueprint-recorder", "https://github.com/Automattic/wordpress-activitypub/tree/trunk", "https://github.com/akirk/friends/pull/559"]
-	},
-	auth: {
-		description: "Ask for GitHub authentication (needed for private repos).",
-		show: function (step: any) {
-			const url = step.querySelector('input[name=url]')?.value;
-			return url && url.match(/^https:\/\/github.com\//);
-		},
-		type: "boolean",
-		samples: ["false", "true"]
 	},
 	prs: {
 		description: "Add support for submitting GitHub Pull Requests.",
