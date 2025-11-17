@@ -7,6 +7,8 @@ Set the site name and tagline.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `setSiteOptions`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -26,15 +28,17 @@ Set the site name and tagline.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "setSiteName",
-          "sitename": "Step Library Demo",
-          "tagline": "Trying out WordPress Playground."
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "Step Library Demo",
+        "blogdescription": "Trying out WordPress Playground."
+      }
     }
   ]
 }

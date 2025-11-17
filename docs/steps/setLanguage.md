@@ -7,6 +7,8 @@ Set the WordPress site language.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `setSiteLanguage`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -24,14 +26,14 @@ Set the WordPress site language.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "setLanguage",
-          "language": "de"
+    {
+      "step": "setSiteLanguage",
+      "language": "de_DE"
     }
   ]
 }

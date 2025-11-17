@@ -7,6 +7,8 @@ When running WooCommerce, don't show the wizard.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `installPlugin`, `runPHP`, `mkdir`, `writeFile`
+
 ## Parameters
 
 *No parameters defined.*
@@ -20,13 +22,36 @@ When running WooCommerce, don't show the wizard.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "skipWooCommerceWizard"
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "woocommerce"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require '/wordpress/wp-load.php'; update_option( 'woocommerce_onboard...",
+      "progress": {
+        "caption": "Skipping WooCommerce setup wizard"
+      }
+    },
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins/"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/no-more-wizards.php",
+      "data": "<?php require '/wordpress/wp-load.php'; add_filter( 'woocommerce_prevent_au..."
     }
   ]
 }

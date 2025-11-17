@@ -7,6 +7,8 @@ Install a theme via WordPress.org or Github.
 ## Type
 🔧 **Built-in Step**
 
+**Compiles to:** `installTheme`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -26,15 +28,23 @@ Install a theme via WordPress.org or Github.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "installTheme",
-          "url": "pendant",
-          "prs": "false"
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "wordpress.org/themes",
+        "slug": "pendant"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing theme: pendant"
+      }
     }
   ]
 }

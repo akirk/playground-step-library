@@ -7,6 +7,7 @@ Set a site option.
 ## Type
 🔧 **Built-in Step**
 
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -26,19 +27,7 @@ Set a site option.
     }
 ```
 
-## Usage in Blueprint
 
-```json
-{
-  "steps": [
-        {
-          "step": "setSiteOption",
-          "name": "",
-          "value": ""
-    }
-  ]
-}
-```
 
 ## Usage with Library
 

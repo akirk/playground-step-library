@@ -75,6 +75,10 @@ class StepDocumentationGenerator {
         const navIndex = this.generateNavigationIndex();
         this.writeFileIfChanged('docs/steps/README.md', navIndex);
 
+        // Generate reverse mapping (builtin steps -> custom steps)
+        const reverseMapping = this.generateReverseMapping();
+        this.writeFileIfChanged('docs/builtin-step-usage.md', reverseMapping);
+
         // Update main README with custom steps list
         this.updateMainReadmeWithSteps();
 
@@ -84,6 +88,68 @@ class StepDocumentationGenerator {
         console.log('\n🎉 Documentation generation complete!');
 
         return docs;
+    }
+
+    /**
+     * Generate reverse mapping showing which custom steps generate each builtin step
+     */
+    generateReverseMapping() {
+        const reverseIndex = {};
+
+        Object.entries(this.steps).forEach(([stepName, stepInfo]) => {
+            const compilationInfo = this.getCompilationInfo(stepName, stepInfo);
+
+            if (compilationInfo.builtinSteps && compilationInfo.builtinSteps.length > 0) {
+                compilationInfo.builtinSteps.forEach(builtinStep => {
+                    if (!reverseIndex[builtinStep]) {
+                        reverseIndex[builtinStep] = [];
+                    }
+                    reverseIndex[builtinStep].push({
+                        name: stepName,
+                        description: stepInfo.description || 'No description available',
+                        builtin: stepInfo.builtin
+                    });
+                });
+            }
+        });
+
+        const sortedBuiltins = Object.keys(reverseIndex).sort();
+
+        let content = `# Built-in Step Usage Reference
+
+This page shows which custom steps compile to each built-in WordPress Playground step.
+
+## Step Types
+
+- 🔧 **Built-in Step** - Core WordPress Playground steps enhanced with additional functionality
+- ⚡ **Custom Step** - New steps that extend Playground beyond its core capabilities
+
+## Table of Contents
+
+${sortedBuiltins.map(step => `- [\`${step}\`](#${step.toLowerCase()})`).join('\n')}
+
+---
+
+`;
+
+        sortedBuiltins.forEach(builtinStep => {
+            const customSteps = reverseIndex[builtinStep].sort((a, b) => a.name.localeCompare(b.name));
+
+            content += `## \`${builtinStep}\`
+
+**Used by ${customSteps.length} step${customSteps.length === 1 ? '' : 's'}:**
+
+`;
+
+            customSteps.forEach(step => {
+                const icon = step.builtin ? '🔧' : '⚡';
+                content += `- ${icon} [\`${step.name}\`](steps/${step.name}.md) - ${step.description}\n`;
+            });
+
+            content += '\n---\n\n';
+        });
+
+        return content;
     }
 
     /**
@@ -121,6 +187,7 @@ ${customSteps.map(([name, info]) =>
 
 - [← Back to Main Documentation](../README.md)
 - [Complete Steps Reference](../steps-reference.md) - All steps in one page
+- [Built-in Step Usage](../builtin-step-usage.md) - See which steps compile to each built-in step
 `;
     }
 
@@ -187,15 +254,16 @@ Many steps can reference and use other steps. For example:
 
 - [Complete Steps Reference](steps-reference.md) - Detailed list with all parameters
 - [Individual Step Documentation](steps/) - Comprehensive docs for each step
+- [Built-in Step Usage](builtin-step-usage.md) - See which steps compile to each built-in step
 
 ## 🛠️ Contributing
 
-To add a new step:
+See our [Contributing Guide](../CONTRIBUTING.md) for details on:
 
-1. Create \`steps/yourStepName.js\`
-2. Define the step function with proper metadata
-3. Run \`npm run docs:generate\` to update documentation
-4. Test your step with \`npm test\`
+- Setting up your development environment
+- Creating new steps
+- Testing your changes
+- Submitting pull requests
 `;
     }
 
@@ -247,6 +315,7 @@ ${stepEntries.map(([name]) => `- [\`${name}\`](#${name.toLowerCase()})`).join('\
     generateIndividualStepDoc(stepName, stepInfo) {
         const examples = this.generateStepExamples(stepName, stepInfo);
         const deprecationNotices = this.generateDeprecationNotices(stepInfo.vars || []);
+        const compilationInfo = this.getCompilationInfo(stepName, stepInfo);
 
         return `# \`${stepName}\` Step
 
@@ -256,6 +325,7 @@ ${stepInfo.description || 'No description available.'}
 
 ## Type
 ${stepInfo.builtin ? '🔧 **Built-in Step**' : '⚡ **Custom Step**'}
+${compilationInfo.compilesToSteps}
 
 ## Parameters
 
@@ -265,15 +335,7 @@ ${this.generateParametersTable(stepInfo.vars || [])}
 
 ${examples}
 
-## Usage in Blueprint
-
-\`\`\`json
-{
-  "steps": [
-    ${this.generateJsonExample(stepName, stepInfo.vars || [])}
-  ]
-}
-\`\`\`
+${compilationInfo.compiledOutput}
 
 ## Usage with Library
 
@@ -291,6 +353,110 @@ const compiled = compiler.compile(blueprint);
 \`\`\`
 
 ${deprecationNotices}`;
+    }
+
+    /**
+     * Get compilation information for a step
+     */
+    getCompilationInfo(stepName, stepInfo) {
+        try {
+            const example = { step: stepName };
+
+            if (stepInfo.vars && stepInfo.vars.length > 0) {
+                const activeVars = stepInfo.vars.filter(varDef => !varDef.deprecated);
+
+                activeVars.forEach(varDef => {
+                    if (varDef.samples && varDef.samples.length > 0) {
+                        example[varDef.name] = varDef.samples[0];
+                    } else {
+                        example[varDef.name] = this.generateDefaultValue(varDef);
+                    }
+                });
+            }
+
+            const compiled = this.compiler.compile({ steps: [example] });
+
+            if (!compiled.steps || compiled.steps.length === 0) {
+                return { compilesToSteps: '', compiledOutput: '' };
+            }
+
+            const builtinSteps = [...new Set(compiled.steps.map(s => s.step))];
+            const compilesToSteps = builtinSteps.length > 0
+                ? `\n**Compiles to:** ${builtinSteps.map(s => `\`${s}\``).join(', ')}`
+                : '';
+
+            const truncatedSteps = compiled.steps.map(step => this.truncateStepValues(step));
+            const formattedJson = JSON.stringify({ steps: truncatedSteps }, null, 2);
+
+            const compiledOutput = `## Compiled Output
+
+\`\`\`json
+${formattedJson}
+\`\`\``;
+
+            return { compilesToSteps, compiledOutput, builtinSteps };
+        } catch (error) {
+            console.error(`Error compiling ${stepName}:`, error.message);
+            return { compilesToSteps: '', compiledOutput: '', builtinSteps: [] };
+        }
+    }
+
+    /**
+     * Generate compiled output for a step with truncated values
+     */
+    generateCompiledOutput(stepName, stepInfo) {
+        try {
+            const example = { step: stepName };
+
+            if (stepInfo.vars && stepInfo.vars.length > 0) {
+                const activeVars = stepInfo.vars.filter(varDef => !varDef.deprecated);
+
+                activeVars.forEach(varDef => {
+                    if (varDef.samples && varDef.samples.length > 0) {
+                        example[varDef.name] = varDef.samples[0];
+                    } else {
+                        example[varDef.name] = this.generateDefaultValue(varDef);
+                    }
+                });
+            }
+
+            const compiled = this.compiler.compile({ steps: [example] });
+
+            if (!compiled.steps || compiled.steps.length === 0) {
+                return '';
+            }
+
+            const truncatedSteps = compiled.steps.map(step => this.truncateStepValues(step));
+            const formattedJson = JSON.stringify({ steps: truncatedSteps }, null, 2);
+
+            return `## Compiled Output
+
+\`\`\`json
+${formattedJson}
+\`\`\``;
+        } catch (error) {
+            console.error(`Error compiling ${stepName}:`, error.message);
+            return '';
+        }
+    }
+
+    /**
+     * Truncate long string values in a step object
+     */
+    truncateStepValues(step, maxLength = 75) {
+        const truncated = {};
+
+        for (const [key, value] of Object.entries(step)) {
+            if (typeof value === 'string' && value.length > maxLength) {
+                truncated[key] = value.substring(0, maxLength) + '...';
+            } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+                truncated[key] = this.truncateStepValues(value, maxLength);
+            } else {
+                truncated[key] = value;
+            }
+        }
+
+        return truncated;
     }
 
     /**

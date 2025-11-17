@@ -7,6 +7,8 @@ Adds a role for clients with additional capabilities than editors, but not quite
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `mkdir`, `writeFile`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -24,14 +26,19 @@ Adds a role for clients with additional capabilities than editors, but not quite
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "addClientRole",
-          "displayName": "Client"
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/add-client-role.php",
+      "data": "<?php\nadd_action(\n'init',\nstatic function () {\n// The client role inherits ..."
     }
   ]
 }

@@ -7,6 +7,8 @@ Install a theme from a Github repository.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `installTheme`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -26,15 +28,24 @@ Install a theme from a Github repository.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "githubTheme",
-          "url": "https://github.com/richtabor/kanso",
-          "prs": "false"
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "git:directory",
+        "url": "https://github.com/richtabor/kanso",
+        "ref": "HEAD"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing theme from GitHub: richtabor/kanso"
+      }
     }
   ]
 }

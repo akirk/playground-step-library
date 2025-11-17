@@ -7,6 +7,7 @@ Import a WXR from a URL.
 ## Type
 🔧 **Built-in Step**
 
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -24,18 +25,7 @@ Import a WXR from a URL.
     }
 ```
 
-## Usage in Blueprint
 
-```json
-{
-  "steps": [
-        {
-          "step": "importWxr",
-          "url": ""
-    }
-  ]
-}
-```
 
 ## Usage with Library
 

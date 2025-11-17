@@ -7,6 +7,8 @@ Import a WordPress.com export file (WXR in a ZIP)
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `mkdir`, `unzip`, `runPHP`, `importWxr`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -24,14 +26,33 @@ Import a WordPress.com export file (WXR in a ZIP)
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "importWordPressComExport",
-          "url": ""
+    {
+      "step": "mkdir",
+      "path": "/tmp/"
+    },
+    {
+      "step": "unzip",
+      "zipFile": {
+        "resource": "url",
+        "url": ""
+      },
+      "extractToPath": "/tmp"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\n$iterator = new RecursiveIteratorIterator( new RecursiveDirectoryIter..."
+    },
+    {
+      "step": "importWxr",
+      "file": {
+        "resource": "vfs",
+        "path": "/tmp/export.xml"
+      }
     }
   ]
 }

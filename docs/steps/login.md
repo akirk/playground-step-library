@@ -7,6 +7,8 @@ Login to the site.
 ## Type
 🔧 **Built-in Step**
 
+**Compiles to:** `login`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -28,16 +30,15 @@ Login to the site.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "login",
-          "username": "admin",
-          "password": "password",
-          "landingPage": "true"
+    {
+      "step": "login",
+      "username": "admin",
+      "password": "password"
     }
   ]
 }

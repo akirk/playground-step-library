@@ -7,6 +7,8 @@ Create a new user.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `runPHP`, `login`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -47,19 +49,22 @@ Create a new user.
 }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "createUser",
-          "username": "user",
-          "password": "password",
-          "role": "administrator",
-          "display_name": "User",
-          "email": "",
-          "login": "true"
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; $data = array( 'user_login' =>...",
+      "progress": {
+        "caption": "createUser: user"
+      }
+    },
+    {
+      "step": "login",
+      "username": "user",
+      "password": "password"
     }
   ]
 }

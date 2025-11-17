@@ -7,6 +7,7 @@ Set the landing page.
 ## Type
 ⚡ **Custom Step**
 
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -24,18 +25,7 @@ Set the landing page.
     }
 ```
 
-## Usage in Blueprint
 
-```json
-{
-  "steps": [
-        {
-          "step": "setLandingPage",
-          "landingPage": "/"
-    }
-  ]
-}
-```
 
 ## Usage with Library
 

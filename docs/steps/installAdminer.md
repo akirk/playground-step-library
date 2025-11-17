@@ -7,6 +7,8 @@ Install Adminer with auto login link.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `mkdir`, `writeFile`
+
 ## Parameters
 
 *No parameters defined.*
@@ -20,13 +22,36 @@ Install Adminer with auto login link.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "installAdminer"
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/adminer-link.php",
+      "data": "<?php\nadd_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {\n$wp..."
+    },
+    {
+      "step": "mkdir",
+      "path": "/wordpress/adminer"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/adminer/index.php",
+      "data": "<?php\nfunction adminer_object() {\nclass AdminerLoginPasswordLess extends Ad..."
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/adminer/adminer.php",
+      "data": {
+        "resource": "url",
+        "url": "https://github.com/vrana/adminer/releases/download/v5.3.0/adminer-5.3.0-en...."
+      }
     }
   ]
 }

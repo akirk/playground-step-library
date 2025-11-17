@@ -7,6 +7,8 @@ Useful to combine with a login step.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `updateUserMeta`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -24,14 +26,17 @@ Useful to combine with a login step.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "changeAdminColorScheme",
-          "colorScheme": "modern"
+    {
+      "step": "updateUserMeta",
+      "meta": {
+        "admin_color": "modern"
+      },
+      "userId": 1
     }
   ]
 }

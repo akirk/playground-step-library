@@ -7,6 +7,7 @@ Execute a custom action.
 ## Type
 ⚡ **Custom Step**
 
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -47,23 +48,7 @@ Execute a custom action.
 }
 ```
 
-## Usage in Blueprint
 
-```json
-{
-  "steps": [
-        {
-          "step": "doAction",
-          "action": "",
-          "parameter1": "",
-          "parameter2": "",
-          "parameter3": "",
-          "parameter4": "",
-          "parameter5": ""
-    }
-  ]
-}
-```
 
 ## Usage with Library
 

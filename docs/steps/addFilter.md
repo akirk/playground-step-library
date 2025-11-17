@@ -7,6 +7,8 @@ Easily add a filtered value.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `mkdir`, `writeFile`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -28,16 +30,22 @@ Easily add a filtered value.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "addFilter",
-          "filter": "init",
-          "code": "'__return_false'",
-          "priority": "10"
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/addFilter-0.php",
+      "data": "<?php add_filter( 'init', '__return_false' );",
+      "progress": {
+        "caption": "addFilter: init"
+      }
     }
   ]
 }

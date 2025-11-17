@@ -7,6 +7,8 @@ Enable WordPress Multisite functionality.
 ## Type
 🔧 **Built-in Step**
 
+**Compiles to:** `enableMultisite`
+
 ## Parameters
 
 *No parameters defined.*
@@ -20,13 +22,13 @@ Enable WordPress Multisite functionality.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "enableMultisite"
+    {
+      "step": "enableMultisite"
     }
   ]
 }

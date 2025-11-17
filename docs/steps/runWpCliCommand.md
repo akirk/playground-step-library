@@ -7,6 +7,8 @@ Run a wp-cli command.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `wp-cli`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -24,14 +26,17 @@ Run a wp-cli command.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "runWpCliCommand",
-          "command": ""
+    {
+      "step": "wp-cli",
+      "command": "",
+      "progress": {
+        "caption": "runWpCliCommand:"
+      }
     }
   ]
 }

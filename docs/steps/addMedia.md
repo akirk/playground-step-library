@@ -7,6 +7,8 @@ Add files to the media library.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `mkdir`, `writeFile`, `runPHP`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -24,14 +26,29 @@ Add files to the media library.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "addMedia",
-          "downloadUrl": "https://s.w.org/style/images/about/WordPress-logotype-wmark.png"
+    {
+      "step": "mkdir",
+      "path": "/tmp/media"
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/media/WordPress-logotype-wmark.png",
+      "data": {
+        "resource": "url",
+        "url": "https://s.w.org/style/images/about/WordPress-logotype-wmark.png"
+      }
+    },
+    {
+      "step": "runPHP",
+      "progress": {
+        "caption": "Importing media to library"
+      },
+      "code": "<?php\n// DEDUP_STRATEGY: keep_last\nrequire_once '/wordpress/wp-load.php';\nr..."
     }
   ]
 }

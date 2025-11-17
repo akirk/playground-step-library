@@ -7,6 +7,8 @@ Run code in the context of WordPress.
 ## Type
 🔧 **Built-in Step**
 
+**Compiles to:** `runPHP`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -24,14 +26,14 @@ Run code in the context of WordPress.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "runPHP",
-          "code": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that ..."
     }
   ]
 }

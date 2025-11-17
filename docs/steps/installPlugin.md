@@ -7,6 +7,8 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
 ## Type
 🔧 **Built-in Step**
 
+**Compiles to:** `installPlugin`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -26,15 +28,20 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "installPlugin",
-          "url": "hello-dolly",
-          "prs": "false"
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "hello-dolly"
+      },
+      "options": {
+        "activate": true
+      }
     }
   ]
 }

@@ -7,6 +7,8 @@ Define a wp-config PHP constant.
 ## Type
 🔧 **Built-in Step**
 
+**Compiles to:** `defineWpConfigConsts`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -26,15 +28,16 @@ Define a wp-config PHP constant.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "defineWpConfigConst",
-          "name": "WP_DEBUG",
-          "value": "true"
+    {
+      "step": "defineWpConfigConsts",
+      "consts": {
+        "WP_DEBUG": "true"
+      }
     }
   ]
 }

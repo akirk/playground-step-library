@@ -7,6 +7,8 @@ Generate WooCommerce products and other data using the WC Smooth Generator plugi
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `installPlugin`, `runPHP`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -44,18 +46,37 @@ Generate WooCommerce products and other data using the WC Smooth Generator plugi
 }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "generateProducts",
-          "count": "10",
-          "orders": "5",
-          "customers": "3",
-          "coupons": "2",
-          "categories": "3"
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "woocommerce"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "url",
+        "url": "https://github.com/woocommerce/wc-smooth-generator/releases/download/1.2.2/..."
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php \nrequire_once '/wordpress/wp-load.php';\nerror_log( \"Debugging plugin ...",
+      "progress": {
+        "caption": "generateProducts: 10 products, 5 orders, 3 customers, 2 coupons, 3 categori..."
+      }
     }
   ]
 }

@@ -7,6 +7,8 @@ Remove widgets from the wp-admin dashboard.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `mkdir`, `writeFile`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -47,19 +49,19 @@ Remove widgets from the wp-admin dashboard.
 }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "removeDashboardWidgets",
-          "welcome": "true",
-          "glance": "true",
-          "events": "true",
-          "quickpress": "true",
-          "activity": "true",
-          "sitehealth": "true"
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/remove-dashboard-widgets.php",
+      "data": "<?php\nadd_action(\n'do_meta_boxes',\nstatic function ( $screen_id ) {\nglobal ..."
     }
   ]
 }

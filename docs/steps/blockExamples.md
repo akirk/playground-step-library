@@ -7,6 +7,8 @@ Creates a post with all block examples from registered blocks
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `runPHP`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -47,19 +49,17 @@ Creates a post with all block examples from registered blocks
 }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "blockExamples",
-          "blockNamespace": "",
-          "postTitle": "Block Examples",
-          "limit": "",
-          "postId": "1000",
-          "excludeCore": "false",
-          "landingPage": "true"
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n$block_namespace = '';\n$limit ...",
+      "progress": {
+        "caption": "blockExamples: Adding blocks to Block Examples"
+      }
     }
   ]
 }

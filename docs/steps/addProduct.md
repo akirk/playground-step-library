@@ -7,6 +7,8 @@ Add a WooCommerce product (will install WooCommerce if not present)
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `installPlugin`, `runPHP`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -47,19 +49,27 @@ Add a WooCommerce product (will install WooCommerce if not present)
 }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "addProduct",
-          "title": "Sample Product",
-          "description": "<p>This is a great product!</p>",
-          "price": "19.99",
-          "salePrice": "15.99",
-          "sku": "PROD-001",
-          "status": "publish"
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "woocommerce"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php';\n// Create the product post\n$pr...",
+      "progress": {
+        "caption": "addProduct: Sample Product"
+      }
     }
   ]
 }

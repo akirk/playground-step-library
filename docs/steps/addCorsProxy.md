@@ -7,6 +7,8 @@ Automatically add the CORS proxy to outgoing HTTP requests.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `mkdir`, `writeFile`
+
 ## Parameters
 
 *No parameters defined.*
@@ -20,13 +22,19 @@ Automatically add the CORS proxy to outgoing HTTP requests.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "addCorsProxy"
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/addCorsProxy.php",
+      "data": "<?php add_action( 'requests-requests.before_request', function( &$url ) {\n$..."
     }
   ]
 }

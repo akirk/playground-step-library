@@ -7,6 +7,8 @@ Register a custom post type.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `mkdir`, `writeFile`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -41,17 +43,22 @@ Register a custom post type.
 }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "customPostType",
-          "slug": "book",
-          "name": "Books",
-          "supports": "['title', 'editor']",
-          "public": "true"
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
+      "data": "<?php add_action( 'init', function() { register_post_type('book', array('pu...",
+      "progress": {
+        "caption": "customPostType: Books"
+      }
     }
   ]
 }

@@ -7,6 +7,7 @@ Change the default "Uncategorized".
 ## Type
 ⚡ **Custom Step**
 
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -26,19 +27,7 @@ Change the default "Uncategorized".
     }
 ```
 
-## Usage in Blueprint
 
-```json
-{
-  "steps": [
-        {
-          "step": "renameDefaultCategory",
-          "categoryName": "",
-          "categorySlug": ""
-    }
-  ]
-}
-```
 
 ## Usage with Library
 

@@ -67,3 +67,4 @@ Extended functionality beyond core WordPress Playground capabilities.
 
 - [← Back to Main Documentation](../README.md)
 - [Complete Steps Reference](../steps-reference.md) - All steps in one page
+- [Built-in Step Usage](../builtin-step-usage.md) - See which steps compile to each built-in step

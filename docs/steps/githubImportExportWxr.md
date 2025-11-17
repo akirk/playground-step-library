@@ -7,6 +7,8 @@ Provide useful additional info.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `runPHP`, `setSiteOptions`, `defineWpConfigConsts`, `unzip`, `writeFile`, `installPlugin`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -41,17 +43,62 @@ Provide useful additional info.
 }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "githubImportExportWxr",
-          "repo": "carstingaxion/gatherpress-demo-data",
-          "branch": "main",
-          "filename": "GatherPress-demo-data-2024.xml",
-          "targetUrl": "https://gatherpress.test"
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php';\nforeach ( array( 'post', 'page...",
+      "progress": {
+        "caption": "Deleting all posts and pages"
+      }
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "wordpress_export_to_server__file": "GatherPress-demo-data-2024.xml",
+        "wordpress_export_to_server__owner_repo_branch": "carstingaxion/gatherpress-demo-data/main",
+        "wordpress_export_to_server__export_home": "https://gatherpress.test"
+      }
+    },
+    {
+      "step": "defineWpConfigConsts",
+      "consts": {
+        "UPLOADS": "wp-content/carstingaxion-gatherpress-demo-data-main"
+      }
+    },
+    {
+      "step": "unzip",
+      "zipFile": {
+        "resource": "git:directory",
+        "url": "https://github.com/carstingaxion/gatherpress-demo-data",
+        "ref": "main",
+        "refType": "branch"
+      },
+      "extractToPath": "/wordpress/wp-content"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/wordpress-export-to-server.php",
+      "data": {
+        "resource": "url",
+        "url": "https://raw.githubusercontent.com/carstingaxion/wordpress-export-to-server/..."
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginZipFile": {
+        "resource": "git:directory",
+        "url": "https://github.com/humanmade/WordPress-Importer",
+        "ref": "master",
+        "refType": "branch"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require '/wordpress/wp-load.php';\n$path = realpath( '/wordpress/wp-co..."
     }
   ]
 }

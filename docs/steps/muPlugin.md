@@ -7,6 +7,8 @@ Add code for a plugin.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `mkdir`, `writeFile`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -26,15 +28,19 @@ Add code for a plugin.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "muPlugin",
-          "name": "my-plugin",
-          "code": ""
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/my-plugin-0.php",
+      "data": "<?php"
     }
   ]
 }

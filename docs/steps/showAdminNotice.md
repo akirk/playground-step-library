@@ -7,6 +7,8 @@ Show an admin notice in the dashboard.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `mkdir`, `writeFile`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -28,16 +30,22 @@ Show an admin notice in the dashboard.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "showAdminNotice",
-          "text": "Welcome to WordPress Playground!",
-          "type": "success",
-          "dismissible": "true"
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/show-admin-notice-0.php",
+      "data": "<?php\nadd_action(\n'admin_notices',\nfunction() {\n$dismissed = get_user_optio...",
+      "progress": {
+        "caption": "Setting up admin notice: Welcome to WordPress Playground!"
+      }
     }
   ]
 }

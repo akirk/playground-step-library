@@ -7,6 +7,8 @@ Add a page with title and content.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `runPHP`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -28,16 +30,17 @@ Add a page with title and content.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "addPage",
-          "title": "Hello World",
-          "content": "<p>Hello World</p>",
-          "homepage": "true"
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php';\n$page_args = array(\n'post_type...",
+      "progress": {
+        "caption": "addPage: Hello World"
+      }
     }
   ]
 }

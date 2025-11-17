@@ -7,6 +7,8 @@ Add a post with title, content, type, status, and date.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `runPHP`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -53,21 +55,17 @@ Add a post with title, content, type, status, and date.
 }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "addPost",
-          "title": "Hello World",
-          "content": "<p>Hello World</p>",
-          "date": "now",
-          "type": "post",
-          "status": "publish",
-          "postId": "",
-          "landingPage": "true",
-          "registerPostType": "example-value"
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php';\n$page_args = array(\n'post_type...",
+      "progress": {
+        "caption": "addPost: Hello World"
+      }
     }
   ]
 }

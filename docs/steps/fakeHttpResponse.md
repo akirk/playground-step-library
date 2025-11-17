@@ -7,6 +7,8 @@ Fake a wp_remote_request() response.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `mkdir`, `writeFile`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -26,15 +28,19 @@ Fake a wp_remote_request() response.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "fakeHttpResponse",
-          "url": "",
-          "response": "hello world"
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins/fake-http-response"
+    },
+    {
+      "step": "writeFile",
+      "path": "wordpress/wp-content/mu-plugins/fake-http-response.php",
+      "data": "<?php\nadd_filter(\n'pre_http_request',\nfunction ( $preempt, $request, $url )..."
     }
   ]
 }

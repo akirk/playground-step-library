@@ -7,6 +7,8 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `defineWpConfigConsts`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -41,17 +43,16 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
 }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "debug",
-          "wpDebug": false,
-          "wpDebugDisplay": false,
-          "scriptDebug": false,
-          "queryMonitor": false
+    {
+      "step": "defineWpConfigConsts",
+      "consts": {
+        "WP_DEBUG": false
+      }
     }
   ]
 }

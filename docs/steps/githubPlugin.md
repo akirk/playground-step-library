@@ -7,6 +7,8 @@ Install a plugin from a Github repository.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `installPlugin`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -26,15 +28,24 @@ Install a plugin from a Github repository.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "githubPlugin",
-          "url": "https://github.com/akirk/blueprint-recorder",
-          "prs": "false"
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "git:directory",
+        "url": "https://github.com/akirk/blueprint-recorder",
+        "ref": "HEAD"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing plugin from GitHub: akirk/blueprint-recorder"
+      }
     }
   ]
 }

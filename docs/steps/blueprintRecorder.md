@@ -7,6 +7,8 @@ Record steps made and compile a new blueprint.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `installPlugin`
+
 ## Parameters
 
 *No parameters defined.*
@@ -20,13 +22,24 @@ Record steps made and compile a new blueprint.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "blueprintRecorder"
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "git:directory",
+        "url": "https://github.com/akirk/blueprint-recorder",
+        "ref": "HEAD"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing plugin from GitHub: akirk/blueprint-recorder"
+      }
     }
   ]
 }

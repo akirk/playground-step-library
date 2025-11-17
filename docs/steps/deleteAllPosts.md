@@ -7,6 +7,8 @@ Delete all posts, pages, attachments, revisions and menu items.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `runPHP`
+
 ## Parameters
 
 *No parameters defined.*
@@ -20,13 +22,17 @@ Delete all posts, pages, attachments, revisions and menu items.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "deleteAllPosts"
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php';\nforeach ( array( 'post', 'page...",
+      "progress": {
+        "caption": "Deleting all posts and pages"
+      }
     }
   ]
 }

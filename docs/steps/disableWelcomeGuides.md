@@ -7,6 +7,8 @@ Disable the welcome guides in the site editor.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `mkdir`, `writeFile`
+
 ## Parameters
 
 *No parameters defined.*
@@ -20,13 +22,19 @@ Disable the welcome guides in the site editor.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "disableWelcomeGuides"
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/disable-welcome-guides.php",
+      "data": "<?php\nfunction my_disable_welcome_guides() {\nwp_add_inline_script( 'wp-data..."
     }
   ]
 }

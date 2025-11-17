@@ -7,6 +7,8 @@ Add subscriptions to the Friends plugin.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** `installPlugin`, `runPHP`
+
 ## Parameters
 
 | Parameter | Type | Required | Description |
@@ -24,14 +26,27 @@ Add subscriptions to the Friends plugin.
     }
 ```
 
-## Usage in Blueprint
+## Compiled Output
 
 ```json
 {
   "steps": [
-        {
-          "step": "importFriendFeeds",
-          "opml": ""
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "friends"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php';if(class_exists('Friends\\Import...",
+      "progress": {
+        "caption": "Importing feeds to Friends plugin"
+      }
     }
   ]
 }
