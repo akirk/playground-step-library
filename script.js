@@ -20,24 +20,6 @@ addEventListener('DOMContentLoaded', function () {
 	const showCallbacks = {};
 	let isManualEditMode = false;
 
-	const stepAliases = {
-		'installPlugin': 'plugin',
-		'installTheme': 'theme',
-		'login': 'login',
-		'addPage': 'page',
-		'setSiteOption': 'opt',
-		'setSiteOptions': 'opts',
-		'runPHP': 'php',
-		'runSQL': 'sql',
-		'setLandingPage': 'landing',
-		'createUser': 'user',
-		'defineWpConfigConsts': 'const'
-	};
-
-	const stepAliasesReverse = Object.fromEntries(
-		Object.entries(stepAliases).map(([k, v]) => [v, k])
-	);
-
 	function minimalEncode(str) {
 		return str
 			.replace(/%/g, '%25')
@@ -57,6 +39,39 @@ addEventListener('DOMContentLoaded', function () {
 			return 'https://' + url;
 		}
 		return url;
+	}
+
+	function isDefaultValue(stepName, varName, value) {
+		if (!value || value === '') {
+			return true;
+		}
+		if (value === 'false') {
+			return true;
+		}
+
+		const stepDef = customSteps[stepName];
+		if (stepDef && stepDef.vars) {
+			const varDef = stepDef.vars.find(v => v.name === varName);
+
+			if (varDef) {
+				let defaultVal = null;
+
+				if (varDef.samples && varDef.samples.length > 0) {
+					defaultVal = varDef.samples[0];
+				} else if (varDef.type === 'boolean') {
+					defaultVal = 'false';
+				} else {
+					return false;
+				}
+
+				if (typeof defaultVal === 'boolean') {
+					return value === defaultVal.toString();
+				}
+				return value == defaultVal;
+			}
+		}
+
+		return false;
 	}
 
 	function getAceTheme() {
@@ -1961,8 +1976,7 @@ addEventListener('DOMContentLoaded', function () {
 			const indices = Object.keys(paramMap.step).sort((a, b) => parseInt(a) - parseInt(b));
 
 			const steps = indices.map(index => {
-				const stepAlias = paramMap.step[index];
-				const stepName = stepAliasesReverse[stepAlias] || stepAlias;
+				const stepName = paramMap.step[index];
 				const stepVars = {};
 
 				for (const [paramName, values] of Object.entries(paramMap)) {
@@ -2871,23 +2885,21 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
-	function generateRedirectUrl(delay = 1) {
+	function generateRedirectUrl(delay = 1, includeRedir = true) {
 		const steps = blueprintSteps.querySelectorAll('.step');
-		console.log('Found steps:', steps.length);
 
 		if (steps.length === 0) {
-			console.error('No steps found');
 			return null;
 		}
 
 		const params = [];
-		params.push('redir=' + delay);
+		if (includeRedir) {
+			params.push('redir=' + delay);
+		}
 
 		steps.forEach((stepElement, index) => {
 			const stepName = stepElement.dataset.step;
-			const stepAlias = stepAliases[stepName] || stepName;
-			console.log(`Step ${index}:`, stepName, '->', stepAlias);
-			params.push(`step[${index}]=` + stepAlias);
+			params.push(`step[${index}]=` + stepName);
 
 			const inputs = stepElement.querySelectorAll('input, textarea, select');
 			inputs.forEach(input => {
@@ -2903,13 +2915,12 @@ addEventListener('DOMContentLoaded', function () {
 					} else {
 						value = input.value;
 					}
-					if (value && value !== 'false') {
+					if (!isDefaultValue(stepName, varName, value)) {
 						let encodedValue = value;
 						if (varName === 'url' || varName.includes('url') || varName.includes('Url')) {
 							encodedValue = shortenUrl(value);
 						}
 						encodedValue = minimalEncode(encodedValue);
-						console.log(`  ${varName}[${index}] = ${encodedValue}`);
 						params.push(`${varName}[${index}]=` + encodedValue);
 					}
 				}
@@ -2918,7 +2929,6 @@ addEventListener('DOMContentLoaded', function () {
 
 		const baseUrl = window.location.origin + window.location.pathname;
 		const fullUrl = `${baseUrl}?${params.join('&')}`;
-		console.log('Generated URL:', fullUrl);
 		return fullUrl;
 	}
 
@@ -2937,13 +2947,98 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
+	document.getElementById('copy-playground-url-menu').addEventListener('click', function (e) {
+		moreOptionsMenu.style.display = 'none';
+		const playgroundUrl = document.getElementById('playground-link').href;
+		const button = e.currentTarget;
+		const originalContent = button.cloneNode(true);
+		copyToClipboard(playgroundUrl, button, originalContent);
+	});
+
 	document.getElementById('download-blueprint-menu').addEventListener('click', function () {
 		moreOptionsMenu.style.display = 'none';
 		downloadBlueprint();
 	});
 
+	document.getElementById('share-url-menu').addEventListener('click', async function (e) {
+
+		if (window.goatcounter) {
+			window.goatcounter.count({
+				path: 'share-url',
+				title: 'Share URL',
+				event: true
+			});
+		}
+
+		try {
+			const shareUrl = generateRedirectUrl(1, false);
+
+			if (!shareUrl) {
+				console.error('No steps found');
+				return;
+			}
+
+			const button = e.currentTarget;
+			const originalContent = button.cloneNode(true);
+			const title = document.getElementById('title').value || 'WordPress Playground Blueprint';
+
+			if (navigator.share) {
+				try {
+					await navigator.share({
+						title: title,
+						url: shareUrl
+					});
+					moreOptionsMenu.style.display = 'none';
+				} catch (err) {
+					if (err.name !== 'AbortError') {
+						console.error('Share failed, falling back to copy:', err);
+						copyToClipboard(shareUrl, button, originalContent);
+					}
+				}
+			} else {
+				copyToClipboard(shareUrl, button, originalContent);
+			}
+		} catch (err) {
+			console.error('Error in share-url handler:', err);
+		}
+	});
+
+	function copyToClipboard(url, button, originalContent) {
+		if (!navigator.clipboard) {
+			const textarea = document.createElement('textarea');
+			textarea.value = url;
+			textarea.style.position = 'fixed';
+			textarea.style.opacity = '0';
+			document.body.appendChild(textarea);
+			textarea.select();
+			try {
+				document.execCommand('copy');
+				showCopiedFeedback(button, originalContent);
+			} catch (err) {
+				console.error('execCommand failed:', err);
+			}
+			document.body.removeChild(textarea);
+		} else {
+			navigator.clipboard.writeText(url).then(() => {
+				showCopiedFeedback(button, originalContent);
+			}).catch(err => {
+				console.error('Clipboard write failed:', err);
+			});
+		}
+	}
+
+	function showCopiedFeedback(button, originalContent) {
+		button.textContent = '✓ Copied!';
+		setTimeout(() => {
+			button.textContent = '';
+			while (originalContent.firstChild) {
+				button.appendChild(originalContent.firstChild);
+			}
+			moreOptionsMenu.style.display = 'none';
+		}, 1500);
+	}
+
 	document.getElementById('copy-redirect-url-menu').addEventListener('click', function (e) {
-		console.log('Copy redirect URL menu clicked');
 
 		if (window.goatcounter) {
 			window.goatcounter.count({
@@ -2955,7 +3050,6 @@ addEventListener('DOMContentLoaded', function () {
 
 		try {
 			const redirectUrl = generateRedirectUrl();
-			console.log('Redirect URL result:', redirectUrl);
 
 			if (!redirectUrl) {
 				console.error('No steps found');
@@ -2964,45 +3058,7 @@ addEventListener('DOMContentLoaded', function () {
 
 			const button = e.currentTarget;
 			const originalContent = button.cloneNode(true);
-
-			if (!navigator.clipboard) {
-				console.error('Clipboard API not available');
-				const textarea = document.createElement('textarea');
-				textarea.value = redirectUrl;
-				textarea.style.position = 'fixed';
-				textarea.style.opacity = '0';
-				document.body.appendChild(textarea);
-				textarea.select();
-				try {
-					document.execCommand('copy');
-					button.textContent = '✓ Copied!';
-					setTimeout(() => {
-						button.textContent = '';
-						while (originalContent.firstChild) {
-							button.appendChild(originalContent.firstChild);
-						}
-						moreOptionsMenu.style.display = 'none';
-					}, 1500);
-				} catch (err) {
-					console.error('execCommand failed:', err);
-				}
-				document.body.removeChild(textarea);
-				return;
-			}
-
-			navigator.clipboard.writeText(redirectUrl).then(() => {
-				console.log('Successfully copied to clipboard');
-				button.textContent = '✓ Copied!';
-				setTimeout(() => {
-					button.textContent = '';
-					while (originalContent.firstChild) {
-						button.appendChild(originalContent.firstChild);
-					}
-					moreOptionsMenu.style.display = 'none';
-				}, 1500);
-			}).catch(err => {
-				console.error('Clipboard write failed:', err);
-			});
+			copyToClipboard(redirectUrl, button, originalContent);
 		} catch (err) {
 			console.error('Error in copy-redirect-url handler:', err);
 		}
