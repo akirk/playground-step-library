@@ -7,7 +7,7 @@ Run code in the context of WordPress.
 ## Type
 🔧 **Built-in Step**
 
-**Compiles to:** `runPHP`
+**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 

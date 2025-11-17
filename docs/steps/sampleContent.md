@@ -7,7 +7,7 @@ Inserts sample pages to the site.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `runPHP`
+**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 

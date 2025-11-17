@@ -7,7 +7,7 @@ Record steps made and compile a new blueprint.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `installPlugin`
+**Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin)
 
 ## Parameters
 

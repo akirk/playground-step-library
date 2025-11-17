@@ -7,7 +7,7 @@ Adds a role for clients with additional capabilities than editors, but not quite
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `mkdir`, `writeFile`
+**Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile)
 
 ## Parameters
 

@@ -7,7 +7,7 @@ Install a theme via WordPress.org or Github.
 ## Type
 🔧 **Built-in Step**
 
-**Compiles to:** `installTheme`
+**Compiles to:** [`installTheme`](../builtin-step-usage.md#installtheme)
 
 ## Parameters
 

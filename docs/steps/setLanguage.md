@@ -7,7 +7,7 @@ Set the WordPress site language.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `setSiteLanguage`
+**Compiles to:** [`setSiteLanguage`](../builtin-step-usage.md#setsitelanguage)
 
 ## Parameters
 

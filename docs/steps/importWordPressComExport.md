@@ -7,7 +7,7 @@ Import a WordPress.com export file (WXR in a ZIP)
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `mkdir`, `unzip`, `runPHP`, `importWxr`
+**Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`unzip`](../builtin-step-usage.md#unzip), [`runPHP`](../builtin-step-usage.md#runphp), [`importWxr`](../builtin-step-usage.md#importwxr)
 
 ## Parameters
 

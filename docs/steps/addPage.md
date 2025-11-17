@@ -7,7 +7,7 @@ Add a page with title and content.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `runPHP`
+**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 

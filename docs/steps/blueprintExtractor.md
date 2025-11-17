@@ -7,7 +7,7 @@ Generate a new blueprint after modifying the WordPress.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `installPlugin`
+**Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin)
 
 ## Parameters
 

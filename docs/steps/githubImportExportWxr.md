@@ -7,7 +7,7 @@ Provide useful additional info.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `runPHP`, `setSiteOptions`, `defineWpConfigConsts`, `unzip`, `writeFile`, `installPlugin`
+**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp), [`setSiteOptions`](../builtin-step-usage.md#setsiteoptions), [`defineWpConfigConsts`](../builtin-step-usage.md#definewpconfigconsts), [`unzip`](../builtin-step-usage.md#unzip), [`writeFile`](../builtin-step-usage.md#writefile), [`installPlugin`](../builtin-step-usage.md#installplugin)
 
 ## Parameters
 

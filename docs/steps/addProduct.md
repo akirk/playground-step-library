@@ -7,7 +7,7 @@ Add a WooCommerce product (will install WooCommerce if not present)
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `installPlugin`, `runPHP`
+**Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin), [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 

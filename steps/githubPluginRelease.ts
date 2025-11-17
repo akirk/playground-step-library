@@ -28,6 +28,7 @@ export const githubPluginRelease: StepFunction<GithubPluginReleaseStep> = (step:
 };
 
 githubPluginRelease.description = "Install a specific plugin release from a Github repository.";
+githubPluginRelease.deprecated = true;
 githubPluginRelease.vars = Object.entries({
 	repo: {
 		description: "The plugin resides in this GitHub repository.",

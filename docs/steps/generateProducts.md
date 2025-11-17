@@ -7,7 +7,7 @@ Generate WooCommerce products and other data using the WC Smooth Generator plugi
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `installPlugin`, `runPHP`
+**Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin), [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 

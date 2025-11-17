@@ -7,7 +7,7 @@ Add a post with title, content, type, status, and date.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `runPHP`
+**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 

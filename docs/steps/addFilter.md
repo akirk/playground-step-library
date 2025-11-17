@@ -7,7 +7,7 @@ Easily add a filtered value.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `mkdir`, `writeFile`
+**Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile)
 
 ## Parameters
 

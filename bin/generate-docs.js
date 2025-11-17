@@ -382,7 +382,7 @@ ${deprecationNotices}`;
 
             const builtinSteps = [...new Set(compiled.steps.map(s => s.step))];
             const compilesToSteps = builtinSteps.length > 0
-                ? `\n**Compiles to:** ${builtinSteps.map(s => `\`${s}\``).join(', ')}`
+                ? `\n**Compiles to:** ${builtinSteps.map(s => `[\`${s}\`](../builtin-step-usage.md#${s.toLowerCase()})`).join(', ')}`
                 : '';
 
             const truncatedSteps = compiled.steps.map(step => this.truncateStepValues(step));

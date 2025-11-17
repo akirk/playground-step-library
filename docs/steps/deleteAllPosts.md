@@ -7,7 +7,7 @@ Delete all posts, pages, attachments, revisions and menu items.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `runPHP`
+**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 

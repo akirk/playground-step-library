@@ -7,7 +7,7 @@ Add files to the media library.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `mkdir`, `writeFile`, `runPHP`
+**Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile), [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 

@@ -7,7 +7,7 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `defineWpConfigConsts`
+**Compiles to:** [`defineWpConfigConsts`](../builtin-step-usage.md#definewpconfigconsts)
 
 ## Parameters
 

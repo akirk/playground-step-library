@@ -77,6 +77,7 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 };
 
 githubPlugin.description = "Install a plugin from a Github repository.";
+githubPlugin.deprecated = true;
 githubPlugin.vars = Object.entries({
 	url: {
 		description: "Github URL of the plugin.",

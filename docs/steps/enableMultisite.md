@@ -7,7 +7,7 @@ Enable WordPress Multisite functionality.
 ## Type
 🔧 **Built-in Step**
 
-**Compiles to:** `enableMultisite`
+**Compiles to:** [`enableMultisite`](../builtin-step-usage.md#enablemultisite)
 
 ## Parameters
 

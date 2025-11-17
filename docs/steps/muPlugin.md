@@ -7,7 +7,7 @@ Add code for a plugin.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `mkdir`, `writeFile`
+**Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile)
 
 ## Parameters
 

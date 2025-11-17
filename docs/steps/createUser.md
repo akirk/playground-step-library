@@ -7,7 +7,7 @@ Create a new user.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `runPHP`, `login`
+**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp), [`login`](../builtin-step-usage.md#login)
 
 ## Parameters
 

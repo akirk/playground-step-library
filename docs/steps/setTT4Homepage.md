@@ -7,7 +7,7 @@ Set the homepage for the twentytwentyfour theme.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `runPHP`
+**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 

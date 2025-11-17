@@ -7,7 +7,7 @@ Define a wp-config PHP constant.
 ## Type
 🔧 **Built-in Step**
 
-**Compiles to:** `defineWpConfigConsts`
+**Compiles to:** [`defineWpConfigConsts`](../builtin-step-usage.md#definewpconfigconsts)
 
 ## Parameters
 

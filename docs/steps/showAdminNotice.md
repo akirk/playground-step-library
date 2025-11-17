@@ -7,7 +7,7 @@ Show an admin notice in the dashboard.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `mkdir`, `writeFile`
+**Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile)
 
 ## Parameters
 

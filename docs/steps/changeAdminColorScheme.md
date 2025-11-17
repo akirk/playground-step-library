@@ -7,7 +7,7 @@ Useful to combine with a login step.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `updateUserMeta`
+**Compiles to:** [`updateUserMeta`](../builtin-step-usage.md#updateusermeta)
 
 ## Parameters
 

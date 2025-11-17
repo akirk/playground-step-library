@@ -7,7 +7,7 @@ Run a wp-cli command.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `wp-cli`
+**Compiles to:** [`wp-cli`](../builtin-step-usage.md#wp-cli)
 
 ## Parameters
 

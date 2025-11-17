@@ -7,7 +7,7 @@ Install phEditor. Password: admin
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `mkdir`, `writeFile`, `unzip`
+**Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile), [`unzip`](../builtin-step-usage.md#unzip)
 
 ## Parameters
 

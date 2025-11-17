@@ -7,7 +7,7 @@ Automatically add the CORS proxy to outgoing HTTP requests.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `mkdir`, `writeFile`
+**Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile)
 
 ## Parameters
 

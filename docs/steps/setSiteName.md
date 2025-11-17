@@ -7,7 +7,7 @@ Set the site name and tagline.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `setSiteOptions`
+**Compiles to:** [`setSiteOptions`](../builtin-step-usage.md#setsiteoptions)
 
 ## Parameters
 

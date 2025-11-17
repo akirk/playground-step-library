@@ -7,7 +7,7 @@ Install a theme from a Github repository.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `installTheme`
+**Compiles to:** [`installTheme`](../builtin-step-usage.md#installtheme)
 
 ## Parameters
 

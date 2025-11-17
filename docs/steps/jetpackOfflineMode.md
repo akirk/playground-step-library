@@ -7,7 +7,7 @@ Start Jetpack in Offline mode.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** `installPlugin`, `defineWpConfigConsts`, `setSiteOptions`
+**Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin), [`defineWpConfigConsts`](../builtin-step-usage.md#definewpconfigconsts), [`setSiteOptions`](../builtin-step-usage.md#setsiteoptions)
 
 ## Parameters
 
