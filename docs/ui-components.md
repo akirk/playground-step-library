@@ -9,6 +9,7 @@ Complete guide to all user interface components in the WordPress Playground Step
 - [**Blueprint Settings**](#blueprint-settings) - Configure WordPress/PHP versions, display mode, storage
 - [**My Blueprints**](#my-blueprints) - Save, search, and manage your blueprints
 - [**Copy/Share Dropdown Menu**](#copyshare-dropdown-menu) - 5 ways to export and share
+- [**Blueprint Import**](#blueprint-import) - Import blueprints via drag & drop or paste URLs
 
 ### 🎨 Display Modes
 - [**Preview Mode**](#preview-mode) - Live WordPress preview alongside builder
@@ -429,6 +430,42 @@ https://playground.wordpress.net/#{"steps":[...]}
 | Copy Playground URL | ❌ No | ❌ No | Direct site access |
 
 *Editable if loaded back into Step Library or used programmatically
+
+## Blueprint Import
+
+Import existing WordPress Playground blueprints into the Step Library.
+
+### Drag & Drop Blueprint Files
+
+Drag any `.json` blueprint file onto the Step Library interface to import it.
+
+**Process:**
+1. Drag `.json` file over the page
+2. Visual overlay appears: "Drop blueprint file to import"
+3. Drop the file
+4. Blueprint is automatically decompiled (if needed)
+5. Steps loaded into editor
+
+**Supported file formats:**
+
+1. **Step Library Export** - Files from "Export All" in My Blueprints
+2. **Single Blueprint with Metadata** - Downloaded blueprints with title
+3. **Native Playground Blueprint** - Standard WordPress Playground format
+
+**Automatic Decompilation:**
+
+When you import a native Playground blueprint, the Step Library automatically converts it to custom steps:
+- ✅ **High confidence:** All steps successfully mapped
+- ⚠️ **Medium confidence:** Most steps mapped (some ignored)
+- ❌ **Low confidence:** Many steps couldn't be mapped
+
+Unmapped steps are shown in a warning toast.
+
+**Learn more:** [Blueprint Data Format](https://wordpress.github.io/wordpress-playground/blueprints/data-format)
+
+### Paste Playground URLs
+
+You can also paste Playground URLs directly - see [Smart Paste Handlers](tips.md#paste-playground-urls) for details.
 
 ## Preview Mode
 
