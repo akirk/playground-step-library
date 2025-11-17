@@ -22,7 +22,7 @@ muPlugin.vars = Object.entries({
 	name: {
 		description: "Name for your mu-plugin file",
 		type: "text",
-		required: true,
+		required: false,
 		samples: [ 'my-plugin', 'custom-hooks' ]
 	},
 	code: {

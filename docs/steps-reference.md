@@ -906,7 +906,7 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | text | ✅ Yes | Name for your mu-plugin file |
+| `name` | text | ❌ No | Name for your mu-plugin file |
 | `code` | textarea | ✅ Yes | Code for your mu-plugin |
 
 

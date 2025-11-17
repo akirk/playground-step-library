@@ -11,7 +11,7 @@ Add code for a plugin.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | text | ✅ Yes | Name for your mu-plugin file |
+| `name` | text | ❌ No | Name for your mu-plugin file |
 | `code` | textarea | ✅ Yes | Code for your mu-plugin |
 
 
