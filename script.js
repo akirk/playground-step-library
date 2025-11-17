@@ -1428,6 +1428,74 @@ addEventListener('DOMContentLoaded', function () {
 		return trimmed.startsWith('<?php') || (trimmed.includes('<?php') && trimmed.includes('?>'));
 	}
 
+	function detectPlaygroundUrl(url) {
+		if (!url || typeof url !== 'string') {
+			return null;
+		}
+
+		const trimmed = url.trim();
+
+		try {
+			const urlObj = new URL(trimmed);
+			if (urlObj.hostname === 'playground.wordpress.net' && urlObj.hash && urlObj.hash.length > 1) {
+				const hashContent = urlObj.hash.substring(1);
+				const blueprintJson = decodeURIComponent(hashContent);
+				return JSON.parse(blueprintJson);
+			}
+		} catch (e) {
+			return null;
+		}
+
+		return null;
+	}
+
+	async function handlePlaygroundBlueprint(blueprintData) {
+		if (!blueprintData) {
+			return false;
+		}
+
+		try {
+			const { BlueprintDecompiler } = await import('./lib/src/decompiler.js');
+			const decompiler = new BlueprintDecompiler();
+			const result = decompiler.decompile(blueprintData);
+
+			if (result.warnings.length > 0) {
+				console.warn('Decompiler warnings:', result.warnings);
+			}
+
+			const stepConfig = {
+				steps: result.steps.map(step => {
+					const vars = {};
+					for (const key in step) {
+						if (key !== 'step') {
+							vars[key] = step[key];
+						}
+					}
+					return {
+						step: step.step,
+						vars: vars
+					};
+				})
+			};
+
+			restoreSteps(stepConfig, 'Playground Blueprint');
+
+			if (result.unmappedSteps.length === 0) {
+				showMyBlueprintsToast('Playground blueprint loaded successfully!');
+			} else {
+				const stepTypes = result.unmappedSteps.map(s => s.step || 'unknown').filter((v, i, a) => a.indexOf(v) === i);
+				const msg = 'Playground blueprint loaded. Ignored ' + result.unmappedSteps.length + ' step(s): ' + stepTypes.join(', ');
+				showMyBlueprintsToast(msg);
+			}
+
+			return true;
+		} catch (error) {
+			console.error('Error handling playground blueprint:', error);
+			showMyBlueprintsToast('Failed to load playground blueprint');
+			return false;
+		}
+	}
+
 	function shouldUseMuPlugin(phpCode) {
 		const hookIndicators = [
 			'add_filter',
@@ -1515,16 +1583,21 @@ addEventListener('DOMContentLoaded', function () {
 		return true;
 	}
 
-	window.addEventListener('paste', (event) => {
+	window.addEventListener('paste', async (event) => {
 		const pastedText = event.clipboardData.getData('text');
 		const urls = pastedText.split('\n').map(line => line.trim()).filter(line => line);
 
+		let hasPlaygroundUrl = false;
 		let hasUrl = false;
 		let hasWpAdminUrl = false;
 		let hasHtml = false;
 		let hasPhp = false;
 
 		for (const url of urls) {
+			if (detectPlaygroundUrl(url)) {
+				hasPlaygroundUrl = true;
+				break;
+			}
 			if (detectUrlType(url)) {
 				hasUrl = true;
 				break;
@@ -1543,7 +1616,7 @@ addEventListener('DOMContentLoaded', function () {
 			hasHtml = true;
 		}
 
-		if (!hasUrl && !hasWpAdminUrl && !hasHtml && !hasPhp) {
+		if (!hasPlaygroundUrl && !hasUrl && !hasWpAdminUrl && !hasHtml && !hasPhp) {
 			return;
 		}
 
@@ -1555,7 +1628,17 @@ addEventListener('DOMContentLoaded', function () {
 
 		let addedAny = false;
 
-		if (hasPhp && !hasUrl && !hasWpAdminUrl) {
+		if (hasPlaygroundUrl) {
+			for (const url of urls) {
+				const blueprintData = detectPlaygroundUrl(url);
+				if (blueprintData) {
+					if (await handlePlaygroundBlueprint(blueprintData)) {
+						addedAny = true;
+					}
+					break;
+				}
+			}
+		} else if (hasPhp && !hasUrl && !hasWpAdminUrl) {
 			if (addStepFromPhp(pastedText)) {
 				addedAny = true;
 			}

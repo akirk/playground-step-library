@@ -24,6 +24,46 @@ export class BlueprintDecompiler {
 		this.unmappedSteps = [];
 
 		const steps: Array<StepLibraryStepDefinition> = [];
+
+		if (nativeBlueprint.plugins && Array.isArray(nativeBlueprint.plugins)) {
+			for (const plugin of nativeBlueprint.plugins) {
+				if (typeof plugin === 'string') {
+					steps.push({
+						step: 'installPlugin',
+						url: `https://wordpress.org/plugins/${plugin}/`,
+						prs: false
+					});
+				} else if (plugin && typeof plugin === 'object') {
+					const pluginStep = this.decompileInstallPlugin({
+						step: 'installPlugin',
+						pluginData: plugin,
+						options: { activate: true }
+					});
+					if (pluginStep) {
+						steps.push(pluginStep);
+					}
+				}
+			}
+		}
+
+		if (nativeBlueprint.login) {
+			if (nativeBlueprint.login === true) {
+				steps.push({
+					step: 'login',
+					username: 'admin',
+					password: 'password',
+					landingPage: false
+				});
+			} else if (typeof nativeBlueprint.login === 'object') {
+				steps.push({
+					step: 'login',
+					username: nativeBlueprint.login.username || 'admin',
+					password: nativeBlueprint.login.password || 'password',
+					landingPage: false
+				});
+			}
+		}
+
 		const nativeSteps = nativeBlueprint.steps || [];
 
 		for (let i = 0; i < nativeSteps.length; i++) {
@@ -38,6 +78,49 @@ export class BlueprintDecompiler {
 				}
 			} else {
 				this.unmappedSteps.push(nativeStep);
+			}
+		}
+
+		if (nativeBlueprint.siteOptions && typeof nativeBlueprint.siteOptions === 'object') {
+			for (const [name, value] of Object.entries(nativeBlueprint.siteOptions)) {
+				if (name === 'blogname' || name === 'blogdescription') {
+					const existing = steps.find(s => s.step === 'setSiteName');
+					if (!existing) {
+						const blogname = nativeBlueprint.siteOptions.blogname || '';
+						const blogdescription = nativeBlueprint.siteOptions.blogdescription || '';
+						if (blogname || blogdescription) {
+							steps.push({
+								step: 'setSiteName',
+								sitename: blogname,
+								tagline: blogdescription
+							});
+						}
+					}
+					continue;
+				}
+
+				steps.push({
+					step: 'setSiteOption',
+					name: name,
+					value: value as string
+				});
+			}
+		}
+
+		if (nativeBlueprint.constants && typeof nativeBlueprint.constants === 'object') {
+			const consts = nativeBlueprint.constants;
+			const wpDebug = consts.WP_DEBUG === true;
+			const wpDebugDisplay = consts.WP_DEBUG_DISPLAY === true;
+			const scriptDebug = consts.SCRIPT_DEBUG === true;
+
+			if (wpDebug || wpDebugDisplay || scriptDebug) {
+				steps.push({
+					step: 'debug',
+					wpDebug,
+					wpDebugDisplay,
+					scriptDebug,
+					queryMonitor: false
+				});
 			}
 		}
 
@@ -81,6 +164,9 @@ export class BlueprintDecompiler {
 
 			case 'setSiteOptions':
 				return this.decompileSetSiteOptions(nativeStep);
+
+			case 'login':
+				return this.decompileLogin(nativeStep);
 
 			case 'wp-cli':
 				return this.decompileWpCli(nativeStep);
@@ -200,8 +286,10 @@ export class BlueprintDecompiler {
 			return this.decompileAddPageOrPost(code);
 		}
 
-		this.warnings.push(`Could not decompile runPHP step: ${caption || 'unknown'}`);
-		return null;
+		return {
+			step: 'runPHP',
+			code: code
+		};
 	}
 
 	private decompileBlockExamples(code: string, caption: string): StepLibraryStepDefinition | null {
@@ -374,6 +462,18 @@ export class BlueprintDecompiler {
 		return {
 			step: 'runWpCliCommand',
 			command: command
+		};
+	}
+
+	private decompileLogin(nativeStep: any): StepLibraryStepDefinition | null {
+		const username = nativeStep.username || 'admin';
+		const password = nativeStep.password || 'password';
+
+		return {
+			step: 'login',
+			username,
+			password,
+			landingPage: false
 		};
 	}
 

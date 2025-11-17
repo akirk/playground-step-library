@@ -771,4 +771,187 @@ wp_insert_post( array(
 			expect(result.warnings[0]).toContain('setSiteOptions');
 		});
 	});
+
+	describe('top-level plugins array', () => {
+		it('should decompile simple plugin slugs', () => {
+			const nativeBlueprint = {
+				plugins: ['hello-dolly', 'akismet']
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps).toHaveLength(2);
+			expect(result.steps[0]).toEqual({
+				step: 'installPlugin',
+				url: 'https://wordpress.org/plugins/hello-dolly/',
+				prs: false
+			});
+			expect(result.steps[1]).toEqual({
+				step: 'installPlugin',
+				url: 'https://wordpress.org/plugins/akismet/',
+				prs: false
+			});
+		});
+
+		it('should decompile plugin objects', () => {
+			const nativeBlueprint = {
+				plugins: [
+					{
+						resource: 'wordpress.org/plugins',
+						slug: 'woocommerce'
+					},
+					{
+						resource: 'url',
+						url: 'https://example.com/my-plugin.zip'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps).toHaveLength(2);
+			expect(result.steps[0]).toEqual({
+				step: 'installPlugin',
+				url: 'https://wordpress.org/plugins/woocommerce/',
+				prs: false
+			});
+			expect(result.steps[1]).toEqual({
+				step: 'installPlugin',
+				url: 'https://example.com/my-plugin.zip',
+				prs: false,
+				permalink: false
+			});
+		});
+
+		it('should decompile mixed plugin formats', () => {
+			const nativeBlueprint = {
+				plugins: [
+					'hello-dolly',
+					{
+						resource: 'wordpress.org/plugins',
+						slug: 'jetpack'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps).toHaveLength(2);
+			expect(result.steps[0]).toEqual({
+				step: 'installPlugin',
+				url: 'https://wordpress.org/plugins/hello-dolly/',
+				prs: false
+			});
+			expect(result.steps[1]).toEqual({
+				step: 'installPlugin',
+				url: 'https://wordpress.org/plugins/jetpack/',
+				prs: false
+			});
+		});
+
+		it('should add plugins before steps', () => {
+			const nativeBlueprint = {
+				plugins: ['hello-dolly'],
+				steps: [
+					{
+						step: 'runPHP',
+						code: '<?php wp_insert_post(["post_title" => "Test Page", "post_content" => "Test content", "post_type" => "page"]);'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps).toHaveLength(2);
+			expect(result.steps[0].step).toBe('installPlugin');
+			expect(result.steps[1].step).toBe('addPage');
+		});
+	});
+
+	describe('top-level properties decompilation', () => {
+		it('should decompile comprehensive blueprint with all top-level properties', () => {
+			const nativeBlueprint = {
+				plugins: ['akismet', 'hello-dolly'],
+				login: true,
+				siteOptions: {
+					blogname: 'My Test Site',
+					blogdescription: 'Just another test site',
+					permalink_structure: '/%postname%/'
+				},
+				constants: {
+					WP_DEBUG: true,
+					WP_DEBUG_DISPLAY: true,
+					SCRIPT_DEBUG: true
+				},
+				landingPage: '/wp-admin/',
+				steps: [
+					{
+						step: 'runPHP',
+						code: '<?php echo "test";'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps.length).toBeGreaterThanOrEqual(7);
+
+			expect(result.steps.find(s => s.step === 'installPlugin' && (s as any).url?.includes('akismet'))).toBeDefined();
+			expect(result.steps.find(s => s.step === 'installPlugin' && (s as any).url?.includes('hello-dolly'))).toBeDefined();
+			expect(result.steps.find(s => s.step === 'login')).toBeDefined();
+			expect(result.steps.find(s => s.step === 'setSiteName')).toBeDefined();
+			expect(result.steps.find(s => s.step === 'setSiteOption' && (s as any).name === 'permalink_structure')).toBeDefined();
+			expect(result.steps.find(s => s.step === 'debug')).toBeDefined();
+			expect(result.steps.find(s => s.step === 'runPHP')).toBeDefined();
+			expect(result.steps.find(s => s.step === 'setLandingPage')).toBeDefined();
+		});
+
+		it('should decompile login as object', () => {
+			const nativeBlueprint = {
+				login: {
+					username: 'testuser',
+					password: 'testpass'
+				}
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			const loginStep = result.steps.find(s => s.step === 'login');
+			expect(loginStep).toBeDefined();
+			expect((loginStep as any).username).toBe('testuser');
+			expect((loginStep as any).password).toBe('testpass');
+		});
+
+		it('should decompile siteOptions individually', () => {
+			const nativeBlueprint = {
+				siteOptions: {
+					option1: 'value1',
+					option2: 'value2'
+				}
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps).toHaveLength(2);
+			expect(result.steps[0].step).toBe('setSiteOption');
+			expect((result.steps[0] as any).name).toBe('option1');
+			expect((result.steps[0] as any).value).toBe('value1');
+		});
+
+		it('should decompile constants to debug step', () => {
+			const nativeBlueprint = {
+				constants: {
+					WP_DEBUG: true,
+					WP_DEBUG_DISPLAY: false
+				}
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			const debugStep = result.steps.find(s => s.step === 'debug');
+			expect(debugStep).toBeDefined();
+			expect((debugStep as any).wpDebug).toBe(true);
+			expect((debugStep as any).wpDebugDisplay).toBe(false);
+		});
+	});
 });
