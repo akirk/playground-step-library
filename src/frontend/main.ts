@@ -75,7 +75,7 @@ import {
 	detectPlaygroundUrl,
 	detectPlaygroundQueryApiUrl
 } from './url-detection';
-import { showCallbacks, isManualEditMode, setBlueprint, setLinkedTextarea } from './app-state';
+import { showCallbacks, isManualEditMode, setBlueprint, setLinkedTextarea, getBlueprint } from './app-state';
 import {
 	getHistory,
 	saveHistory,
@@ -118,6 +118,25 @@ addEventListener('DOMContentLoaded', function () {
 	// URL detection functions are imported from url-detection.ts
 	// DOM utility functions (fixMouseCursor, etc.) are imported from dom-utils.ts
 	// createStep is now imported from step-renderer.ts
+
+	// Helper functions to get/set blueprint value from Ace editor or textarea
+	function getBlueprintValue(): string {
+		if (blueprintAceEditor) {
+			return blueprintAceEditor.getValue();
+		}
+		const textarea = document.getElementById('blueprint-compiled') as HTMLTextAreaElement;
+		return textarea ? textarea.value : '';
+	}
+
+	function setBlueprintValue(value: string): void {
+		if (blueprintAceEditor) {
+			blueprintAceEditor.setValue(value, -1);
+		}
+		const textarea = document.getElementById('blueprint-compiled') as HTMLTextAreaElement;
+		if (textarea) {
+			textarea.value = value;
+		}
+	}
 
 	function saveMyStep() {
 		const myStepNameEl = document.getElementById('my-step-name');
@@ -1272,7 +1291,7 @@ addEventListener('DOMContentLoaded', function () {
 			}
 		}
 
-		blueprint = JSON.stringify(combinedExamples, null, 2);
+		setBlueprint(JSON.stringify(combinedExamples, null, 2));
 
 		const currentCompressedState = compressStateFromDOM(state);
 
@@ -1292,17 +1311,17 @@ addEventListener('DOMContentLoaded', function () {
 
 
 		// If in manual edit mode, use the manually edited blueprint directly
-		if (isManualEditMode) {
+		if (isManualEditMode.value) {
 			try {
 				const manualBlueprint = getBlueprintValue();
-				outputData = JSON.parse(manualBlueprint);
+				outputData = manualBlueprint ? JSON.parse(manualBlueprint) : {};
 			} catch (e) {
 				console.error('Invalid JSON in manual edit mode:', e);
 				alert('Invalid JSON in blueprint. Please fix syntax errors before launching.');
 				return;
 			}
 		} else {
-			let jsonInput = blueprint;
+			let jsonInput = getBlueprint();
 
 			// Prepare compilation options from UI elements
 			const userDefined = {
@@ -1354,7 +1373,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 
-		if (!isManualEditMode) {
+		if (!isManualEditMode.value) {
 			setBlueprintValue(JSON.stringify(outputData, null, 2));
 		}
 
@@ -2474,11 +2493,11 @@ addEventListener('DOMContentLoaded', function () {
 	const blueprintTextarea = document.getElementById('blueprint-compiled');
 
 	blueprintTextarea.addEventListener('focus', function () {
-		initBlueprintAceEditor();
+		initBlueprintAceEditor(getBlueprintValue, isManualEditMode, transformJson);
 	});
 
 	blueprintTextarea.addEventListener('click', function () {
-		initBlueprintAceEditor();
+		initBlueprintAceEditor(getBlueprintValue, isManualEditMode, transformJson);
 	});
 
 	// Intercept playground link clicks to regenerate URL if in manual edit mode
@@ -2497,7 +2516,7 @@ addEventListener('DOMContentLoaded', function () {
 			showSavePromptToast();
 		}
 
-		if (isManualEditMode) {
+		if (isManualEditMode.value) {
 			e.preventDefault();
 			transformJson();
 			// Allow the click to proceed after transformJson updates the href
@@ -3783,7 +3802,7 @@ addEventListener('DOMContentLoaded', function () {
 			return;
 		}
 
-		isManualEditMode = false;
+		isManualEditMode.value = false;
 		const manualEditBanner = document.getElementById('manual-edit-banner');
 		if (manualEditBanner) {
 			manualEditBanner.style.display = 'none';
