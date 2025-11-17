@@ -1193,6 +1193,8 @@ Let me know if you have any questions or if you'd like me to help implement this
         // Handle title click
         function handleTitleClick() {
             if (plugins.length > 0) {
+                selectedPluginId = null;
+                renderPluginList();
                 showStatsOverview();
             }
         }
@@ -1211,6 +1213,7 @@ Let me know if you have any questions or if you'd like me to help implement this
 
             const repoCount = plugins.filter(p => p.status.hasGithubRepo).length;
             const blueprintCount = plugins.filter(p => p.status.blueprintCreated).length;
+            const typeSelectedCount = plugins.filter(p => p.submissionType && p.status.typeSelected).length;
             const submissionCount = plugins.filter(p => p.status.submissionCreated).length;
             const acceptedCount = plugins.filter(p => p.status.submissionAccepted).length;
             const completeCount = plugins.filter(p =>
@@ -1221,9 +1224,14 @@ Let me know if you have any questions or if you'd like me to help implement this
             ).length;
 
             // Get plugins needing attention
-            const needsRepo = plugins.filter(p => !p.status.hasGithubRepo);
+            const needsRepo = plugins.filter(p => !p.status.hasGithubRepo && p.submissionType !== 'forum');
             const needsBlueprint = plugins.filter(p => !p.status.blueprintCreated);
-            const needsSubmission = plugins.filter(p => p.status.blueprintCreated && !p.status.submissionCreated);
+            const needsSubmission = plugins.filter(p => {
+                if (!p.status.blueprintCreated || p.status.submissionCreated) return false;
+                if (!p.submissionType || !p.status.typeSelected) return false;
+                if (p.submissionType === 'pr' && !p.status.fileUploaded) return false;
+                return true;
+            });
             const needsAcceptance = plugins.filter(p => p.status.submissionCreated && !p.status.submissionAccepted);
 
             const content = document.getElementById('content');
@@ -1249,6 +1257,16 @@ Let me know if you have any questions or if you'd like me to help implement this
                         </div>
                         <div style="background: #e5e5e5; height: 8px; border-radius: 4px; overflow: hidden;">
                             <div style="background: #0073aa; height: 100%; width: ${(blueprintCount/totalPlugins*100)}%;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="font-weight: 500;">Submission Type Selected</span>
+                            <span style="color: #666;">${typeSelectedCount}/${totalPlugins}</span>
+                        </div>
+                        <div style="background: #e5e5e5; height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: #0073aa; height: 100%; width: ${(typeSelectedCount/totalPlugins*100)}%;"></div>
                         </div>
                     </div>
 
@@ -1688,6 +1706,32 @@ Let me know if you have any questions or if you'd like me to help implement this
                 }
             };
             reader.readAsText(file);
+        }
+
+        function handlePluginUrl() {
+            const urlInput = document.getElementById('newPluginUrl');
+            if (!urlInput) return;
+
+            const url = urlInput.value.trim();
+            if (!url) return;
+
+            const match = url.match(/wordpress\.org\/plugins\/([^\/]+)/);
+            if (match) {
+                const slug = match[1];
+                const slugInput = document.getElementById('newPluginSlug');
+                const nameInput = document.getElementById('newPluginName');
+
+                if (slugInput && !slugInput.value) {
+                    slugInput.value = slug;
+                }
+
+                if (nameInput && !nameInput.value) {
+                    const name = slug.split('-').map(word =>
+                        word.charAt(0).toUpperCase() + word.slice(1)
+                    ).join(' ');
+                    nameInput.value = name;
+                }
+            }
         }
 
         function escapeHtml(text) {
