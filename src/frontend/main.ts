@@ -60,6 +60,8 @@ import {
 } from './my-blueprints';
 import { parsePlaygroundQueryApi, shouldUseMuPlugin } from './playground-integration';
 import { compressState, uncompressState, extractStepDataFromElement, type StepConfig } from './blueprint-compiler';
+import { getDragAfterElement } from './drag-drop';
+import { getMySteps, saveMyStep as saveMyStepToStorage, deleteMyStep, renameMyStep } from './custom-steps';
 
 declare global {
 	interface Window {
@@ -362,8 +364,7 @@ addEventListener('DOMContentLoaded', function () {
 
 		const myStep = JSON.parse(stepData);
 		insertMyStep(myStepName, myStep);
-		mySteps[myStepName] = myStep;
-		localStorage.setItem('mySteps', JSON.stringify(mySteps));
+		saveMyStepToStorage(myStepName, myStep);
 		saveStepEl.close();
 		myStepNameEl.value = '';
 	}
@@ -399,7 +400,8 @@ addEventListener('DOMContentLoaded', function () {
 		step.querySelectorAll('input,textarea').forEach(fixMouseCursor);
 
 	}
-	const mySteps = JSON.parse(localStorage.getItem('mySteps') || '{}');
+	// Load custom steps from localStorage (now using getMySteps from custom-steps.ts)
+	const mySteps = getMySteps();
 	for (const name in mySteps) {
 		const data = mySteps[name];
 		insertMyStep(name, data);
@@ -876,10 +878,9 @@ addEventListener('DOMContentLoaded', function () {
 		if (event.target.closest('#step-library') && stepElement && stepElement.classList.contains('mine')) {
 			if (event.target.classList.contains('delete')) {
 				const name = stepElement.dataset.id;
-				if (confirm('Are you sure you want to delete the step ' + name + '?')) {
+				if (name && confirm('Are you sure you want to delete the step ' + name + '?')) {
 					stepElement.remove();
-					mySteps[name] = undefined;
-					localStorage.setItem('mySteps', JSON.stringify(mySteps));
+					deleteMyStep(name);
 					loadCombinedExamples();
 				}
 				return false;
@@ -887,19 +888,19 @@ addEventListener('DOMContentLoaded', function () {
 			if (event.target.classList.contains('rename')) {
 				const name = stepElement.dataset.id;
 				const newName = prompt('Enter a new name for the step:', name);
-				if (newName) {
-					const data = mySteps[name];
-					mySteps[newName] = data;
-					mySteps[name] = undefined;
-					localStorage.setItem('mySteps', JSON.stringify(mySteps));
-					event.target.closest('.step').dataset.id = newName;
-					event.target.closest('.step').querySelector('.stepname').innerText = newName;
+				if (newName && name && renameMyStep(name, newName)) {
+					const stepEl = event.target.closest('.step');
+					if (stepEl instanceof HTMLElement) {
+						stepEl.dataset.id = newName;
+						const stepNameEl = stepEl.querySelector('.stepname');
+						if (stepNameEl) stepNameEl.textContent = newName;
+					}
 					loadCombinedExamples();
 				}
 				return false;
 			}
 			if (event.target.classList.contains('share')) {
-				const data = location.href.replace(/#.*$/, '') + '#' + compressState([getStepData(event.target.closest('.step'))]);
+				const data = location.href.replace(/#.*$/, '') + '#' + compressStateFromDOM([getStepData(event.target.closest('.step'))]);
 				navigator.clipboard.writeText(data);
 				event.target.innerText = 'Copied!';
 				setTimeout(function () {
@@ -1327,19 +1328,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
-	function getDragAfterElement(container, y) {
-		const draggableElements = [...container.querySelectorAll('.step')];
-
-		return draggableElements.reduce((closest, child) => {
-			const box = child.getBoundingClientRect();
-			const offset = y - box.top - box.height / 2;
-			if (offset < 0 && offset > closest.offset) {
-				return { offset: offset, element: child };
-			} else {
-				return closest;
-			}
-		}, { offset: Number.NEGATIVE_INFINITY }).element;
-	}
+	// getDragAfterElement is now imported from drag-drop.ts
 
 	document.getElementById('clear').addEventListener('click', function () {
 		document.getElementById('title').value = '';
