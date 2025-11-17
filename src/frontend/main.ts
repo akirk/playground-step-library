@@ -59,6 +59,7 @@ import {
 	type BlueprintHistoryEntry
 } from './my-blueprints';
 import { parsePlaygroundQueryApi, shouldUseMuPlugin } from './playground-integration';
+import { compressState, uncompressState, extractStepDataFromElement, type StepConfig } from './blueprint-compiler';
 
 declare global {
 	interface Window {
@@ -1446,65 +1447,24 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
-	function compressState(steps) {
-		const state = {
-			steps
-		};
-		if (document.getElementById('title').value) {
-			state.title = document.getElementById('title').value;
-		}
-		if (document.getElementById('autosave').value) {
-			state.autosave = document.getElementById('autosave').value;
-		}
-		if (document.getElementById('playground').value !== 'playground.wordpress.net') {
-			state.playground = document.getElementById('playground').value;
-		}
-		if (document.getElementById('mode').value != 'browser-full-screen') {
-			state.mode = document.getElementById('mode').value;
-		}
-		if (document.getElementById('preview-mode').value) {
-			state.previewMode = document.getElementById('preview-mode').value;
-		}
-		if (document.getElementById('exclude-meta').checked) {
-			state.excludeMeta = true;
-		}
-		const json = JSON.stringify(state);
+	// compressState and uncompressState are now imported from blueprint-compiler.ts
+	// Wrapper function to gather DOM values and call the imported compressState
+	function compressStateFromDOM(steps) {
+		const titleEl = document.getElementById('title') as HTMLInputElement;
+		const autosaveEl = document.getElementById('autosave') as HTMLInputElement;
+		const playgroundEl = document.getElementById('playground') as HTMLInputElement;
+		const modeEl = document.getElementById('mode') as HTMLSelectElement;
+		const previewModeEl = document.getElementById('preview-mode') as HTMLInputElement;
+		const excludeMetaEl = document.getElementById('exclude-meta') as HTMLInputElement;
 
-		if ('{"steps":[]}' === json) {
-			return '';
-		}
-		return encodeStringAsBase64(json);
-	}
-
-	function uncompressState(state) {
-		try {
-			return JSON.parse(decodeBase64ToString(state));
-		} catch {
-			return {};
-		}
-	}
-
-	function decodeBase64ToString(base64) {
-		return new TextDecoder().decode(decodeBase64ToUint8Array(base64));
-	}
-
-	function decodeBase64ToUint8Array(base64) {
-		const binaryString = window.atob(base64); // This will convert base64 to binary string
-		const len = binaryString.length;
-		const bytes = new Uint8Array(len);
-		for (let i = 0; i < len; i++) {
-			bytes[i] = binaryString.charCodeAt(i);
-		}
-		return bytes;
-	}
-
-	function encodeStringAsBase64(str) {
-		return encodeUint8ArrayAsBase64(new TextEncoder().encode(str));
-	}
-
-	function encodeUint8ArrayAsBase64(bytes) {
-		const binString = String.fromCodePoint(...bytes);
-		return btoa(binString);
+		return compressState(steps, {
+			title: titleEl?.value || undefined,
+			autosave: autosaveEl?.value || undefined,
+			playground: playgroundEl?.value || undefined,
+			mode: modeEl?.value || undefined,
+			previewMode: previewModeEl?.value || undefined,
+			excludeMeta: excludeMetaEl?.checked || undefined
+		});
 	}
 	function updateVariableVisibility(stepBlock) {
 		stepBlock.querySelectorAll('input,select,textarea,button').forEach(function (input) {
@@ -1519,37 +1479,9 @@ addEventListener('DOMContentLoaded', function () {
 			}
 		});
 	}
+	// getStepData is now extracted to blueprint-compiler.ts as extractStepDataFromElement
 	function getStepData(stepBlock) {
-		const step = {
-			'step': stepBlock.dataset.step,
-			'vars': {}
-		};
-		stepBlock.querySelectorAll('input,select,textarea').forEach(function (input) {
-			if (input.name === 'count') {
-				step.count = parseInt(input.value);
-				return;
-			}
-			if (typeof step.vars[input.name] !== 'undefined') {
-				if (!Array.isArray(step.vars[input.name])) {
-					step.vars[input.name] = [step.vars[input.name]];
-				}
-				if (input.type === 'checkbox') {
-					step.vars[input.name].push(input.checked);
-				} else {
-					step.vars[input.name].push(input.value);
-				}
-			} else {
-				if (input.type === 'checkbox') {
-					step.vars[input.name] = input.checked;
-				} else {
-					step.vars[input.name] = input.value;
-				}
-			}
-		});
-		if (!Object.keys(step.vars).length) {
-			delete step.vars;
-		}
-		return step;
+		return extractStepDataFromElement(stepBlock);
 	}
 
 	let lastCompressedState = '';
@@ -1584,7 +1516,7 @@ addEventListener('DOMContentLoaded', function () {
 
 		blueprint = JSON.stringify(combinedExamples, null, 2);
 
-		const currentCompressedState = compressState(state);
+		const currentCompressedState = compressStateFromDOM(state);
 
 		// Only update history and transform JSON if the state has changed
 		if (currentCompressedState !== lastCompressedState) {
