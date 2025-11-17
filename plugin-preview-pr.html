@@ -850,28 +850,20 @@
 
             // Render PR description in right column
             const prPreview = document.getElementById('prPreview');
+
+            // Determine headline based on submission type
+            let submissionHeadline = 'Submission Text';
+            if (plugin.submissionType === 'pr') {
+                submissionHeadline = 'Pull Request Description';
+            } else if (plugin.submissionType === 'issue') {
+                submissionHeadline = 'GitHub Issue Text';
+            } else if (plugin.submissionType === 'forum') {
+                submissionHeadline = 'Forum Post Text';
+            }
+
             prPreview.innerHTML = `
-                <h2>Submission Text</h2>
-
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 10px; font-weight: 500;">Select submission type:</label>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="radio" name="submissionType" value="pr" checked onchange="updateSubmissionText('${plugin.id}')">
-                            <span>GitHub Pull Request</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="radio" name="submissionType" value="issue" onchange="updateSubmissionText('${plugin.id}')">
-                            <span>GitHub Issue</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="radio" name="submissionType" value="forum" onchange="updateSubmissionText('${plugin.id}')">
-                            <span>WordPress.org Forum Post</span>
-                        </label>
-                    </div>
-                </div>
-
-                <p class="help-text" style="margin-bottom: 15px;">Copy and paste this text:</p>
+                <h2>${submissionHeadline}</h2>
+                <p class="help-text" style="margin-bottom: 15px;">Copy and paste this text into your ${plugin.submissionType === 'pr' ? 'pull request' : plugin.submissionType === 'issue' ? 'GitHub issue' : plugin.submissionType === 'forum' ? 'forum post' : 'submission'}:</p>
                 <textarea class="code" id="prDescription" readonly style="min-height: 500px;">${escapeHtml(prDescription)}</textarea>
                 <div class="button-group">
                     <button onclick="copyPRDescription()">Copy Text</button>
@@ -919,12 +911,6 @@
                 }
                 renderPluginList();
                 renderPluginDetail(plugin);
-                // Update the submission text radio buttons
-                const radio = document.querySelector(`input[name="submissionType"][value="${value}"]`);
-                if (radio) {
-                    radio.checked = true;
-                    updateSubmissionText(id);
-                }
             }
         }
 
@@ -1136,7 +1122,7 @@ Let me know if you have any questions or if you'd like me to help implement this
             const plugin = plugins.find(p => p.id === pluginId);
             if (!plugin) return;
 
-            const selectedType = document.querySelector('input[name="submissionType"]:checked')?.value || 'pr';
+            const selectedType = plugin.submissionType || 'pr';
             const textarea = document.getElementById('prDescription');
 
             let description = '';
@@ -1173,6 +1159,30 @@ Let me know if you have any questions or if you'd like me to help implement this
             }
 
             textarea.value = description;
+
+            // Update the headline to match the submission type
+            const prPreview = document.getElementById('prPreview');
+            const h2 = prPreview.querySelector('h2');
+            const helpText = prPreview.querySelector('.help-text');
+
+            if (h2) {
+                if (selectedType === 'pr') {
+                    h2.textContent = 'Pull Request Description';
+                } else if (selectedType === 'issue') {
+                    h2.textContent = 'GitHub Issue Text';
+                } else if (selectedType === 'forum') {
+                    h2.textContent = 'Forum Post Text';
+                } else {
+                    h2.textContent = 'Submission Text';
+                }
+            }
+
+            if (helpText) {
+                const submissionName = selectedType === 'pr' ? 'pull request' :
+                                      selectedType === 'issue' ? 'GitHub issue' :
+                                      selectedType === 'forum' ? 'forum post' : 'submission';
+                helpText.textContent = `Copy and paste this text into your ${submissionName}:`;
+            }
         }
 
         function copyBlueprint(pluginId) {
