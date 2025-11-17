@@ -2,6 +2,8 @@
 
 Adds a role for clients with additional capabilities than editors, but not quite admin.
 
+**[View Source](../../steps/addClientRole.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

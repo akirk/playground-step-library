@@ -2,6 +2,8 @@
 
 Enable WordPress Multisite functionality.
 
+**[View Source](../../steps/enableMultisite.ts)**
+
 ## Type
 🔧 **Built-in Step**
 

@@ -2,6 +2,8 @@
 
 Remove widgets from the wp-admin dashboard.
 
+**[View Source](../../steps/removeDashboardWidgets.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

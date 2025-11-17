@@ -252,6 +252,8 @@ ${stepEntries.map(([name]) => `- [\`${name}\`](#${name.toLowerCase()})`).join('\
 
 ${stepInfo.description || 'No description available.'}
 
+**[View Source](../../steps/${stepName}.ts)**
+
 ## Type
 ${stepInfo.builtin ? '🔧 **Built-in Step**' : '⚡ **Custom Step**'}
 

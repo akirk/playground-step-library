@@ -2,6 +2,8 @@
 
 Generate a new blueprint after modifying the WordPress.
 
+**[View Source](../../steps/blueprintExtractor.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

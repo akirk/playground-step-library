@@ -2,6 +2,8 @@
 
 Set the site name and tagline.
 
+**[View Source](../../steps/setSiteName.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

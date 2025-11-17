@@ -2,6 +2,8 @@
 
 Add subscriptions to the Friends plugin.
 
+**[View Source](../../steps/importFriendFeeds.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

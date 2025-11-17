@@ -2,6 +2,8 @@
 
 When running WooCommerce, don't show the wizard.
 
+**[View Source](../../steps/skipWooCommerceWizard.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

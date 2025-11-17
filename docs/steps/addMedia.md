@@ -2,6 +2,8 @@
 
 Add files to the media library.
 
+**[View Source](../../steps/addMedia.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

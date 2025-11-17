@@ -2,6 +2,8 @@
 
 Install Adminer with auto login link.
 
+**[View Source](../../steps/installAdminer.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

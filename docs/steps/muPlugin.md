@@ -2,6 +2,8 @@
 
 Add code for a plugin.
 
+**[View Source](../../steps/muPlugin.ts)**
+
 ## Type
 ⚡ **Custom Step**
 
@@ -9,6 +11,7 @@ Add code for a plugin.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
+| `name` | text | ✅ Yes | Name for your mu-plugin file |
 | `code` | textarea | ✅ Yes | Code for your mu-plugin |
 
 
@@ -18,6 +21,7 @@ Add code for a plugin.
 ```json
     {
           "step": "muPlugin",
+          "name": "my-plugin",
           "code": ""
     }
 ```
@@ -29,6 +33,7 @@ Add code for a plugin.
   "steps": [
         {
           "step": "muPlugin",
+          "name": "my-plugin",
           "code": ""
     }
   ]
@@ -45,6 +50,7 @@ const blueprint = {
   steps: [
         {
           "step": "muPlugin",
+          "name": "my-plugin",
           "code": ""
     }
   ]

@@ -2,6 +2,8 @@
 
 Provide phpLiteAdmin. Password: admin
 
+**[View Source](../../steps/installPhpLiteAdmin.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

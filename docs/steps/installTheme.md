@@ -2,6 +2,8 @@
 
 Install a theme via WordPress.org or Github.
 
+**[View Source](../../steps/installTheme.ts)**
+
 ## Type
 🔧 **Built-in Step**
 

@@ -2,6 +2,8 @@
 
 Start Jetpack in Offline mode.
 
+**[View Source](../../steps/jetpackOfflineMode.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

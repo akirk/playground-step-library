@@ -2,6 +2,8 @@
 
 Show an admin notice in the dashboard.
 
+**[View Source](../../steps/showAdminNotice.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

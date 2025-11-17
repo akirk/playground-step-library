@@ -2,6 +2,8 @@
 
 Record steps made and compile a new blueprint.
 
+**[View Source](../../steps/blueprintRecorder.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

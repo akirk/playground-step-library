@@ -2,6 +2,8 @@
 
 Create a new user.
 
+**[View Source](../../steps/createUser.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

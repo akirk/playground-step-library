@@ -2,6 +2,8 @@
 
 Add a page with title and content.
 
+**[View Source](../../steps/addPage.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

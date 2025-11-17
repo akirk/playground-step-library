@@ -2,6 +2,8 @@
 
 Run a wp-cli command.
 
+**[View Source](../../steps/runWpCliCommand.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

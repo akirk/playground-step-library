@@ -2,6 +2,8 @@
 
 Install a plugin via WordPress.org or Github (branches, releases, PRs).
 
+**[View Source](../../steps/installPlugin.ts)**
+
 ## Type
 🔧 **Built-in Step**
 

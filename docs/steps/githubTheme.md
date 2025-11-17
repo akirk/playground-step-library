@@ -2,6 +2,8 @@
 
 Install a theme from a Github repository.
 
+**[View Source](../../steps/githubTheme.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

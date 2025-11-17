@@ -2,6 +2,8 @@
 
 Import a WordPress.com export file (WXR in a ZIP)
 
+**[View Source](../../steps/importWordPressComExport.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

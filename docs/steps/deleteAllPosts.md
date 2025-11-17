@@ -2,6 +2,8 @@
 
 Delete all posts, pages, attachments, revisions and menu items.
 
+**[View Source](../../steps/deleteAllPosts.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

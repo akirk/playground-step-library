@@ -2,6 +2,8 @@
 
 Disable the welcome guides in the site editor.
 
+**[View Source](../../steps/disableWelcomeGuides.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

@@ -2,6 +2,8 @@
 
 Define a wp-config PHP constant.
 
+**[View Source](../../steps/defineWpConfigConst.ts)**
+
 ## Type
 🔧 **Built-in Step**
 

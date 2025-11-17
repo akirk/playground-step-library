@@ -2,6 +2,8 @@
 
 Configure WordPress debug settings and optionally install Query Monitor plugin.
 
+**[View Source](../../steps/debug.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

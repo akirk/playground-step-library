@@ -2,6 +2,8 @@
 
 Install a plugin from a Github repository.
 
+**[View Source](../../steps/githubPlugin.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

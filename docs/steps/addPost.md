@@ -2,6 +2,8 @@
 
 Add a post with title, content, type, status, and date.
 
+**[View Source](../../steps/addPost.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

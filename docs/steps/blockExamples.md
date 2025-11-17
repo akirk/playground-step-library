@@ -2,6 +2,8 @@
 
 Creates a post with all block examples from registered blocks
 
+**[View Source](../../steps/blockExamples.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

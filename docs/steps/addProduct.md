@@ -2,6 +2,8 @@
 
 Add a WooCommerce product (will install WooCommerce if not present)
 
+**[View Source](../../steps/addProduct.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

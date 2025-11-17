@@ -2,6 +2,8 @@
 
 Automatically add the CORS proxy to outgoing HTTP requests.
 
+**[View Source](../../steps/addCorsProxy.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

@@ -2,6 +2,8 @@
 
 Easily add a filtered value.
 
+**[View Source](../../steps/addFilter.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

@@ -2,6 +2,8 @@
 
 Import a WXR from a URL.
 
+**[View Source](../../steps/importWxr.ts)**
+
 ## Type
 🔧 **Built-in Step**
 

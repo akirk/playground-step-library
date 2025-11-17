@@ -2,6 +2,8 @@
 
 Set the WordPress site language.
 
+**[View Source](../../steps/setLanguage.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

@@ -2,6 +2,8 @@
 
 Register a custom post type.
 
+**[View Source](../../steps/customPostType.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

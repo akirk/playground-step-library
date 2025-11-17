@@ -2,6 +2,8 @@
 
 Install phEditor. Password: admin
 
+**[View Source](../../steps/installPhEditor.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

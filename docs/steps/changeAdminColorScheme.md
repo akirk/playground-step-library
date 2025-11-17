@@ -2,6 +2,8 @@
 
 Useful to combine with a login step.
 
+**[View Source](../../steps/changeAdminColorScheme.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

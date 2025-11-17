@@ -2,6 +2,8 @@
 
 Change the default "Uncategorized".
 
+**[View Source](../../steps/renameDefaultCategory.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

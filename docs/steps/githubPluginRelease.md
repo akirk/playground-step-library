@@ -2,6 +2,8 @@
 
 Install a specific plugin release from a Github repository.
 
+**[View Source](../../steps/githubPluginRelease.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

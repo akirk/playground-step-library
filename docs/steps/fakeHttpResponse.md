@@ -2,6 +2,8 @@
 
 Fake a wp_remote_request() response.
 
+**[View Source](../../steps/fakeHttpResponse.ts)**
+
 ## Type
 ⚡ **Custom Step**
 

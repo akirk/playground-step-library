@@ -13,7 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "docs:generate": "node bin/generate-docs.js",
-    "prepare": "npm run build",
+    "prepare": "npm run build && npm run docs:generate",
     "dev": "tsc --watch & vite"
   },
   "devDependencies": {

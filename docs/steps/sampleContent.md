@@ -2,6 +2,8 @@
 
 Inserts sample pages to the site.
 
+**[View Source](../../steps/sampleContent.ts)**
+
 ## Type
 ⚡ **Custom Step**
 
