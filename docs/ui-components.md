@@ -321,6 +321,8 @@ Same as main Copy Dropdown:
 
 **Location:** Below "Launch in Playground" button → Three dots icon
 
+![Copy/Share Dropdown Menu](images/ui/copy-dropdown-menu.png)
+
 Provides multiple ways to export and share your blueprint.
 
 ### Menu Options

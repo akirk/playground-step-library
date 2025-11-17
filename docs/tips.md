@@ -163,14 +163,29 @@ The Step Library extracts `/wp-admin/post-new.php` and sets it as the landing pa
 
 ## URL Patterns
 
-### Sharing Your Blueprint
+### The URL IS Your Blueprint
 
-The URL automatically updates as you build your blueprint. Just **copy the URL** to share!
+**Important:** The entire blueprint state is encoded in the URL hash. This means:
+
+- ✅ **Bookmark any state** - Your browser bookmark saves the complete blueprint
+- ✅ **Refresh preserves everything** - Reload the page without losing work
+- ✅ **No server required** - Everything is client-side
+- ✅ **Share = Copy URL** - The URL contains everything needed
 
 **Pattern:**
 ```
 https://akirk.github.io/playground-step-library/#BASE64_ENCODED_BLUEPRINT
 ```
+
+**Pro Tips:**
+- Bookmark your work-in-progress blueprints
+- Browser history contains all your blueprint iterations
+- Close the tab and come back later - your work is in the URL
+- Use "Copy Link" to share exact state with others
+
+### Sharing Your Blueprint
+
+The URL automatically updates as you build your blueprint. Just **copy the URL** to share!
 
 ### Blueprint Settings in URL
 
