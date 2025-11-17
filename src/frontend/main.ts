@@ -1,7 +1,15 @@
 /**
- * This file is being incrementally typed. Currently using @ts-nocheck to allow compilation.
- * TODO: Remove @ts-nocheck and fix remaining ~940 type errors systematically.
- * New code should be fully typed. Legacy code should be typed as it's refactored.
+ * Main application entry point
+ *
+ * TODO: Continue refactoring to extract remaining functionality into modules:
+ * - history-manager.ts (history persistence and management)
+ * - blueprint-compiler.ts (blueprint transformation and compilation)
+ * - paste-handlers.ts (paste event handling and content detection)
+ * - drag-drop.ts (drag and drop functionality)
+ * - event-handlers.ts (global event listeners)
+ * - playground-integration.ts (playground URL parsing and decompilation)
+ * - wizard.ts (wizard interface)
+ * - custom-steps.ts (my steps management)
  */
 // @ts-nocheck
 import PlaygroundStepLibrary from '../index';
@@ -28,6 +36,17 @@ import {
 	blueprintAceEditor,
 	setBlueprintAceValue
 } from './ace-editor';
+import { fixMouseCursor, makeParentStepDraggable, makeParentStepUnDraggable } from './dom-utils';
+import {
+	detectUrlType,
+	detectWpAdminUrl,
+	detectHtml,
+	detectPhp,
+	isPlaygroundDomain,
+	detectPlaygroundUrl,
+	detectPlaygroundQueryApiUrl
+} from './url-detection';
+import { showCallbacks, isManualEditMode, setBlueprint, setLinkedTextarea } from './app-state';
 
 declare global {
 	interface Window {
@@ -47,11 +66,12 @@ addEventListener('DOMContentLoaded', function () {
 	window.stepCompiler = compiler;
 	const stepList = document.getElementById('step-library')!;
 	const blueprintSteps = document.getElementById('blueprint-steps')!;
-	let blueprint = '';
-	let linkedTextarea: HTMLTextAreaElement | null = null;
-	const showCallbacks: ShowCallbacks = {};
-	const isManualEditMode = { value: false };
 
+	// Note: showCallbacks and isManualEditMode are imported from app-state.ts
+	// URL detection functions are imported from url-detection.ts
+	// DOM utility functions (fixMouseCursor, etc.) are imported from dom-utils.ts
+
+	// Note: createStep stays in main.ts for now due to tight coupling with showCallbacks closure
 	function createStep(name: string, data: StepDefinition): HTMLDivElement {
 		const step = document.createElement('div');
 		step.dataset.step = data.step;
@@ -689,22 +709,7 @@ addEventListener('DOMContentLoaded', function () {
 			return false;
 		}
 	});
-	function makeParentStepDraggable(event: Event) {
-		if (event.target instanceof Element) {
-			const step = event.target.closest('.step');
-			if (step) step.setAttribute('draggable', 'true');
-		}
-	}
-	function makeParentStepUnDraggable(event: Event) {
-		if (event.target instanceof Element) {
-			const step = event.target.closest('.step');
-			if (step) step.setAttribute('draggable', 'false');
-		}
-	}
-	function fixMouseCursor(el: Element) {
-		el.addEventListener('mouseenter', makeParentStepUnDraggable);
-		el.addEventListener('mouseleave', makeParentStepDraggable);
-	}
+	// makeParentStepDraggable, makeParentStepUnDraggable, and fixMouseCursor are now imported from dom-utils.ts
 	document.addEventListener('click', (event) => {
 		let dialog;
 		if (event.target.closest('#blueprint-steps')) {
@@ -1031,31 +1036,7 @@ addEventListener('DOMContentLoaded', function () {
 		loadCombinedExamples();
 	});
 
-	function detectUrlType(url) {
-		if (!url || typeof url !== 'string') {
-			return null;
-		}
-
-		const trimmedUrl = url.trim();
-
-		if (/^https?:\/\/wordpress\.org\/plugins\/.+/.test(trimmedUrl)) {
-			return 'plugin';
-		}
-		if (/^https?:\/\/wordpress\.org\/themes\/.+/.test(trimmedUrl)) {
-			return 'theme';
-		}
-		if (/^https?:\/\/github\.com\/.+\/.+/.test(trimmedUrl)) {
-			return 'plugin';
-		}
-		if (/^https?:\/\/.+\.(zip|tar\.gz|tgz)(\?.*)?$/.test(trimmedUrl)) {
-			return 'plugin';
-		}
-		if (/^https?:\/\/.+/.test(trimmedUrl)) {
-			return 'plugin';
-		}
-
-		return null;
-	}
+	// detectUrlType is now imported from url-detection.ts
 
 	function addStepFromUrl(url) {
 		const urlType = detectUrlType(url);
@@ -1088,30 +1069,7 @@ addEventListener('DOMContentLoaded', function () {
 		return true;
 	}
 
-	function detectWpAdminUrl(url) {
-		if (!url || typeof url !== 'string') {
-			return null;
-		}
-
-		const trimmed = url.trim();
-
-		if ( trimmed.startsWith('/wp-admin/') || trimmed.startsWith('/wp-login.php') ) {
-			return trimmed;
-		}
-
-		try {
-			const urlObj = new URL(trimmed);
-			const path = urlObj.pathname + urlObj.search + urlObj.hash;
-
-			if ( path.includes('/wp-admin/') || path.includes('/wp-login.php') ) {
-				return path;
-			}
-		} catch (e) {
-			return null;
-		}
-
-		return null;
-	}
+	// detectWpAdminUrl is now imported from url-detection.ts
 
 	function addLandingPageStep(landingPath) {
 		const stepData = customSteps['setLandingPage'];
@@ -1138,69 +1096,8 @@ addEventListener('DOMContentLoaded', function () {
 		return true;
 	}
 
-	function detectHtml(text) {
-		if (!text || typeof text !== 'string') {
-			return false;
-		}
-
-		const trimmed = text.trim();
-
-		return /<[^>]+>/.test(trimmed) && trimmed.includes('</');
-	}
-
-	function detectPhp(text) {
-		if (!text || typeof text !== 'string') {
-			return false;
-		}
-
-		const trimmed = text.trim();
-
-		return trimmed.startsWith('<?php') || (trimmed.includes('<?php') && trimmed.includes('?>'));
-	}
-
-	function isPlaygroundDomain(hostname) {
-		return hostname === 'playground.wordpress.net' || hostname === '127.0.0.1';
-	}
-
-	function detectPlaygroundUrl(url) {
-		if (!url || typeof url !== 'string') {
-			return null;
-		}
-
-		const trimmed = url.trim();
-
-		try {
-			const urlObj = new URL(trimmed);
-			if (isPlaygroundDomain(urlObj.hostname) && urlObj.hash && urlObj.hash.length > 1) {
-				const hashContent = urlObj.hash.substring(1);
-				const blueprintJson = decodeURIComponent(hashContent);
-				return JSON.parse(blueprintJson);
-			}
-		} catch (e) {
-			return null;
-		}
-
-		return null;
-	}
-
-	function detectPlaygroundQueryApiUrl(url) {
-		if (!url || typeof url !== 'string') {
-			return false;
-		}
-
-		const trimmed = url.trim();
-
-		try {
-			const urlObj = new URL(trimmed);
-			if (isPlaygroundDomain(urlObj.hostname) && urlObj.search) {
-				return true;
-			}
-		} catch (e) {
-			return false;
-		}
-
-		return false;
-	}
+	// detectHtml, detectPhp, isPlaygroundDomain, detectPlaygroundUrl, and detectPlaygroundQueryApiUrl
+	// are now imported from url-detection.ts
 
 	function parsePlaygroundQueryApi(url) {
 		if (!url || typeof url !== 'string') {
