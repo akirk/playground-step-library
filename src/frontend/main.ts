@@ -123,6 +123,7 @@ import { HistoryController, type HistoryControllerDependencies } from './history
 import { StepLibraryController, type StepLibraryControllerDependencies } from './step-library-controller';
 import { BlueprintCompilationController, type BlueprintCompilationControllerDependencies } from './blueprint-compilation-controller';
 import { PasteHandlerController, type PasteHandlerControllerDependencies } from './paste-handler-controller';
+import { StateController, type StateControllerDependencies } from './state-controller';
 import {
 	initWizard,
 	getWizardState,
@@ -187,6 +188,13 @@ addEventListener('DOMContentLoaded', function () {
 	};
 	const stepLibraryController = new StepLibraryController(stepLibraryControllerDeps);
 	stepLibraryController.initializeStepLibrary();
+
+	// Initialize State Controller
+	const stateControllerDeps: StateControllerDependencies = {
+		blueprintSteps,
+		stepList
+	};
+	const stateController = new StateController(stateControllerDeps);
 
 	function saveMyStep() {
 		const myStepNameEl = document.getElementById('my-step-name');
@@ -700,7 +708,7 @@ addEventListener('DOMContentLoaded', function () {
 				return false;
 			}
 			if (event.target.classList.contains('share')) {
-				const data = location.href.replace(/#.*$/, '') + '#' + compressStateFromDOM([getStepData(event.target.closest('.step'))]);
+				const data = location.href.replace(/#.*$/, '') + '#' + stateController.compressStateFromDOM([getStepData(event.target.closest('.step'))]);
 				navigator.clipboard.writeText(data);
 				event.target.innerText = 'Copied!';
 				setTimeout(function () {
@@ -857,13 +865,13 @@ addEventListener('DOMContentLoaded', function () {
 
 	window.addEventListener('popstate', function (event) {
 		if (event.state) {
-			restoreState(event.state);
+			stateController.restoreState(event.state);
 		}
 	});
 
 	window.addEventListener('hashchange', function () {
 		if (location.hash) {
-			restoreState(uncompressState(location.hash.replace(/^#+/, '')));
+			stateController.restoreState(uncompressState(location.hash.replace(/^#+/, '')));
 		}
 	});
 
@@ -878,23 +886,6 @@ addEventListener('DOMContentLoaded', function () {
 
 	// compressState and uncompressState are now imported from blueprint-compiler.ts
 	// Wrapper function to gather DOM values and call the imported compressState
-	function compressStateFromDOM(steps) {
-		const titleEl = document.getElementById('title') as HTMLInputElement;
-		const autosaveEl = document.getElementById('autosave') as HTMLInputElement;
-		const playgroundEl = document.getElementById('playground') as HTMLInputElement;
-		const modeEl = document.getElementById('mode') as HTMLSelectElement;
-		const previewModeEl = document.getElementById('preview-mode') as HTMLInputElement;
-		const excludeMetaEl = document.getElementById('exclude-meta') as HTMLInputElement;
-
-		return compressState(steps, {
-			title: titleEl?.value || undefined,
-			autosave: autosaveEl?.value || undefined,
-			playground: playgroundEl?.value || undefined,
-			mode: modeEl?.value || undefined,
-			previewMode: previewModeEl?.value || undefined,
-			excludeMeta: excludeMetaEl?.checked || undefined
-		});
-	}
 	function updateVariableVisibility(stepBlock) {
 		stepBlock.querySelectorAll('input,select,textarea,button').forEach(function (input) {
 			if (!input || typeof showCallbacks[stepBlock.dataset.step] === 'undefined' || typeof showCallbacks[stepBlock.dataset.step][input.name] !== 'function') {
@@ -945,7 +936,7 @@ addEventListener('DOMContentLoaded', function () {
 
 		setBlueprint(JSON.stringify(combinedExamples, null, 2));
 
-		const currentCompressedState = compressStateFromDOM(state);
+		const currentCompressedState = stateController.compressStateFromDOM(state);
 
 		// Only update history and transform JSON if the state has changed
 		if (currentCompressedState !== lastCompressedState) {
@@ -996,174 +987,9 @@ addEventListener('DOMContentLoaded', function () {
 
 	// migrateState is now imported from state-migration.ts
 
-	function restoreState(state) {
-		if (!state) {
-			return;
-		}
-
-		// Apply migrations before restoring
-		state = migrateState(state);
-		if (state.title) {
-			document.getElementById('title').value = state.title;
-		}
-		if (state.autosave) {
-			document.getElementById('autosave').value = state.autosave;
-		}
-		if (state.playground) {
-			document.getElementById('playground').value = state.playground;
-		}
-		if (state.mode) {
-			document.getElementById('mode').value = state.mode;
-		}
-		if (state.previewMode) {
-			document.getElementById('preview-mode').value = state.previewMode;
-		}
-		if (state.excludeMeta !== undefined) {
-			document.getElementById('exclude-meta').checked = state.excludeMeta;
-		}
-		if (!(state.steps || []).length) {
-			return;
-		}
-		blueprintSteps.innerHTML = '';
-		(state.steps || []).forEach(function (step) {
-			if (typeof step.step === 'undefined') {
-				if (typeof step.title === 'string') {
-					document.getElementById('title').value = step.title;
-				}
-				return;
-			}
-			let possibleBlocks = stepList.querySelectorAll('[data-step="' + step.step + '"]');
-			if (!possibleBlocks.length) {
-				return;
-			}
-			if (possibleBlocks.length > 1) {
-				const keys = Object.keys(step.vars || {});
-				possibleBlocks = [...possibleBlocks].filter(function (block) {
-					for (const key of keys) {
-						const vars = Array.isArray(step.vars[key]) ? step.vars[key] : [step.vars[key]];
-						const inputs = block.querySelectorAll('[name="' + key + '"]');
-						if (inputs.length !== vars.length) {
-							return false;
-						}
-						for (let i = 0; i < inputs.length; i++) {
-							const input = inputs[i];
-							const value = vars[i];
-							if ('checkbox' === input.type) {
-								if (input.checked !== (value === 'true' || value === true)) {
-									return false;
-								}
-							} else if (input.value !== value) {
-								return false;
-							}
-						}
-					}
-					return true;
-				});
-				if (0 === possibleBlocks.length) {
-					possibleBlocks = [...stepList.querySelectorAll('[data-step="' + step.step + '"]')].filter(function (block) {
-						if (block.classList.contains('mine')) {
-							return false;
-						}
-						return true;
-					});
-				}
-			}
-			const block = possibleBlocks[0];
-			const stepBlock = block.cloneNode(true);
-			stepBlock.classList.remove('dragging');
-			blueprintSteps.appendChild(stepBlock);
-			stepBlock.querySelectorAll('input,textarea').forEach(fixMouseCursor);
-			if (step.count) {
-				stepBlock.querySelector('[name="count"]').value = step.count;
-			}
-			Object.keys(step.vars || {}).forEach(function (key) {
-				if (key === 'step') {
-					return;
-				}
-				const input = stepBlock.querySelector('[name="' + key + '"]');
-				if (!input) {
-					console.warn('Step "' + step.step + '" is missing variable "' + key + '" - step definition may have changed');
-					return;
-				}
-				if (Array.isArray(step.vars[key])) {
-					step.vars[key].forEach(function (value, index) {
-						if (!value) {
-							return;
-						}
-						const inputs = stepBlock.querySelectorAll('[name="' + key + '"]');
-						if (typeof inputs[index] === 'undefined') {
-							const vars = stepBlock.querySelector('.vars');
-							const clone = vars.cloneNode(true);
-							vars.parentNode.appendChild(clone);
-						}
-						const input = stepBlock.querySelectorAll('[name="' + key + '"]')[index];
-						if (!input) {
-							console.warn('Step "' + step.step + '" is missing variable "' + key + '" at index ' + index + ' - step definition may have changed');
-							return;
-						}
-						if ('checkbox' === input.type) {
-							input.checked = value === 'true' || value === true;
-						} else {
-							input.value = value;
-						}
-					});
-					return;
-				}
-
-				if ('checkbox' === input.type) {
-					input.checked = step.vars[key] === 'true' || step.vars[key] === true;
-				} else {
-					input.value = step.vars[key];
-				}
-			});
-		});
-		blueprintEventBus.emit('blueprint:updated');
-	}
 
 	// parseQueryParamsForBlueprint is now imported from query-params.ts
 
-	function autoredirect(delay = 5) {
-		document.getElementById('autoredirecting').showModal();
-		document.getElementById('autoredirect-title').textContent = document.getElementById('title').value;
-		let seconds = delay;
-		document.getElementById('autoredirecting-seconds').innerText = seconds + ' second' + (seconds === 1 ? '' : 's');
-		const interval = setInterval(function () {
-			seconds--;
-			document.getElementById('autoredirecting-seconds').innerText = seconds + ' second' + (seconds === 1 ? '' : 's');
-			if (0 === seconds) {
-				clearInterval(interval);
-				document.getElementById('autoredirecting').close();
-				// ensure that the backbutton works to come back here:
-				history.replaceState(null, '', '#' + location.hash.replace(/^#+/, ''));
-				location.href = document.getElementById('playground-link').href;
-			}
-		}, 1000);
-		let button = document.querySelector('#autoredirect-cancel');
-		button.addEventListener('click', function () {
-			clearInterval(interval);
-			document.getElementById('autoredirecting').close();
-		});
-		button.focus();
-		button = document.querySelector('#redirect-now');
-		button.addEventListener('click', function () {
-			clearInterval(interval);
-			history.replaceState(null, '', '#' + location.hash.replace(/^#+/, ''));
-			location.href = document.getElementById('playground-link').href;
-		});
-		document.getElementById('autoredirecting').addEventListener('click', function (event) {
-			if (event.target === this) {
-				clearInterval(interval);
-				document.getElementById('autoredirecting').close();
-			}
-		});
-		const handleEscape = function (event) {
-			if (event.key === 'Escape' && document.getElementById('autoredirecting').open) {
-				clearInterval(interval);
-				document.removeEventListener('keydown', handleEscape);
-			}
-		};
-		document.addEventListener('keydown', handleEscape);
-	}
 
 	// Detect if page was accessed via reload (F5, Ctrl+R, etc.)
 	// Use modern Performance Navigation API
@@ -1180,18 +1006,18 @@ addEventListener('DOMContentLoaded', function () {
 
 	const queryParamBlueprint = parseQueryParamsForBlueprint();
 	if (queryParamBlueprint) {
-		restoreState({ steps: queryParamBlueprint.steps });
+		stateController.restoreState({ steps: queryParamBlueprint.steps });
 		// Clear step[] and url[] parameters from URL to prevent conflicts with hash state
 		const newUrl = new URL(window.location);
 		newUrl.search = '';
 		history.replaceState(null, '', newUrl.pathname + newUrl.hash);
 		if (queryParamBlueprint.redir && !document.getElementById('preview-mode').value && !pageAccessedByReload) {
-			autoredirect(queryParamBlueprint.redir);
+			stateController.autoredirect(queryParamBlueprint.redir);
 		}
 	} else if (location.hash) {
-		restoreState(uncompressState(location.hash.replace(/^#+/, '')));
+		stateController.restoreState(uncompressState(location.hash.replace(/^#+/, '')));
 		if (!document.getElementById('preview-mode').value && blueprintSteps.querySelectorAll('.step').length && !pageAccessedByReload) {
-			autoredirect();
+			stateController.autoredirect();
 		}
 	} else {
 		blueprintEventBus.emit('blueprint:updated');
@@ -1301,7 +1127,7 @@ addEventListener('DOMContentLoaded', function () {
 			return;
 		}
 		document.getElementById('title').value = this.value;
-		restoreState({ steps: examples[this.value] });
+		stateController.restoreState({ steps: examples[this.value] });
 		blueprintEventBus.emit('blueprint:updated');
 	});
 	stepLibraryController.clearFilter();
