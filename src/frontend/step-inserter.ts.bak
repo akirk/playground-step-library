@@ -56,7 +56,7 @@ export function addStepFromUrl(
 		urlInput.value = url;
 	}
 
-	blueprintEventBus.emit('blueprint:updated');
+	deps.loadCombinedExamples();
 	return true;
 }
 
@@ -84,7 +84,7 @@ export function addLandingPageStep(
 		landingPageInput.value = landingPath;
 	}
 
-	blueprintEventBus.emit('blueprint:updated');
+	deps.loadCombinedExamples();
 	return true;
 }
 
@@ -122,7 +122,7 @@ export function addPostStepFromHtml(
 		typeInput.value = 'page';
 	}
 
-	blueprintEventBus.emit('blueprint:updated');
+	deps.loadCombinedExamples();
 	return true;
 }
 
@@ -159,6 +159,6 @@ export function addStepFromPhp(
 		}
 	}
 
-	blueprintEventBus.emit('blueprint:updated');
+	deps.loadCombinedExamples();
 	return true;
 }

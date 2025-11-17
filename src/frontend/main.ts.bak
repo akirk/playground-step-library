@@ -249,7 +249,7 @@ addEventListener('DOMContentLoaded', function () {
 
 		if (event.target.classList.contains('step')) {
 			event.target.classList.remove('dragging');
-			blueprintEventBus.emit('blueprint:updated');
+			loadCombinedExamples();
 		}
 	});
 
@@ -406,7 +406,7 @@ addEventListener('DOMContentLoaded', function () {
 		stepClone.classList.remove('dragging');
 		stepClone.classList.remove('hidden');
 		stepClone.querySelectorAll('input,textarea').forEach(fixMouseCursor);
-		blueprintEventBus.emit('blueprint:updated');
+		loadCombinedExamples();
 		stepClone.querySelector('input,textarea')?.focus();
 
 		if (window.goatcounter && stepElement.dataset.step) {
@@ -450,7 +450,7 @@ addEventListener('DOMContentLoaded', function () {
 				return false;
 			}
 			if (event.target.closest('input') && !event.target.closest('.ace_search_form')) {
-				blueprintEventBus.emit('blueprint:updated');
+				loadCombinedExamples();
 				const playgroundLink = document.getElementById('playground-link');
 				if (playgroundLink instanceof HTMLElement) playgroundLink.click();
 				return false;
@@ -514,11 +514,11 @@ addEventListener('DOMContentLoaded', function () {
 			}
 		}
 
-		blueprintEventBus.emit('blueprint:updated');
+		loadCombinedExamples();
 	});
 	document.addEventListener('change', (event) => {
 		if ( event.target.id === 'mode' || event.target.id === 'preview-mode' || event.target.id === 'exclude-meta' ) {
-			blueprintEventBus.emit('blueprint:updated');
+			loadCombinedExamples();
 			return;
 		}
 		if ( event.target.name === 'blueprint-version' ) {
@@ -529,7 +529,7 @@ addEventListener('DOMContentLoaded', function () {
 			return;
 		}
 		if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'TEXTAREA') {
-			blueprintEventBus.emit('blueprint:updated');
+			loadCombinedExamples();
 			return;
 		}
 	});
@@ -595,7 +595,7 @@ addEventListener('DOMContentLoaded', function () {
 
 						aceEditor.getSession().on('change', () => {
 							linkedTextarea.value = aceEditor.getValue();
-							blueprintEventBus.emit('blueprint:updated');
+							loadCombinedExamples();
 						});
 
 						const codeEditorStatus = document.getElementById('code-editor-status');
@@ -674,7 +674,7 @@ addEventListener('DOMContentLoaded', function () {
 				return;
 			}
 			if (event.target.tagName === 'SELECT') {
-				blueprintEventBus.emit('blueprint:updated');
+				loadCombinedExamples();
 				return;
 			}
 
@@ -687,13 +687,13 @@ addEventListener('DOMContentLoaded', function () {
 		if (event.target.tagName === 'LABEL') {
 			const input = event.target.querySelector('input, select');
 			if (input.type === 'checkbox') {
-				blueprintEventBus.emit('blueprint:updated');
+				loadCombinedExamples();
 			}
 			return;
 		}
 		if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'OPTION') {
 			if (event.target.type === 'checkbox' || event.target.parentNode.id === 'playground') {
-				blueprintEventBus.emit('blueprint:updated');
+				loadCombinedExamples();
 			}
 			return;
 		}
@@ -705,7 +705,7 @@ addEventListener('DOMContentLoaded', function () {
 				if (name && confirm('Are you sure you want to delete the step ' + name + '?')) {
 					stepElement.remove();
 					deleteMyStep(name);
-					blueprintEventBus.emit('blueprint:updated');
+					loadCombinedExamples();
 				}
 				return false;
 			}
@@ -719,7 +719,7 @@ addEventListener('DOMContentLoaded', function () {
 						const stepNameEl = stepEl.querySelector('.stepname');
 						if (stepNameEl) stepNameEl.textContent = newName;
 					}
-					blueprintEventBus.emit('blueprint:updated');
+					loadCombinedExamples();
 				}
 				return false;
 			}
@@ -740,13 +740,13 @@ addEventListener('DOMContentLoaded', function () {
 		}
 		if (event.target.classList.contains('remove')) {
 			event.target.closest('.step').remove();
-			blueprintEventBus.emit('blueprint:updated');
+			loadCombinedExamples();
 			event.preventDefault();
 			return false;
 		}
 		if (event.target.classList.contains('sample')) {
 			event.target.closest('td').querySelector('input,textarea').value = event.target.innerText === '<empty>' ? '' : event.target.innerText;
-			blueprintEventBus.emit('blueprint:updated');
+			loadCombinedExamples();
 			return;
 		}
 		dialog = document.getElementById('view-source');
@@ -856,7 +856,7 @@ addEventListener('DOMContentLoaded', function () {
 		} else {
 			blueprintSteps.insertBefore(draggable, afterElement);
 		}
-		blueprintEventBus.emit('blueprint:updated');
+		loadCombinedExamples();
 	});
 
 	// Remove block when dragged out
@@ -871,7 +871,7 @@ addEventListener('DOMContentLoaded', function () {
 				removedBlock.remove();
 			}
 		}
-		blueprintEventBus.emit('blueprint:updated');
+		loadCombinedExamples();
 	});
 
 	// detectUrlType, detectWpAdminUrl are now imported from url-detection.ts
@@ -1037,7 +1037,7 @@ addEventListener('DOMContentLoaded', function () {
 		draghint.textContent = 'Click or drag the steps to add them here.';
 		blueprintSteps.appendChild(draghint);
 		document.getElementById('examples').value = 'Examples';
-		blueprintEventBus.emit('blueprint:updated');
+		loadCombinedExamples();
 	});
 
 	function downloadBlueprint() {
@@ -1131,7 +1131,7 @@ addEventListener('DOMContentLoaded', function () {
 	// Handle title input changes
 	document.addEventListener('input', function (e) {
 		if ( e.target.id === 'title' ) {
-			blueprintEventBus.emit('blueprint:updated');
+			loadCombinedExamples();
 		}
 	});
 
@@ -1223,7 +1223,8 @@ addEventListener('DOMContentLoaded', function () {
 	const stepInserterDeps: StepInserterDependencies = {
 		blueprintSteps,
 		customSteps,
-		showCallbacks
+		showCallbacks,
+		loadCombinedExamples
 	};
 
 	// Dependencies for blueprint UI functions
@@ -1491,7 +1492,7 @@ addEventListener('DOMContentLoaded', function () {
 				}
 			});
 		});
-		blueprintEventBus.emit('blueprint:updated');
+		loadCombinedExamples();
 	}
 
 	// parseQueryParamsForBlueprint is now imported from query-params.ts
@@ -1568,7 +1569,7 @@ addEventListener('DOMContentLoaded', function () {
 			autoredirect();
 		}
 	} else {
-		blueprintEventBus.emit('blueprint:updated');
+		loadCombinedExamples();
 	}
 	const examples = {
 		'Interactivity API Todo list MVC': [
@@ -1676,7 +1677,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 		document.getElementById('title').value = this.value;
 		restoreState({ steps: examples[this.value] });
-		blueprintEventBus.emit('blueprint:updated');
+		loadCombinedExamples();
 	});
 	document.getElementById('filter').value = '';
 
@@ -1687,7 +1688,8 @@ addEventListener('DOMContentLoaded', function () {
 		setBlueprintValue,
 		createStep,
 		showCallbacks,
-		blueprintSteps
+		blueprintSteps,
+		loadCombinedExamples
 	};
 
 	initWizard(wizardDeps);
@@ -2880,7 +2882,7 @@ addEventListener('DOMContentLoaded', function () {
 			}
 		}
 
-		blueprintEventBus.emit('blueprint:updated');
+		loadCombinedExamples();
 	}
 
 	// Initialize empty blueprint if no steps are present

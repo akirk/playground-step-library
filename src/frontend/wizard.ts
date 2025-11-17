@@ -8,6 +8,7 @@
 import { StepDefinition, WizardState } from './types';
 import { showCallbacks } from './app-state';
 import { createStep } from './step-renderer';
+import { blueprintEventBus } from './blueprint-event-bus';
 
 export interface WizardDependencies {
 	customSteps: Record<string, StepDefinition>;
@@ -15,7 +16,6 @@ export interface WizardDependencies {
 	createStep?: (name: string, data: StepDefinition, showCallbacks: any) => HTMLElement;
 	showCallbacks?: any;
 	blueprintSteps?: HTMLElement;
-	loadCombinedExamples?: () => void;
 }
 
 let wizardDeps: WizardDependencies | null = null;
@@ -822,9 +822,8 @@ function applyWizardToMainInterface(): void {
 
 	wizardDeps.setBlueprintValue(JSON.stringify(finalBlueprint, null, '\t'));
 
-	if (wizardDeps.loadCombinedExamples) {
-		wizardDeps.loadCombinedExamples();
-	}
+	// Emit blueprint:updated event instead of calling loadCombinedExamples directly
+	blueprintEventBus.emit('blueprint:updated');
 }
 
 export function finishWizard(): void {
