@@ -73,14 +73,15 @@ export const helloWorldLogger: StepFunction<HelloWorldLoggerStep> = (step: Hello
 };
 
 helloWorldLogger.description = "Log text to the PHP error log";
-helloWorldLogger.vars = Object.entries({
-	text: { // And then we added these fields to describe it.
+helloWorldLogger.vars = [
+	{ // And then we added these fields to describe it.
+		name: "text",
 		description: "Text to be logged",
 		type: "text",
 		required: true,
 		samples: ["Hello World", "Oh no!!"]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];
 ```
 
 **Type definition (automatically added to `steps/types.ts`):**

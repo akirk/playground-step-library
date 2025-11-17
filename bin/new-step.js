@@ -48,15 +48,16 @@ export const ${stepName}: StepFunction<${pascalCaseStepName}Step> = (step: ${pas
 };
 
 ${stepName}.description = "Provide useful additional info.";
-${stepName}.vars = Object.entries({
+${stepName}.vars = [
 	// Your variables here. Example:
-	// variableName: {
+	// {
+	// 	name: "variableName",
 	// 	description: "Variable description",
 	// 	type: "text",
 	// 	required: true,
 	// 	samples: ["sample1", "sample2"]
 	// }
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];
 `;
 
 // Writing the TypeScript content to a new file
