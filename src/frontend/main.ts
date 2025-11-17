@@ -16,7 +16,9 @@
  * - custom-steps.ts - My Steps management
  * - state-migration.ts - Backward compatibility migrations
  * - query-params.ts - URL query parameter parsing
- * - step-renderer.ts - Step DOM element creation
+ * - step-renderer.ts - Step DOM element creation with DI
+ * - step-inserter.ts - Step insertion functions with DI
+ * - wizard.ts - Wizard UI rendering and state (partial extraction)
  *
  * 🔄 REMAINING OPPORTUNITIES (tightly coupled with DOM/UI):
  * - Wizard interface (~655 lines, lines 2162-2817)
@@ -94,6 +96,22 @@ import { getMySteps, saveMyStep as saveMyStepToStorage, deleteMyStep, renameMySt
 import { migrateState } from './state-migration';
 import { parseQueryParamsForBlueprint } from './query-params';
 import { createStep } from './step-renderer';
+import {
+	addStepFromUrl,
+	addLandingPageStep,
+	addPostStepFromHtml,
+	addStepFromPhp,
+	type StepInserterDependencies
+} from './step-inserter';
+import {
+	initWizard,
+	getWizardState,
+	removeWizardPlugin,
+	removeWizardTheme,
+	updateWizardPluginList,
+	updateWizardThemeList,
+	type WizardDependencies
+} from './wizard';
 
 declare global {
 	interface Window {
@@ -838,65 +856,8 @@ addEventListener('DOMContentLoaded', function () {
 		loadCombinedExamples();
 	});
 
-	// detectUrlType is now imported from url-detection.ts
-
-	function addStepFromUrl(url) {
-		const urlType = detectUrlType(url);
-		if (!urlType) {
-			return false;
-		}
-
-		const stepType = urlType === 'theme' ? 'installTheme' : 'installPlugin';
-		const stepData = customSteps[stepType];
-
-		if (!stepData) {
-			return false;
-		}
-
-		const draghint = blueprintSteps.querySelector('#draghint');
-		if (draghint) {
-			draghint.remove();
-		}
-
-		const stepElement = createStep(stepType, stepData, showCallbacks);
-		blueprintSteps.appendChild(stepElement);
-		stepElement.querySelectorAll('input,textarea').forEach(fixMouseCursor);
-
-		const urlInput = stepElement.querySelector('input[name="url"]');
-		if (urlInput) {
-			urlInput.value = url;
-		}
-
-		loadCombinedExamples();
-		return true;
-	}
-
-	// detectWpAdminUrl is now imported from url-detection.ts
-
-	function addLandingPageStep(landingPath) {
-		const stepData = customSteps['setLandingPage'];
-
-		if (!stepData) {
-			return false;
-		}
-
-		const draghint = blueprintSteps.querySelector('#draghint');
-		if (draghint) {
-			draghint.remove();
-		}
-
-		const stepElement = createStep('setLandingPage', stepData, showCallbacks);
-		blueprintSteps.appendChild(stepElement);
-		stepElement.querySelectorAll('input,textarea').forEach(fixMouseCursor);
-
-		const landingPageInput = stepElement.querySelector('input[name="landingPage"]');
-		if (landingPageInput) {
-			landingPageInput.value = landingPath;
-		}
-
-		loadCombinedExamples();
-		return true;
-	}
+	// detectUrlType, detectWpAdminUrl are now imported from url-detection.ts
+	// Step insertion functions are now imported from step-inserter.ts
 
 	// detectHtml, detectPhp, isPlaygroundDomain, detectPlaygroundUrl, and detectPlaygroundQueryApiUrl
 	// are now imported from url-detection.ts
@@ -950,75 +911,7 @@ addEventListener('DOMContentLoaded', function () {
 	}
 
 	// shouldUseMuPlugin is now imported from playground-integration.ts
-
-	function addPostStepFromHtml(html) {
-		const stepData = customSteps['addPost'];
-
-		if (!stepData) {
-			return false;
-		}
-
-		const draghint = blueprintSteps.querySelector('#draghint');
-		if (draghint) {
-			draghint.remove();
-		}
-
-		const stepElement = createStep('addPost', stepData, showCallbacks);
-		blueprintSteps.appendChild(stepElement);
-		stepElement.querySelectorAll('input,textarea').forEach(fixMouseCursor);
-
-		const contentInput = stepElement.querySelector('textarea[name="content"]');
-		if (contentInput) {
-			contentInput.value = html;
-		}
-
-		const titleInput = stepElement.querySelector('input[name="title"]');
-		if (titleInput && !titleInput.value) {
-			titleInput.value = 'Pasted Content';
-		}
-
-		const typeInput = stepElement.querySelector('input[name="type"]');
-		if (typeInput && !typeInput.value) {
-			typeInput.value = 'page';
-		}
-
-		loadCombinedExamples();
-		return true;
-	}
-
-	function addStepFromPhp(phpCode) {
-		const useMuPlugin = shouldUseMuPlugin(phpCode);
-		const stepType = useMuPlugin ? 'muPlugin' : 'runPHP';
-		const stepData = customSteps[stepType];
-
-		if (!stepData) {
-			return false;
-		}
-
-		const draghint = blueprintSteps.querySelector('#draghint');
-		if (draghint) {
-			draghint.remove();
-		}
-
-		const stepElement = createStep(stepType, stepData, showCallbacks);
-		blueprintSteps.appendChild(stepElement);
-		stepElement.querySelectorAll('input,textarea').forEach(fixMouseCursor);
-
-		const codeInput = stepElement.querySelector('textarea[name="code"]');
-		if (codeInput) {
-			codeInput.value = phpCode;
-		}
-
-		if (useMuPlugin) {
-			const nameInput = stepElement.querySelector('input[name="name"]');
-			if (nameInput && !nameInput.value) {
-				nameInput.value = 'pasted-plugin';
-			}
-		}
-
-		loadCombinedExamples();
-		return true;
-	}
+	// addPostStepFromHtml and addStepFromPhp are now imported from step-inserter.ts
 
 	window.addEventListener('paste', async (event) => {
 		const pastedText = event.clipboardData.getData('text');
@@ -1091,21 +984,21 @@ addEventListener('DOMContentLoaded', function () {
 				}
 			}
 		} else if (hasPhp && !hasUrl && !hasWpAdminUrl) {
-			if (addStepFromPhp(pastedText)) {
+			if (addStepFromPhp(pastedText, stepInserterDeps)) {
 				addedAny = true;
 			}
 		} else if (hasHtml && !hasUrl && !hasWpAdminUrl) {
-			if (addPostStepFromHtml(pastedText)) {
+			if (addPostStepFromHtml(pastedText, stepInserterDeps)) {
 				addedAny = true;
 			}
 		} else {
 			for (const url of urls) {
 				const wpAdminPath = detectWpAdminUrl(url);
 				if (wpAdminPath) {
-					if (addLandingPageStep(wpAdminPath)) {
+					if (addLandingPageStep(wpAdminPath, stepInserterDeps)) {
 						addedAny = true;
 					}
-				} else if (addStepFromUrl(url)) {
+				} else if (addStepFromUrl(url, stepInserterDeps)) {
 					addedAny = true;
 				}
 			}
@@ -1302,6 +1195,14 @@ addEventListener('DOMContentLoaded', function () {
 			transformJson();
 		}
 	}
+
+	// Dependencies for step inserter functions
+	const stepInserterDeps: StepInserterDependencies = {
+		blueprintSteps,
+		customSteps,
+		showCallbacks,
+		loadCombinedExamples
+	};
 
 	function transformJson() {
 		const queries = [];
@@ -1832,176 +1733,15 @@ addEventListener('DOMContentLoaded', function () {
 	document.getElementById('filter').value = '';
 
 	// Wizard Mode Implementation
-	const wizardState = {
-		currentStep: 1,
-		totalSteps: 4,
-		selectedSteps: [],
-		selectedPlugins: [],
-		selectedThemes: [],
-		projectTitle: '',
-		projectDescription: '',
-		stepConfigurations: {}
+	// Core wizard functions (initWizard, updateWizardPluginList, etc.) are now imported from wizard.ts
+
+	// Initialize wizard with dependencies
+	const wizardDeps: WizardDependencies = {
+		customSteps,
+		setBlueprintValue
 	};
 
-	const stepCategories = {
-		plugin: ['installPlugin'],
-		theme: ['installTheme'],
-		content: ['uploadFile', 'writeFile', 'cp', 'mkdir', 'importWxr', 'unzipFile'],
-		config: ['defineWpConfigConsts', 'createUser', 'enableMultisite', 'setLandingPage', 'setSiteOptions'],
-		advanced: ['runPHP', 'runSQL', 'runShell', 'addFilter', 'importFriendFeeds']
-	};
-
-	// Step 2 categories (separate from step 1)
-	const step2SelectedSteps = [];
-
-	function initWizard() {
-		populateWizardSteps();
-		updateWizardProgress();
-		setupWizardEventListeners();
-	}
-
-	function populateWizardSteps() {
-		// Step 1 now uses URL inputs, so we only populate Step 2
-		// Populate Step 2: Content, Config, Advanced
-		['content', 'config', 'advanced'].forEach(category => {
-			const container = document.getElementById(`wizard-${category}-steps`);
-			if (!container) return;
-
-			stepCategories[category].forEach(stepName => {
-				if (customSteps[stepName]) {
-					const card = createWizardStepCard(stepName, customSteps[stepName], 2);
-					container.appendChild(card);
-				}
-			});
-		});
-
-		// Initialize plugin and theme lists
-		updateWizardPluginList();
-		updateWizardThemeList();
-	}
-
-	function createWizardStepCard(stepName, stepData, wizardStep) {
-		const card = document.createElement('div');
-		card.className = 'wizard-step-card';
-		card.dataset.step = stepName;
-		card.dataset.wizardStep = wizardStep;
-
-		const title = document.createElement('h4');
-		title.textContent = stepData.name || stepName;
-		card.appendChild(title);
-
-		if (stepData.description) {
-			const description = document.createElement('p');
-			description.textContent = stepData.description;
-			card.appendChild(description);
-		}
-
-		card.addEventListener('click', () => toggleWizardStep(stepName, card, wizardStep));
-
-		return card;
-	}
-
-	function toggleWizardStep(stepName, card, wizardStep) {
-		if (wizardStep === 1) {
-			const isSelected = wizardState.selectedSteps.includes(stepName);
-			if (isSelected) {
-				wizardState.selectedSteps = wizardState.selectedSteps.filter(s => s !== stepName);
-				card.classList.remove('selected');
-				delete wizardState.stepConfigurations[stepName];
-			} else {
-				wizardState.selectedSteps.push(stepName);
-				card.classList.add('selected');
-			}
-			updateWizardSelectedList();
-		} else if (wizardStep === 2) {
-			const isSelected = step2SelectedSteps.includes(stepName);
-			if (isSelected) {
-				step2SelectedSteps.splice(step2SelectedSteps.indexOf(stepName), 1);
-				card.classList.remove('selected');
-				delete wizardState.stepConfigurations[stepName];
-			} else {
-				step2SelectedSteps.push(stepName);
-				card.classList.add('selected');
-			}
-			updateWizardSelectedList2();
-		}
-	}
-
-	function updateWizardPluginList() {
-		const container = document.getElementById('wizard-selected-plugins');
-		container.innerHTML = '';
-
-		if (wizardState.selectedPlugins.length === 0) {
-			container.innerHTML = '<div class="empty-state">No plugins added yet</div>';
-			return;
-		}
-
-		wizardState.selectedPlugins.forEach((pluginUrl, index) => {
-			const item = document.createElement('div');
-			item.className = 'wizard-url-item';
-
-			item.innerHTML = `
-				<span class="url-text">${pluginUrl}</span>
-				<span class="remove" onclick="removeWizardPlugin(${index})">×</span>
-			`;
-
-			container.appendChild(item);
-		});
-	}
-
-	function updateWizardThemeList() {
-		const container = document.getElementById('wizard-selected-themes');
-		container.innerHTML = '';
-
-		if (wizardState.selectedThemes.length === 0) {
-			container.innerHTML = '<div class="empty-state">No themes added yet</div>';
-			return;
-		}
-
-		wizardState.selectedThemes.forEach((themeUrl, index) => {
-			const item = document.createElement('div');
-			item.className = 'wizard-url-item';
-
-			item.innerHTML = `
-				<span class="url-text">${themeUrl}</span>
-				<span class="remove" onclick="removeWizardTheme(${index})">×</span>
-			`;
-
-			container.appendChild(item);
-		});
-	}
-
-	function addWizardPlugin() {
-		const input = document.getElementById('plugin-url-input');
-		const url = input.value.trim();
-
-		if (url && !wizardState.selectedPlugins.includes(url)) {
-			wizardState.selectedPlugins.push(url);
-			input.value = '';
-			updateWizardPluginList();
-		}
-	}
-
-	function addWizardTheme() {
-		const input = document.getElementById('theme-url-input');
-		const url = input.value.trim();
-
-		if (url && !wizardState.selectedThemes.includes(url)) {
-			wizardState.selectedThemes.push(url);
-			input.value = '';
-			updateWizardThemeList();
-		}
-	}
-
-	function removeWizardPlugin(index) {
-		wizardState.selectedPlugins.splice(index, 1);
-		updateWizardPluginList();
-	}
-
-	function removeWizardTheme(index) {
-		wizardState.selectedThemes.splice(index, 1);
-		updateWizardThemeList();
-	}
+	initWizard(wizardDeps);
 
 	function updateWizardSelectedList2() {
 		const container = document.getElementById('wizard-selected-list-2');
@@ -2486,8 +2226,8 @@ addEventListener('DOMContentLoaded', function () {
 
 	// Make wizard functions globally accessible
 	window.removeWizardStep = removeWizardStep;
-	window.removeWizardPlugin = removeWizardPlugin;
-	window.removeWizardTheme = removeWizardTheme;
+	window.removeWizardPlugin = removeWizardPlugin;  // Imported from wizard.ts
+	window.removeWizardTheme = removeWizardTheme;    // Imported from wizard.ts
 
 	// Manual Edit Mode functionality
 	const blueprintTextarea = document.getElementById('blueprint-compiled');
