@@ -1,15 +1,43 @@
 /**
  * Main application entry point
  *
- * TODO: Continue refactoring to extract remaining functionality into modules:
- * - history-manager.ts (history persistence and management)
- * - blueprint-compiler.ts (blueprint transformation and compilation)
- * - paste-handlers.ts (paste event handling and content detection)
- * - drag-drop.ts (drag and drop functionality)
- * - event-handlers.ts (global event listeners)
- * - playground-integration.ts (playground URL parsing and decompilation)
- * - wizard.ts (wizard interface)
- * - custom-steps.ts (my steps management)
+ * REFACTORING STATUS:
+ * ✅ COMPLETED EXTRACTIONS:
+ * - types.ts - TypeScript interfaces
+ * - utils.ts - Utility functions
+ * - app-state.ts - Shared application state
+ * - url-detection.ts - URL and content type detection
+ * - dom-utils.ts - DOM manipulation utilities
+ * - ace-editor.ts - Ace Editor management
+ * - my-blueprints.ts - Blueprint history/saved blueprints
+ * - playground-integration.ts - Playground URL parsing
+ * - blueprint-compiler.ts - State compression/decompression
+ * - drag-drop.ts - Drag and drop utilities
+ * - custom-steps.ts - My Steps management
+ * - state-migration.ts - Backward compatibility migrations
+ * - query-params.ts - URL query parameter parsing
+ *
+ * 🔄 REMAINING OPPORTUNITIES (tightly coupled with DOM/UI):
+ * - Wizard interface (~655 lines, lines 2162-2817)
+ *   Reason: Heavy DOM coupling, window global exports, complex state management
+ * - Blueprint transformation (transformJson function ~130 lines)
+ *   Reason: Direct DOM element access throughout
+ * - Event handlers (paste, click, drag events)
+ *   Reason: Event delegation pattern requires access to multiple DOM trees
+ * - Step capture/restore functions
+ *   Reason: Coupled with DOM element traversal and UI state
+ * - History UI rendering
+ *   Reason: Heavy DOM manipulation and event binding
+ * - Label generation
+ *   Reason: DOM traversal and element inspection
+ *
+ * REFACTORING STRATEGY:
+ * The remaining ~4,200 lines are primarily event handlers and DOM-coupled UI logic.
+ * Further extraction would require:
+ * 1. Dependency injection for DOM elements
+ * 2. Event bus/pub-sub pattern for decoupling
+ * 3. View/ViewModel separation
+ * This would be a larger architectural change beyond simple module extraction.
  */
 // @ts-nocheck
 import PlaygroundStepLibrary from '../index';
@@ -62,6 +90,8 @@ import { parsePlaygroundQueryApi, shouldUseMuPlugin } from './playground-integra
 import { compressState, uncompressState, extractStepDataFromElement, type StepConfig } from './blueprint-compiler';
 import { getDragAfterElement } from './drag-drop';
 import { getMySteps, saveMyStep as saveMyStepToStorage, deleteMyStep, renameMyStep } from './custom-steps';
+import { migrateState } from './state-migration';
+import { parseQueryParamsForBlueprint } from './query-params';
 
 declare global {
 	interface Window {
@@ -1731,68 +1761,7 @@ addEventListener('DOMContentLoaded', function () {
 		}, 50);
 	}
 
-	function migrateState(state) {
-		if (!state || !state.steps) {
-			return state;
-		}
-
-		// Migration rules for variable name changes
-		const variableMigrations = {
-			'addPage': {
-				'postTitle': 'title',
-				'postContent': 'content'
-			},
-			'addPost': {
-				'postTitle': 'title',
-				'postContent': 'content',
-				'postDate': 'date',
-				'postType': 'type',
-				'postStatus': 'status'
-			},
-			'addProduct': {
-				'productTitle': 'title',
-				'productDescription': 'description',
-				'productPrice': 'price',
-				'productSalePrice': 'salePrice',
-				'productSku': 'sku',
-				'productStatus': 'status'
-			}
-			// Add more step migrations here as needed
-			// 'stepName': {
-			//     'oldVarName': 'newVarName'
-			// }
-		};
-
-		// Apply migrations to each step
-		state.steps = state.steps.map(function (step) {
-			if (!step.vars || !variableMigrations[step.step]) {
-				return step;
-			}
-
-			const migrations = variableMigrations[step.step];
-			const migratedVars = {};
-
-			// Copy existing vars and apply migrations
-			Object.keys(step.vars).forEach(function (varName) {
-				if (migrations[varName]) {
-					// Migrate old variable name to new name
-					const newVarName = migrations[varName];
-					migratedVars[newVarName] = step.vars[varName];
-					console.info('Migrated variable "' + varName + '" to "' + newVarName + '" in step "' + step.step + '"');
-				} else {
-					// Keep existing variable
-					migratedVars[varName] = step.vars[varName];
-				}
-			});
-
-			return {
-				...step,
-				vars: migratedVars
-			};
-		});
-
-		return state;
-	}
+	// migrateState is now imported from state-migration.ts
 
 	function restoreState(state) {
 		if (!state) {
@@ -1918,61 +1887,7 @@ addEventListener('DOMContentLoaded', function () {
 		loadCombinedExamples();
 	}
 
-	function parseQueryParamsForBlueprint() {
-		const urlParams = new URLSearchParams(window.location.search);
-		const redirParam = urlParams.get('redir');
-
-		const stepMap = {};
-		const paramMap = {};
-
-		for (const [key, value] of urlParams.entries()) {
-			if (key === 'redir') {
-				continue;
-			}
-
-			const arrayMatch = key.match(/^(\w+)\[(\d+)\]$/);
-			if (arrayMatch) {
-				const paramName = arrayMatch[1];
-				const index = parseInt(arrayMatch[2], 10);
-
-				if (!paramMap[paramName]) {
-					paramMap[paramName] = {};
-				}
-				paramMap[paramName][index] = value;
-			}
-		}
-
-		if (paramMap.step) {
-			const indices = Object.keys(paramMap.step).sort((a, b) => parseInt(a) - parseInt(b));
-
-			const steps = indices.map(index => {
-				const stepName = paramMap.step[index];
-				const stepVars = {};
-
-				for (const [paramName, values] of Object.entries(paramMap)) {
-					if (paramName !== 'step' && values[index] !== undefined) {
-						let value = values[index];
-						if (paramName === 'url' || paramName.includes('url') || paramName.includes('Url')) {
-							value = expandUrl(value);
-						}
-						stepVars[paramName] = value;
-					}
-				}
-
-				return {
-					step: stepName,
-					vars: stepVars
-				};
-			});
-
-			return {
-				steps: steps,
-				redir: redirParam ? parseInt(redirParam, 10) : null
-			};
-		}
-
-		return null;
-	}
+	// parseQueryParamsForBlueprint is now imported from query-params.ts
 
 	function autoredirect(delay = 5) {
 		document.getElementById('autoredirecting').showModal();
