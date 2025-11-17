@@ -131,15 +131,35 @@ The Step Library extracts `/wp-admin/post-new.php` and sets it as the landing pa
 
 ## Keyboard Shortcuts
 
-### Universal
+### Quick Filter
+
+- **Type any letter/number** - Automatically focuses the filter box and starts filtering steps
+- **Arrow Down** (when no step focused) - Focus first visible step
+- **Arrow Up** (when no step focused) - Focus last visible step
+
+### Navigating Steps
+
+- **Arrow Down** (when step focused) - Move to next visible step
+- **Arrow Up** (when step focused) - Move to previous visible step
+- **Enter** (when step focused) - Insert the step into your blueprint
+
+### Using Filter
+
+- **Enter** (with single result) - Automatically insert the only matching step
+- **Escape** - Clear focus from filter box
+
+### Launching Blueprint
+
+- **Enter** (in any input field) - Launch blueprint in Playground
+
+### Code Editor
+
+- **Escape** (in Ace editor) - Close editor and resume auto-compilation
+
+### General
 
 - **Paste** (Ctrl/Cmd+V) - Smart paste detection works anywhere
-- **Search** - Click the filter box or start typing to filter steps
-
-### In Text Fields
-
-- **Tab** - Move to next field
-- **Enter** - Usually submits forms
+- **Escape** (in any input/textarea) - Blur the field
 
 ## URL Patterns
 
@@ -205,6 +225,8 @@ Click the **"Mine"** bookmark icon to open your saved blueprints.
 **Pro Tip:** Use My Blueprints as a library of common setups you use frequently!
 
 ### Copy Dropdown (Three Dots Menu)
+
+![Copy Dropdown Menu](images/ui/copy-dropdown-menu.png)
 
 Click the **three dots** next to "Launch in Playground" for more options:
 
