@@ -1351,7 +1351,29 @@ addEventListener('DOMContentLoaded', function () {
 			});
 		}
 		const blueprintContent = getBlueprintValue();
-		const title = document.getElementById('title').value || 'blueprint';
+		let title = document.getElementById('title').value;
+
+		if (!title || !title.trim()) {
+			const stepBlocks = blueprintSteps.querySelectorAll('.step');
+			const pluginSteps = Array.from(stepBlocks).filter(block => block.dataset.step === 'installPlugin');
+			const hasLandingPage = Array.from(stepBlocks).some(block => block.dataset.step === 'setLandingPage');
+
+			if (pluginSteps.length === 1) {
+				const pluginSlug = pluginSteps[0].querySelector('[name="pluginZipFile"]')?.value ||
+					pluginSteps[0].querySelector('[name="slug"]')?.value ||
+					pluginSteps[0].querySelector('[name="url"]')?.value;
+				if (pluginSlug && pluginSlug.trim()) {
+					const parts = pluginSlug.split('/').filter(p => p.trim());
+					const slug = parts[parts.length - 1].replace(/\.zip$/, '');
+					title = 'blueprint-' + slug + (hasLandingPage ? '-landingpage' : '');
+				}
+			}
+		}
+
+		if (!title || !title.trim()) {
+			title = 'blueprint';
+		}
+
 		const filename = title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.json';
 		const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(blueprintContent);
 		const downloadAnchor = document.createElement('a');
@@ -3550,7 +3572,8 @@ addEventListener('DOMContentLoaded', function () {
 						block.querySelector('[name="slug"]')?.value ||
 						block.querySelector('[name="url"]')?.value;
 					if (pluginSlug && pluginSlug.trim()) {
-						const name = pluginSlug.split('/').pop().replace(/\.zip$/, '').replace(/-/g, ' ');
+						const parts = pluginSlug.split('/').filter(p => p.trim());
+						const name = parts[parts.length - 1].replace(/\.zip$/, '').replace(/-/g, ' ');
 						plugins.push(name);
 					} else {
 						otherSteps.add(stepType);
@@ -3560,7 +3583,8 @@ addEventListener('DOMContentLoaded', function () {
 						block.querySelector('[name="slug"]')?.value ||
 						block.querySelector('[name="url"]')?.value;
 					if (themeSlug && themeSlug.trim()) {
-						const name = themeSlug.split('/').pop().replace(/\.zip$/, '').replace(/-/g, ' ');
+						const parts = themeSlug.split('/').filter(p => p.trim());
+						const name = parts[parts.length - 1].replace(/\.zip$/, '').replace(/-/g, ' ');
 						themes.push(name);
 					} else {
 						otherSteps.add(stepType);
