@@ -17,6 +17,7 @@ import { toastService } from './toast-service';
 import { generateLabel } from './label-generator';
 import { blueprintEventBus } from './blueprint-event-bus';
 import { cleanupHistoryBlueprintAceEditor, initHistoryBlueprintAceEditor } from './ace-editor';
+import { initMoreOptionsDropdown } from './url-controller';
 
 export interface HistoryControllerDependencies {
 	getBlueprintValue: () => string;
@@ -33,14 +34,15 @@ export class HistoryController {
 	constructor(deps: HistoryControllerDependencies) {
 		this.deps = deps;
 		this.setupEventListeners();
+		this.updateHistoryButtonVisibility();
 	}
 
 	/**
 	 * Setup event listeners for history UI
 	 */
 	private setupEventListeners(): void {
-		// My Blueprints button
-		const myBlueprintsBtn = document.getElementById('my-blueprints-btn');
+		// My Blueprints button (Mine button)
+		const myBlueprintsBtn = document.getElementById('history-button');
 		if (myBlueprintsBtn) {
 			myBlueprintsBtn.addEventListener('click', () => {
 				this.openHistoryModal();
@@ -81,15 +83,21 @@ export class HistoryController {
 				}
 			});
 		}
+
+		// Initialize more options dropdown
+		const historyDropdown = document.getElementById('history-more-options-dropdown');
+		if (historyDropdown) {
+			initMoreOptionsDropdown(historyDropdown);
+		}
 	}
 
 	/**
 	 * Open the My Blueprints modal
 	 */
 	openHistoryModal(): void {
-		const modal = document.getElementById('history-modal');
+		const modal = document.getElementById('history-modal') as HTMLDialogElement;
 		if (modal) {
-			modal.style.display = 'flex';
+			modal.showModal();
 			this.renderHistoryList();
 			this.updateHistoryButtonVisibility();
 		}
@@ -99,9 +107,9 @@ export class HistoryController {
 	 * Close the My Blueprints modal
 	 */
 	closeHistoryModal(): void {
-		const modal = document.getElementById('history-modal');
+		const modal = document.getElementById('history-modal') as HTMLDialogElement;
 		if (modal) {
-			modal.style.display = 'none';
+			modal.close();
 			cleanupHistoryBlueprintAceEditor();
 		}
 	}
@@ -155,13 +163,13 @@ export class HistoryController {
 	 */
 	updateHistoryButtonVisibility(): void {
 		const history = getHistory();
-		const myBlueprintsBtn = document.getElementById('my-blueprints-btn');
+		const myBlueprintsBtn = document.getElementById('history-button');
 
 		if (myBlueprintsBtn) {
 			if (history.length === 0) {
 				myBlueprintsBtn.style.display = 'none';
 			} else {
-				myBlueprintsBtn.style.display = '';
+				myBlueprintsBtn.style.display = 'flex';
 			}
 		}
 	}
@@ -193,25 +201,29 @@ export class HistoryController {
 
 		filteredHistory.forEach(entry => {
 			const item = document.createElement('div');
-			item.className = 'history-item';
+			item.className = 'history-entry';
 			item.dataset.id = entry.id.toString();
 
 			if (this.currentHistorySelection && this.currentHistorySelection.id === entry.id) {
 				item.classList.add('selected');
 			}
 
-			const title = document.createElement('div');
-			title.className = 'history-item-title';
-			title.textContent = entry.title;
+			const content = document.createElement('div');
+			content.className = 'history-entry-content';
 
-			const date = document.createElement('div');
-			date.className = 'history-item-date';
-			date.textContent = this.formatDate(entry.date);
+			const time = document.createElement('div');
+			time.className = 'history-entry-time';
+			time.textContent = this.formatDate(entry.date);
 
-			item.appendChild(title);
-			item.appendChild(date);
+			const label = document.createElement('div');
+			label.className = 'history-entry-label';
+			label.textContent = entry.title;
 
-			item.addEventListener('click', () => {
+			content.appendChild(time);
+			content.appendChild(label);
+			item.appendChild(content);
+
+			content.addEventListener('click', () => {
 				this.selectHistoryEntry(entry.id);
 			});
 
@@ -255,7 +267,7 @@ export class HistoryController {
 		this.currentHistorySelection = entry;
 
 		// Update UI selection
-		document.querySelectorAll('.history-item').forEach(item => {
+		document.querySelectorAll('.history-entry').forEach(item => {
 			if (parseInt(item.getAttribute('data-id') || '0') === entryId) {
 				item.classList.add('selected');
 			} else {
@@ -268,19 +280,13 @@ export class HistoryController {
 		const detailContent = document.getElementById('history-detail-content');
 
 		if (detailEmpty) detailEmpty.style.display = 'none';
-		if (detailContent) detailContent.style.display = 'block';
-
-		// Update detail content
-		const detailTitle = document.getElementById('history-detail-title');
-		if (detailTitle) {
-			detailTitle.textContent = entry.title;
-		}
+		if (detailContent) detailContent.style.display = 'flex';
 
 		// Initialize Ace editor for preview
-		const blueprintPreview = document.getElementById('history-blueprint-preview') as HTMLTextAreaElement;
-		if (blueprintPreview) {
+		const blueprintView = document.getElementById('history-blueprint-view') as HTMLTextAreaElement;
+		if (blueprintView) {
+			blueprintView.value = entry.compiledBlueprint;
 			initHistoryBlueprintAceEditor();
-			blueprintPreview.value = entry.compiledBlueprint;
 		}
 
 		// Setup action buttons
@@ -291,32 +297,25 @@ export class HistoryController {
 	 * Setup action buttons for selected entry
 	 */
 	private setupDetailActions(entryId: number): void {
-		const loadBtn = document.getElementById('history-load-btn');
-		const renameBtn = document.getElementById('history-rename-btn');
-		const deleteBtn = document.getElementById('history-delete-btn');
-		const playgroundBtn = document.getElementById('history-playground-btn');
+		const restoreBtn = document.getElementById('history-restore-btn');
+		const launchBtn = document.getElementById('history-launch-btn');
+		const mobileDeleteBtn = document.getElementById('history-mobile-delete-btn');
 
-		if (loadBtn) {
-			loadBtn.onclick = () => {
+		if (restoreBtn) {
+			restoreBtn.onclick = () => {
 				this.loadHistoryEntry(entryId);
 			};
 		}
 
-		if (renameBtn) {
-			renameBtn.onclick = () => {
-				this.renameHistoryEntry(entryId);
-			};
-		}
-
-		if (deleteBtn) {
-			deleteBtn.onclick = () => {
-				this.deleteHistoryEntry(entryId);
-			};
-		}
-
-		if (playgroundBtn) {
-			playgroundBtn.onclick = () => {
+		if (launchBtn) {
+			launchBtn.onclick = () => {
 				window.open(this.getHistoryPlaygroundUrl(), '_blank');
+			};
+		}
+
+		if (mobileDeleteBtn) {
+			mobileDeleteBtn.onclick = () => {
+				this.deleteHistoryEntry(entryId);
 			};
 		}
 	}

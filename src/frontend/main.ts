@@ -63,7 +63,8 @@ import {
 	initViewSourceAceEditor,
 	cleanupAceEditor,
 	blueprintAceEditor,
-	setBlueprintAceValue
+	setBlueprintAceValue,
+	viewSourceAceEditor
 } from './ace-editor';
 import { fixMouseCursor, makeParentStepDraggable, makeParentStepUnDraggable } from './dom-utils';
 import {
@@ -724,67 +725,10 @@ addEventListener('DOMContentLoaded', function () {
 			blueprintEventBus.emit('blueprint:updated');
 			return;
 		}
-		dialog = document.getElementById('view-source');
 		if (event.target.classList.contains('view-source')) {
 			event.preventDefault();
 			const sourceUrl = event.target.href;
-			const fileName = sourceUrl.split('/').slice(-1)[0];
-			const stepName = fileName.replace(/\.ts$/, '');
-			dialog.querySelector('h2').innerText = fileName;
-
-			// Set documentation link
-			const docsLink = dialog.querySelector('#view-source-docs');
-			const docsUrl = `https://github.com/akirk/playground-step-library/blob/main/docs/steps/${stepName}.md`;
-			docsLink.href = docsUrl;
-			docsLink.style.display = '';
-
-			// Load Ace editor and fetch the source file
-			Promise.all([loadAceEditor(), fetch(sourceUrl)])
-				.then(([_, response]) => {
-					if (!response.ok) {
-						throw new Error('Failed to load source file');
-					}
-					return response.text();
-				})
-				.then(sourceCode => {
-					// Initialize Ace editor if not already done
-					if (!viewSourceAceEditor) {
-						viewSourceAceEditor = ace.edit('view-source-editor');
-						viewSourceAceEditor.setTheme(getAceTheme());
-						viewSourceAceEditor.session.setMode('ace/mode/typescript');
-						viewSourceAceEditor.setFontSize(14);
-						viewSourceAceEditor.setShowPrintMargin(false);
-						viewSourceAceEditor.setReadOnly(true);
-						viewSourceAceEditor.session.setUseWrapMode(true);
-
-						const viewSourceStatus = document.getElementById('view-source-status');
-						viewSourceStatus.classList.add('active');
-
-						const updateViewSourceStatus = () => {
-							updateAceStatusBar(viewSourceAceEditor, viewSourceStatus, 'TypeScript (Read-only)');
-						};
-
-						viewSourceAceEditor.getSession().selection.on('changeCursor', updateViewSourceStatus);
-						viewSourceAceEditor.getSession().selection.on('changeSelection', updateViewSourceStatus);
-					}
-
-					// Set the source code
-					viewSourceAceEditor.setValue(sourceCode, -1);
-
-					// Update status bar
-					const viewSourceStatus = document.getElementById('view-source-status');
-					const updateViewSourceStatus = () => {
-						updateAceStatusBar(viewSourceAceEditor, viewSourceStatus, 'TypeScript (Read-only)');
-					};
-					updateViewSourceStatus();
-
-					document.body.classList.add('dialog-open');
-					dialog.showModal();
-				})
-				.catch(error => {
-					console.error('Error loading source:', error);
-					alert('Failed to load source file: ' + error.message);
-				});
+			initViewSourceAceEditor(sourceUrl);
 		}
 
 		if (event.target.tagName === 'BUTTON' && event.target.closest('#save-step')) {
@@ -1525,6 +1469,8 @@ addEventListener('DOMContentLoaded', function () {
 	});
 
 	// History functionality is now handled by history-controller.ts
+	// Save dialog needs to be created after historyController is initialized
+	let historyController: HistoryController;
 
 	function showSaveBlueprintDialog(defaultName, isOverwrite) {
 		const dialog = document.getElementById('save-blueprint-dialog');
@@ -1560,15 +1506,13 @@ addEventListener('DOMContentLoaded', function () {
 			const updatedHistory = history.filter(entry => entry.title !== title);
 			saveHistory(updatedHistory);
 
-			const success = addToHistory(title);
-			if (success) {
-				const titleInput = document.getElementById('title');
-				if (titleInput) {
-					titleInput.value = title;
-				}
-				showToast('Updated');
-				historyController.renderHistoryList();
+			historyController.addToHistory(title);
+			const titleInput = document.getElementById('title');
+			if (titleInput) {
+				titleInput.value = title;
 			}
+			showToast('Updated');
+			historyController.renderHistoryList();
 
 			dialog.close();
 			cleanup();
@@ -1599,15 +1543,13 @@ addEventListener('DOMContentLoaded', function () {
 				return;
 			}
 
-			const success = addToHistory(title);
-			if (success) {
-				const titleInput = document.getElementById('title');
-				if (titleInput) {
-					titleInput.value = title;
-				}
-				showToast('Saved');
-				historyController.renderHistoryList();
+			historyController.addToHistory(title);
+			const titleInput = document.getElementById('title');
+			if (titleInput) {
+				titleInput.value = title;
 			}
+			showToast('Saved');
+			historyController.renderHistoryList();
 
 			dialog.close();
 			cleanup();
@@ -1702,13 +1644,13 @@ addEventListener('DOMContentLoaded', function () {
 			if (existingEntry) {
 				const updatedHistory = history.filter(entry => entry.title !== blueprintTitle);
 				saveHistory(updatedHistory);
-				const entryId = addToHistoryWithId(blueprintTitle);
+				const entryId = historyController.addToHistoryWithId(blueprintTitle);
 				if (entryId) {
 					showToast('Updated');
 					historyController.renderHistoryList();
 				}
 			} else if (blueprintTitle) {
-				const entryId = addToHistoryWithId(blueprintTitle);
+				const entryId = historyController.addToHistoryWithId(blueprintTitle);
 				if (entryId) {
 					showToast('Saved');
 					historyController.renderHistoryList();
@@ -1927,7 +1869,7 @@ addEventListener('DOMContentLoaded', function () {
 		isBlueprintAlreadySaved,
 		showSaveBlueprintDialog
 	};
-	const historyController = new HistoryController(historyControllerDeps);
+	historyController = new HistoryController(historyControllerDeps);
 
 	// Initialize Paste Handler Controller
 	const pasteHandlerControllerDeps: PasteHandlerControllerDependencies = {
@@ -1936,10 +1878,7 @@ addEventListener('DOMContentLoaded', function () {
 	};
 	const pasteHandlerController = new PasteHandlerController(pasteHandlerControllerDeps);
 
-	// Make history controller methods accessible where needed
-	window.addToHistory = (customTitle?: string) => historyController.addToHistory(customTitle);
-	window.addToHistoryWithId = (customTitle?: string) => historyController.addToHistoryWithId(customTitle);
-	window.updateHistoryButtonVisibility = () => historyController.updateHistoryButtonVisibility();
+	// History controller methods are now accessed directly via the historyController instance
 
 	// Initialize empty blueprint if no steps are present
 	if (blueprintSteps.querySelectorAll('.step').length === 0) {
