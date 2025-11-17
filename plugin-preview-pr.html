@@ -724,6 +724,17 @@
                                   placeholder="Describe any extra effort made to make the blueprint useful (e.g., 'Added an mu-plugin that skips authentication and shows fake stats')">${escapeHtml(plugin.blueprintCustomization || '')}</textarea>
                         <div class="help-text">This will be included in the PR description to explain any custom setup</div>
                     </div>
+
+                    <div class="form-group">
+                        <label>Blueprint JSON</label>
+                        <div class="drop-zone" id="pluginDetailDropZone" style="margin-bottom: 10px; padding: 20px;">
+                            <div class="drop-zone-text"><strong>Drop blueprint.json here</strong></div>
+                            <div class="drop-zone-text">to update the blueprint</div>
+                            <input type="file" id="pluginDetailFileInput" accept=".json" style="display: none;">
+                        </div>
+                        <textarea id="editBlueprintContent" class="code" onchange="updatePluginField('${plugin.id}', 'blueprintContent', this.value)"
+                                  placeholder='{"landingPage": "/wp-admin/", ...}'>${escapeHtml(plugin.blueprintContent || '')}</textarea>
+                    </div>
                 </div>
 
                 <div id="blueprintMessage" class="message"></div>
@@ -867,6 +878,11 @@
                 </div>
                 <div id="prMessage" class="message"></div>
             `;
+
+            // Initialize drop zone for plugin detail page
+            setTimeout(() => {
+                initializePluginDetailDropZone(plugin.id);
+            }, 0);
         }
 
         function updateStatus(id, field, value) {
@@ -1456,6 +1472,71 @@ Let me know if you have any questions or if you'd like me to help implement this
             savePlugins();
             renderPluginList();
             selectPlugin(newPlugin.id);
+        }
+
+        // Drag and drop for plugin detail page
+        function initializePluginDetailDropZone(pluginId) {
+            const dropZone = document.getElementById('pluginDetailDropZone');
+            const fileInput = document.getElementById('pluginDetailFileInput');
+
+            if (!dropZone || !fileInput) return;
+
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handlePluginDetailBlueprintFile(files[0], pluginId);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handlePluginDetailBlueprintFile(e.target.files[0], pluginId);
+                }
+            });
+        }
+
+        function handlePluginDetailBlueprintFile(file, pluginId) {
+            if (!file.name.endsWith('.json')) {
+                showMessage('blueprintMessage', '⚠ Please upload a JSON file', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const blueprint = JSON.parse(e.target.result);
+                    const blueprintContent = JSON.stringify(blueprint, null, 2);
+
+                    const plugin = plugins.find(p => p.id === pluginId);
+                    if (!plugin) return;
+
+                    plugin.blueprintContent = blueprintContent;
+                    plugin.status.blueprintCreated = true;
+                    savePlugins();
+
+                    document.getElementById('editBlueprintContent').value = blueprintContent;
+                    renderPluginList();
+                    renderPluginDetail(plugin);
+
+                    showMessage('blueprintMessage', '✓ Blueprint uploaded successfully!', 'success');
+                } catch (error) {
+                    showMessage('blueprintMessage', '⚠ Invalid JSON file: ' + error.message, 'error');
+                }
+            };
+            reader.readAsText(file);
         }
 
         // Drag and drop for stats page
