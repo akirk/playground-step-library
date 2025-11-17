@@ -14,6 +14,8 @@ Add a post with title, content, type, status, and date.
 | `date` | string | ❌ No | The date of the post (optional) |
 | `type` | string | ✅ Yes | The post type |
 | `status` | string | ❌ No | The post status |
+| `postId` | text | ❌ No | Post ID to use (optional) |
+| `landingPage` | boolean | ❌ No | Set landing page to the post editor (requires postId) |
 | `registerPostType` | button | ❌ No | Register custom post type if needed |
 
 
@@ -28,6 +30,8 @@ Add a post with title, content, type, status, and date.
           "date": "now",
           "type": "post",
           "status": "publish",
+          "postId": "",
+          "landingPage": "true",
           "registerPostType": "example-value"
     }
 ```
@@ -41,6 +45,8 @@ Add a post with title, content, type, status, and date.
   "date": "2024-01-01 00:00:00",
   "type": "page",
   "status": "draft",
+  "postId": "1000",
+  "landingPage": "false",
   "registerPostType": "example-value"
 }
 ```
@@ -57,6 +63,8 @@ Add a post with title, content, type, status, and date.
           "date": "now",
           "type": "post",
           "status": "publish",
+          "postId": "",
+          "landingPage": "true",
           "registerPostType": "example-value"
     }
   ]
@@ -78,6 +86,8 @@ const blueprint = {
           "date": "now",
           "type": "post",
           "status": "publish",
+          "postId": "",
+          "landingPage": "true",
           "registerPostType": "example-value"
     }
   ]

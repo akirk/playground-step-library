@@ -10,7 +10,6 @@ Install a plugin from a Github repository.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `url` | string | ❌ No | Github URL of the plugin. |
-| `auth` | boolean | ❌ No | Ask for GitHub authentication (needed for private repos). |
 | `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
 
 
@@ -21,7 +20,6 @@ Install a plugin from a Github repository.
     {
           "step": "githubPlugin",
           "url": "https://github.com/akirk/blueprint-recorder",
-          "auth": "false",
           "prs": "false"
     }
 ```
@@ -34,7 +32,6 @@ Install a plugin from a Github repository.
         {
           "step": "githubPlugin",
           "url": "https://github.com/akirk/blueprint-recorder",
-          "auth": "false",
           "prs": "false"
     }
   ]
@@ -52,7 +49,6 @@ const blueprint = {
         {
           "step": "githubPlugin",
           "url": "https://github.com/akirk/blueprint-recorder",
-          "auth": "false",
           "prs": "false"
     }
   ]

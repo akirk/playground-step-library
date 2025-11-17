@@ -550,8 +550,9 @@ addEventListener('DOMContentLoaded', function () {
 				} else if (v.type === 'button') {
 					const button = document.createElement('button');
 					button.textContent = v.label;
+					button.name = v.name;
 					td.appendChild(button);
-					button.dataset.stepName = k;
+					button.dataset.stepName = v.name;
 					button.dataset.stepVar = name;
 				} else {
 					input = document.createElement('input');
@@ -959,8 +960,10 @@ addEventListener('DOMContentLoaded', function () {
 				}
 
 
-				if (typeof customSteps[event.target.dataset.stepVar]?.vars[event.target.dataset.stepName]?.onclick === 'function') {
-					return customSteps[event.target.dataset.stepVar].vars[event.target.dataset.stepName].onclick(event, loadCombinedExamples);
+				const stepConfig = customSteps[event.target.dataset.stepVar];
+				const varConfig = stepConfig?.vars?.find(v => v.name === event.target.dataset.stepName);
+				if (typeof varConfig?.onclick === 'function') {
+					return varConfig.onclick(event, loadCombinedExamples);
 				}
 				return;
 			}
@@ -1273,12 +1276,59 @@ addEventListener('DOMContentLoaded', function () {
 		return true;
 	}
 
+	function detectHtml(text) {
+		if (!text || typeof text !== 'string') {
+			return false;
+		}
+
+		const trimmed = text.trim();
+
+		return /<[^>]+>/.test(trimmed) && trimmed.includes('</');
+	}
+
+	function addPostStepFromHtml(html) {
+		const stepData = customSteps['addPost'];
+
+		if (!stepData) {
+			return false;
+		}
+
+		const draghint = blueprintSteps.querySelector('#draghint');
+		if (draghint) {
+			draghint.remove();
+		}
+
+		const stepElement = createStep('addPost', stepData);
+		blueprintSteps.appendChild(stepElement);
+		stepElement.querySelectorAll('input,textarea').forEach(fixMouseCursor);
+
+		const contentInput = stepElement.querySelector('textarea[name="content"]');
+		if (contentInput) {
+			contentInput.value = html;
+		}
+
+		const titleInput = stepElement.querySelector('input[name="title"]');
+		if (titleInput && !titleInput.value) {
+			titleInput.value = 'Pasted Content';
+		}
+
+		const typeInput = stepElement.querySelector('input[name="type"]');
+		if (typeInput && !typeInput.value) {
+			typeInput.value = 'page';
+		}
+
+		loadCombinedExamples();
+		return true;
+	}
+
 	window.addEventListener('paste', (event) => {
 		const pastedText = event.clipboardData.getData('text');
 		const urls = pastedText.split('\n').map(line => line.trim()).filter(line => line);
 
 		let hasUrl = false;
 		let hasWpAdminUrl = false;
+		let hasHtml = false;
+
 		for (const url of urls) {
 			if (detectUrlType(url)) {
 				hasUrl = true;
@@ -1290,7 +1340,11 @@ addEventListener('DOMContentLoaded', function () {
 			}
 		}
 
-		if (!hasUrl && !hasWpAdminUrl) {
+		if (detectHtml(pastedText)) {
+			hasHtml = true;
+		}
+
+		if (!hasUrl && !hasWpAdminUrl && !hasHtml) {
 			return;
 		}
 
@@ -1301,14 +1355,21 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		let addedAny = false;
-		for (const url of urls) {
-			const wpAdminPath = detectWpAdminUrl(url);
-			if (wpAdminPath) {
-				if (addLandingPageStep(wpAdminPath)) {
+
+		if (hasHtml && !hasUrl && !hasWpAdminUrl) {
+			if (addPostStepFromHtml(pastedText)) {
+				addedAny = true;
+			}
+		} else {
+			for (const url of urls) {
+				const wpAdminPath = detectWpAdminUrl(url);
+				if (wpAdminPath) {
+					if (addLandingPageStep(wpAdminPath)) {
+						addedAny = true;
+					}
+				} else if (addStepFromUrl(url)) {
 					addedAny = true;
 				}
-			} else if (addStepFromUrl(url)) {
-				addedAny = true;
 			}
 		}
 
@@ -1498,7 +1559,7 @@ addEventListener('DOMContentLoaded', function () {
 		return btoa(binString);
 	}
 	function updateVariableVisibility(stepBlock) {
-		stepBlock.querySelectorAll('input,select,textarea').forEach(function (input) {
+		stepBlock.querySelectorAll('input,select,textarea,button').forEach(function (input) {
 			if (!input || typeof showCallbacks[stepBlock.dataset.step] === 'undefined' || typeof showCallbacks[stepBlock.dataset.step][input.name] !== 'function') {
 				return;
 			}
@@ -2096,6 +2157,10 @@ addEventListener('DOMContentLoaded', function () {
 	const queryParamBlueprint = parseQueryParamsForBlueprint();
 	if (queryParamBlueprint) {
 		restoreState({ steps: queryParamBlueprint.steps });
+		// Clear step[] and url[] parameters from URL to prevent conflicts with hash state
+		const newUrl = new URL(window.location);
+		newUrl.search = '';
+		history.replaceState(null, '', newUrl.pathname + newUrl.hash);
 		if (queryParamBlueprint.redir && !document.getElementById('preview-mode').value && !pageAccessedByReload) {
 			autoredirect(queryParamBlueprint.redir);
 		}

@@ -181,6 +181,8 @@ This document provides detailed information about all available steps, including
 | `date` | string | ❌ No | The date of the post (optional) |
 | `type` | string | ✅ Yes | The post type |
 | `status` | string | ❌ No | The post status |
+| `postId` | text | ❌ No | Post ID to use (optional) |
+| `landingPage` | boolean | ❌ No | Set landing page to the post editor (requires postId) |
 | `registerPostType` | button | ❌ No | Register custom post type if needed |
 
 
@@ -194,6 +196,8 @@ This document provides detailed information about all available steps, including
           "date": "now",
           "type": "post",
           "status": "publish",
+          "postId": "",
+          "landingPage": "true",
           "registerPostType": "example-value"
     }
 ```
@@ -611,7 +615,6 @@ This document provides detailed information about all available steps, including
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `url` | string | ❌ No | Github URL of the plugin. |
-| `auth` | boolean | ❌ No | Ask for GitHub authentication (needed for private repos). |
 | `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
 
 
@@ -621,7 +624,6 @@ This document provides detailed information about all available steps, including
     {
           "step": "githubPlugin",
           "url": "https://github.com/akirk/blueprint-recorder",
-          "auth": "false",
           "prs": "false"
     }
 ```
@@ -807,9 +809,7 @@ This document provides detailed information about all available steps, including
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of the plugin or WordPress.org slug. |
-| `auth` | boolean | ❌ No | Ask for GitHub authentication (needed for private repos). |
 | `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
-| `permalink` | boolean | ❌ No | Requires a permalink structure |
 
 
 ### Example Usage
@@ -818,9 +818,7 @@ This document provides detailed information about all available steps, including
     {
           "step": "installPlugin",
           "url": "hello-dolly",
-          "auth": "false",
-          "prs": "false",
-          "permalink": false
+          "prs": "false"
     }
 ```
 

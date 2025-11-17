@@ -96,14 +96,6 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 			};
 		}
 	}
-	if (step?.permalink) {
-		steps.unshift({
-			"step": "setSiteOptions",
-			"options": {
-				"permalink_structure": "/%postname%/"
-			}
-		} as any);
-	}
 	return steps;
 };
 
@@ -123,9 +115,5 @@ installPlugin.vars = Object.entries({
 		},
 		type: "boolean",
 		samples: ["false", "true"]
-	},
-	permalink: {
-		description: "Requires a permalink structure",
-		type: "boolean"
 	}
 }).map(([name, varConfig]) => ({ name, ...varConfig }));

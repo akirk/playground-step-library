@@ -183,6 +183,8 @@ export interface AddPostStep extends BlueprintStep {
     date?: string;
     type: string;
     status?: string;
+    postId?: number;
+    landingPage?: boolean;
     // Backward compatibility
     postTitle?: string;
     postContent?: string;
@@ -226,7 +228,6 @@ export interface GithubPluginReleaseStep extends BlueprintStep {
 export interface InstallPluginStep extends BlueprintStep {
     url: string;
     prs?: boolean;
-    permalink?: boolean;
 }
 
 export interface InstallThemeStep extends BlueprintStep {

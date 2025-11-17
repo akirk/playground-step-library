@@ -327,35 +327,7 @@ describe('installPlugin', () => {
         expect(result[0].queryParams['ghexport-content-type']).toBe('plugin');
     });
 
-    it('should add permalink structure when permalink flag is true', () => {
-        const step: InstallPluginStep = {
-            step: 'installPlugin',
-            url: 'woocommerce',
-            permalink: true
-        };
-
-        const result = installPlugin(step);
-
-        expect(result).toHaveLength(2);
-        expect(result[0].step).toBe('setSiteOptions');
-        expect(result[0].options.permalink_structure).toBe('/%postname%/');
-        expect(result[1].step).toBe('installPlugin');
-    });
-
-    it('should not add permalink structure when permalink flag is false', () => {
-        const step: InstallPluginStep = {
-            step: 'installPlugin',
-            url: 'hello-dolly',
-            permalink: false
-        };
-
-        const result = installPlugin(step);
-
-        expect(result).toHaveLength(1);
-        expect(result[0].step).toBe('installPlugin');
-    });
-
-    it('should not add permalink structure when permalink flag is not set', () => {
+    it('should install plugin without permalink structure', () => {
         const step: InstallPluginStep = {
             step: 'installPlugin',
             url: 'hello-dolly'
@@ -395,7 +367,7 @@ describe('installPlugin', () => {
         expect(installPlugin.description).toBe('Install a plugin via WordPress.org or Github (branches, releases, PRs).');
         expect(installPlugin.builtin).toBe(true);
         expect(Array.isArray(installPlugin.vars)).toBe(true);
-        expect(installPlugin.vars).toHaveLength(3);
+        expect(installPlugin.vars).toHaveLength(2);
 
         const urlVar = installPlugin.vars.find(v => v.name === 'url');
         expect(urlVar).toBeDefined();
@@ -407,10 +379,6 @@ describe('installPlugin', () => {
         expect(prsVar).toBeDefined();
         expect(prsVar.type).toBe('boolean');
         expect(typeof prsVar.show).toBe('function');
-
-        const permalinkVar = installPlugin.vars.find(v => v.name === 'permalink');
-        expect(permalinkVar).toBeDefined();
-        expect(permalinkVar.type).toBe('boolean');
     });
 
     it('should handle empty or malformed URLs gracefully', () => {
