@@ -284,6 +284,7 @@ export interface CustomPostTypeStep extends BlueprintStep {
 }
 
 export interface MuPluginStep extends BlueprintStep {
+    name: string;
     code: string;
 }
 

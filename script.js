@@ -1286,6 +1286,34 @@ addEventListener('DOMContentLoaded', function () {
 		return /<[^>]+>/.test(trimmed) && trimmed.includes('</');
 	}
 
+	function detectPhp(text) {
+		if (!text || typeof text !== 'string') {
+			return false;
+		}
+
+		const trimmed = text.trim();
+
+		return trimmed.startsWith('<?php') || (trimmed.includes('<?php') && trimmed.includes('?>'));
+	}
+
+	function shouldUseMuPlugin(phpCode) {
+		const hookIndicators = [
+			'add_filter',
+			'add_action',
+			'remove_filter',
+			'remove_action',
+			'register_activation_hook',
+			'register_deactivation_hook',
+			'add_shortcode',
+			'register_post_type',
+			'register_taxonomy',
+			'add_menu_page',
+			'add_submenu_page'
+		];
+
+		return hookIndicators.some(indicator => phpCode.includes(indicator));
+	}
+
 	function addPostStepFromHtml(html) {
 		const stepData = customSteps['addPost'];
 
@@ -1321,6 +1349,40 @@ addEventListener('DOMContentLoaded', function () {
 		return true;
 	}
 
+	function addStepFromPhp(phpCode) {
+		const useMuPlugin = shouldUseMuPlugin(phpCode);
+		const stepType = useMuPlugin ? 'muPlugin' : 'runPHP';
+		const stepData = customSteps[stepType];
+
+		if (!stepData) {
+			return false;
+		}
+
+		const draghint = blueprintSteps.querySelector('#draghint');
+		if (draghint) {
+			draghint.remove();
+		}
+
+		const stepElement = createStep(stepType, stepData);
+		blueprintSteps.appendChild(stepElement);
+		stepElement.querySelectorAll('input,textarea').forEach(fixMouseCursor);
+
+		const codeInput = stepElement.querySelector('textarea[name="code"]');
+		if (codeInput) {
+			codeInput.value = phpCode;
+		}
+
+		if (useMuPlugin) {
+			const nameInput = stepElement.querySelector('input[name="name"]');
+			if (nameInput && !nameInput.value) {
+				nameInput.value = 'pasted-plugin';
+			}
+		}
+
+		loadCombinedExamples();
+		return true;
+	}
+
 	window.addEventListener('paste', (event) => {
 		const pastedText = event.clipboardData.getData('text');
 		const urls = pastedText.split('\n').map(line => line.trim()).filter(line => line);
@@ -1328,6 +1390,7 @@ addEventListener('DOMContentLoaded', function () {
 		let hasUrl = false;
 		let hasWpAdminUrl = false;
 		let hasHtml = false;
+		let hasPhp = false;
 
 		for (const url of urls) {
 			if (detectUrlType(url)) {
@@ -1340,11 +1403,15 @@ addEventListener('DOMContentLoaded', function () {
 			}
 		}
 
+		if (detectPhp(pastedText)) {
+			hasPhp = true;
+		}
+
 		if (detectHtml(pastedText)) {
 			hasHtml = true;
 		}
 
-		if (!hasUrl && !hasWpAdminUrl && !hasHtml) {
+		if (!hasUrl && !hasWpAdminUrl && !hasHtml && !hasPhp) {
 			return;
 		}
 
@@ -1356,7 +1423,11 @@ addEventListener('DOMContentLoaded', function () {
 
 		let addedAny = false;
 
-		if (hasHtml && !hasUrl && !hasWpAdminUrl) {
+		if (hasPhp && !hasUrl && !hasWpAdminUrl) {
+			if (addStepFromPhp(pastedText)) {
+				addedAny = true;
+			}
+		} else if (hasHtml && !hasUrl && !hasWpAdminUrl) {
 			if (addPostStepFromHtml(pastedText)) {
 				addedAny = true;
 			}
