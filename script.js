@@ -811,6 +811,14 @@ addEventListener('DOMContentLoaded', function () {
 		loadCombinedExamples();
 	});
 	document.addEventListener('change', (event) => {
+		if ( event.target.id === 'mode' || event.target.id === 'preview-mode' || event.target.id === 'exclude-meta' ) {
+			loadCombinedExamples();
+			return;
+		}
+		if ( event.target.name === 'blueprint-version' ) {
+			transformJson();
+			return;
+		}
 		if (!event.target.closest('#blueprint')) {
 			return;
 		}
@@ -1241,19 +1249,74 @@ addEventListener('DOMContentLoaded', function () {
 		return true;
 	}
 
+	function detectWpAdminUrl(url) {
+		if (!url || typeof url !== 'string') {
+			return null;
+		}
+
+		const trimmed = url.trim();
+
+		if ( trimmed.startsWith('/wp-admin/') || trimmed.startsWith('/wp-login.php') ) {
+			return trimmed;
+		}
+
+		try {
+			const urlObj = new URL(trimmed);
+			const path = urlObj.pathname + urlObj.search + urlObj.hash;
+
+			if ( path.includes('/wp-admin/') || path.includes('/wp-login.php') ) {
+				return path;
+			}
+		} catch (e) {
+			return null;
+		}
+
+		return null;
+	}
+
+	function addLandingPageStep(landingPath) {
+		const stepData = customSteps['setLandingPage'];
+
+		if (!stepData) {
+			return false;
+		}
+
+		const draghint = blueprintSteps.querySelector('#draghint');
+		if (draghint) {
+			draghint.remove();
+		}
+
+		const stepElement = createStep('setLandingPage', stepData);
+		blueprintSteps.appendChild(stepElement);
+		stepElement.querySelectorAll('input,textarea').forEach(fixMouseCursor);
+
+		const landingPageInput = stepElement.querySelector('input[name="landingPage"]');
+		if (landingPageInput) {
+			landingPageInput.value = landingPath;
+		}
+
+		loadCombinedExamples();
+		return true;
+	}
+
 	window.addEventListener('paste', (event) => {
 		const pastedText = event.clipboardData.getData('text');
 		const urls = pastedText.split('\n').map(line => line.trim()).filter(line => line);
 
 		let hasUrl = false;
+		let hasWpAdminUrl = false;
 		for (const url of urls) {
 			if (detectUrlType(url)) {
 				hasUrl = true;
 				break;
 			}
+			if (detectWpAdminUrl(url)) {
+				hasWpAdminUrl = true;
+				break;
+			}
 		}
 
-		if (!hasUrl) {
+		if (!hasUrl && !hasWpAdminUrl) {
 			return;
 		}
 
@@ -1265,7 +1328,12 @@ addEventListener('DOMContentLoaded', function () {
 
 		let addedAny = false;
 		for (const url of urls) {
-			if (addStepFromUrl(url)) {
+			const wpAdminPath = detectWpAdminUrl(url);
+			if (wpAdminPath) {
+				if (addLandingPageStep(wpAdminPath)) {
+					addedAny = true;
+				}
+			} else if (addStepFromUrl(url)) {
 				addedAny = true;
 			}
 		}
@@ -1366,31 +1434,11 @@ addEventListener('DOMContentLoaded', function () {
 		stepList.classList.remove('show-builtin');
 	}
 
-	// Handle mode changes
-	document.getElementById('mode').addEventListener('change', function () {
-		loadCombinedExamples();
-	});
-
-	// Handle preview mode changes
-	document.getElementById('preview-mode').addEventListener('change', function () {
-		loadCombinedExamples();
-	});
-
 	// Handle title input changes
-	document.getElementById('title').addEventListener('input', function () {
-		loadCombinedExamples();
-	});
-
-	// Handle exclude-meta checkbox changes
-	document.getElementById('exclude-meta').addEventListener('change', function () {
-		loadCombinedExamples();
-	});
-
-	// Handle blueprint version radio button changes
-	document.querySelectorAll('input[name="blueprint-version"]').forEach(function (radio) {
-		radio.addEventListener('change', function () {
-			transformJson();
-		});
+	document.addEventListener('input', function (e) {
+		if ( e.target.id === 'title' ) {
+			loadCombinedExamples();
+		}
 	});
 
 	function compressState(steps) {
@@ -2695,14 +2743,15 @@ addEventListener('DOMContentLoaded', function () {
 			finishWizard();
 		});
 
-		// Progress indicator clicks
-		document.querySelectorAll('.wizard-step-indicator').forEach((indicator, index) => {
-			indicator.addEventListener('click', () => {
-				const targetStep = index + 1;
+		// Progress indicator clicks (using event delegation)
+		document.getElementById('wizard-progress').addEventListener('click', (e) => {
+			const indicator = e.target.closest('.wizard-step-indicator');
+			if ( indicator ) {
+				const targetStep = parseInt(indicator.dataset.step, 10);
 				if (targetStep <= wizardState.currentStep || targetStep === wizardState.currentStep + 1) {
 					goToWizardStep(targetStep);
 				}
-			});
+			}
 		});
 
 		// Plugin/Theme input handlers
@@ -2837,14 +2886,6 @@ addEventListener('DOMContentLoaded', function () {
 	// Manual Edit Mode functionality
 	const blueprintTextarea = document.getElementById('blueprint-compiled');
 
-	blueprintTextarea.addEventListener('focus', function () {
-		initBlueprintAceEditor();
-	});
-
-	blueprintTextarea.addEventListener('click', function () {
-		initBlueprintAceEditor();
-	});
-
 	// Intercept playground link clicks to regenerate URL if in manual edit mode
 	document.getElementById('playground-link').addEventListener('click', function (e) {
 		if (window.goatcounter) {
@@ -2940,7 +2981,7 @@ addEventListener('DOMContentLoaded', function () {
 			return;
 		}
 
-		button.addEventListener('click', function(e) {
+		button.addEventListener('click', function (e) {
 			e.stopPropagation();
 			const isVisible = menu.style.display === 'block';
 			document.querySelectorAll('.more-options-menu').forEach(m => {
@@ -2952,7 +2993,7 @@ addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	document.addEventListener('click', function(e) {
+	document.addEventListener('click', function (e) {
 		document.querySelectorAll('.more-options-menu').forEach(menu => {
 			const container = menu.closest('.more-options-dropdown');
 			const button = container?.querySelector('.more-options-button');
@@ -2970,7 +3011,6 @@ addEventListener('DOMContentLoaded', function () {
 	const moreOptionsMenu = document.getElementById('more-options-menu');
 
 	document.getElementById('copy-playground-url-menu').addEventListener('click', function (e) {
-		moreOptionsMenu.style.display = 'none';
 		const playgroundUrl = document.getElementById('playground-link').href;
 		const button = e.currentTarget;
 		const originalContent = button.cloneNode(true);
@@ -4321,4 +4361,7 @@ addEventListener('DOMContentLoaded', function () {
 	if (blueprintSteps.querySelectorAll('.step').length === 0) {
 		setBlueprintValue(JSON.stringify({}, null, 2));
 	}
+
+	// Initialize Ace editor for blueprint on page load
+	initBlueprintAceEditor();
 });
