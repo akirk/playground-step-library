@@ -1428,6 +1428,10 @@ addEventListener('DOMContentLoaded', function () {
 		return trimmed.startsWith('<?php') || (trimmed.includes('<?php') && trimmed.includes('?>'));
 	}
 
+	function isPlaygroundDomain(hostname) {
+		return hostname === 'playground.wordpress.net' || hostname === '127.0.0.1';
+	}
+
 	function detectPlaygroundUrl(url) {
 		if (!url || typeof url !== 'string') {
 			return null;
@@ -1437,7 +1441,7 @@ addEventListener('DOMContentLoaded', function () {
 
 		try {
 			const urlObj = new URL(trimmed);
-			if (urlObj.hostname === 'playground.wordpress.net' && urlObj.hash && urlObj.hash.length > 1) {
+			if (isPlaygroundDomain(urlObj.hostname) && urlObj.hash && urlObj.hash.length > 1) {
 				const hashContent = urlObj.hash.substring(1);
 				const blueprintJson = decodeURIComponent(hashContent);
 				return JSON.parse(blueprintJson);
@@ -1447,6 +1451,126 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		return null;
+	}
+
+	function detectPlaygroundQueryApiUrl(url) {
+		if (!url || typeof url !== 'string') {
+			return false;
+		}
+
+		const trimmed = url.trim();
+
+		try {
+			const urlObj = new URL(trimmed);
+			if (isPlaygroundDomain(urlObj.hostname) && urlObj.search) {
+				return true;
+			}
+		} catch (e) {
+			return false;
+		}
+
+		return false;
+	}
+
+	function parsePlaygroundQueryApi(url) {
+		if (!url || typeof url !== 'string') {
+			return null;
+		}
+
+		try {
+			const urlObj = new URL(url.trim());
+			if (!isPlaygroundDomain(urlObj.hostname)) {
+				return null;
+			}
+
+			const params = urlObj.searchParams;
+			const blueprint = {};
+
+			if (params.has('php')) {
+				blueprint.phpExtensionBundles = [params.get('php')];
+			}
+
+			if (params.has('wp')) {
+				blueprint.preferredVersions = { wp: params.get('wp') };
+			}
+
+			if (params.has('multisite')) {
+				const value = params.get('multisite');
+				if (value === 'yes' || value === 'true' || value === '1') {
+					blueprint.features = { networking: true };
+				}
+			}
+
+			if (params.has('login')) {
+				const value = params.get('login');
+				if (value === 'yes' || value === 'true' || value === '1') {
+					blueprint.login = true;
+				}
+			}
+
+			const steps = [];
+
+			const plugins = params.getAll('plugin');
+			for (const plugin of plugins) {
+				steps.push({
+					step: 'installPlugin',
+					pluginData: { resource: 'wordpress.org/plugins', slug: plugin }
+				});
+			}
+
+			const themes = params.getAll('theme');
+			for (const theme of themes) {
+				steps.push({
+					step: 'installTheme',
+					themeData: { resource: 'wordpress.org/themes', slug: theme }
+				});
+			}
+
+			if (params.has('gutenberg-pr')) {
+				const pr = params.get('gutenberg-pr');
+				steps.push({
+					step: 'installPlugin',
+					pluginData: {
+						resource: 'url',
+						url: `https://plugin-proxy.wordpress.net/gutenberg/gutenberg-build-pr-${pr}.zip`
+					}
+				});
+			}
+
+			if (params.has('core-pr')) {
+				const pr = params.get('core-pr');
+				steps.push({
+					step: 'runPHP',
+					code: `<?php require '/wordpress/wp-load.php'; wp_install_core_pr(${pr});`
+				});
+			}
+
+			if (steps.length > 0) {
+				blueprint.steps = steps;
+			}
+
+			if (params.has('url')) {
+				blueprint.landingPage = params.get('url');
+			}
+
+			if (params.has('mode')) {
+				const mode = params.get('mode');
+				if (mode === 'seamless') {
+					blueprint.preferredVersions = blueprint.preferredVersions || {};
+					blueprint.preferredVersions.seamless = true;
+				}
+			}
+
+			if (params.has('language')) {
+				blueprint.siteOptions = blueprint.siteOptions || {};
+				blueprint.siteOptions.WPLANG = params.get('language');
+			}
+
+			return blueprint;
+		} catch (e) {
+			console.error('Error parsing Query API URL:', e);
+			return null;
+		}
 	}
 
 	async function handlePlaygroundBlueprint(blueprintData) {
@@ -1588,6 +1712,7 @@ addEventListener('DOMContentLoaded', function () {
 		const urls = pastedText.split('\n').map(line => line.trim()).filter(line => line);
 
 		let hasPlaygroundUrl = false;
+		let hasPlaygroundQueryApiUrl = false;
 		let hasUrl = false;
 		let hasWpAdminUrl = false;
 		let hasHtml = false;
@@ -1596,6 +1721,10 @@ addEventListener('DOMContentLoaded', function () {
 		for (const url of urls) {
 			if (detectPlaygroundUrl(url)) {
 				hasPlaygroundUrl = true;
+				break;
+			}
+			if (detectPlaygroundQueryApiUrl(url)) {
+				hasPlaygroundQueryApiUrl = true;
 				break;
 			}
 			if (detectUrlType(url)) {
@@ -1616,7 +1745,7 @@ addEventListener('DOMContentLoaded', function () {
 			hasHtml = true;
 		}
 
-		if (!hasPlaygroundUrl && !hasUrl && !hasWpAdminUrl && !hasHtml && !hasPhp) {
+		if (!hasPlaygroundUrl && !hasPlaygroundQueryApiUrl && !hasUrl && !hasWpAdminUrl && !hasHtml && !hasPhp) {
 			return;
 		}
 
@@ -1631,6 +1760,16 @@ addEventListener('DOMContentLoaded', function () {
 		if (hasPlaygroundUrl) {
 			for (const url of urls) {
 				const blueprintData = detectPlaygroundUrl(url);
+				if (blueprintData) {
+					if (await handlePlaygroundBlueprint(blueprintData)) {
+						addedAny = true;
+					}
+					break;
+				}
+			}
+		} else if (hasPlaygroundQueryApiUrl) {
+			for (const url of urls) {
+				const blueprintData = parsePlaygroundQueryApi(url);
 				if (blueprintData) {
 					if (await handlePlaygroundBlueprint(blueprintData)) {
 						addedAny = true;
@@ -1706,7 +1845,7 @@ addEventListener('DOMContentLoaded', function () {
 			const hasLandingPage = Array.from(stepBlocks).some(block => block.dataset.step === 'setLandingPage');
 
 			if (pluginSteps.length === 1) {
-				const pluginSlug = pluginSteps[0].querySelector('[name="pluginZipFile"]')?.value ||
+				const pluginSlug = pluginSteps[0].querySelector('[name="pluginData"]')?.value ||
 					pluginSteps[0].querySelector('[name="slug"]')?.value ||
 					pluginSteps[0].querySelector('[name="url"]')?.value;
 				if (pluginSlug && pluginSlug.trim()) {
@@ -3926,7 +4065,7 @@ addEventListener('DOMContentLoaded', function () {
 				stepTypes.add(stepType);
 
 				if (stepType === 'installPlugin') {
-					const pluginSlug = block.querySelector('[name="pluginZipFile"]')?.value ||
+					const pluginSlug = block.querySelector('[name="pluginData"]')?.value ||
 						block.querySelector('[name="slug"]')?.value ||
 						block.querySelector('[name="url"]')?.value;
 					if (pluginSlug && pluginSlug.trim()) {
@@ -3937,7 +4076,7 @@ addEventListener('DOMContentLoaded', function () {
 						otherSteps.add(stepType);
 					}
 				} else if (stepType === 'installTheme') {
-					const themeSlug = block.querySelector('[name="themeZipFile"]')?.value ||
+					const themeSlug = block.querySelector('[name="themeData"]')?.value ||
 						block.querySelector('[name="slug"]')?.value ||
 						block.querySelector('[name="url"]')?.value;
 					if (themeSlug && themeSlug.trim()) {
