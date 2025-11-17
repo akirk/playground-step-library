@@ -107,6 +107,16 @@ import {
 	updateIframeSrc,
 	type BlueprintUIDependencies
 } from './blueprint-ui';
+import { toastService } from './toast-service';
+import { generateLabel } from './label-generator';
+import {
+	generateRedirectUrl,
+	copyToClipboard,
+	shareUrl,
+	initMoreOptionsDropdown,
+	setupDropdownCloseHandler,
+	type URLControllerDependencies
+} from './url-controller';
 import {
 	initWizard,
 	getWizardState,
@@ -1216,6 +1226,12 @@ addEventListener('DOMContentLoaded', function () {
 		playgroundIframe: document.getElementById('playground-iframe') as HTMLIFrameElement
 	};
 
+	// Dependencies for URL controller
+	const urlControllerDeps: URLControllerDependencies = {
+		blueprintSteps,
+		customSteps
+	};
+
 	function transformJson() {
 		const queries = [];
 		let useBlueprintURLParam = false;
@@ -1715,82 +1731,10 @@ addEventListener('DOMContentLoaded', function () {
 	});
 
 
-	function generateRedirectUrl(delay = 1, includeRedir = true) {
-		const steps = blueprintSteps.querySelectorAll('.step');
+	// generateRedirectUrl and dropdown functions are now imported from url-controller.ts
 
-		if (steps.length === 0) {
-			return null;
-		}
-
-		const params = [];
-		if (includeRedir) {
-			params.push('redir=' + delay);
-		}
-
-		steps.forEach((stepElement, index) => {
-			const stepName = stepElement.dataset.step;
-			params.push(`step[${index}]=` + stepName);
-
-			const inputs = stepElement.querySelectorAll('input, textarea, select');
-			inputs.forEach(input => {
-				const varName = input.name;
-				if (varName) {
-					let value;
-					if (input.type === 'checkbox') {
-						if (input.checked) {
-							value = 'true';
-						} else {
-							return;
-						}
-					} else {
-						value = input.value;
-					}
-					if (!isDefaultValue(stepName, varName, value)) {
-						let encodedValue = value;
-						if (varName === 'url' || varName.includes('url') || varName.includes('Url')) {
-							encodedValue = shortenUrl(value);
-						}
-						encodedValue = minimalEncode(encodedValue);
-						params.push(`${varName}[${index}]=` + encodedValue);
-					}
-				}
-			});
-		});
-
-		const baseUrl = window.location.origin + window.location.pathname;
-		const fullUrl = `${baseUrl}?${params.join('&')}`;
-		return fullUrl;
-	}
-
-	function initMoreOptionsDropdown(container) {
-		const button = container.querySelector('.more-options-button');
-		const menu = container.querySelector('.more-options-menu');
-
-		if (!button || !menu) {
-			return;
-		}
-
-		button.addEventListener('click', function (e) {
-			e.stopPropagation();
-			const isVisible = menu.style.display === 'block';
-			document.querySelectorAll('.more-options-menu').forEach(m => {
-				if (m !== menu) {
-					m.style.display = 'none';
-				}
-			});
-			menu.style.display = isVisible ? 'none' : 'block';
-		});
-	}
-
-	document.addEventListener('click', function (e) {
-		document.querySelectorAll('.more-options-menu').forEach(menu => {
-			const container = menu.closest('.more-options-dropdown');
-			const button = container?.querySelector('.more-options-button');
-			if (button && !menu.contains(e.target) && !button.contains(e.target)) {
-				menu.style.display = 'none';
-			}
-		});
-	});
+	// Setup dropdown close handler
+	setupDropdownCloseHandler();
 
 	const mainDropdown = document.getElementById('more-options-dropdown');
 	if (mainDropdown) {
@@ -1799,11 +1743,14 @@ addEventListener('DOMContentLoaded', function () {
 
 	const moreOptionsMenu = document.getElementById('more-options-menu');
 
-	document.getElementById('copy-playground-url-menu').addEventListener('click', function (e) {
-		const playgroundUrl = document.getElementById('playground-link').href;
-		const button = e.currentTarget;
+	document.getElementById('copy-playground-url-menu').addEventListener('click', async function (e) {
+		const playgroundUrl = (document.getElementById('playground-link') as HTMLAnchorElement).href;
+		const button = e.currentTarget as HTMLElement;
 		const originalContent = button.cloneNode(true);
-		copyToClipboard(playgroundUrl, button, originalContent);
+		const success = await copyToClipboard(playgroundUrl);
+		if (success) {
+			showCopiedFeedback(button, originalContent);
+		}
 	});
 
 	document.getElementById('download-blueprint-menu').addEventListener('click', function () {
@@ -1822,74 +1769,47 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		try {
-			const shareUrl = generateRedirectUrl(1, false);
+			const redirectUrl = generateRedirectUrl(1, false, urlControllerDeps);
 
-			if (!shareUrl) {
+			if (!redirectUrl) {
 				console.error('No steps found');
 				return;
 			}
 
-			const button = e.currentTarget;
+			const button = e.currentTarget as HTMLElement;
 			const originalContent = button.cloneNode(true);
-			const title = document.getElementById('title').value || 'WordPress Playground Blueprint';
+			const title = (document.getElementById('title') as HTMLInputElement).value || 'WordPress Playground Blueprint';
 
-			if (navigator.share) {
-				try {
-					await navigator.share({
-						title: title,
-						url: shareUrl
-					});
+			const result = await shareUrl(redirectUrl, title);
+
+			if (result === 'shared' || result === 'copied') {
+				if (result === 'copied') {
+					showCopiedFeedback(button, originalContent);
+				} else {
 					moreOptionsMenu.style.display = 'none';
-				} catch (err) {
-					if (err.name !== 'AbortError') {
-						console.error('Share failed, falling back to copy:', err);
-						copyToClipboard(shareUrl, button, originalContent);
-					}
 				}
-			} else {
-				copyToClipboard(shareUrl, button, originalContent);
 			}
 		} catch (err) {
 			console.error('Error in share-url handler:', err);
 		}
 	});
 
-	function copyToClipboard(url, button, originalContent) {
-		if (!navigator.clipboard) {
-			const textarea = document.createElement('textarea');
-			textarea.value = url;
-			textarea.style.position = 'fixed';
-			textarea.style.opacity = '0';
-			document.body.appendChild(textarea);
-			textarea.select();
-			try {
-				document.execCommand('copy');
-				showCopiedFeedback(button, originalContent);
-			} catch (err) {
-				console.error('execCommand failed:', err);
-			}
-			document.body.removeChild(textarea);
-		} else {
-			navigator.clipboard.writeText(url).then(() => {
-				showCopiedFeedback(button, originalContent);
-			}).catch(err => {
-				console.error('Clipboard write failed:', err);
-			});
-		}
-	}
+	// copyToClipboard is now imported from url-controller.ts
 
-	function showCopiedFeedback(button, originalContent) {
+	function showCopiedFeedback(button: HTMLElement, originalContent: Node) {
 		button.textContent = '✓ Copied!';
 		setTimeout(() => {
 			button.textContent = '';
 			while (originalContent.firstChild) {
 				button.appendChild(originalContent.firstChild);
 			}
-			moreOptionsMenu.style.display = 'none';
+			if (moreOptionsMenu) {
+				moreOptionsMenu.style.display = 'none';
+			}
 		}, 1500);
 	}
 
-	document.getElementById('copy-redirect-url-menu').addEventListener('click', function (e) {
+	document.getElementById('copy-redirect-url-menu').addEventListener('click', async function (e) {
 
 		if (window.goatcounter) {
 			window.goatcounter.count({
@@ -1900,16 +1820,19 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		try {
-			const redirectUrl = generateRedirectUrl();
+			const redirectUrl = generateRedirectUrl(1, true, urlControllerDeps);
 
 			if (!redirectUrl) {
 				console.error('No steps found');
 				return;
 			}
 
-			const button = e.currentTarget;
+			const button = e.currentTarget as HTMLElement;
 			const originalContent = button.cloneNode(true);
-			copyToClipboard(redirectUrl, button, originalContent);
+			const success = await copyToClipboard(redirectUrl);
+			if (success) {
+				showCopiedFeedback(button, originalContent);
+			}
 		} catch (err) {
 			console.error('Error in copy-redirect-url handler:', err);
 		}
@@ -2115,54 +2038,9 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
-	function showToast(message) {
-		const toast = document.getElementById('history-toast');
-		const toastMessage = document.getElementById('history-toast-message');
-		const undoBtn = document.getElementById('history-toast-undo');
-
-		toastMessage.textContent = message;
-		undoBtn.style.display = 'none';
-		toast.style.display = 'flex';
-
-		if (deleteUndoTimeout) {
-			clearTimeout(deleteUndoTimeout);
-		}
-
-		deleteUndoTimeout = setTimeout(function () {
-			toast.style.display = 'none';
-		}, 3000);
-	}
-
-	function showMyBlueprintsToast(message: string, undoCallback?: () => void) {
-		const toast = document.getElementById('undo-toast');
-		const toastMessage = document.getElementById('undo-toast-message');
-		const undoBtn = document.getElementById('undo-toast-undo');
-
-		toastMessage.textContent = message;
-
-		if (undoCallback) {
-			undoBtn.textContent = 'Undo';
-			undoBtn.style.display = 'inline-block';
-			undoBtn.onclick = function () {
-				clearTimeout(deleteUndoTimeout);
-				toast.style.display = 'none';
-				undoCallback();
-			};
-		} else {
-			undoBtn.style.display = 'none';
-		}
-
-		toast.style.display = 'flex';
-
-		if (deleteUndoTimeout) {
-			clearTimeout(deleteUndoTimeout);
-		}
-
-		deleteUndoTimeout = setTimeout(function () {
-			toast.style.display = 'none';
-			lastDeletedEntry = null;
-		}, undoCallback ? 5000 : 3000);
-	}
+	// showToast and showMyBlueprintsToast are now provided by toast-service.ts
+	const showToast = (message: string) => toastService.show(message);
+	const showMyBlueprintsToast = (message: string, undoCallback?: () => void) => toastService.showWithUndo(message, undoCallback);
 
 
 	function isBlueprintAlreadySaved() {
@@ -2190,33 +2068,27 @@ addEventListener('DOMContentLoaded', function () {
 	}
 
 	function showSavePromptToast() {
-		const toast = document.getElementById('history-toast');
-		const toastMessage = document.getElementById('history-toast-message');
-		const undoBtn = document.getElementById('history-toast-undo');
-
-		const titleInput = document.getElementById('title');
+		const titleInput = document.getElementById('title') as HTMLInputElement;
 		const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
 
 		const history = getHistory();
 		const existingEntry = blueprintTitle ? history.find(entry => entry.title === blueprintTitle) : null;
 
+		let message: string;
+		let actionLabel: string;
+
 		if (existingEntry) {
-			toastMessage.textContent = `Update "${blueprintTitle}"?`;
-			undoBtn.textContent = 'Update';
+			message = `Update "${blueprintTitle}"?`;
+			actionLabel = 'Update';
 		} else if (blueprintTitle) {
-			toastMessage.textContent = `Save as "${blueprintTitle}"?`;
-			undoBtn.textContent = 'Save';
+			message = `Save as "${blueprintTitle}"?`;
+			actionLabel = 'Save';
 		} else {
-			toastMessage.textContent = 'Save this blueprint?';
-			undoBtn.textContent = 'Save';
+			message = 'Save this blueprint?';
+			actionLabel = 'Save';
 		}
 
-		undoBtn.style.display = 'inline-block';
-		toast.style.display = 'flex';
-
-		undoBtn.onclick = function () {
-			hideSavePromptToast();
-
+		toastService.showSavePrompt(message, actionLabel, () => {
 			if (existingEntry) {
 				const updatedHistory = history.filter(entry => entry.title !== blueprintTitle);
 				saveHistory(updatedHistory);
@@ -2235,15 +2107,10 @@ addEventListener('DOMContentLoaded', function () {
 				const defaultTitle = generateLabel();
 				showSaveBlueprintDialog(defaultTitle, false);
 			}
-		};
+		});
 	}
 
-	function hideSavePromptToast() {
-		const toast = document.getElementById('history-toast');
-		toast.style.display = 'none';
-		const undoBtn = document.getElementById('history-toast-undo');
-		undoBtn.textContent = 'Undo';
-	}
+	const hideSavePromptToast = () => toastService.hide();
 
 	function captureCurrentSteps() {
 		const stepsData = {
@@ -2297,79 +2164,7 @@ addEventListener('DOMContentLoaded', function () {
 		return stepsData;
 	}
 
-	function generateLabel() {
-		const stepBlocks = document.querySelectorAll('#blueprint-steps .step');
-		const stepCount = stepBlocks.length;
-		const stepTypes = new Set();
-		const plugins = [];
-		const themes = [];
-		const otherSteps = new Set();
-
-		stepBlocks.forEach(function (block) {
-			const stepType = block.dataset.step || block.querySelector('[name="step"]')?.value;
-			if (stepType) {
-				stepTypes.add(stepType);
-
-				if (stepType === 'installPlugin') {
-					const pluginSlug = block.querySelector('[name="pluginData"]')?.value ||
-						block.querySelector('[name="slug"]')?.value ||
-						block.querySelector('[name="url"]')?.value;
-					if (pluginSlug && pluginSlug.trim()) {
-						const parts = pluginSlug.split('/').filter(p => p.trim());
-						const name = parts[parts.length - 1].replace(/\.zip$/, '').replace(/-/g, ' ');
-						plugins.push(name);
-					} else {
-						otherSteps.add(stepType);
-					}
-				} else if (stepType === 'installTheme') {
-					const themeSlug = block.querySelector('[name="themeData"]')?.value ||
-						block.querySelector('[name="slug"]')?.value ||
-						block.querySelector('[name="url"]')?.value;
-					if (themeSlug && themeSlug.trim()) {
-						const parts = themeSlug.split('/').filter(p => p.trim());
-						const name = parts[parts.length - 1].replace(/\.zip$/, '').replace(/-/g, ' ');
-						themes.push(name);
-					} else {
-						otherSteps.add(stepType);
-					}
-				} else {
-					otherSteps.add(stepType);
-				}
-			}
-		});
-
-		if (stepTypes.size === 0 || stepCount === 0) {
-			return 'Empty Blueprint';
-		}
-
-		const parts = [];
-
-		if (plugins.length > 0) {
-			const pluginLabel = plugins.length === 1 ? 'Plugin' : 'Plugins';
-			const pluginNames = plugins.slice(0, 2).join(', ');
-			parts.push(pluginLabel + ' (' + pluginNames + ')');
-		}
-
-		if (themes.length > 0) {
-			const themeName = themes[0];
-			parts.push('Theme (' + themeName + ')');
-		}
-
-		if (otherSteps.size > 0) {
-			const otherArray = Array.from(otherSteps);
-			if (otherArray.length <= 2) {
-				parts.push(otherArray.join(', '));
-			} else {
-				parts.push(otherArray.length + ' more step' + (otherArray.length !== 1 ? 's' : ''));
-			}
-		}
-
-		if (parts.length > 0) {
-			return parts.join(' + ');
-		}
-
-		return 'Empty Blueprint';
-	}
+	// generateLabel is now imported from label-generator.ts
 
 	function formatDate(isoString) {
 		const date = new Date(isoString);
@@ -2441,8 +2236,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
-	let lastDeletedEntry = null;
-	let deleteUndoTimeout = null;
+	// lastDeletedEntry and deleteUndoTimeout are now managed by toast-service.ts
 
 	function renderHistoryList() {
 		const history = getHistory();
@@ -2603,7 +2397,7 @@ addEventListener('DOMContentLoaded', function () {
 			return;
 		}
 
-		lastDeletedEntry = entry;
+		toastService.setLastDeletedEntry(entry);
 
 		const filtered = history.filter(function (e) {
 			return e.id !== entryId;
@@ -2625,6 +2419,7 @@ addEventListener('DOMContentLoaded', function () {
 	}
 
 	function undoDelete() {
+		const lastDeletedEntry = toastService.getLastDeletedEntry();
 		if (!lastDeletedEntry) {
 			return;
 		}
@@ -2637,7 +2432,7 @@ addEventListener('DOMContentLoaded', function () {
 		saveHistory(history);
 		updateHistoryButtonVisibility();
 
-		lastDeletedEntry = null;
+		toastService.setLastDeletedEntry(null);
 		renderHistoryList();
 		showMyBlueprintsToast('Restored');
 	}
@@ -2872,9 +2667,7 @@ addEventListener('DOMContentLoaded', function () {
 	document.getElementById('undo-toast-close').addEventListener('click', function () {
 		const toast = document.getElementById('undo-toast');
 		toast.style.display = 'none';
-		if (deleteUndoTimeout) {
-			clearTimeout(deleteUndoTimeout);
-		}
+		// Timeout is managed by toast-service.ts
 	});
 
 	function exportAllBlueprints() {
