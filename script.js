@@ -2139,6 +2139,13 @@ addEventListener('DOMContentLoaded', function () {
 				document.getElementById('autoredirecting').close();
 			}
 		});
+		const handleEscape = function (event) {
+			if (event.key === 'Escape' && document.getElementById('autoredirecting').open) {
+				clearInterval(interval);
+				document.removeEventListener('keydown', handleEscape);
+			}
+		};
+		document.addEventListener('keydown', handleEscape);
 	}
 
 	// Detect if page was accessed via reload (F5, Ctrl+R, etc.)
