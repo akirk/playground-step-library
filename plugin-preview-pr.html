@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plugin Preview PR Tracker</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 2px solid #e5e5e5;
+        }
+        h1 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+        }
+        h1:hover {
+            color: #0073aa;
+        }
+        .main {
+            display: grid;
+            grid-template-columns: 400px 1fr 500px;
+            gap: 0;
+            flex: 1;
+            overflow: hidden;
+        }
+        .sidebar {
+            background: white;
+            border-right: 2px solid #e5e5e5;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .plugin-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        .plugin-item {
+            background: #f9f9f9;
+            border: 2px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .plugin-item:hover {
+            border-color: #0073aa;
+            background: #f5f9fc;
+        }
+        .plugin-item.active {
+            border-color: #0073aa;
+            background: #e9f5fb;
+        }
+        .plugin-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .plugin-slug {
+            font-size: 12px;
+            color: #666;
+            font-family: monospace;
+            margin-bottom: 10px;
+        }
+        .plugin-status {
+            margin-top: 8px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e5e5e5;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #00a32a;
+            transition: width 0.3s ease;
+        }
+        .status-checklist {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 11px;
+        }
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #666;
+        }
+        .status-item.complete {
+            color: #00a32a;
+        }
+        .status-item .icon {
+            font-size: 11px;
+        }
+        .add-plugin-btn {
+            width: 100%;
+            padding: 12px;
+            background: #0073aa;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+        .add-plugin-btn:hover {
+            background: #005a87;
+        }
+        .content {
+            overflow-y: auto;
+            padding: 30px;
+            border-right: 2px solid #e5e5e5;
+        }
+        .pr-preview {
+            background: white;
+            overflow-y: auto;
+            padding: 30px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #0073aa;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 18px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+        input[type="text"],
+        input[type="url"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        textarea {
+            resize: vertical;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+        }
+        textarea.code {
+            min-height: 200px;
+        }
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 400;
+        }
+        .checkbox-item input[type="checkbox"]:checked + label {
+            color: #00a32a;
+            text-decoration: line-through;
+        }
+        .drop-zone {
+            border: 2px dashed #0073aa;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f9f9f9;
+        }
+        .drop-zone:hover {
+            background: #e9f5fb;
+            border-color: #005a87;
+        }
+        .drop-zone.dragover {
+            background: #e9f5fb;
+            border-color: #005a87;
+            transform: scale(1.02);
+        }
+        .drop-zone-text {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        button {
+            background: #0073aa;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        button:hover {
+            background: #005a87;
+        }
+        button.secondary {
+            background: #50575e;
+        }
+        button.secondary:hover {
+            background: #32373c;
+        }
+        button.danger {
+            background: #d63638;
+        }
+        button.danger:hover {
+            background: #b32d2e;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        .instructions {
+            background: #e9f5fb;
+            border-left: 4px solid #0073aa;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .instructions h3 {
+            margin: 0 0 10px 0;
+            color: #0073aa;
+            font-size: 16px;
+        }
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        .instructions code {
+            background: rgba(0,115,170,0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .message {
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: none;
+        }
+        .message.show {
+            display: block;
+        }
+        .message.success {
+            background: #00a32a;
+            color: white;
+        }
+        .message.error {
+            background: #d63638;
+            color: white;
+        }
+        @media (max-width: 1400px) {
+            .main {
+                grid-template-columns: 350px 1fr;
+            }
+            .pr-preview {
+                display: none;
+            }
+        }
+        @media (max-width: 1000px) {
+            .main {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                border-right: none;
+                border-bottom: 2px solid #e5e5e5;
+            }
+            .pr-preview {
+                display: none;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="cursor: pointer;" onclick="handleTitleClick()">Plugin Preview PR Tracker</h1>
+    </div>
+
+    <div class="main">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <button class="add-plugin-btn" onclick="showAddForm()">+ Add Plugin</button>
+            </div>
+            <div class="plugin-list" id="pluginList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📦</div>
+                    <p>No plugins yet.<br>Click "Add Plugin" to get started!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content" id="content">
+            <div class="empty-state">
+                <div class="empty-state-icon">👈</div>
+                <p>Select a plugin from the list or click "Add Plugin" to get started</p>
+            </div>
+        </div>
+
+        <div class="pr-preview" id="prPreview">
+            <div class="empty-state">
+                <div class="empty-state-icon">📝</div>
+                <p>PR description will appear here</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let plugins = [];
+        let selectedPluginId = null;
+
+        // Load from localStorage
+        function loadPlugins() {
+            const saved = localStorage.getItem('pluginPreviewTracker');
+            if (saved) {
+                plugins = JSON.parse(saved);
+            }
+            renderPluginList();
+
+            // Show add form if no plugins exist, otherwise show stats
+            if (plugins.length === 0) {
+                showAddForm();
+            } else if (!selectedPluginId) {
+                showStatsOverview();
+            }
+        }
+
+        function savePlugins() {
+            localStorage.setItem('pluginPreviewTracker', JSON.stringify(plugins));
+        }
+
+        function renderPluginList() {
+            const list = document.getElementById('pluginList');
+            if (plugins.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📦</div>
+                        <p>No plugins yet.<br>Click "Add Plugin" to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = plugins.map(plugin => {
+                // Backwards compatibility
+                if (plugin.status.prCreated !== undefined && plugin.status.submissionCreated === undefined) {
+                    plugin.status.submissionCreated = plugin.status.prCreated;
+                    plugin.status.submissionAccepted = plugin.status.prAccepted;
+                }
+
+                const completedCount = [
+                    plugin.status.hasGithubRepo,
+                    plugin.status.blueprintCreated,
+                    plugin.status.submissionCreated,
+                    plugin.status.submissionAccepted
+                ].filter(Boolean).length;
+                const totalCount = 4;
+                const progressPercent = (completedCount / totalCount) * 100;
+
+                const activeClass = plugin.id === selectedPluginId ? 'active' : '';
+                const submissionLabel = plugin.submissionType === 'issue' ? 'Issue' :
+                                       plugin.submissionType === 'forum' ? 'Forum' : 'PR';
+                const acceptedLabel = plugin.submissionType === 'forum' ? 'Resolved' : 'Merged';
+
+                return `
+                    <div class="plugin-item ${activeClass}" onclick="selectPlugin('${plugin.id}')">
+                        <div class="plugin-name">${escapeHtml(plugin.pluginName)}</div>
+                        <div class="plugin-slug">${escapeHtml(plugin.pluginSlug)}</div>
+                        <div class="plugin-status">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                            </div>
+                            <div class="status-checklist">
+                                <div class="status-item ${plugin.status.hasGithubRepo ? 'complete' : ''}">
+                                    <span class="icon">${plugin.status.hasGithubRepo ? '✓' : '○'}</span>
+                                    <span>Repo</span>
+                                </div>
+                                <div class="status-item ${plugin.status.blueprintCreated ? 'complete' : ''}">
+                                    <span class="icon">${plugin.status.blueprintCreated ? '✓' : '○'}</span>
+                                    <span>Blueprint</span>
+                                </div>
+                                <div class="status-item ${plugin.status.submissionCreated ? 'complete' : ''}">
+                                    <span class="icon">${plugin.status.submissionCreated ? '✓' : '○'}</span>
+                                    <span>${submissionLabel}</span>
+                                </div>
+                                <div class="status-item ${plugin.status.submissionAccepted ? 'complete' : ''}">
+                                    <span class="icon">${plugin.status.submissionAccepted ? '✓' : '○'}</span>
+                                    <span>${acceptedLabel}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectPlugin(id) {
+            selectedPluginId = id;
+            const plugin = plugins.find(p => p.id === id);
+            if (!plugin) return;
+
+            renderPluginList();
+            renderPluginDetail(plugin);
+        }
+
+        function renderPluginDetail(plugin) {
+            // Backwards compatibility
+            if (plugin.status.prCreated !== undefined && plugin.status.submissionCreated === undefined) {
+                plugin.status.submissionCreated = plugin.status.prCreated;
+                plugin.status.submissionAccepted = plugin.status.prAccepted;
+            }
+            if (!plugin.submissionType) plugin.submissionType = '';
+            if (!plugin.submissionUrl && plugin.prUrl) plugin.submissionUrl = plugin.prUrl;
+
+            const content = document.getElementById('content');
+
+            const prDescription = generatePRDescription(
+                plugin.pluginName,
+                plugin.pluginSlug,
+                plugin.landingPageDesc,
+                plugin.blueprintPath || '.wordpress-org/blueprints/blueprint.json',
+                plugin.githubRepo || '',
+                plugin.forkedBlueprintUrl || ''
+            );
+
+            // Determine next steps based on submission type
+            let nextStep = '';
+            if (!plugin.status.hasGithubRepo && plugin.submissionType !== 'forum') {
+                nextStep = '📍 <strong>Next:</strong> Add GitHub repository URL below';
+            } else if (!plugin.status.blueprintCreated) {
+                nextStep = '📍 <strong>Next:</strong> Create and test blueprint.json in the section below';
+            } else if (!plugin.submissionType || !plugin.status.typeSelected) {
+                nextStep = '📍 <strong>Next:</strong> Choose submission type below (PR recommended)';
+            } else if (plugin.submissionType === 'pr' && !plugin.status.fileUploaded) {
+                nextStep = `📍 <strong>Next:</strong> Upload blueprint file to GitHub (see instructions below)`;
+            } else if (!plugin.status.submissionCreated) {
+                const typeLabel = plugin.submissionType === 'pr' ? 'Pull Request' :
+                                 plugin.submissionType === 'issue' ? 'Issue' : 'Forum Post';
+                nextStep = `📍 <strong>Next:</strong> Create ${typeLabel} using text from right panel →`;
+            } else if (!plugin.status.submissionAccepted) {
+                nextStep = '📍 <strong>Next:</strong> Wait for maintainer response';
+            } else {
+                nextStep = '✅ <strong>Complete!</strong> Live Preview enabled - check it out!';
+            }
+
+            // Determine checklist items based on submission type
+            let checklistItems = '';
+            if (plugin.submissionType === 'pr') {
+                checklistItems = `
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-repo"
+                               ${plugin.status.hasGithubRepo ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'hasGithubRepo', this.checked)">
+                        <label for="check-repo">GitHub repository URL added</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-blueprint"
+                               ${plugin.status.blueprintCreated ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'blueprintCreated', this.checked)">
+                        <label for="check-blueprint">Blueprint.json created and tested</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-type"
+                               ${plugin.status.typeSelected ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'typeSelected', this.checked)">
+                        <label for="check-type">Submission type selected (PR)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-uploaded"
+                               ${plugin.status.fileUploaded ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'fileUploaded', this.checked)">
+                        <label for="check-uploaded">Blueprint file uploaded to GitHub repo</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-submission"
+                               ${plugin.status.submissionCreated ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'submissionCreated', this.checked)">
+                        <label for="check-submission">Pull request created</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-accepted"
+                               ${plugin.status.submissionAccepted ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'submissionAccepted', this.checked)">
+                        <label for="check-accepted">Pull request merged</label>
+                    </div>
+                `;
+            } else if (plugin.submissionType === 'issue') {
+                checklistItems = `
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-repo"
+                               ${plugin.status.hasGithubRepo ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'hasGithubRepo', this.checked)">
+                        <label for="check-repo">GitHub repository URL added</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-blueprint"
+                               ${plugin.status.blueprintCreated ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'blueprintCreated', this.checked)">
+                        <label for="check-blueprint">Blueprint.json created and tested</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-type"
+                               ${plugin.status.typeSelected ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'typeSelected', this.checked)">
+                        <label for="check-type">Submission type selected (Issue)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-submission"
+                               ${plugin.status.submissionCreated ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'submissionCreated', this.checked)">
+                        <label for="check-submission">Issue created with blueprint code</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-accepted"
+                               ${plugin.status.submissionAccepted ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'submissionAccepted', this.checked)">
+                        <label for="check-accepted">Issue resolved / PR created by maintainer</label>
+                    </div>
+                `;
+            } else if (plugin.submissionType === 'forum') {
+                checklistItems = `
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-blueprint"
+                               ${plugin.status.blueprintCreated ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'blueprintCreated', this.checked)">
+                        <label for="check-blueprint">Blueprint.json created and tested</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-type"
+                               ${plugin.status.typeSelected ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'typeSelected', this.checked)">
+                        <label for="check-type">Submission type selected (Forum)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-submission"
+                               ${plugin.status.submissionCreated ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'submissionCreated', this.checked)">
+                        <label for="check-submission">Forum post created with blueprint code</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-accepted"
+                               ${plugin.status.submissionAccepted ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'submissionAccepted', this.checked)">
+                        <label for="check-accepted">Plugin author responded / implemented</label>
+                    </div>
+                `;
+            } else {
+                // Default checklist when type not selected
+                checklistItems = `
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-repo"
+                               ${plugin.status.hasGithubRepo ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'hasGithubRepo', this.checked)">
+                        <label for="check-repo">GitHub repository URL added</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-blueprint"
+                               ${plugin.status.blueprintCreated ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'blueprintCreated', this.checked)">
+                        <label for="check-blueprint">Blueprint.json created and tested</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="check-type"
+                               ${plugin.status.typeSelected ? 'checked' : ''}
+                               onchange="updateStatus('${plugin.id}', 'typeSelected', this.checked)">
+                        <label for="check-type">Submission type selected</label>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = `
+                ${nextStep ? `
+                <div style="background: #e9f5fb; border-left: 4px solid #0073aa; padding: 15px 20px; margin-bottom: 20px; border-radius: 4px;">
+                    ${nextStep}
+                </div>
+                ` : ''}
+
+                <div class="panel">
+                    <h2>Progress Checklist</h2>
+                    <div class="checkbox-group">
+                        ${checklistItems}
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>${escapeHtml(plugin.pluginName)}</h2>
+
+                    <div class="form-group">
+                        <label>Plugin Slug</label>
+                        <input type="text" value="${escapeHtml(plugin.pluginSlug)}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>GitHub Repository</label>
+                        <input type="text" id="editGithubRepo" value="${escapeHtml(plugin.githubRepo || '')}"
+                               placeholder="owner/repo" onchange="updatePluginField('${plugin.id}', 'githubRepo', this.value)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Forked Blueprint URL (for testing before merge)</label>
+                        <input type="url" id="editForkedBlueprintUrl" value="${escapeHtml(plugin.forkedBlueprintUrl || '')}"
+                               placeholder="https://raw.githubusercontent.com/your-username/repo/branch-name/.wordpress-org/blueprints/blueprint.json"
+                               onchange="updatePluginField('${plugin.id}', 'forkedBlueprintUrl', this.value)">
+                        <div class="help-text">Raw GitHub URL to your fork's blueprint file (get this after creating the file in your fork)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Submission Type</label>
+                        <select id="editSubmissionType" onchange="updatePluginField('${plugin.id}', 'submissionType', this.value)">
+                            <option value="" ${plugin.submissionType === '' ? 'selected' : ''}>Not selected yet</option>
+                            <option value="pr" ${plugin.submissionType === 'pr' ? 'selected' : ''}>Pull Request (recommended)</option>
+                            <option value="issue" ${plugin.submissionType === 'issue' ? 'selected' : ''}>GitHub Issue</option>
+                            <option value="forum" ${plugin.submissionType === 'forum' ? 'selected' : ''}>WordPress.org Forum</option>
+                        </select>
+                        <div class="help-text">Choose how you'll submit the blueprint</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Submission URL</label>
+                        <input type="url" id="editSubmissionUrl" value="${escapeHtml(plugin.submissionUrl || '')}"
+                               placeholder="https://github.com/..." onchange="updatePluginField('${plugin.id}', 'submissionUrl', this.value)">
+                        <div class="help-text">Link to your PR, Issue, or Forum post</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="editNotes" onchange="updatePluginField('${plugin.id}', 'notes', this.value)"
+                                  placeholder="Any notes about this plugin...">${escapeHtml(plugin.notes || '')}</textarea>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <h2>Blueprint File</h2>
+                    ${plugin.blueprintContent ? `
+                        <div style="background: #f9f9f9; padding: 15px; border-radius: 4px; border: 1px solid #e5e5e5;">
+                            <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">
+                                Blueprint loaded and ready to use. Copy it when creating the PR, or drag a new blueprint file to update.
+                            </p>
+                            <div class="button-group" style="margin: 0;">
+                                <button onclick="copyBlueprint('${plugin.id}')">📋 Copy Blueprint JSON</button>
+                            </div>
+                        </div>
+                        <div id="blueprintMessage" class="message"></div>
+                    ` : `
+                        <div class="drop-zone" id="detailDropZone">
+                            <div class="drop-zone-text"><strong>Drop blueprint.json here</strong></div>
+                            <div class="drop-zone-text">to load the blueprint file</div>
+                            <input type="file" id="detailFileInput" accept=".json" style="display: none;">
+                        </div>
+                    `}
+                </div>
+
+                ${plugin.submissionType === 'pr' ? `
+                <div class="instructions">
+                    <h3>📝 Step-by-Step: Upload Blueprint File to GitHub</h3>
+                    <p style="margin-bottom: 15px;">Follow these steps to upload the blueprint file and create your pull request:</p>
+                    <ol>
+                        <li><strong>Navigate to the repository</strong><br>
+                            ${plugin.githubRepo ? `Go to <a href="https://github.com/${escapeHtml(plugin.githubRepo)}" target="_blank" style="color: #0073aa;">https://github.com/${escapeHtml(plugin.githubRepo)}</a>` : '<em>Add the GitHub repository URL in the field above first</em>'}
+                        </li>
+                        <li><strong>Start creating a new file</strong><br>
+                            Click the <strong>"Add file"</strong> button (top right), then select <strong>"Create new file"</strong> from the dropdown
+                        </li>
+                        <li><strong>GitHub creates a fork automatically</strong><br>
+                            If you don't have write access, GitHub will show a message that it's creating a fork in your account. This is normal and expected!
+                        </li>
+                        <li><strong>Enter the file path</strong><br>
+                            In the "Name your file..." field at the top, type: <code>.wordpress-org/blueprints/blueprint.json</code><br>
+                            <em>Note: The <code>.wordpress-org</code> folder will be created automatically</em>
+                        </li>
+                        <li><strong>Paste the blueprint content</strong><br>
+                            Copy the blueprint JSON from the "Blueprint File" section above, then paste it into the file editor
+                        </li>
+                        <li><strong>Commit to your fork</strong><br>
+                            Scroll down to the "Commit changes" section at the bottom<br>
+                            In the commit message, you can use: <code>Add Live Preview blueprint</code><br>
+                            Click the green <strong>"Commit changes"</strong> button
+                        </li>
+                        <li><strong>Get the raw file URL for testing</strong><br>
+                            After committing, GitHub will show you the file. Click the <strong>"Raw"</strong> button<br>
+                            Copy the URL from your browser's address bar (it will look like <code>https://raw.githubusercontent.com/...</code>)<br>
+                            Paste it into the "Forked Blueprint URL" field above - this lets you test the blueprint before creating the PR!
+                        </li>
+                        <li><strong>Create the pull request</strong><br>
+                            Navigate back to the original repository's main page<br>
+                            GitHub will show a banner saying "Your recently pushed branches" - click <strong>"Compare & pull request"</strong>
+                        </li>
+                        <li><strong>Add the PR description</strong><br>
+                            Paste the PR description from the right panel → into the PR description field<br>
+                            Then click the green <strong>"Create pull request"</strong> button
+                        </li>
+                        <li><strong>Record the PR URL</strong><br>
+                            After creating the PR, copy the URL from your browser's address bar<br>
+                            Paste it into the "Submission URL" field above
+                        </li>
+                        <li><strong>Mark as complete</strong><br>
+                            Check the "Blueprint file uploaded to GitHub repo" checkbox above<br>
+                            Then check "Pull request created" when done!
+                        </li>
+                    </ol>
+                </div>
+                ` : plugin.submissionType === 'issue' ? `
+                <div class="instructions">
+                    <h3>📝 How to Create a GitHub Issue</h3>
+                    <ol>
+                        <li><strong>Go to the repository issues page</strong><br>
+                            ${plugin.githubRepo ? `Navigate to <a href="https://github.com/${escapeHtml(plugin.githubRepo)}/issues/new" target="_blank" style="color: #0073aa;">https://github.com/${escapeHtml(plugin.githubRepo)}/issues/new</a>` : '<em>Add the GitHub repository URL in the field above first</em>'}
+                        </li>
+                        <li><strong>Add a title</strong><br>
+                            Use something like: <code>Add Live Preview blueprint for WordPress.org</code>
+                        </li>
+                        <li><strong>Paste the issue description</strong><br>
+                            Copy the text from the right panel → and paste it into the issue description
+                        </li>
+                        <li><strong>Submit the issue</strong><br>
+                            Click the green <strong>"Submit new issue"</strong> button
+                        </li>
+                        <li><strong>Record the issue URL</strong><br>
+                            Copy the URL and paste it into the "Submission URL" field above<br>
+                            Check the "Issue created with blueprint code" checkbox
+                        </li>
+                    </ol>
+                </div>
+                ` : plugin.submissionType === 'forum' ? `
+                <div class="instructions">
+                    <h3>📝 How to Post on WordPress.org Forums</h3>
+                    <ol>
+                        <li><strong>Go to the plugin support forum</strong><br>
+                            Navigate to <a href="https://wordpress.org/support/plugin/${escapeHtml(plugin.pluginSlug)}/" target="_blank" style="color: #0073aa;">https://wordpress.org/support/plugin/${escapeHtml(plugin.pluginSlug)}/</a>
+                        </li>
+                        <li><strong>Create a new topic</strong><br>
+                            Look for the "Add new" button or link in the forum
+                        </li>
+                        <li><strong>Add a title</strong><br>
+                            Use something like: <code>Live Preview blueprint for your plugin</code>
+                        </li>
+                        <li><strong>Paste the forum post</strong><br>
+                            Copy the text from the right panel → and paste it into the post content
+                        </li>
+                        <li><strong>Submit the post</strong><br>
+                            Click <strong>"Submit"</strong> to post your message
+                        </li>
+                        <li><strong>Record the post URL</strong><br>
+                            Copy the URL and paste it into the "Submission URL" field above<br>
+                            Check the "Forum post created with blueprint code" checkbox
+                        </li>
+                    </ol>
+                </div>
+                ` : `
+                <div class="instructions">
+                    <h3>📝 Next Steps</h3>
+                    <p>Select a submission type above to see detailed instructions for creating your submission.</p>
+                </div>
+                `}
+
+                <div style="text-align: center; padding: 20px 0;">
+                    <button class="secondary" onclick="deletePlugin('${plugin.id}')" style="padding: 8px 16px; font-size: 13px;">Delete Plugin from Tracker</button>
+                </div>
+            `;
+
+            // Render PR description in right column
+            const prPreview = document.getElementById('prPreview');
+            prPreview.innerHTML = `
+                <h2>Submission Text</h2>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: 500;">Select submission type:</label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="radio" name="submissionType" value="pr" checked onchange="updateSubmissionText('${plugin.id}')">
+                            <span>GitHub Pull Request</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="radio" name="submissionType" value="issue" onchange="updateSubmissionText('${plugin.id}')">
+                            <span>GitHub Issue</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="radio" name="submissionType" value="forum" onchange="updateSubmissionText('${plugin.id}')">
+                            <span>WordPress.org Forum Post</span>
+                        </label>
+                    </div>
+                </div>
+
+                <p class="help-text" style="margin-bottom: 15px;">Copy and paste this text:</p>
+                <textarea class="code" id="prDescription" readonly style="min-height: 500px;">${escapeHtml(prDescription)}</textarea>
+                <div class="button-group">
+                    <button onclick="copyPRDescription()">Copy Text</button>
+                </div>
+                <div id="prMessage" class="message"></div>
+            `;
+
+            // Initialize detail drop zone if blueprint is not loaded
+            if (!plugin.blueprintContent) {
+                initializeDetailDropZone(plugin.id);
+            }
+        }
+
+        function initializeDetailDropZone(pluginId) {
+            const dropZone = document.getElementById('detailDropZone');
+            const fileInput = document.getElementById('detailFileInput');
+
+            if (!dropZone || !fileInput) return;
+
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleDetailBlueprintFile(files[0], pluginId);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleDetailBlueprintFile(e.target.files[0], pluginId);
+                }
+            });
+        }
+
+        function handleDetailBlueprintFile(file, pluginId) {
+            if (!file.name.endsWith('.json')) {
+                alert('Please upload a JSON file');
+                return;
+            }
+
+            const plugin = plugins.find(p => p.id === pluginId);
+            if (!plugin) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const blueprint = JSON.parse(e.target.result);
+                    plugin.blueprintContent = JSON.stringify(blueprint, null, 2);
+                    plugin.status.blueprintCreated = true;
+                    savePlugins();
+                    renderPluginList();
+                    renderPluginDetail(plugin);
+                } catch (error) {
+                    alert('Invalid JSON file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function updateStatus(id, field, value) {
+            const plugin = plugins.find(p => p.id === id);
+            if (!plugin) return;
+
+            plugin.status[field] = value;
+            savePlugins();
+            renderPluginList();
+        }
+
+        function updatePluginField(id, field, value) {
+            const plugin = plugins.find(p => p.id === id);
+            if (!plugin) return;
+
+            plugin[field] = value;
+            savePlugins();
+
+            if (field === 'githubRepo' && value) {
+                plugin.status.hasGithubRepo = true;
+                renderPluginList();
+                renderPluginDetail(plugin);
+            } else if (field === 'blueprintPath' || field === 'blueprintContent' || field === 'forkedBlueprintUrl') {
+                if (field === 'blueprintPath') {
+                    renderPluginDetail(plugin);
+                }
+                // Update the submission text to reflect new path/content/URL
+                if (selectedPluginId === id) {
+                    updateSubmissionText(id);
+                }
+            } else if (field === 'submissionType') {
+                if (value) {
+                    plugin.status.typeSelected = true;
+                }
+                renderPluginList();
+                renderPluginDetail(plugin);
+                // Update the submission text radio buttons
+                const radio = document.querySelector(`input[name="submissionType"][value="${value}"]`);
+                if (radio) {
+                    radio.checked = true;
+                    updateSubmissionText(id);
+                }
+            }
+        }
+
+        function deletePlugin(id) {
+            if (!confirm('Are you sure you want to delete this plugin from the tracker?')) return;
+
+            plugins = plugins.filter(p => p.id !== id);
+            savePlugins();
+            selectedPluginId = null;
+
+            renderPluginList();
+            document.getElementById('content').innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">👈</div>
+                    <p>Select a plugin from the list to view details and track progress</p>
+                </div>
+            `;
+        }
+
+        function generatePRDescription(pluginName, pluginSlug, landingPageDesc, blueprintPath, githubRepo, forkedBlueprintUrl) {
+            let landingText = 'the most relevant admin page';
+            if (landingPageDesc) {
+                landingText = landingPageDesc;
+            }
+
+            // Generate playground URL - prefer forked URL for immediate testing
+            let playgroundUrl = '';
+            if (forkedBlueprintUrl) {
+                playgroundUrl = `https://playground.wordpress.net/?blueprint-url=${encodeURIComponent(forkedBlueprintUrl)}`;
+            } else if (githubRepo) {
+                const rawGitHubUrl = `https://raw.githubusercontent.com/${githubRepo}/main/${blueprintPath}`;
+                playgroundUrl = `https://playground.wordpress.net/?blueprint-url=${encodeURIComponent(rawGitHubUrl)}`;
+            }
+
+            return `# Add Live Preview Blueprint for WordPress.org
+
+Hi! I noticed that ${pluginName} doesn't have a Live Preview button on its WordPress.org page yet, so I created a blueprint configuration for it.
+
+## About Live Preview
+
+The [Live Preview feature](https://developer.wordpress.org/plugins/wordpress-org/previews-and-blueprints/) allows users to try plugins directly in their browser without installing anything, powered by [WordPress Playground](https://playground.wordpress.net/). This can significantly increase user engagement and conversions.
+
+**Learn more:**
+- [Plugin Handbook - Previews and Blueprints](https://developer.wordpress.org/plugins/wordpress-org/previews-and-blueprints/)
+- [WordPress Playground Documentation](https://wordpress.github.io/wordpress-playground/)
+
+## What's Included
+
+This PR adds \`${blueprintPath}\` which configures the preview to:
+- Install and activate ${pluginName}
+- Log users in automatically
+- Direct them to ${landingText}
+- Use compatible PHP and WordPress versions
+
+## Testing the Blueprint
+
+${forkedBlueprintUrl ? `You can test this blueprint right now in WordPress Playground (before merging):
+
+**[▶️ Try it in Playground](${playgroundUrl})**
+
+This lets you see exactly how users will experience the Live Preview!` : `After the PR is created, you can test the blueprint in WordPress Playground by using the raw GitHub URL from your fork.`}
+
+## How to Enable
+
+After merging this PR and syncing to your WordPress.org SVN repository at \`/assets/blueprints/blueprint.json\`:
+
+1. Log in to your WordPress.org account
+2. Go to [your plugin's Advanced page](https://wordpress.org/plugins/${pluginSlug}/advanced/)
+3. Scroll to **"Toggle Live Preview"**
+4. Set the preview to **"public"**
+
+The Live Preview button will then appear on your plugin page!
+
+You can also test before enabling publicly by adding \`?preview=1\` to your plugin URL:
+https://wordpress.org/plugins/${pluginSlug}/?preview=1
+
+## Customization
+
+Feel free to customize the blueprint to better showcase your plugin's features. You can:
+- Change the landing page
+- Add demo content or sample data
+- Configure specific PHP/WordPress versions
+- Add setup steps
+
+See the [Blueprint documentation](https://wordpress.github.io/wordpress-playground/blueprints-api/index) for all available options.
+
+---
+
+Let me know if you'd like any adjustments to better showcase ${pluginName}!`;
+        }
+
+        function generateIssueDescription(pluginName, pluginSlug, landingPageDesc, blueprintPath, blueprintContent, githubRepo) {
+            let landingText = 'the most relevant admin page';
+            if (landingPageDesc) {
+                landingText = landingPageDesc;
+            }
+
+            // Generate playground URL from raw github
+            let playgroundUrl = '';
+            if (githubRepo) {
+                const rawGitHubUrl = `https://raw.githubusercontent.com/${githubRepo}/main/${blueprintPath}`;
+                playgroundUrl = `https://playground.wordpress.net/?blueprint-url=${encodeURIComponent(rawGitHubUrl)}`;
+            }
+
+            return `## Summary
+
+I noticed that ${pluginName} doesn't have a Live Preview button on its WordPress.org page. I've created a blueprint configuration that would enable this feature.
+
+## About Live Preview
+
+The [Live Preview feature](https://developer.wordpress.org/plugins/wordpress-org/previews-and-blueprints/) lets users try plugins directly in their browser without installation, powered by [WordPress Playground](https://playground.wordpress.net/). This can increase user engagement and help users understand the plugin before installing.
+
+**Documentation:**
+- [Plugin Handbook - Previews and Blueprints](https://developer.wordpress.org/plugins/wordpress-org/previews-and-blueprints/)
+- [Blueprint API Reference](https://wordpress.github.io/wordpress-playground/blueprints-api/index)
+
+## Proposed Blueprint
+
+I've created a blueprint that:
+- Installs and activates ${pluginName}
+- Logs users in automatically
+- Directs them to ${landingText}
+- Uses compatible PHP and WordPress versions
+
+### Blueprint File
+
+Add this as \`${blueprintPath}\`:
+
+\`\`\`json
+${blueprintContent}
+\`\`\`
+
+${playgroundUrl ? `\n### Test it Now\n\nYou can test this blueprint directly: **[▶️ Try it in Playground](${playgroundUrl})**\n(Note: Link will work after the blueprint file is added to the repository)\n` : ''}
+## Implementation Steps
+
+1. Add the blueprint file to your repository at \`${blueprintPath}\`
+2. Sync to WordPress.org SVN at \`/assets/blueprints/blueprint.json\`
+3. Go to [your plugin's Advanced page](https://wordpress.org/plugins/${pluginSlug}/advanced/)
+4. Enable the preview by setting it to "public"
+
+## Testing
+
+Test the preview at: https://wordpress.org/plugins/${pluginSlug}/?preview=1
+
+Let me know if you'd like me to submit this as a PR or if you'd prefer to implement it yourself!`;
+        }
+
+        function generateForumDescription(pluginName, pluginSlug, landingPageDesc, blueprintPath, blueprintContent, githubRepo) {
+            let landingText = 'the most relevant admin page';
+            if (landingPageDesc) {
+                landingText = landingPageDesc;
+            }
+
+            // Create a data URL for the blueprint to test directly
+            const blueprintDataUrl = `data:text/json;base64,${btoa(blueprintContent)}`;
+            const playgroundUrl = `https://playground.wordpress.net/?blueprint-url=${encodeURIComponent(blueprintDataUrl)}`;
+
+            return `Hi! I noticed that ${pluginName} doesn't have a Live Preview button on its WordPress.org page yet, so I created a blueprint configuration for you.
+
+**What's Live Preview?**
+
+The [Live Preview feature](https://developer.wordpress.org/plugins/wordpress-org/previews-and-blueprints/) lets users try your plugin directly in their browser without installing anything. It's powered by WordPress Playground and can really help users understand your plugin before committing to install it.
+
+**I've created a blueprint for you**
+
+The blueprint I created will:
+- Install and activate ${pluginName}
+- Log users in automatically
+- Direct them to ${landingText}
+- Use compatible PHP and WordPress versions
+
+${blueprintContent ? `**Try it now:** [▶️ Test in Playground](${playgroundUrl})\n\n` : ''}**Blueprint Code**
+
+You can add this as \`${blueprintPath}\` in your repository:
+
+\`\`\`json
+${blueprintContent}
+\`\`\`
+
+**How to enable it**
+
+1. Add the blueprint file to your repository
+2. Sync it to WordPress.org SVN at \`/assets/blueprints/blueprint.json\`
+3. Go to your [plugin's Advanced page](https://wordpress.org/plugins/${pluginSlug}/advanced/)
+4. Set the Live Preview to "public"
+
+**Resources**
+
+- [Plugin Handbook - Previews and Blueprints](https://developer.wordpress.org/plugins/wordpress-org/previews-and-blueprints/)
+- [Blueprint API Documentation](https://wordpress.github.io/wordpress-playground/blueprints-api/index)
+
+You can test it before enabling by going to: https://wordpress.org/plugins/${pluginSlug}/?preview=1
+
+Let me know if you have any questions or if you'd like me to help implement this!`;
+        }
+
+        function updateSubmissionText(pluginId) {
+            const plugin = plugins.find(p => p.id === pluginId);
+            if (!plugin) return;
+
+            const selectedType = document.querySelector('input[name="submissionType"]:checked')?.value || 'pr';
+            const textarea = document.getElementById('prDescription');
+
+            let description = '';
+            if (selectedType === 'pr') {
+                description = generatePRDescription(
+                    plugin.pluginName,
+                    plugin.pluginSlug,
+                    plugin.landingPageDesc,
+                    plugin.blueprintPath || '.wordpress-org/blueprints/blueprint.json',
+                    plugin.githubRepo || '',
+                    plugin.forkedBlueprintUrl || ''
+                );
+            } else if (selectedType === 'issue') {
+                description = generateIssueDescription(
+                    plugin.pluginName,
+                    plugin.pluginSlug,
+                    plugin.landingPageDesc,
+                    plugin.blueprintPath || '.wordpress-org/blueprints/blueprint.json',
+                    plugin.blueprintContent || '',
+                    plugin.githubRepo || ''
+                );
+            } else if (selectedType === 'forum') {
+                description = generateForumDescription(
+                    plugin.pluginName,
+                    plugin.pluginSlug,
+                    plugin.landingPageDesc,
+                    plugin.blueprintPath || '.wordpress-org/blueprints/blueprint.json',
+                    plugin.blueprintContent || '',
+                    plugin.githubRepo || ''
+                );
+            }
+
+            textarea.value = description;
+        }
+
+        function copyBlueprint(pluginId) {
+            const plugin = plugins.find(p => p.id === pluginId);
+            if (!plugin || !plugin.blueprintContent) {
+                showMessage('blueprintMessage', '⚠ No blueprint content to copy', 'error');
+                return;
+            }
+
+            navigator.clipboard.writeText(plugin.blueprintContent).then(() => {
+                showMessage('blueprintMessage', '✓ Blueprint copied to clipboard!', 'success');
+            }).catch(() => {
+                showMessage('blueprintMessage', '⚠ Failed to copy to clipboard', 'error');
+            });
+        }
+
+        function copyPRDescription() {
+            const textarea = document.getElementById('prDescription');
+            textarea.select();
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                showMessage('prMessage', '✓ Text copied to clipboard!', 'success');
+            });
+        }
+
+        function showMessage(elementId, message, type) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.className = 'message show ' + type;
+            setTimeout(() => {
+                el.classList.remove('show');
+            }, 2000);
+        }
+
+        // Handle title click
+        function handleTitleClick() {
+            if (plugins.length > 0) {
+                showStatsOverview();
+            }
+        }
+
+        // Stats overview
+        function showStatsOverview() {
+            const totalPlugins = plugins.length;
+
+            // Backwards compatibility
+            plugins.forEach(p => {
+                if (p.status.prCreated !== undefined && p.status.submissionCreated === undefined) {
+                    p.status.submissionCreated = p.status.prCreated;
+                    p.status.submissionAccepted = p.status.prAccepted;
+                }
+            });
+
+            const repoCount = plugins.filter(p => p.status.hasGithubRepo).length;
+            const blueprintCount = plugins.filter(p => p.status.blueprintCreated).length;
+            const submissionCount = plugins.filter(p => p.status.submissionCreated).length;
+            const acceptedCount = plugins.filter(p => p.status.submissionAccepted).length;
+            const completeCount = plugins.filter(p =>
+                p.status.hasGithubRepo &&
+                p.status.blueprintCreated &&
+                p.status.submissionCreated &&
+                p.status.submissionAccepted
+            ).length;
+
+            // Get plugins needing attention
+            const needsRepo = plugins.filter(p => !p.status.hasGithubRepo);
+            const needsBlueprint = plugins.filter(p => !p.status.blueprintCreated);
+            const needsSubmission = plugins.filter(p => p.status.blueprintCreated && !p.status.submissionCreated);
+            const needsAcceptance = plugins.filter(p => p.status.submissionCreated && !p.status.submissionAccepted);
+
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div class="panel">
+                    <h2>📊 Progress Overview</h2>
+                    <p style="color: #666; margin-bottom: 25px;">Tracking ${totalPlugins} plugin${totalPlugins !== 1 ? 's' : ''} • ${completeCount} completed</p>
+
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="font-weight: 500;">Repositories Added</span>
+                            <span style="color: #666;">${repoCount}/${totalPlugins}</span>
+                        </div>
+                        <div style="background: #e5e5e5; height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: #0073aa; height: 100%; width: ${(repoCount/totalPlugins*100)}%;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="font-weight: 500;">Blueprints Created</span>
+                            <span style="color: #666;">${blueprintCount}/${totalPlugins}</span>
+                        </div>
+                        <div style="background: #e5e5e5; height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: #0073aa; height: 100%; width: ${(blueprintCount/totalPlugins*100)}%;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="font-weight: 500;">Submissions Created</span>
+                            <span style="color: #666;">${submissionCount}/${totalPlugins}</span>
+                        </div>
+                        <div style="background: #e5e5e5; height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: #0073aa; height: 100%; width: ${(submissionCount/totalPlugins*100)}%;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="font-weight: 500;">Submissions Accepted</span>
+                            <span style="color: #666;">${acceptedCount}/${totalPlugins}</span>
+                        </div>
+                        <div style="background: #e5e5e5; height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div style="background: #00a32a; height: 100%; width: ${(acceptedCount/totalPlugins*100)}%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                ${needsRepo.length > 0 ? `
+                <div class="panel">
+                    <h2>⚠️ Needs Repository (${needsRepo.length})</h2>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        ${needsRepo.slice(0, 5).map(p => `
+                            <div style="padding: 8px; background: #fff3cd; border-radius: 4px; cursor: pointer;" onclick="selectPlugin('${p.id}')">
+                                <strong>${escapeHtml(p.pluginName)}</strong>
+                            </div>
+                        `).join('')}
+                        ${needsRepo.length > 5 ? `<div style="color: #666; font-size: 13px; padding: 8px;">+ ${needsRepo.length - 5} more</div>` : ''}
+                    </div>
+                </div>
+                ` : ''}
+
+                ${needsSubmission.length > 0 ? `
+                <div class="panel">
+                    <h2>🚀 Ready to Submit (${needsSubmission.length})</h2>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        ${needsSubmission.slice(0, 5).map(p => `
+                            <div style="padding: 8px; background: #d1ecf1; border-radius: 4px; cursor: pointer;" onclick="selectPlugin('${p.id}')">
+                                <strong>${escapeHtml(p.pluginName)}</strong>
+                            </div>
+                        `).join('')}
+                        ${needsSubmission.length > 5 ? `<div style="color: #666; font-size: 13px; padding: 8px;">+ ${needsSubmission.length - 5} more</div>` : ''}
+                    </div>
+                </div>
+                ` : ''}
+
+                ${needsAcceptance.length > 0 ? `
+                <div class="panel">
+                    <h2>⏳ Awaiting Response (${needsAcceptance.length})</h2>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        ${needsAcceptance.slice(0, 5).map(p => {
+                            const url = p.submissionUrl || p.prUrl;
+                            return `
+                            <div style="padding: 8px; background: #e2e3e5; border-radius: 4px; cursor: pointer;" onclick="selectPlugin('${p.id}')">
+                                <strong>${escapeHtml(p.pluginName)}</strong>
+                                ${url ? `<a href="${escapeHtml(url)}" target="_blank" onclick="event.stopPropagation()" style="color: #0073aa; font-size: 13px; display: block; margin-top: 4px;">View submission</a>` : ''}
+                            </div>
+                        `}).join('')}
+                        ${needsAcceptance.length > 5 ? `<div style="color: #666; font-size: 13px; padding: 8px;">+ ${needsAcceptance.length - 5} more</div>` : ''}
+                    </div>
+                </div>
+                ` : ''}
+            `;
+
+            // Show drop zone in PR preview column
+            const prPreview = document.getElementById('prPreview');
+            prPreview.innerHTML = `
+                <h2>Quick Add Plugin</h2>
+                <div class="drop-zone" id="statsDropZone" style="margin-top: 20px;">
+                    <div class="drop-zone-text"><strong>Drop blueprint.json here</strong></div>
+                    <div class="drop-zone-text">to quickly add a new plugin</div>
+                    <div class="drop-zone-text" style="margin-top: 10px;">or <a href="#" onclick="showAddForm(); return false;" style="color: #0073aa;">click to add manually</a></div>
+                    <input type="file" id="statsFileInput" accept=".json" style="display: none;">
+                </div>
+                <div style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 4px;">
+                    <p style="margin: 0; color: #666; font-size: 14px;">Select a plugin from the sidebar to view submission text</p>
+                </div>
+            `;
+
+            // Initialize drop zone for stats page
+            initializeStatsDropZone();
+        }
+
+        // Add plugin functions
+        function showAddForm() {
+            selectedPluginId = null;
+            renderPluginList();
+
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div class="panel">
+                    <h2>Add Plugin</h2>
+
+                    <div class="form-group">
+                        <label>Drop Blueprint File (Optional)</label>
+                        <div class="drop-zone" id="dropZone">
+                            <div class="drop-zone-text"><strong>Drop blueprint.json here</strong></div>
+                            <div class="drop-zone-text">or click to browse</div>
+                            <input type="file" id="fileInput" accept=".json" style="display: none;">
+                        </div>
+                        <div class="help-text">Blueprint will auto-fill plugin details</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newPluginName">Plugin Name *</label>
+                        <input type="text" id="newPluginName" placeholder="e.g., Contact Form 7">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newPluginSlug">Plugin Slug *</label>
+                        <input type="text" id="newPluginSlug" placeholder="e.g., contact-form-7">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newGithubRepo">GitHub Repository</label>
+                        <input type="text" id="newGithubRepo" placeholder="e.g., rocklobster-in/contact-form-7">
+                        <div class="help-text">Optional: owner/repo format</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newLandingPageDesc">Landing Page Description</label>
+                        <input type="text" id="newLandingPageDesc" placeholder="e.g., the plugin settings page">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newBlueprintContent">Blueprint JSON</label>
+                        <textarea id="newBlueprintContent" class="code" placeholder='{"landingPage": "/wp-admin/", ...}'></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button onclick="saveNewPlugin()">Add Plugin</button>
+                        ${plugins.length > 0 ? '<button class="secondary" onclick="loadPlugins(); if(plugins.length > 0) selectPlugin(plugins[0].id)">Cancel</button>' : ''}
+                    </div>
+                </div>
+            `;
+
+            // Initialize drag and drop
+            initializeDragDrop();
+
+            // Clear PR preview
+            const prPreview = document.getElementById('prPreview');
+            prPreview.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📝</div>
+                    <p>PR description will appear here</p>
+                </div>
+            `;
+        }
+
+        function saveNewPlugin() {
+            const name = document.getElementById('newPluginName').value.trim();
+            const slug = document.getElementById('newPluginSlug').value.trim();
+
+            if (!name || !slug) {
+                alert('Plugin name and slug are required');
+                return;
+            }
+
+            const newPlugin = {
+                id: Date.now().toString(),
+                pluginName: name,
+                pluginSlug: slug,
+                githubRepo: document.getElementById('newGithubRepo').value.trim(),
+                landingPageDesc: document.getElementById('newLandingPageDesc').value.trim(),
+                blueprintContent: document.getElementById('newBlueprintContent').value.trim(),
+                blueprintPath: '.wordpress-org/blueprints/blueprint.json',
+                submissionType: '',
+                status: {
+                    hasGithubRepo: document.getElementById('newGithubRepo').value.trim().length > 0,
+                    blueprintCreated: document.getElementById('newBlueprintContent').value.trim().length > 0,
+                    typeSelected: false,
+                    fileUploaded: false,
+                    submissionCreated: false,
+                    submissionAccepted: false
+                },
+                submissionUrl: '',
+                notes: ''
+            };
+
+            plugins.push(newPlugin);
+            savePlugins();
+            renderPluginList();
+            selectPlugin(newPlugin.id);
+        }
+
+        // Drag and drop for stats page
+        function initializeStatsDropZone() {
+            const dropZone = document.getElementById('statsDropZone');
+            const fileInput = document.getElementById('statsFileInput');
+
+            if (!dropZone || !fileInput) return;
+
+            dropZone.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'A') {
+                    fileInput.click();
+                }
+            });
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleStatsBlueprint(files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleStatsBlueprint(e.target.files[0]);
+                }
+            });
+        }
+
+        function handleStatsBlueprint(file) {
+            if (!file.name.endsWith('.json')) {
+                alert('Please upload a JSON file');
+                return;
+            }
+
+            // Read the file and go to add form with pre-filled data
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const blueprint = JSON.parse(e.target.result);
+
+                    // Show add form
+                    showAddForm();
+
+                    // Pre-fill the form (wait a tick for DOM to update)
+                    setTimeout(() => {
+                        document.getElementById('newBlueprintContent').value = JSON.stringify(blueprint, null, 2);
+
+                        // Extract and fill plugin info
+                        let pluginSlug = '';
+                        if (blueprint.steps) {
+                            for (const step of blueprint.steps) {
+                                if (step.step === 'installPlugin') {
+                                    if (step.pluginData && step.pluginData.slug) {
+                                        pluginSlug = step.pluginData.slug;
+                                    } else if (step.pluginZipFile && step.pluginZipFile.slug) {
+                                        pluginSlug = step.pluginZipFile.slug;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (pluginSlug) {
+                            document.getElementById('newPluginSlug').value = pluginSlug;
+                            const pluginName = pluginSlug.split('-').map(word =>
+                                word.charAt(0).toUpperCase() + word.slice(1)
+                            ).join(' ');
+                            document.getElementById('newPluginName').value = pluginName;
+                        }
+
+                        if (blueprint.landingPage) {
+                            const landingPage = blueprint.landingPage;
+                            if (landingPage.includes('admin.php?page=')) {
+                                const pageMatch = landingPage.match(/page=([^&#]+)/);
+                                if (pageMatch) {
+                                    document.getElementById('newLandingPageDesc').value = `the ${pageMatch[1].replace(/-/g, ' ')} page`;
+                                }
+                            }
+                        }
+                    }, 100);
+                } catch (error) {
+                    alert('Invalid JSON file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Drag and drop for blueprint
+        function initializeDragDrop() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+
+            if (!dropZone || !fileInput) return;
+
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleBlueprintFile(files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleBlueprintFile(e.target.files[0]);
+                }
+            });
+        }
+
+        function handleBlueprintFile(file) {
+            if (!file.name.endsWith('.json')) {
+                alert('Please upload a JSON file');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const blueprint = JSON.parse(e.target.result);
+                    document.getElementById('newBlueprintContent').value = JSON.stringify(blueprint, null, 2);
+
+                    let pluginSlug = '';
+                    let pluginName = '';
+                    let themes = [];
+
+                    // Extract plugin and theme info from steps
+                    if (blueprint.steps) {
+                        for (const step of blueprint.steps) {
+                            // Check for plugin installation (multiple formats)
+                            if (step.step === 'installPlugin') {
+                                // Try pluginData.slug first (newer format)
+                                if (step.pluginData && step.pluginData.slug) {
+                                    pluginSlug = step.pluginData.slug;
+                                }
+                                // Fall back to pluginZipFile.slug (older format)
+                                else if (step.pluginZipFile && step.pluginZipFile.slug) {
+                                    pluginSlug = step.pluginZipFile.slug;
+                                }
+                            }
+
+                            // Check for theme installation
+                            if (step.step === 'installTheme') {
+                                if (step.themeData && step.themeData.slug) {
+                                    themes.push(step.themeData.slug);
+                                } else if (step.themeZipFile && step.themeZipFile.slug) {
+                                    themes.push(step.themeZipFile.slug);
+                                }
+                            }
+                        }
+                    }
+
+                    // Try to extract plugin name from meta.title if available
+                    if (blueprint.meta && blueprint.meta.title) {
+                        const title = blueprint.meta.title;
+                        // Look for pattern like "Plugin (plugin-name)"
+                        const pluginMatch = title.match(/Plugin\s*\(([^)]+)\)/i);
+                        if (pluginMatch) {
+                            if (!pluginSlug) {
+                                pluginSlug = pluginMatch[1];
+                            }
+                            // Use the title version for the name if it looks better
+                            const titleName = pluginMatch[1].split('-').map(word =>
+                                word.charAt(0).toUpperCase() + word.slice(1)
+                            ).join(' ');
+                            pluginName = titleName;
+                        }
+                    }
+
+                    // Set plugin slug and name
+                    if (pluginSlug) {
+                        document.getElementById('newPluginSlug').value = pluginSlug;
+
+                        if (!pluginName) {
+                            pluginName = pluginSlug.split('-').map(word =>
+                                word.charAt(0).toUpperCase() + word.slice(1)
+                            ).join(' ');
+                        }
+                        document.getElementById('newPluginName').value = pluginName;
+                    }
+
+                    // Parse landing page for better description
+                    if (blueprint.landingPage) {
+                        const landingPage = blueprint.landingPage;
+                        let landingDesc = '';
+
+                        // Check for specific patterns
+                        if (landingPage.includes('options-general.php?page=')) {
+                            const pageMatch = landingPage.match(/page=([^&]+)/);
+                            landingDesc = 'the plugin settings page';
+                        } else if (landingPage.includes('admin.php?page=')) {
+                            const pageMatch = landingPage.match(/page=([^&#]+)/);
+                            if (pageMatch) {
+                                const pageName = pageMatch[1].replace(/-/g, ' ');
+                                landingDesc = `the ${pageName} page`;
+                            } else {
+                                landingDesc = 'the plugin admin page';
+                            }
+                        } else if (landingPage.includes('/wp-admin/edit.php')) {
+                            landingDesc = 'the posts/content management page';
+                        } else if (landingPage.includes('/wp-admin/tools.php')) {
+                            landingDesc = 'the tools page';
+                        } else if (landingPage.includes('/wp-admin/')) {
+                            landingDesc = 'the WordPress admin';
+                        } else if (landingPage === '/' || landingPage.startsWith('/?')) {
+                            landingDesc = 'the site homepage';
+                        }
+
+                        if (landingDesc) {
+                            document.getElementById('newLandingPageDesc').value = landingDesc;
+                        }
+                    }
+
+                    // Add theme info to special features if themes are required
+                    if (themes.length > 0) {
+                        const currentFeatures = document.getElementById('newSpecialFeatures');
+                        if (!currentFeatures) return;
+
+                        let features = currentFeatures.value ? currentFeatures.value + '\n' : '';
+                        features += `Requires theme: ${themes.join(', ')}`;
+                        // Note: Special features field doesn't exist in add form, but we could add notes
+                    }
+
+                } catch (error) {
+                    alert('Invalid JSON file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize
+        loadPlugins();
+    </script>
+</body>
+</html>
