@@ -13,7 +13,8 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./lib",
-    "rootDir": "./",
+    "rootDir": ".",
+    "lib": ["ES2020", "DOM"],
     "types": ["node"]
   },
   "include": ["src/**/*", "steps/**/*"],
