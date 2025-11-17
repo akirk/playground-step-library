@@ -1041,32 +1041,6 @@ addEventListener('DOMContentLoaded', function () {
 			loadCombinedExamples();
 			return;
 		}
-		const copyButton = event.target.closest('#copy-playground-link');
-		if (copyButton) {
-			navigator.clipboard.writeText(document.getElementById('playground-link').href);
-			const originalContent = copyButton.cloneNode(true);
-			copyButton.textContent = '';
-			const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-			svg.setAttribute('width', '16');
-			svg.setAttribute('height', '16');
-			svg.setAttribute('viewBox', '0 0 24 24');
-			svg.setAttribute('fill', 'none');
-			const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-			path.setAttribute('d', 'M5 13l4 4L19 7');
-			path.setAttribute('stroke', 'currentColor');
-			path.setAttribute('stroke-width', '2');
-			path.setAttribute('stroke-linecap', 'round');
-			path.setAttribute('stroke-linejoin', 'round');
-			svg.appendChild(path);
-			copyButton.appendChild(svg);
-			setTimeout(function () {
-				copyButton.textContent = '';
-				while (originalContent.firstChild) {
-					copyButton.appendChild(originalContent.firstChild);
-				}
-			}, 2000);
-			return false;
-		}
 		dialog = document.getElementById('view-source');
 		if (event.target.classList.contains('view-source')) {
 			event.preventDefault();
@@ -1996,10 +1970,6 @@ addEventListener('DOMContentLoaded', function () {
 		const urlParams = new URLSearchParams(window.location.search);
 		const redirParam = urlParams.get('redir');
 
-		if (!redirParam) {
-			return null;
-		}
-
 		const stepMap = {};
 		const paramMap = {};
 
@@ -2045,7 +2015,7 @@ addEventListener('DOMContentLoaded', function () {
 
 			return {
 				steps: steps,
-				redir: parseInt(redirParam, 10)
+				redir: redirParam ? parseInt(redirParam, 10) : null
 			};
 		}
 
@@ -2104,7 +2074,7 @@ addEventListener('DOMContentLoaded', function () {
 	const queryParamBlueprint = parseQueryParamsForBlueprint();
 	if (queryParamBlueprint) {
 		restoreState({ steps: queryParamBlueprint.steps });
-		if (!document.getElementById('preview-mode').value && !pageAccessedByReload) {
+		if (queryParamBlueprint.redir && !document.getElementById('preview-mode').value && !pageAccessedByReload) {
 			autoredirect(queryParamBlueprint.redir);
 		}
 	} else if (location.hash) {
@@ -2886,6 +2856,14 @@ addEventListener('DOMContentLoaded', function () {
 	// Manual Edit Mode functionality
 	const blueprintTextarea = document.getElementById('blueprint-compiled');
 
+	blueprintTextarea.addEventListener('focus', function () {
+		initBlueprintAceEditor();
+	});
+
+	blueprintTextarea.addEventListener('click', function () {
+		initBlueprintAceEditor();
+	});
+
 	// Intercept playground link clicks to regenerate URL if in manual edit mode
 	document.getElementById('playground-link').addEventListener('click', function (e) {
 		if (window.goatcounter) {
@@ -2912,19 +2890,6 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
-	// Intercept copy button to regenerate URL if in manual edit mode
-	document.getElementById('copy-playground-link').addEventListener('click', function (e) {
-		if (window.goatcounter) {
-			window.goatcounter.count({
-				path: 'copy-link',
-				title: 'Copy Playground Link',
-				event: true
-			});
-		}
-		if (isManualEditMode) {
-			transformJson();
-		}
-	});
 
 	function generateRedirectUrl(delay = 1, includeRedir = true) {
 		const steps = blueprintSteps.querySelectorAll('.step');
@@ -4361,7 +4326,4 @@ addEventListener('DOMContentLoaded', function () {
 	if (blueprintSteps.querySelectorAll('.step').length === 0) {
 		setBlueprintValue(JSON.stringify({}, null, 2));
 	}
-
-	// Initialize Ace editor for blueprint on page load
-	initBlueprintAceEditor();
 });
