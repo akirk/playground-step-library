@@ -507,9 +507,10 @@
                 plugin.pluginName,
                 plugin.pluginSlug,
                 plugin.landingPageDesc,
-                plugin.blueprintPath || '.wordpress-org/blueprints/blueprint.json',
+                plugin.blueprintPath || 'blueprint.json',
                 plugin.githubRepo || '',
-                plugin.forkedBlueprintUrl || ''
+                plugin.forkedBlueprintUrl || '',
+                plugin.blueprintCustomization || ''
             );
 
             // Determine next steps based on submission type
@@ -716,28 +717,16 @@
                         <textarea id="editNotes" onchange="updatePluginField('${plugin.id}', 'notes', this.value)"
                                   placeholder="Any notes about this plugin...">${escapeHtml(plugin.notes || '')}</textarea>
                     </div>
+
+                    <div class="form-group">
+                        <label>Blueprint Customization</label>
+                        <textarea id="editBlueprintCustomization" onchange="updatePluginField('${plugin.id}', 'blueprintCustomization', this.value)"
+                                  placeholder="Describe any extra effort made to make the blueprint useful (e.g., 'Added an mu-plugin that skips authentication and shows fake stats')">${escapeHtml(plugin.blueprintCustomization || '')}</textarea>
+                        <div class="help-text">This will be included in the PR description to explain any custom setup</div>
+                    </div>
                 </div>
 
-                <div class="panel">
-                    <h2>Blueprint File</h2>
-                    ${plugin.blueprintContent ? `
-                        <div style="background: #f9f9f9; padding: 15px; border-radius: 4px; border: 1px solid #e5e5e5;">
-                            <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">
-                                Blueprint loaded and ready to use. Copy it when creating the PR, or drag a new blueprint file to update.
-                            </p>
-                            <div class="button-group" style="margin: 0;">
-                                <button onclick="copyBlueprint('${plugin.id}')">📋 Copy Blueprint JSON</button>
-                            </div>
-                        </div>
-                        <div id="blueprintMessage" class="message"></div>
-                    ` : `
-                        <div class="drop-zone" id="detailDropZone">
-                            <div class="drop-zone-text"><strong>Drop blueprint.json here</strong></div>
-                            <div class="drop-zone-text">to load the blueprint file</div>
-                            <input type="file" id="detailFileInput" accept=".json" style="display: none;">
-                        </div>
-                    `}
-                </div>
+                <div id="blueprintMessage" class="message"></div>
 
                 ${plugin.submissionType === 'pr' ? `
                 <div class="instructions">
@@ -757,8 +746,9 @@
                             In the "Name your file..." field at the top, type: <code>.wordpress-org/blueprints/blueprint.json</code><br>
                             <em>Note: The <code>.wordpress-org</code> folder will be created automatically</em>
                         </li>
-                        <li><strong>Paste the blueprint content</strong><br>
-                            Copy the blueprint JSON from the "Blueprint File" section above, then paste it into the file editor
+                        <li><strong>Copy and paste the blueprint content</strong><br>
+                            ${plugin.blueprintContent ? `<button onclick="copyBlueprint('${plugin.id}')" style="margin: 8px 0;">📋 Copy Blueprint JSON</button><br>` : '<em>Upload a blueprint file first by dragging it onto the "Add Plugin" form</em><br>'}
+                            Click the button above to copy, then paste the blueprint JSON into the GitHub file editor
                         </li>
                         <li><strong>Commit to your fork</strong><br>
                             Scroll down to the "Commit changes" section at the bottom<br>
@@ -877,69 +867,6 @@
                 </div>
                 <div id="prMessage" class="message"></div>
             `;
-
-            // Initialize detail drop zone if blueprint is not loaded
-            if (!plugin.blueprintContent) {
-                initializeDetailDropZone(plugin.id);
-            }
-        }
-
-        function initializeDetailDropZone(pluginId) {
-            const dropZone = document.getElementById('detailDropZone');
-            const fileInput = document.getElementById('detailFileInput');
-
-            if (!dropZone || !fileInput) return;
-
-            dropZone.addEventListener('click', () => fileInput.click());
-
-            dropZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                dropZone.classList.add('dragover');
-            });
-
-            dropZone.addEventListener('dragleave', () => {
-                dropZone.classList.remove('dragover');
-            });
-
-            dropZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                dropZone.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    handleDetailBlueprintFile(files[0], pluginId);
-                }
-            });
-
-            fileInput.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    handleDetailBlueprintFile(e.target.files[0], pluginId);
-                }
-            });
-        }
-
-        function handleDetailBlueprintFile(file, pluginId) {
-            if (!file.name.endsWith('.json')) {
-                alert('Please upload a JSON file');
-                return;
-            }
-
-            const plugin = plugins.find(p => p.id === pluginId);
-            if (!plugin) return;
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const blueprint = JSON.parse(e.target.result);
-                    plugin.blueprintContent = JSON.stringify(blueprint, null, 2);
-                    plugin.status.blueprintCreated = true;
-                    savePlugins();
-                    renderPluginList();
-                    renderPluginDetail(plugin);
-                } catch (error) {
-                    alert('Invalid JSON file: ' + error.message);
-                }
-            };
-            reader.readAsText(file);
         }
 
         function updateStatus(id, field, value) {
@@ -1001,7 +928,7 @@
             `;
         }
 
-        function generatePRDescription(pluginName, pluginSlug, landingPageDesc, blueprintPath, githubRepo, forkedBlueprintUrl) {
+        function generatePRDescription(pluginName, pluginSlug, landingPageDesc, blueprintPath, githubRepo, forkedBlueprintUrl, blueprintCustomization) {
             let landingText = 'the most relevant admin page';
             if (landingPageDesc) {
                 landingText = landingPageDesc;
@@ -1036,7 +963,11 @@ This PR adds \`${blueprintPath}\` which configures the preview to:
 - Direct them to ${landingText}
 - Use compatible PHP and WordPress versions
 
-## Testing the Blueprint
+${blueprintCustomization ? `## Blueprint Customization
+
+${blueprintCustomization}
+
+` : ''}## Testing the Blueprint
 
 ${forkedBlueprintUrl ? `You can test this blueprint right now in WordPress Playground (before merging):
 
@@ -1073,7 +1004,7 @@ See the [Blueprint documentation](https://wordpress.github.io/wordpress-playgrou
 Let me know if you'd like any adjustments to better showcase ${pluginName}!`;
         }
 
-        function generateIssueDescription(pluginName, pluginSlug, landingPageDesc, blueprintPath, blueprintContent, githubRepo) {
+        function generateIssueDescription(pluginName, pluginSlug, landingPageDesc, blueprintPath, blueprintContent, githubRepo, blueprintCustomization) {
             let landingText = 'the most relevant admin page';
             if (landingPageDesc) {
                 landingText = landingPageDesc;
@@ -1104,9 +1035,12 @@ I've created a blueprint that:
 - Installs and activates ${pluginName}
 - Logs users in automatically
 - Directs them to ${landingText}
-- Uses compatible PHP and WordPress versions
 
-### Blueprint File
+${blueprintCustomization ? `### Blueprint Customization
+
+${blueprintCustomization}
+
+` : ''}### Blueprint File
 
 Add this as \`${blueprintPath}\`:
 
@@ -1114,7 +1048,7 @@ Add this as \`${blueprintPath}\`:
 ${blueprintContent}
 \`\`\`
 
-${playgroundUrl ? `\n### Test it Now\n\nYou can test this blueprint directly: **[▶️ Try it in Playground](${playgroundUrl})**\n(Note: Link will work after the blueprint file is added to the repository)\n` : ''}
+${playgroundUrl ? `\n### Test it Now\n\nYou can test this blueprint directly: **[▶️ Try it in Playground](${playgroundUrl})**\n` : ''}
 ## Implementation Steps
 
 1. Add the blueprint file to your repository at \`${blueprintPath}\`
@@ -1129,7 +1063,7 @@ Test the preview at: https://wordpress.org/plugins/${pluginSlug}/?preview=1
 Let me know if you'd like me to submit this as a PR or if you'd prefer to implement it yourself!`;
         }
 
-        function generateForumDescription(pluginName, pluginSlug, landingPageDesc, blueprintPath, blueprintContent, githubRepo) {
+        function generateForumDescription(pluginName, pluginSlug, landingPageDesc, blueprintPath, blueprintContent, githubRepo, blueprintCustomization) {
             let landingText = 'the most relevant admin page';
             if (landingPageDesc) {
                 landingText = landingPageDesc;
@@ -1153,7 +1087,11 @@ The blueprint I created will:
 - Direct them to ${landingText}
 - Use compatible PHP and WordPress versions
 
-${blueprintContent ? `**Try it now:** [▶️ Test in Playground](${playgroundUrl})\n\n` : ''}**Blueprint Code**
+${blueprintCustomization ? `**Blueprint Customization**
+
+${blueprintCustomization}
+
+` : ''}${blueprintContent ? `**Try it now:** [▶️ Test in Playground](${playgroundUrl})\n\n` : ''}**Blueprint Code**
 
 You can add this as \`${blueprintPath}\` in your repository:
 
@@ -1193,7 +1131,8 @@ Let me know if you have any questions or if you'd like me to help implement this
                     plugin.landingPageDesc,
                     plugin.blueprintPath || '.wordpress-org/blueprints/blueprint.json',
                     plugin.githubRepo || '',
-                    plugin.forkedBlueprintUrl || ''
+                    plugin.forkedBlueprintUrl || '',
+                    plugin.blueprintCustomization || ''
                 );
             } else if (selectedType === 'issue') {
                 description = generateIssueDescription(
@@ -1202,7 +1141,8 @@ Let me know if you have any questions or if you'd like me to help implement this
                     plugin.landingPageDesc,
                     plugin.blueprintPath || '.wordpress-org/blueprints/blueprint.json',
                     plugin.blueprintContent || '',
-                    plugin.githubRepo || ''
+                    plugin.githubRepo || '',
+                    plugin.blueprintCustomization || ''
                 );
             } else if (selectedType === 'forum') {
                 description = generateForumDescription(
@@ -1211,7 +1151,8 @@ Let me know if you have any questions or if you'd like me to help implement this
                     plugin.landingPageDesc,
                     plugin.blueprintPath || '.wordpress-org/blueprints/blueprint.json',
                     plugin.blueprintContent || '',
-                    plugin.githubRepo || ''
+                    plugin.githubRepo || '',
+                    plugin.blueprintCustomization || ''
                 );
             }
 

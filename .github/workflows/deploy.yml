@@ -39,7 +39,7 @@ jobs:
       - name: Prepare deployment files
         run: |
           mkdir deploy
-          mv index.html script.js style.css deploy/
+          mv index.html plugin-preview-pr.html script.js style.css deploy/
           mv lib steps vendor deploy/
 
       - name: Upload artifact
