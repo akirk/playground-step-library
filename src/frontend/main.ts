@@ -118,6 +118,10 @@ import {
 	type URLControllerDependencies
 } from './url-controller';
 import { blueprintEventBus } from './blueprint-event-bus';
+import { HistoryController, type HistoryControllerDependencies } from './history-controller';
+import { StepLibraryController, type StepLibraryControllerDependencies } from './step-library-controller';
+import { BlueprintCompilationController, type BlueprintCompilationControllerDependencies } from './blueprint-compilation-controller';
+import { PasteHandlerController, type PasteHandlerControllerDependencies } from './paste-handler-controller';
 import {
 	initWizard,
 	getWizardState,
@@ -174,6 +178,15 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
+	// Initialize Step Library Controller
+	const stepLibraryControllerDeps: StepLibraryControllerDependencies = {
+		stepList,
+		customSteps,
+		showCallbacks
+	};
+	const stepLibraryController = new StepLibraryController(stepLibraryControllerDeps);
+	stepLibraryController.initializeStepLibrary();
+
 	function saveMyStep() {
 		const myStepNameEl = document.getElementById('my-step-name');
 		const saveStepEl = document.getElementById('save-step');
@@ -187,48 +200,10 @@ addEventListener('DOMContentLoaded', function () {
 		if (!stepData) return;
 
 		const myStep = JSON.parse(stepData);
-		insertMyStep(myStepName, myStep);
+		stepLibraryController.insertMyStep(myStepName, myStep);
 		saveMyStepToStorage(myStepName, myStep);
 		saveStepEl.close();
 		myStepNameEl.value = '';
-	}
-
-	function insertMyStep(name: string, data: StepDefinition) {
-		data.mine = true;
-		let beforeStep: Element | null = null;
-
-		for (const j in stepList.children) {
-			if (stepList.children[j].dataset.id > name) {
-				beforeStep = stepList.children[j];
-				break;
-			}
-			if (!stepList.children[j].classList.contains('mine')) {
-				beforeStep = stepList.querySelector('.step.builtin');
-				break;
-			}
-		}
-		const step = createStep(name, data, showCallbacks);
-		stepList.insertBefore(step, beforeStep);
-		step.querySelectorAll('input,textarea').forEach(fixMouseCursor);
-	}
-
-	for (const name in customSteps) {
-		const data = customSteps[name];
-		// Skip deprecated steps
-		if (data.deprecated) {
-			continue;
-		}
-		data.step = name;
-		const step = createStep(name, data, showCallbacks);
-		stepList.appendChild(step);
-		step.querySelectorAll('input,textarea').forEach(fixMouseCursor);
-
-	}
-	// Load custom steps from localStorage (now using getMySteps from custom-steps.ts)
-	const mySteps = getMySteps();
-	for (const name in mySteps) {
-		const data = mySteps[name];
-		insertMyStep(name, data);
 	}
 
 	document.addEventListener('dragstart', (event) => {
@@ -881,151 +856,7 @@ addEventListener('DOMContentLoaded', function () {
 	// are now imported from url-detection.ts
 	// parsePlaygroundQueryApi is now imported from playground-integration.ts
 
-	async function handlePlaygroundBlueprint(blueprintData) {
-		if (!blueprintData) {
-			return false;
-		}
-
-		try {
-			const { BlueprintDecompiler } = await import('../decompiler');
-			const decompiler = new BlueprintDecompiler();
-			const result = decompiler.decompile(blueprintData);
-
-			if (result.warnings.length > 0) {
-				console.warn('Decompiler warnings:', result.warnings);
-			}
-
-			const stepConfig = {
-				steps: result.steps.map(step => {
-					const vars = {};
-					for (const key in step) {
-						if (key !== 'step') {
-							vars[key] = step[key];
-						}
-					}
-					return {
-						step: step.step,
-						vars: vars
-					};
-				})
-			};
-
-			restoreSteps(stepConfig, 'Playground Blueprint');
-
-			if (result.unmappedSteps.length === 0) {
-				showMyBlueprintsToast('Playground blueprint loaded successfully!');
-			} else {
-				const stepTypes = result.unmappedSteps.map(s => s.step || 'unknown').filter((v, i, a) => a.indexOf(v) === i);
-				const msg = 'Playground blueprint loaded. Ignored ' + result.unmappedSteps.length + ' step(s): ' + stepTypes.join(', ');
-				showMyBlueprintsToast(msg);
-			}
-
-			return true;
-		} catch (error) {
-			console.error('Error handling playground blueprint:', error);
-			showMyBlueprintsToast('Failed to load playground blueprint');
-			return false;
-		}
-	}
-
-	// shouldUseMuPlugin is now imported from playground-integration.ts
-	// addPostStepFromHtml and addStepFromPhp are now imported from step-inserter.ts
-
-	window.addEventListener('paste', async (event) => {
-		const pastedText = event.clipboardData.getData('text');
-		const urls = pastedText.split('\n').map(line => line.trim()).filter(line => line);
-
-		let hasPlaygroundUrl = false;
-		let hasPlaygroundQueryApiUrl = false;
-		let hasUrl = false;
-		let hasWpAdminUrl = false;
-		let hasHtml = false;
-		let hasPhp = false;
-
-		for (const url of urls) {
-			if (detectPlaygroundUrl(url)) {
-				hasPlaygroundUrl = true;
-				break;
-			}
-			if (detectPlaygroundQueryApiUrl(url)) {
-				hasPlaygroundQueryApiUrl = true;
-				break;
-			}
-			if (detectUrlType(url)) {
-				hasUrl = true;
-				break;
-			}
-			if (detectWpAdminUrl(url)) {
-				hasWpAdminUrl = true;
-				break;
-			}
-		}
-
-		if (detectPhp(pastedText)) {
-			hasPhp = true;
-		}
-
-		if (detectHtml(pastedText)) {
-			hasHtml = true;
-		}
-
-		if (!hasPlaygroundUrl && !hasPlaygroundQueryApiUrl && !hasUrl && !hasWpAdminUrl && !hasHtml && !hasPhp) {
-			return;
-		}
-
-		if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
-			if (event.target.id !== 'filter') {
-				return;
-			}
-		}
-
-		let addedAny = false;
-
-		if (hasPlaygroundUrl) {
-			for (const url of urls) {
-				const blueprintData = detectPlaygroundUrl(url);
-				if (blueprintData) {
-					if (await handlePlaygroundBlueprint(blueprintData)) {
-						addedAny = true;
-					}
-					break;
-				}
-			}
-		} else if (hasPlaygroundQueryApiUrl) {
-			for (const url of urls) {
-				const blueprintData = parsePlaygroundQueryApi(url);
-				if (blueprintData) {
-					if (await handlePlaygroundBlueprint(blueprintData)) {
-						addedAny = true;
-					}
-					break;
-				}
-			}
-		} else if (hasPhp && !hasUrl && !hasWpAdminUrl) {
-			if (addStepFromPhp(pastedText, stepInserterDeps)) {
-				addedAny = true;
-			}
-		} else if (hasHtml && !hasUrl && !hasWpAdminUrl) {
-			if (addPostStepFromHtml(pastedText, stepInserterDeps)) {
-				addedAny = true;
-			}
-		} else {
-			for (const url of urls) {
-				const wpAdminPath = detectWpAdminUrl(url);
-				if (wpAdminPath) {
-					if (addLandingPageStep(wpAdminPath, stepInserterDeps)) {
-						addedAny = true;
-					}
-				} else if (addStepFromUrl(url, stepInserterDeps)) {
-					addedAny = true;
-				}
-			}
-		}
-
-		if (addedAny) {
-			event.preventDefault();
-		}
-	});
+	// Paste handler is now managed by paste-handler-controller.ts
 
 	// getDragAfterElement is now imported from drag-drop.ts
 
@@ -1092,41 +923,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
-	document.getElementById('filter').addEventListener('keyup', function (event) {
-		// convert to a fuzzy search term by allowing any character to be followed by any number of any characters
-		const filter = new RegExp(this.value.replace(/(.)/g, '$1.*'), 'i');
-		stepList.querySelectorAll('.step').forEach(function (step) {
-			if (step.dataset.id.toLowerCase().match(filter)) {
-				step.classList.remove('hidden');
-			} else {
-				step.classList.add('hidden');
-			}
-		});
-		if (event.key === 'ArrowDown') {
-			const steps = stepList.querySelectorAll('.step');
-			for (let i = 0; i < steps.length; i++) {
-				if (!steps[i].classList.contains('hidden')) {
-					steps[i].focus();
-					break;
-				}
-			}
-			return false;
-		}
-	});
-
-	document.getElementById('show-builtin').addEventListener('change', function () {
-		if (this.checked) {
-			stepList.classList.add('show-builtin');
-		} else {
-			stepList.classList.remove('show-builtin');
-		}
-	});
-
-	if (document.getElementById('show-builtin').checked) {
-		stepList.classList.add('show-builtin');
-	} else {
-		stepList.classList.remove('show-builtin');
-	}
+	// Filter and show-builtin event listeners are now handled by step-library-controller.ts
 
 	// Handle title input changes
 	document.addEventListener('input', function (e) {
@@ -1237,134 +1034,19 @@ addEventListener('DOMContentLoaded', function () {
 		customSteps
 	};
 
+	// Initialize Blueprint Compilation Controller
+	const blueprintCompilationControllerDeps: BlueprintCompilationControllerDependencies = {
+		getBlueprintValue,
+		setBlueprintValue,
+		blueprintUIDeps
+	};
+	const blueprintCompilationController = new BlueprintCompilationController(blueprintCompilationControllerDeps);
+
 	function transformJson() {
-		const queries = [];
-		let useBlueprintURLParam = false;
-		let outputData;
-		const useV2 = document.querySelector('input[name="blueprint-version"]:checked')?.value === 'v2';
-
-
-		// If in manual edit mode, use the manually edited blueprint directly
-		if (isManualEditMode.value) {
-			try {
-				const manualBlueprint = getBlueprintValue();
-				outputData = manualBlueprint ? JSON.parse(manualBlueprint) : {};
-			} catch (e) {
-				console.error('Invalid JSON in manual edit mode:', e);
-				alert('Invalid JSON in blueprint. Please fix syntax errors before launching.');
-				return;
-			}
-		} else {
-			let jsonInput = getBlueprint();
-
-			// Prepare compilation options from UI elements
-			const userDefined = {
-				'landingPage': '/',
-				'features': {}
-			};
-			if (!document.getElementById('networking').checked) {
-				userDefined.features.networking = false;
-			}
-			if (document.getElementById('wp-cli').checked) {
-				userDefined.extraLibraries = ['wp-cli'];
-			}
-			if ('latest' !== document.getElementById('wp-version').value || 'latest' !== document.getElementById('php-version').value) {
-				userDefined.preferredVersions = {
-					wp: document.getElementById('wp-version').value,
-					php: document.getElementById('php-version').value
-				};
-			}
-
-			// Use the PlaygroundStepLibrary to compile the blueprint
-			const compiler = new PlaygroundStepLibrary();
-			const inputData = Object.assign(userDefined, JSON.parse(jsonInput));
-			outputData = compiler.compile(inputData, {}, useV2);
-
-			// Extract query params from the compiler
-			const extractedQueryParams = compiler.getLastQueryParams();
-			for (const key in extractedQueryParams) {
-				queries.push(key + '=' + encodeURIComponent(extractedQueryParams[key]));
-			}
-		}
-
-		// Add metadata indicating compilation by step library (only if there are steps)
-		if (outputData.steps && outputData.steps.length > 0 && !document.getElementById('exclude-meta').checked) {
-			if (!outputData.meta) {
-				outputData.meta = {};
-			}
-			// Ensure meta has a title (required by schema)
-			if (!outputData.meta.title) {
-				const titleInput = document.getElementById('title');
-				const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
-				outputData.meta.title = blueprintTitle || generateLabel();
-			}
-			outputData.meta.author = 'https://github.com/akirk/playground-step-library';
-		}
-
-		// If exclude-meta is checked, remove the meta property entirely
-		if (document.getElementById('exclude-meta').checked && outputData.meta) {
-			delete outputData.meta;
-		}
-
-
-		if (!isManualEditMode.value) {
-			setBlueprintValue(JSON.stringify(outputData, null, 2));
-		}
-
-		if (document.getElementById('autosave').value) {
-			queries.push('site-slug=' + encodeURIComponent(document.getElementById('autosave').value.replace(/[^a-z0-9-]/gi, '')));
-			queries.push('if-stored-site-missing=prompt');
-		}
-
-		switch (document.getElementById('mode').value) {
-			case 'browser':
-				queries.push('mode=browser');
-				break;
-			case 'seamless':
-				queries.push('mode=seamless');
-				break;
-			case 'split-view-bottom':
-			case 'split-view-right':
-				queries.push('mode=seamless');
-				break;
-		}
-		switch (document.getElementById('storage').value) {
-			case 'browser':
-				queries.push('storage=browser');
-				break;
-			case 'device':
-				queries.push('storage=device');
-				break;
-		}
-		if (useV2) {
-			queries.push('experimental-blueprints-v2-runner=yes');
-		}
-		const encodingFormat = document.getElementById('encoding-format').value;
-		let hash = '#' + (JSON.stringify(outputData).replace(/%/g, '%25'));
-
-		if (encodingFormat === 'auto') {
-			if (hash.length > 2000) {
-				useBlueprintURLParam = true;
-			}
-		} else if (encodingFormat === 'base64') {
-			useBlueprintURLParam = true;
-		}
-
-		if (useBlueprintURLParam) {
-			queries.push('blueprint-url=data:application/json;base64,' + encodeURIComponent(encodeStringAsBase64(JSON.stringify(outputData))));
-			hash = '';
-		}
-		const query = (queries.length ? '?' + queries.join('&') : '');
-		const playground = document.getElementById('playground').value;
-		const href = (playground.substr(0, 7) === 'http://' ? playground : 'https://' + playground) + '/' + query + hash;
-		document.getElementById('playground-link').href = href;
-
-
-		// Check blueprint size and show warning if needed
-		updateBlueprintSizeWarning(href);
-		// Handle split view mode
-		handleSplitViewMode(href, blueprintUIDeps);
+		blueprintCompilationController.transformJson();
 	}
+
+	// transformJson is now handled by blueprint-compilation-controller.ts
 
 	// updateBlueprintSizeWarning, handleSplitViewMode, updateIframeSrc are now imported from blueprint-ui.ts
 
@@ -1678,7 +1360,7 @@ addEventListener('DOMContentLoaded', function () {
 		restoreState({ steps: examples[this.value] });
 		blueprintEventBus.emit('blueprint:updated');
 	});
-	document.getElementById('filter').value = '';
+	stepLibraryController.clearFilter();
 
 	// Wizard Mode Implementation
 	// Initialize wizard with dependencies
@@ -1842,83 +1524,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
-	// History functionality
-	// getHistory and saveHistory are now imported from my-blueprints.ts
-	let currentHistorySelection = null;
-
-	function addToHistory(customTitle) {
-		const blueprintString = getBlueprintValue();
-		if (!blueprintString) {
-			return false;
-		}
-
-		let compiledBlueprint;
-		try {
-			compiledBlueprint = JSON.parse(blueprintString);
-		} catch (e) {
-			console.error('Failed to parse blueprint:', e);
-			return false;
-		}
-
-		const stepConfig = captureCurrentSteps();
-		const title = customTitle || stepConfig.title || generateLabel();
-		delete stepConfig.title;
-
-		const result = addBlueprintToHistory(compiledBlueprint, stepConfig, title);
-		updateHistoryButtonVisibility();
-		return result;
-	}
-
-	function addToHistoryWithId(customTitle) {
-		const blueprintString = getBlueprintValue();
-		if (!blueprintString) {
-			return null;
-		}
-
-		let compiledBlueprint;
-		try {
-			compiledBlueprint = JSON.parse(blueprintString);
-		} catch (e) {
-			console.error('Failed to parse blueprint:', e);
-			return null;
-		}
-
-		const stepConfig = captureCurrentSteps();
-		const title = customTitle || stepConfig.title || generateLabel();
-		delete stepConfig.title;
-
-		const entryId = addBlueprintToHistoryWithId(compiledBlueprint, stepConfig, title);
-		updateHistoryButtonVisibility();
-		return entryId;
-	}
-
-	function saveToHistoryWithName() {
-		const compiledBlueprint = getBlueprintValue();
-		if (!compiledBlueprint || !compiledBlueprint.trim()) {
-			showToast('Cannot save empty blueprint');
-			return;
-		}
-
-		const titleInput = document.getElementById('title');
-		const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
-
-		if (blueprintTitle) {
-			const history = getHistory();
-			const existingEntry = history.find(entry => entry.title === blueprintTitle);
-
-			if (existingEntry) {
-				showSaveBlueprintDialog(blueprintTitle, true);
-			} else {
-				const success = addToHistory(blueprintTitle);
-				if (success) {
-					showToast('Saved');
-				}
-			}
-		} else {
-			const defaultTitle = generateLabel();
-			showSaveBlueprintDialog(defaultTitle, false);
-		}
-	}
+	// History functionality is now handled by history-controller.ts
 
 	function showSaveBlueprintDialog(defaultName, isOverwrite) {
 		const dialog = document.getElementById('save-blueprint-dialog');
@@ -1961,7 +1567,7 @@ addEventListener('DOMContentLoaded', function () {
 					titleInput.value = title;
 				}
 				showToast('Updated');
-				renderHistoryList();
+				historyController.renderHistoryList();
 			}
 
 			dialog.close();
@@ -2000,7 +1606,7 @@ addEventListener('DOMContentLoaded', function () {
 					titleInput.value = title;
 				}
 				showToast('Saved');
-				renderHistoryList();
+				historyController.renderHistoryList();
 			}
 
 			dialog.close();
@@ -2099,13 +1705,13 @@ addEventListener('DOMContentLoaded', function () {
 				const entryId = addToHistoryWithId(blueprintTitle);
 				if (entryId) {
 					showToast('Updated');
-					renderHistoryList();
+					historyController.renderHistoryList();
 				}
 			} else if (blueprintTitle) {
 				const entryId = addToHistoryWithId(blueprintTitle);
 				if (entryId) {
 					showToast('Saved');
-					renderHistoryList();
+					historyController.renderHistoryList();
 				}
 			} else {
 				const defaultTitle = generateLabel();
@@ -2195,472 +1801,9 @@ addEventListener('DOMContentLoaded', function () {
 
 	// Save to History button
 	document.getElementById('save-to-history-btn').addEventListener('click', function () {
-		saveToHistoryWithName();
+		historyController.saveToHistoryWithName();
 	});
 
-	// History modal functionality
-	const historyModal = document.getElementById('history-modal');
-	const historyButton = document.getElementById('history-button');
-	const historyClose = document.getElementById('history-close');
-	const historyList = document.getElementById('history-list');
-	const historyDetailEmpty = document.getElementById('history-detail-empty');
-	const historyDetailContent = document.getElementById('history-detail-content');
-	const historyBlueprintView = document.getElementById('history-blueprint-view');
-
-	function updateHistoryButtonVisibility() {
-		const history = getHistory();
-		if (history.length === 0) {
-			historyButton.style.display = 'none';
-		} else {
-			historyButton.style.display = 'flex';
-		}
-	}
-
-	updateHistoryButtonVisibility();
-
-	historyButton.addEventListener('click', function () {
-		renderHistoryList();
-		document.body.classList.add('dialog-open');
-		historyModal.showModal();
-	});
-
-	historyClose.addEventListener('click', function () {
-		cleanupHistoryBlueprintAceEditor();
-		document.body.classList.remove('dialog-open');
-		historyModal.close();
-		currentHistorySelection = null;
-	});
-
-	historyModal.addEventListener('click', function (e) {
-		if (e.target === historyModal) {
-			cleanupHistoryBlueprintAceEditor();
-			document.body.classList.remove('dialog-open');
-			historyModal.close();
-			currentHistorySelection = null;
-		}
-	});
-
-	// lastDeletedEntry and deleteUndoTimeout are now managed by toast-service.ts
-
-	function renderHistoryList() {
-		const history = getHistory();
-		const searchTerm = document.getElementById('history-search').value.toLowerCase();
-		historyList.textContent = '';
-
-		const filteredHistory = history.filter(function (entry) {
-			if (!searchTerm) {
-				return true;
-			}
-			const titleMatch = entry.title.toLowerCase().includes(searchTerm);
-			const blueprintJSON = JSON.stringify(entry.compiledBlueprint).toLowerCase();
-			const blueprintMatch = blueprintJSON.includes(searchTerm);
-			return titleMatch || blueprintMatch;
-		});
-
-		if (history.length === 0) {
-			const emptyDiv = document.createElement('div');
-			emptyDiv.className = 'history-empty';
-			emptyDiv.textContent = 'No saved blueprints yet.';
-			historyList.appendChild(emptyDiv);
-			return;
-		}
-
-		if (filteredHistory.length === 0) {
-			const emptyDiv = document.createElement('div');
-			emptyDiv.className = 'history-empty';
-			emptyDiv.textContent = 'No blueprints match your search.';
-			historyList.appendChild(emptyDiv);
-			return;
-		}
-
-		filteredHistory.forEach(function (entry, index) {
-			const entryElement = document.createElement('div');
-			entryElement.className = 'history-entry';
-			entryElement.dataset.id = entry.id;
-
-			const contentWrapper = document.createElement('div');
-			contentWrapper.className = 'history-entry-content';
-
-			const timeElement = document.createElement('div');
-			timeElement.className = 'history-entry-time';
-			timeElement.textContent = formatDate(entry.date);
-			timeElement.title = new Date(entry.date).toLocaleString();
-
-			const labelElement = document.createElement('div');
-			labelElement.className = 'history-entry-label';
-			labelElement.textContent = entry.title;
-
-			contentWrapper.appendChild(timeElement);
-			contentWrapper.appendChild(labelElement);
-
-			const blueprint = entry.compiledBlueprint;
-
-			if (blueprint && blueprint.steps && blueprint.steps.length > 0) {
-				const detailsElement = document.createElement('details');
-				detailsElement.className = 'history-entry-details';
-
-				const summaryElement = document.createElement('summary');
-				summaryElement.textContent = blueprint.steps.length + ' step' + (blueprint.steps.length !== 1 ? 's' : '');
-				summaryElement.addEventListener('click', function (e) {
-					e.stopPropagation();
-				});
-
-				const stepsList = document.createElement('ol');
-				stepsList.className = 'history-steps-list';
-
-				blueprint.steps.forEach(function (step) {
-					const stepItem = document.createElement('li');
-					stepItem.textContent = step.step || 'Unknown step';
-					stepsList.appendChild(stepItem);
-				});
-
-				detailsElement.appendChild(summaryElement);
-				detailsElement.appendChild(stepsList);
-				contentWrapper.appendChild(detailsElement);
-			}
-
-			const actionsWrapper = document.createElement('div');
-			actionsWrapper.className = 'history-entry-actions';
-
-			const renameBtn = document.createElement('button');
-			renameBtn.className = 'history-entry-rename';
-			renameBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-			renameBtn.title = 'Rename';
-			renameBtn.addEventListener('click', function (e) {
-				e.stopPropagation();
-				renameHistoryEntry(entry.id);
-			});
-
-			const deleteBtn = document.createElement('button');
-			deleteBtn.className = 'history-entry-delete';
-			deleteBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.1709 4C9.58273 2.83481 10.694 2 12.0002 2C13.3064 2 14.4177 2.83481 14.8295 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M20.5001 6H3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M18.8332 8.5L18.3732 15.3991C18.1962 18.054 18.1077 19.3815 17.2427 20.1907C16.3777 21 15.0473 21 12.3865 21H11.6132C8.95235 21 7.62195 21 6.75694 20.1907C5.89194 19.3815 5.80344 18.054 5.62644 15.3991L5.1665 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9.5 11L10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14.5 11L14 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
-			deleteBtn.title = 'Delete';
-			deleteBtn.addEventListener('click', function (e) {
-				e.stopPropagation();
-				deleteHistoryEntry(entry.id);
-			});
-
-			actionsWrapper.appendChild(renameBtn);
-			actionsWrapper.appendChild(deleteBtn);
-
-			entryElement.appendChild(contentWrapper);
-			entryElement.appendChild(actionsWrapper);
-
-			contentWrapper.addEventListener('click', function (e) {
-				if (!e.target.closest('details') && !e.target.closest('summary')) {
-					selectHistoryEntry(entry.id);
-				}
-			});
-
-			contentWrapper.addEventListener('dblclick', function () {
-				renameHistoryEntry(entry.id);
-			});
-
-			historyList.appendChild(entryElement);
-
-			if (index === 0 && !currentHistorySelection && window.innerWidth > 768) {
-				selectHistoryEntry(entry.id);
-			}
-		});
-	}
-
-	function renameHistoryEntry(entryId) {
-		const history = getHistory();
-		const entry = history.find(function (e) {
-			return e.id === entryId;
-		});
-
-		if (!entry) {
-			return;
-		}
-
-		const newTitle = prompt('Enter new name:', entry.title);
-
-		if (newTitle === null || newTitle.trim() === '') {
-			return;
-		}
-
-		entry.title = newTitle.trim();
-		saveHistory(history);
-		renderHistoryList();
-
-		if (currentHistorySelection && currentHistorySelection.id === entryId) {
-			currentHistorySelection.title = newTitle.trim();
-		}
-
-		showMyBlueprintsToast('Renamed to "' + newTitle.trim() + '"');
-	}
-
-	function deleteHistoryEntry(entryId) {
-		const history = getHistory();
-		const entry = history.find(function (e) {
-			return e.id === entryId;
-		});
-
-		if (!entry) {
-			return;
-		}
-
-		toastService.setLastDeletedEntry(entry);
-
-		const filtered = history.filter(function (e) {
-			return e.id !== entryId;
-		});
-		saveHistory(filtered);
-		updateHistoryButtonVisibility();
-
-		if (currentHistorySelection && currentHistorySelection.id === entryId) {
-			currentHistorySelection = null;
-			historyDetailEmpty.style.display = 'block';
-			historyDetailContent.style.display = 'none';
-		}
-
-		renderHistoryList();
-
-		showMyBlueprintsToast('Deleted "' + entry.title + '"', function () {
-			undoDelete();
-		});
-	}
-
-	function undoDelete() {
-		const lastDeletedEntry = toastService.getLastDeletedEntry();
-		if (!lastDeletedEntry) {
-			return;
-		}
-
-		const history = getHistory();
-		history.push(lastDeletedEntry);
-		history.sort(function (a, b) {
-			return new Date(b.date) - new Date(a.date);
-		});
-		saveHistory(history);
-		updateHistoryButtonVisibility();
-
-		toastService.setLastDeletedEntry(null);
-		renderHistoryList();
-		showMyBlueprintsToast('Restored');
-	}
-
-	function selectHistoryEntry(entryId) {
-		const history = getHistory();
-		const entry = history.find(function (e) {
-			return e.id === entryId;
-		});
-
-		if (!entry) {
-			return;
-		}
-
-		currentHistorySelection = entry;
-
-		document.querySelectorAll('.history-entry').forEach(function (el) {
-			el.classList.remove('selected');
-		});
-		document.querySelector('.history-entry[data-id="' + entryId + '"]').classList.add('selected');
-
-		historyDetailEmpty.style.display = 'none';
-		historyDetailContent.style.display = 'block';
-
-		const blueprintString = JSON.stringify(entry.compiledBlueprint, null, 2);
-		historyBlueprintView.value = blueprintString;
-
-		if (historyBlueprintAceEditor) {
-			historyBlueprintAceEditor.setValue(blueprintString, -1);
-			historyBlueprintAceEditor.resize();
-		} else {
-			initHistoryBlueprintAceEditor();
-		}
-
-		if (window.innerWidth <= 768) {
-			document.getElementById('history-detail-column').classList.add('mobile-visible');
-		}
-	}
-
-	const historyDetailColumn = document.getElementById('history-detail-column');
-	const historyMobileBackBtn = document.getElementById('history-mobile-back-btn');
-
-	historyMobileBackBtn.addEventListener('click', function () {
-		historyDetailColumn.classList.remove('mobile-visible');
-	});
-
-	const historyDropdown = document.getElementById('history-more-options-dropdown');
-	if (historyDropdown) {
-		initMoreOptionsDropdown(historyDropdown);
-	}
-
-	function getHistoryPlaygroundUrl() {
-		if (!currentHistorySelection) {
-			return null;
-		}
-		const playground = document.getElementById('playground').value;
-		const blueprintString = JSON.stringify(currentHistorySelection.compiledBlueprint);
-		return (playground.substr(0, 7) === 'http://' ? playground : 'https://' + playground) + '/?blueprint-url=data:application/json;base64,' + encodeURIComponent(encodeStringAsBase64(blueprintString));
-	}
-
-	document.getElementById('history-copy-playground-url-btn').addEventListener('click', function (e) {
-		if (!currentHistorySelection) {
-			return;
-		}
-		const playgroundUrl = getHistoryPlaygroundUrl();
-		const button = e.currentTarget;
-		const originalContent = button.cloneNode(true);
-		copyToClipboard(playgroundUrl, button, originalContent);
-	});
-
-	document.getElementById('history-copy-blueprint-btn').addEventListener('click', function () {
-		if (!currentHistorySelection) {
-			return;
-		}
-		const blueprintString = JSON.stringify(currentHistorySelection.compiledBlueprint, null, 2);
-		navigator.clipboard.writeText(blueprintString).then(function () {
-			const btn = document.getElementById('history-copy-blueprint-btn');
-			const originalText = btn.innerHTML;
-			btn.textContent = '✓ Copied!';
-			setTimeout(function () {
-				btn.innerHTML = originalText;
-			}, 2000);
-		});
-	});
-
-	document.getElementById('history-download-blueprint-btn').addEventListener('click', function () {
-		if (!currentHistorySelection) {
-			return;
-		}
-
-		const blueprintString = JSON.stringify(currentHistorySelection.compiledBlueprint, null, 2);
-		const filename = currentHistorySelection.title.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.json';
-		const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(blueprintString);
-		const downloadAnchor = document.createElement('a');
-		downloadAnchor.setAttribute('href', dataStr);
-		downloadAnchor.setAttribute('download', filename);
-		downloadAnchor.click();
-
-		showMyBlueprintsToast('Downloaded');
-	});
-
-	document.getElementById('history-share-url-btn').addEventListener('click', async function (e) {
-		if (!currentHistorySelection) {
-			return;
-		}
-
-		const baseUrl = window.location.origin + window.location.pathname;
-		const compiledSteps = currentHistorySelection.compiledBlueprint.steps || [];
-
-		const params = [];
-		compiledSteps.forEach((step, index) => {
-			params.push(`step[${index}]=` + step.step);
-			Object.keys(step).forEach(key => {
-				if (key !== 'step') {
-					params.push(`${key}[${index}]=` + encodeURIComponent(JSON.stringify(step[key])));
-				}
-			});
-		});
-
-		const shareUrl = `${baseUrl}?${params.join('&')}`;
-		const button = e.currentTarget;
-		const originalContent = button.cloneNode(true);
-		const title = currentHistorySelection.title || 'WordPress Playground Blueprint';
-
-		if (navigator.share) {
-			try {
-				await navigator.share({
-					title: title,
-					url: shareUrl
-				});
-			} catch (err) {
-				if (err.name !== 'AbortError') {
-					copyToClipboard(shareUrl, button, originalContent);
-				}
-			}
-		} else {
-			copyToClipboard(shareUrl, button, originalContent);
-		}
-	});
-
-	document.getElementById('history-copy-redirect-url-btn').addEventListener('click', function (e) {
-		if (!currentHistorySelection) {
-			return;
-		}
-
-		const baseUrl = window.location.origin + window.location.pathname;
-		const compiledSteps = currentHistorySelection.compiledBlueprint.steps || [];
-
-		const params = ['redir=1'];
-		compiledSteps.forEach((step, index) => {
-			params.push(`step[${index}]=` + step.step);
-			Object.keys(step).forEach(key => {
-				if (key !== 'step') {
-					params.push(`${key}[${index}]=` + encodeURIComponent(JSON.stringify(step[key])));
-				}
-			});
-		});
-
-		const redirectUrl = `${baseUrl}?${params.join('&')}`;
-		const button = e.currentTarget;
-		const originalContent = button.cloneNode(true);
-		copyToClipboard(redirectUrl, button, originalContent);
-	});
-
-	document.getElementById('history-launch-btn').addEventListener('click', function () {
-		if (!currentHistorySelection) {
-			return;
-		}
-
-		const playground = document.getElementById('playground').value;
-		const blueprintString = JSON.stringify(currentHistorySelection.compiledBlueprint);
-		const href = (playground.substr(0, 7) === 'http://' ? playground : 'https://' + playground) + '/?blueprint-url=data:application/json;base64,' + encodeURIComponent(encodeStringAsBase64(blueprintString));
-
-		window.open(href, '_blank');
-	});
-
-	document.getElementById('history-restore-btn').addEventListener('click', function () {
-		if (!currentHistorySelection) {
-			return;
-		}
-		restoreSteps(currentHistorySelection.stepConfig, currentHistorySelection.title);
-
-		cleanupHistoryBlueprintAceEditor();
-		document.body.classList.remove('dialog-open');
-		historyModal.close();
-	});
-
-	document.getElementById('history-mobile-delete-btn').addEventListener('click', function () {
-		if (!currentHistorySelection) {
-			return;
-		}
-		const entryId = currentHistorySelection.id;
-		historyDetailColumn.classList.remove('mobile-visible');
-		setTimeout(function () {
-			deleteHistoryEntry(entryId);
-		}, 300);
-	});
-
-	document.getElementById('history-save-current-btn').addEventListener('click', function () {
-		saveToHistoryWithName();
-		renderHistoryList();
-	});
-
-	document.getElementById('history-export-all-btn').addEventListener('click', function () {
-		exportAllBlueprints();
-	});
-
-	document.getElementById('history-import-btn').addEventListener('click', function () {
-		document.getElementById('history-import-file').click();
-	});
-
-	document.getElementById('history-import-file').addEventListener('change', function (e) {
-		const file = e.target.files[0];
-		if (file) {
-			importBlueprints(file);
-		}
-		e.target.value = '';
-	});
-
-
-	// History search
-	document.getElementById('history-search').addEventListener('input', function () {
-		renderHistoryList();
-	});
 
 	// Toast close button
 	document.getElementById('history-toast-close').addEventListener('click', function () {
@@ -2674,113 +1817,6 @@ addEventListener('DOMContentLoaded', function () {
 		// Timeout is managed by toast-service.ts
 	});
 
-	function exportAllBlueprints() {
-		const history = getHistory();
-		if (history.length === 0) {
-			showMyBlueprintsToast('No blueprints to export');
-			return;
-		}
-
-		const now = new Date();
-		const blueprintsForExport = history.map(function (entry) {
-			return {
-				title: entry.title,
-				date: entry.date,
-				compiledBlueprint: entry.compiledBlueprint,
-				stepConfig: entry.stepConfig
-			};
-		});
-
-		const exportData = {
-			version: 1,
-			exportDate: now.toISOString(),
-			blueprints: blueprintsForExport
-		};
-
-		const dateStr = now.toISOString().split('T')[0];
-		const filename = 'blueprints-' + dateStr + '.json';
-
-		const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportData, null, 2));
-		const downloadAnchor = document.createElement('a');
-		downloadAnchor.setAttribute('href', dataStr);
-		downloadAnchor.setAttribute('download', filename);
-		downloadAnchor.click();
-
-		showMyBlueprintsToast('Exported ' + history.length + ' blueprint' + (history.length === 1 ? '' : 's'));
-	}
-
-	function importBlueprints(file) {
-		const reader = new FileReader();
-		reader.onload = function (e) {
-			try {
-				const importData = JSON.parse(e.target.result);
-				let blueprintsToImport = [];
-
-				if (Array.isArray(importData)) {
-					blueprintsToImport = importData;
-				} else if (importData.blueprints && Array.isArray(importData.blueprints)) {
-					blueprintsToImport = importData.blueprints;
-				} else if (importData.stepConfig && importData.compiledBlueprint) {
-					blueprintsToImport = [importData];
-				} else {
-					showMyBlueprintsToast('Invalid file format');
-					return;
-				}
-
-				const history = getHistory();
-				let importedCount = 0;
-				let skippedCount = 0;
-
-				blueprintsToImport.forEach(function (blueprint) {
-					if (!blueprint.compiledBlueprint || !blueprint.stepConfig) {
-						skippedCount++;
-						return;
-					}
-
-					const blueprintStr = JSON.stringify(blueprint.compiledBlueprint);
-					const isDuplicate = history.some(function (existingEntry) {
-						return JSON.stringify(existingEntry.compiledBlueprint) === blueprintStr &&
-							existingEntry.date === blueprint.date;
-					});
-
-					if (isDuplicate) {
-						skippedCount++;
-						return;
-					}
-
-					const entry = {
-						id: Date.now() + importedCount,
-						date: blueprint.date || new Date().toISOString(),
-						title: blueprint.title || 'Imported Blueprint',
-						compiledBlueprint: blueprint.compiledBlueprint,
-						stepConfig: blueprint.stepConfig
-					};
-
-					history.unshift(entry);
-					importedCount++;
-				});
-
-				if (history.length > MAX_HISTORY_ENTRIES) {
-					history.splice(MAX_HISTORY_ENTRIES);
-				}
-
-				saveHistory(history);
-				renderHistoryList();
-				updateHistoryButtonVisibility();
-
-				let message = 'Imported ' + importedCount + ' blueprint' + (importedCount === 1 ? '' : 's');
-				if (skippedCount > 0) {
-					message += ' (' + skippedCount + ' skipped)';
-				}
-				showMyBlueprintsToast(message);
-
-			} catch (error) {
-				console.error('Import error:', error);
-				showMyBlueprintsToast('Failed to import: Invalid JSON');
-			}
-		};
-		reader.readAsText(file);
-	}
 
 	function restoreSteps(stepsData, title) {
 		if (!stepsData || !stepsData.steps) {
@@ -2882,6 +1918,28 @@ addEventListener('DOMContentLoaded', function () {
 
 		blueprintEventBus.emit('blueprint:updated');
 	}
+
+	// Initialize History Controller
+	const historyControllerDeps: HistoryControllerDependencies = {
+		getBlueprintValue,
+		captureCurrentSteps,
+		restoreSteps,
+		isBlueprintAlreadySaved,
+		showSaveBlueprintDialog
+	};
+	const historyController = new HistoryController(historyControllerDeps);
+
+	// Initialize Paste Handler Controller
+	const pasteHandlerControllerDeps: PasteHandlerControllerDependencies = {
+		stepInserterDeps,
+		restoreSteps
+	};
+	const pasteHandlerController = new PasteHandlerController(pasteHandlerControllerDeps);
+
+	// Make history controller methods accessible where needed
+	window.addToHistory = (customTitle?: string) => historyController.addToHistory(customTitle);
+	window.addToHistoryWithId = (customTitle?: string) => historyController.addToHistoryWithId(customTitle);
+	window.updateHistoryButtonVisibility = () => historyController.updateHistoryButtonVisibility();
 
 	// Initialize empty blueprint if no steps are present
 	if (blueprintSteps.querySelectorAll('.step').length === 0) {
