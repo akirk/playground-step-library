@@ -47,6 +47,18 @@ import {
 	detectPlaygroundQueryApiUrl
 } from './url-detection';
 import { showCallbacks, isManualEditMode, setBlueprint, setLinkedTextarea } from './app-state';
+import {
+	getHistory,
+	saveHistory,
+	addBlueprintToHistory,
+	addBlueprintToHistoryWithId,
+	deleteBlueprintFromHistory,
+	renameBlueprintInHistory,
+	getBlueprintFromHistory,
+	isBlueprintInHistory,
+	type BlueprintHistoryEntry
+} from './my-blueprints';
+import { parsePlaygroundQueryApi, shouldUseMuPlugin } from './playground-integration';
 
 declare global {
 	interface Window {
@@ -1098,107 +1110,7 @@ addEventListener('DOMContentLoaded', function () {
 
 	// detectHtml, detectPhp, isPlaygroundDomain, detectPlaygroundUrl, and detectPlaygroundQueryApiUrl
 	// are now imported from url-detection.ts
-
-	function parsePlaygroundQueryApi(url) {
-		if (!url || typeof url !== 'string') {
-			return null;
-		}
-
-		try {
-			const urlObj = new URL(url.trim());
-			if (!isPlaygroundDomain(urlObj.hostname)) {
-				return null;
-			}
-
-			const params = urlObj.searchParams;
-			const blueprint = {};
-
-			if (params.has('php')) {
-				blueprint.phpExtensionBundles = [params.get('php')];
-			}
-
-			if (params.has('wp')) {
-				blueprint.preferredVersions = { wp: params.get('wp') };
-			}
-
-			if (params.has('multisite')) {
-				const value = params.get('multisite');
-				if (value === 'yes' || value === 'true' || value === '1') {
-					blueprint.features = { networking: true };
-				}
-			}
-
-			if (params.has('login')) {
-				const value = params.get('login');
-				if (value === 'yes' || value === 'true' || value === '1') {
-					blueprint.login = true;
-				}
-			}
-
-			const steps = [];
-
-			const plugins = params.getAll('plugin');
-			for (const plugin of plugins) {
-				steps.push({
-					step: 'installPlugin',
-					pluginData: { resource: 'wordpress.org/plugins', slug: plugin }
-				});
-			}
-
-			const themes = params.getAll('theme');
-			for (const theme of themes) {
-				steps.push({
-					step: 'installTheme',
-					themeData: { resource: 'wordpress.org/themes', slug: theme }
-				});
-			}
-
-			if (params.has('gutenberg-pr')) {
-				const pr = params.get('gutenberg-pr');
-				steps.push({
-					step: 'installPlugin',
-					pluginData: {
-						resource: 'url',
-						url: `https://plugin-proxy.wordpress.net/gutenberg/gutenberg-build-pr-${pr}.zip`
-					}
-				});
-			}
-
-			if (params.has('core-pr')) {
-				const pr = params.get('core-pr');
-				steps.push({
-					step: 'runPHP',
-					code: `<?php require '/wordpress/wp-load.php'; wp_install_core_pr(${pr});`
-				});
-			}
-
-			if (steps.length > 0) {
-				blueprint.steps = steps;
-			}
-
-			if (params.has('url')) {
-				blueprint.landingPage = params.get('url');
-			}
-
-			if (params.has('mode')) {
-				const mode = params.get('mode');
-				if (mode === 'seamless') {
-					blueprint.preferredVersions = blueprint.preferredVersions || {};
-					blueprint.preferredVersions.seamless = true;
-				}
-			}
-
-			if (params.has('language')) {
-				blueprint.siteOptions = blueprint.siteOptions || {};
-				blueprint.siteOptions.WPLANG = params.get('language');
-			}
-
-			return blueprint;
-		} catch (e) {
-			console.error('Error parsing Query API URL:', e);
-			return null;
-		}
-	}
+	// parsePlaygroundQueryApi is now imported from playground-integration.ts
 
 	async function handlePlaygroundBlueprint(blueprintData) {
 		if (!blueprintData) {
@@ -1247,23 +1159,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
-	function shouldUseMuPlugin(phpCode) {
-		const hookIndicators = [
-			'add_filter',
-			'add_action',
-			'remove_filter',
-			'remove_action',
-			'register_activation_hook',
-			'register_deactivation_hook',
-			'add_shortcode',
-			'register_post_type',
-			'register_taxonomy',
-			'add_menu_page',
-			'add_submenu_page'
-		];
-
-		return hookIndicators.some(indicator => phpCode.includes(indicator));
-	}
+	// shouldUseMuPlugin is now imported from playground-integration.ts
 
 	function addPostStepFromHtml(html) {
 		const stepData = customSteps['addPost'];
@@ -3238,27 +3134,8 @@ addEventListener('DOMContentLoaded', function () {
 	});
 
 	// History functionality
-	const HISTORY_STORAGE_KEY = 'playground-blueprint-history';
-	const MAX_HISTORY_ENTRIES = 50;
+	// getHistory and saveHistory are now imported from my-blueprints.ts
 	let currentHistorySelection = null;
-
-	function getHistory() {
-		try {
-			const history = localStorage.getItem(HISTORY_STORAGE_KEY);
-			return history ? JSON.parse(history) : [];
-		} catch (e) {
-			console.error('Failed to load history:', e);
-			return [];
-		}
-	}
-
-	function saveHistory(history) {
-		try {
-			localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
-		} catch (e) {
-			console.error('Failed to save history:', e);
-		}
-	}
 
 	function addToHistory(customTitle) {
 		const blueprintString = getBlueprintValue();
@@ -3278,23 +3155,9 @@ addEventListener('DOMContentLoaded', function () {
 		const title = customTitle || stepConfig.title || generateLabel();
 		delete stepConfig.title;
 
-		const history = getHistory();
-		const entry = {
-			id: Date.now(),
-			date: new Date().toISOString(),
-			title: title,
-			compiledBlueprint: compiledBlueprint,
-			stepConfig: stepConfig
-		};
-
-		history.unshift(entry);
-		if (history.length > MAX_HISTORY_ENTRIES) {
-			history.splice(MAX_HISTORY_ENTRIES);
-		}
-
-		saveHistory(history);
+		const result = addBlueprintToHistory(compiledBlueprint, stepConfig, title);
 		updateHistoryButtonVisibility();
-		return true;
+		return result;
 	}
 
 	function addToHistoryWithId(customTitle) {
@@ -3315,33 +3178,7 @@ addEventListener('DOMContentLoaded', function () {
 		const title = customTitle || stepConfig.title || generateLabel();
 		delete stepConfig.title;
 
-		const history = getHistory();
-
-		// Check if the most recent entry is identical (avoid duplicate saves)
-		if (history.length > 0) {
-			const lastEntry = history[0];
-			const lastBlueprintString = JSON.stringify(lastEntry.compiledBlueprint);
-			const currentBlueprintString = JSON.stringify(compiledBlueprint);
-			if (lastBlueprintString === currentBlueprintString) {
-				return null;
-			}
-		}
-
-		const entryId = Date.now();
-		const entry = {
-			id: entryId,
-			date: new Date().toISOString(),
-			title: title,
-			compiledBlueprint: compiledBlueprint,
-			stepConfig: stepConfig
-		};
-
-		history.unshift(entry);
-		if (history.length > MAX_HISTORY_ENTRIES) {
-			history.splice(MAX_HISTORY_ENTRIES);
-		}
-
-		saveHistory(history);
+		const entryId = addBlueprintToHistoryWithId(compiledBlueprint, stepConfig, title);
 		updateHistoryButtonVisibility();
 		return entryId;
 	}
