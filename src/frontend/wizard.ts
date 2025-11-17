@@ -170,7 +170,7 @@ export function removeWizardTheme(index: number): void {
 }
 
 export function updateWizardPluginList(): void {
-	const container = document.getElementById('wizard-plugin-list');
+	const container = document.getElementById('wizard-selected-plugins');
 	if (!container) return;
 
 	container.innerHTML = '';
@@ -203,7 +203,7 @@ export function updateWizardPluginList(): void {
 }
 
 export function updateWizardThemeList(): void {
-	const container = document.getElementById('wizard-theme-list');
+	const container = document.getElementById('wizard-selected-themes');
 	if (!container) return;
 
 	container.innerHTML = '';
