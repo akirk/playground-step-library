@@ -5,7 +5,6 @@ This document provides detailed information about all available steps, including
 ## Table of Contents
 
 - [`addClientRole`](#addclientrole)
-- [`addCorsProxy`](#addcorsproxy)
 - [`addFilter`](#addfilter)
 - [`addMedia`](#addmedia)
 - [`addPage`](#addpage)
@@ -71,24 +70,6 @@ This document provides detailed information about all available steps, including
     {
           "step": "addClientRole",
           "displayName": "Client"
-    }
-```
-
-
----
-
-## `addCorsProxy`
-
-**Type**: Custom Step  
-**Description**: Automatically add the CORS proxy to outgoing HTTP requests.
-
-*No parameters defined.*
-
-### Example Usage
-
-```json
-    {
-          "step": "addCorsProxy"
     }
 ```
 

@@ -4,9 +4,9 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 📊 Overview
 
-- **Total Steps**: 48
+- **Total Steps**: 47
 - **Built-in Steps**: 8
-- **Custom Steps**: 40
+- **Custom Steps**: 39
 
 ## 🚀 Quick Start
 
@@ -45,7 +45,6 @@ Built-in steps are core WordPress Playground steps that are enhanced with additi
 Custom steps provide additional functionality beyond the core WordPress Playground capabilities.
 
 - [`addClientRole`](steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
-- [`addCorsProxy`](steps/addCorsProxy.md) - Automatically add the CORS proxy to outgoing HTTP requests.
 - [`addFilter`](steps/addFilter.md) - Easily add a filtered value.
 - [`addMedia`](steps/addMedia.md) - Add files to the media library.
 - [`addPage`](steps/addPage.md) - Add a page with title and content.

@@ -33,10 +33,7 @@ Run a wp-cli command.
   "steps": [
     {
       "step": "wp-cli",
-      "command": "",
-      "progress": {
-        "caption": "runWpCliCommand:"
-      }
+      "command": ""
     }
   ]
 }

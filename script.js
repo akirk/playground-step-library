@@ -695,6 +695,138 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
+	let blueprintDropZoneActive = false;
+
+	document.body.addEventListener('dragover', (event) => {
+		const items = event.dataTransfer?.items;
+		if (!items) {
+			return;
+		}
+
+		const hasFile = Array.from(items).some(item => item.kind === 'file');
+		if (!hasFile) {
+			return;
+		}
+
+		event.preventDefault();
+		event.dataTransfer.dropEffect = 'copy';
+
+		if (!blueprintDropZoneActive) {
+			blueprintDropZoneActive = true;
+			document.body.classList.add('blueprint-drop-active');
+		}
+	});
+
+	document.body.addEventListener('dragleave', (event) => {
+		if (event.target === document.body || !document.body.contains(event.relatedTarget)) {
+			blueprintDropZoneActive = false;
+			document.body.classList.remove('blueprint-drop-active');
+		}
+	});
+
+	document.body.addEventListener('drop', (event) => {
+		const files = event.dataTransfer?.files;
+		if (!files || files.length === 0) {
+			return;
+		}
+
+		const isStepDrag = event.dataTransfer?.effectAllowed === 'move';
+		if (isStepDrag) {
+			return;
+		}
+
+		event.preventDefault();
+		event.stopPropagation();
+
+		blueprintDropZoneActive = false;
+		document.body.classList.remove('blueprint-drop-active');
+
+		handleBlueprintFileDrop(files[0]);
+	});
+
+	async function handleBlueprintFileDrop(file) {
+		if (!file.name.endsWith('.json')) {
+			showMyBlueprintsToast('Please drop a JSON file');
+			return;
+		}
+
+		try {
+			const text = await file.text();
+			const data = JSON.parse(text);
+
+			let nativeBlueprint = null;
+			let title = 'Imported Blueprint';
+
+			if (data.blueprints && Array.isArray(data.blueprints)) {
+				if (data.blueprints.length === 0) {
+					showMyBlueprintsToast('No blueprints found in file');
+					return;
+				}
+
+				if (data.blueprints.length > 1) {
+					const choice = confirm('This file contains ' + data.blueprints.length + ' blueprints. Load the first one?');
+					if (!choice) {
+						return;
+					}
+				}
+
+				const firstBlueprint = data.blueprints[0];
+				if (firstBlueprint.compiledBlueprint) {
+					nativeBlueprint = firstBlueprint.compiledBlueprint;
+					title = firstBlueprint.title || title;
+				} else {
+					nativeBlueprint = firstBlueprint;
+				}
+			} else if (data.compiledBlueprint) {
+				nativeBlueprint = data.compiledBlueprint;
+				title = data.title || title;
+			} else if (data.steps || data.landingPage) {
+				nativeBlueprint = data;
+			} else {
+				showMyBlueprintsToast('Unrecognized blueprint format');
+				return;
+			}
+
+			const { BlueprintDecompiler } = await import('./lib/src/decompiler.js');
+			const decompiler = new BlueprintDecompiler();
+			const result = decompiler.decompile(nativeBlueprint);
+
+			if (result.warnings.length > 0) {
+				console.warn('Decompiler warnings:', result.warnings);
+			}
+
+			const stepConfig = {
+				steps: result.steps.map(step => {
+					const vars = {};
+					for (const key in step) {
+						if (key !== 'step') {
+							vars[key] = step[key];
+						}
+					}
+					return {
+						step: step.step,
+						vars: vars
+					};
+				})
+			};
+
+			restoreSteps(stepConfig, title);
+
+			if (result.unmappedSteps.length === 0) {
+				showMyBlueprintsToast('Blueprint loaded successfully!');
+			} else {
+				const stepTypes = result.unmappedSteps.map(s => s.step || 'unknown').filter((v, i, a) => a.indexOf(v) === i);
+				const msg = 'Blueprint loaded. Ignored ' + result.unmappedSteps.length + ' step(s): ' + stepTypes.join(', ');
+				showMyBlueprintsToast(msg);
+				console.warn('Unmapped steps:', result.unmappedSteps);
+			}
+
+		} catch (error) {
+			console.error('Blueprint import error:', error);
+			showMyBlueprintsToast('Failed to load blueprint: ' + error.message);
+		}
+	}
+
 	document.addEventListener('keydown', (event) => {
 		if (event.key === 'Escape') {
 			const viewSourceDialog = document.getElementById('view-source');

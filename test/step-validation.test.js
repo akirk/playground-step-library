@@ -161,7 +161,6 @@ describe('Step Output Validation', () => {
   describe('Custom Steps', () => {
     const customSteps = [
       'addClientRole',
-      'addCorsProxy', 
       'addFilter',
       'addMedia',
       // 'addPage', // Temporarily disabled - converted to flattened TypeScript structure

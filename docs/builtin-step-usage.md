@@ -91,10 +91,9 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `mkdir`
 
-**Used by 15 steps:**
+**Used by 14 steps:**
 
 - ⚡ [`addClientRole`](steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
-- ⚡ [`addCorsProxy`](steps/addCorsProxy.md) - Automatically add the CORS proxy to outgoing HTTP requests.
 - ⚡ [`addFilter`](steps/addFilter.md) - Easily add a filtered value.
 - ⚡ [`addMedia`](steps/addMedia.md) - Add files to the media library.
 - ⚡ [`customPostType`](steps/customPostType.md) - Register a custom post type.
@@ -179,10 +178,9 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `writeFile`
 
-**Used by 15 steps:**
+**Used by 14 steps:**
 
 - ⚡ [`addClientRole`](steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
-- ⚡ [`addCorsProxy`](steps/addCorsProxy.md) - Automatically add the CORS proxy to outgoing HTTP requests.
 - ⚡ [`addFilter`](steps/addFilter.md) - Easily add a filtered value.
 - ⚡ [`addMedia`](steps/addMedia.md) - Add files to the media library.
 - ⚡ [`customPostType`](steps/customPostType.md) - Register a custom post type.

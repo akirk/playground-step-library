@@ -161,10 +161,6 @@ export interface LoginStep extends BlueprintStep {
     landingPage?: boolean;
 }
 
-export interface AddCorsProxyStep extends BlueprintStep {
-    // No parameters needed
-}
-
 export interface InstallPhpLiteAdminStep extends BlueprintStep {
     // No parameters needed
 }
@@ -329,7 +325,6 @@ export type StepLibraryStepDefinition =
 	DoActionStep |
 	AddClientRoleStep |
 	LoginStep |
-	AddCorsProxyStep |
 	InstallPhpLiteAdminStep |
 	InstallAdminerStep |
 	SetLandingPageStep |

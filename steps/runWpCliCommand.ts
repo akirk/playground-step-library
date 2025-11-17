@@ -5,10 +5,7 @@ export const runWpCliCommand: StepFunction<RunWpCliCommandStep> = (step: RunWpCl
 	return [
 		{
 			step: 'wp-cli',
-			command: step.command,
-			progress: {
-				caption: `runWpCliCommand: ${step.command}`
-			}
+			command: step.command
 		}
 	];
 };

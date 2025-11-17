@@ -214,7 +214,7 @@ Returns information about all available custom steps.
 - Returns: Object with step names as keys and step info as values
 ## Custom Steps
 
-This library provides **48** total steps (8 built-in enhanced steps + 40 custom steps):
+This library provides **47** total steps (8 built-in enhanced steps + 39 custom steps):
 
 ### Built-in Enhanced Steps
 - [`defineWpConfigConst`](docs/steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
@@ -228,7 +228,6 @@ This library provides **48** total steps (8 built-in enhanced steps + 40 custom 
 
 ### Custom Steps
 - [`addClientRole`](docs/steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
-- [`addCorsProxy`](docs/steps/addCorsProxy.md) - Automatically add the CORS proxy to outgoing HTTP requests.
 - [`addFilter`](docs/steps/addFilter.md) - Easily add a filtered value.
 - [`addMedia`](docs/steps/addMedia.md) - Add files to the media library.
 - [`addPage`](docs/steps/addPage.md) - Add a page with title and content.
