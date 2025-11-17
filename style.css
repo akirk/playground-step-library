@@ -356,7 +356,6 @@ a:any-link {
 a:any-link:hover {
   color: var(--link-hover);
   text-decoration: none;
-  transform: translateY(-1px);
 }
 
 #blueprint-builder {
@@ -810,7 +809,6 @@ button:hover,
 #download-blueprint:hover,
 #examples:hover {
   background-color: var(--button-hover-background);
-  transform: translateY(-1px);
   box-shadow: var(--shadow-md);
   border-color: light-dark(var(--primary-300), var(--primary-600));
 }
@@ -831,7 +829,6 @@ button.save-step:hover {
   background-color: transparent;
   text-decoration: none;
   color: light-dark(var(--link-hover), var(--primary-100));
-  transform: translateY(-1px);
 }
 
 #examples {
@@ -977,7 +974,6 @@ select {
   background-color: light-dark(var(--primary-100), var(--primary-900));
   color: light-dark(var(--primary-700), var(--primary-200));
   border-color: light-dark(var(--primary-300), var(--primary-600));
-  transform: translateY(-1px);
 }
 
 #playground-link:any-link {
@@ -1017,16 +1013,15 @@ select {
   background-color: light-dark(var(--primary-100), var(--primary-900));
   color: light-dark(var(--primary-700), var(--primary-200));
   border-color: light-dark(var(--primary-300), var(--primary-600));
-  transform: translateY(-1px);
 }
 
 /* More Options Dropdown */
-#more-options-dropdown {
+.more-options-dropdown {
   position: relative;
   display: inline-block;
 }
 
-#more-options-button {
+.more-options-button, #history-actions button.more-options-button {
   border: none;
   background: none;
   padding: var(--spacing-2);
@@ -1037,29 +1032,32 @@ select {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
+  width: 20px;
   height: 40px;
+  font-size: var(--font-size-lg);
 }
 
-#more-options-button:hover {
+.more-options-button:hover {
   background-color: light-dark(var(--gray-100), var(--gray-800));
   color: var(--text-color);
 }
 
-#more-options-menu {
+
+.more-options-menu {
   display: none;
   position: absolute;
   right: 0;
+  bottom: 100%;
   background: var(--surface-elevated);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   z-index: 1000;
   min-width: 200px;
-  margin-top: 4px;
+  margin-bottom: 4px;
 }
 
-#more-options-menu button {
+.more-options-menu button, #history-actions .more-options-menu button {
   display: block;
   width: 100%;
   text-align: left;
@@ -1073,12 +1071,12 @@ select {
   font-size: var(--font-size-sm);
 }
 
-#more-options-menu button:hover {
+.more-options-menu button:hover, #history-actions .more-options-menu button:hover {
   background: light-dark(var(--primary-50), var(--primary-950));
   color: light-dark(var(--primary-700), var(--primary-200));
 }
 
-#more-options-menu button svg {
+.more-options-menu button svg, #history-actions .more-options-menu button svg {
   vertical-align: middle;
   margin-right: var(--spacing-2);
 }
@@ -1833,7 +1831,6 @@ body.split-view-right #playground-iframe {
 
 #wizard-mode-toggle:hover {
   background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
-  transform: translateY(-1px);
   box-shadow: var(--shadow-lg);
 }
 
@@ -2154,7 +2151,6 @@ body.split-view-right #playground-iframe {
 
 #wizard-prev:hover:not(:disabled) {
   background: var(--button-hover-background);
-  transform: translateY(-1px);
 }
 
 #wizard-prev:disabled {
@@ -2173,7 +2169,6 @@ body.split-view-right #playground-iframe {
 #wizard-finish:hover {
   background: var(--primary-600);
   border-color: var(--primary-600);
-  transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
 
@@ -2227,7 +2222,6 @@ body.split-view-right #playground-iframe {
 .wizard-url-input-group button:hover {
   background: var(--primary-600);
   border-color: var(--primary-600);
-  transform: translateY(-1px);
 }
 
 .wizard-selected-items {
@@ -2737,7 +2731,7 @@ body.split-view-right #playground-iframe {
 #history-blueprint-wrapper {
   position: relative;
   height: calc(100% - 80px);
-  min-height: 300px;
+  min-height: 60px;
 }
 
 #history-blueprint-view {

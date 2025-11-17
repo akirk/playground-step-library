@@ -2932,20 +2932,42 @@ addEventListener('DOMContentLoaded', function () {
 		return fullUrl;
 	}
 
-	const moreOptionsButton = document.getElementById('more-options-button');
-	const moreOptionsMenu = document.getElementById('more-options-menu');
+	function initMoreOptionsDropdown(container) {
+		const button = container.querySelector('.more-options-button');
+		const menu = container.querySelector('.more-options-menu');
 
-	moreOptionsButton.addEventListener('click', function (e) {
-		e.stopPropagation();
-		const isVisible = moreOptionsMenu.style.display === 'block';
-		moreOptionsMenu.style.display = isVisible ? 'none' : 'block';
-	});
-
-	document.addEventListener('click', function (e) {
-		if (!moreOptionsMenu.contains(e.target) && e.target !== moreOptionsButton) {
-			moreOptionsMenu.style.display = 'none';
+		if (!button || !menu) {
+			return;
 		}
+
+		button.addEventListener('click', function(e) {
+			e.stopPropagation();
+			const isVisible = menu.style.display === 'block';
+			document.querySelectorAll('.more-options-menu').forEach(m => {
+				if (m !== menu) {
+					m.style.display = 'none';
+				}
+			});
+			menu.style.display = isVisible ? 'none' : 'block';
+		});
+	}
+
+	document.addEventListener('click', function(e) {
+		document.querySelectorAll('.more-options-menu').forEach(menu => {
+			const container = menu.closest('.more-options-dropdown');
+			const button = container?.querySelector('.more-options-button');
+			if (button && !menu.contains(e.target) && !button.contains(e.target)) {
+				menu.style.display = 'none';
+			}
+		});
 	});
+
+	const mainDropdown = document.getElementById('more-options-dropdown');
+	if (mainDropdown) {
+		initMoreOptionsDropdown(mainDropdown);
+	}
+
+	const moreOptionsMenu = document.getElementById('more-options-menu');
 
 	document.getElementById('copy-playground-url-menu').addEventListener('click', function (e) {
 		moreOptionsMenu.style.display = 'none';
@@ -3890,22 +3912,46 @@ addEventListener('DOMContentLoaded', function () {
 		historyDetailColumn.classList.remove('mobile-visible');
 	});
 
-	document.getElementById('history-copy-btn').addEventListener('click', function () {
+	const historyDropdown = document.getElementById('history-more-options-dropdown');
+	if (historyDropdown) {
+		initMoreOptionsDropdown(historyDropdown);
+	}
+
+	function getHistoryPlaygroundUrl() {
+		if (!currentHistorySelection) {
+			return null;
+		}
+		const playground = document.getElementById('playground').value;
+		const blueprintString = JSON.stringify(currentHistorySelection.compiledBlueprint);
+		return (playground.substr(0, 7) === 'http://' ? playground : 'https://' + playground) + '/?blueprint-url=data:application/json;base64,' + encodeURIComponent(encodeStringAsBase64(blueprintString));
+	}
+
+	document.getElementById('history-copy-playground-url-btn').addEventListener('click', function (e) {
+		if (!currentHistorySelection) {
+			return;
+		}
+		const playgroundUrl = getHistoryPlaygroundUrl();
+		const button = e.currentTarget;
+		const originalContent = button.cloneNode(true);
+		copyToClipboard(playgroundUrl, button, originalContent);
+	});
+
+	document.getElementById('history-copy-blueprint-btn').addEventListener('click', function () {
 		if (!currentHistorySelection) {
 			return;
 		}
 		const blueprintString = JSON.stringify(currentHistorySelection.compiledBlueprint, null, 2);
 		navigator.clipboard.writeText(blueprintString).then(function () {
-			const btn = document.getElementById('history-copy-btn');
-			const originalText = btn.textContent;
+			const btn = document.getElementById('history-copy-blueprint-btn');
+			const originalText = btn.innerHTML;
 			btn.textContent = '✓ Copied!';
 			setTimeout(function () {
-				btn.textContent = originalText;
+				btn.innerHTML = originalText;
 			}, 2000);
 		});
 	});
 
-	document.getElementById('history-download-btn').addEventListener('click', function () {
+	document.getElementById('history-download-blueprint-btn').addEventListener('click', function () {
 		if (!currentHistorySelection) {
 			return;
 		}
@@ -3919,6 +3965,69 @@ addEventListener('DOMContentLoaded', function () {
 		downloadAnchor.click();
 
 		showMyBlueprintsToast('Downloaded');
+	});
+
+	document.getElementById('history-share-url-btn').addEventListener('click', async function (e) {
+		if (!currentHistorySelection) {
+			return;
+		}
+
+		const baseUrl = window.location.origin + window.location.pathname;
+		const compiledSteps = currentHistorySelection.compiledBlueprint.steps || [];
+
+		const params = [];
+		compiledSteps.forEach((step, index) => {
+			params.push(`step[${index}]=` + step.step);
+			Object.keys(step).forEach(key => {
+				if (key !== 'step') {
+					params.push(`${key}[${index}]=` + encodeURIComponent(JSON.stringify(step[key])));
+				}
+			});
+		});
+
+		const shareUrl = `${baseUrl}?${params.join('&')}`;
+		const button = e.currentTarget;
+		const originalContent = button.cloneNode(true);
+		const title = currentHistorySelection.title || 'WordPress Playground Blueprint';
+
+		if (navigator.share) {
+			try {
+				await navigator.share({
+					title: title,
+					url: shareUrl
+				});
+			} catch (err) {
+				if (err.name !== 'AbortError') {
+					copyToClipboard(shareUrl, button, originalContent);
+				}
+			}
+		} else {
+			copyToClipboard(shareUrl, button, originalContent);
+		}
+	});
+
+	document.getElementById('history-copy-redirect-url-btn').addEventListener('click', function (e) {
+		if (!currentHistorySelection) {
+			return;
+		}
+
+		const baseUrl = window.location.origin + window.location.pathname;
+		const compiledSteps = currentHistorySelection.compiledBlueprint.steps || [];
+
+		const params = ['redir=1'];
+		compiledSteps.forEach((step, index) => {
+			params.push(`step[${index}]=` + step.step);
+			Object.keys(step).forEach(key => {
+				if (key !== 'step') {
+					params.push(`${key}[${index}]=` + encodeURIComponent(JSON.stringify(step[key])));
+				}
+			});
+		});
+
+		const redirectUrl = `${baseUrl}?${params.join('&')}`;
+		const button = e.currentTarget;
+		const originalContent = button.cloneNode(true);
+		copyToClipboard(redirectUrl, button, originalContent);
 	});
 
 	document.getElementById('history-launch-btn').addEventListener('click', function () {
