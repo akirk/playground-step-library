@@ -161,9 +161,164 @@ describe('PlaygroundStepLibrary', () => {
           }
         ]
       };
-      
+
       const result = compiler.validateBlueprint(JSON.stringify(blueprint));
       expect(result.valid).toBe(true);
+    });
+  });
+
+  describe('preferredVersions handling', () => {
+    it('should preserve preferredVersions with wp and php when provided', () => {
+      const blueprint = {
+        steps: [
+          {
+            step: 'setSiteName',
+            sitename: 'Version Test',
+            tagline: 'Testing version preservation'
+          }
+        ]
+      };
+
+      const options = {
+        preferredVersions: {
+          wp: '6.4',
+          php: '8.2'
+        }
+      };
+
+      const compiled = compiler.compile(blueprint, options);
+      expect(compiled.preferredVersions).toBeDefined();
+      expect(compiled.preferredVersions.wp).toBe('6.4');
+      expect(compiled.preferredVersions.php).toBe('8.2');
+    });
+
+    it('should preserve preferredVersions with only wp version', () => {
+      const blueprint = {
+        steps: [
+          {
+            step: 'setSiteName',
+            sitename: 'WP Version Test',
+            tagline: 'Testing WP version only'
+          }
+        ]
+      };
+
+      const options = {
+        preferredVersions: {
+          wp: '6.3'
+        }
+      };
+
+      const compiled = compiler.compile(blueprint, options);
+      expect(compiled.preferredVersions).toBeDefined();
+      expect(compiled.preferredVersions.wp).toBe('6.3');
+      expect(compiled.preferredVersions.php).toBe('latest');
+    });
+
+    it('should preserve preferredVersions with only php version', () => {
+      const blueprint = {
+        steps: [
+          {
+            step: 'setSiteName',
+            sitename: 'PHP Version Test',
+            tagline: 'Testing PHP version only'
+          }
+        ]
+      };
+
+      const options = {
+        preferredVersions: {
+          php: '8.1'
+        }
+      };
+
+      const compiled = compiler.compile(blueprint, options);
+      expect(compiled.preferredVersions).toBeDefined();
+      expect(compiled.preferredVersions.php).toBe('8.1');
+      expect(compiled.preferredVersions.wp).toBe('latest');
+    });
+
+    it('should preserve preferredVersions with latest values', () => {
+      const blueprint = {
+        steps: [
+          {
+            step: 'setSiteName',
+            sitename: 'Latest Version Test',
+            tagline: 'Testing latest versions'
+          }
+        ]
+      };
+
+      const options = {
+        preferredVersions: {
+          wp: 'latest',
+          php: 'latest'
+        }
+      };
+
+      const compiled = compiler.compile(blueprint, options);
+      expect(compiled.preferredVersions).toBeDefined();
+      expect(compiled.preferredVersions.wp).toBe('latest');
+      expect(compiled.preferredVersions.php).toBe('latest');
+    });
+
+    it('should handle blueprint without preferredVersions', () => {
+      const blueprint = {
+        steps: [
+          {
+            step: 'setSiteName',
+            sitename: 'No Version Test',
+            tagline: 'Testing without versions'
+          }
+        ]
+      };
+
+      const compiled = compiler.compile(blueprint);
+      expect(compiled.preferredVersions).toBeUndefined();
+    });
+
+    it('should set php to latest when only wp is specified in options', () => {
+      const blueprint = {
+        steps: [
+          {
+            step: 'setSiteName',
+            sitename: 'WP Only Test'
+          }
+        ]
+      };
+
+      const options = {
+        preferredVersions: {
+          wp: '6.4'
+        }
+      };
+
+      const compiled = compiler.compile(blueprint, options);
+      expect(compiled.preferredVersions).toBeDefined();
+      expect(compiled.preferredVersions.wp).toBe('6.4');
+      expect(compiled.preferredVersions.php).toBe('latest');
+    });
+
+    it('should set wp to latest when only php is specified in options', () => {
+      const blueprint = {
+        steps: [
+          {
+            step: 'setSiteName',
+            sitename: 'PHP Only Test'
+          }
+        ]
+      };
+
+      const options = {
+        preferredVersions: {
+          php: '8.2'
+        }
+      };
+
+      const compiled = compiler.compile(blueprint, options);
+      expect(compiled.preferredVersions).toBeDefined();
+      expect(compiled.preferredVersions.php).toBe('8.2');
+      expect(compiled.preferredVersions.wp).toBe('latest');
     });
   });
 });

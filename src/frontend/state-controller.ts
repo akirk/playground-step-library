@@ -30,6 +30,8 @@ export class StateController {
 		const modeEl = document.getElementById('mode') as HTMLSelectElement;
 		const previewModeEl = document.getElementById('preview-mode') as HTMLInputElement;
 		const excludeMetaEl = document.getElementById('exclude-meta') as HTMLInputElement;
+		const wpVersionEl = document.getElementById('wp-version') as HTMLSelectElement;
+		const phpVersionEl = document.getElementById('php-version') as HTMLSelectElement;
 
 		return compressState(steps, {
 			title: titleEl?.value || undefined,
@@ -37,7 +39,9 @@ export class StateController {
 			playground: playgroundEl?.value || undefined,
 			mode: modeEl?.value || undefined,
 			previewMode: previewModeEl?.value || undefined,
-			excludeMeta: excludeMetaEl?.checked || undefined
+			excludeMeta: excludeMetaEl?.checked || undefined,
+			wpVersion: wpVersionEl?.value || undefined,
+			phpVersion: phpVersionEl?.value || undefined
 		});
 	}
 
@@ -68,6 +72,12 @@ export class StateController {
 		}
 		if (state.excludeMeta !== undefined) {
 			(document.getElementById('exclude-meta') as HTMLInputElement).checked = state.excludeMeta;
+		}
+		if (state.wpVersion) {
+			(document.getElementById('wp-version') as HTMLSelectElement).value = state.wpVersion;
+		}
+		if (state.phpVersion) {
+			(document.getElementById('php-version') as HTMLSelectElement).value = state.phpVersion;
 		}
 		if (!(state.steps || []).length) {
 			return;

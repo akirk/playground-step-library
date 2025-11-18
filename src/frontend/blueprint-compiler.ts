@@ -19,6 +19,8 @@ export interface CompressedState {
 	mode?: string;
 	previewMode?: string;
 	excludeMeta?: boolean;
+	wpVersion?: string;
+	phpVersion?: string;
 }
 
 /**
@@ -33,6 +35,8 @@ export function compressState(
 		mode?: string;
 		previewMode?: string;
 		excludeMeta?: boolean;
+		wpVersion?: string;
+		phpVersion?: string;
 	}
 ): string {
 	const state: CompressedState = {
@@ -56,6 +60,12 @@ export function compressState(
 	}
 	if (options.excludeMeta) {
 		state.excludeMeta = true;
+	}
+	if (options.wpVersion && options.wpVersion !== 'latest') {
+		state.wpVersion = options.wpVersion;
+	}
+	if (options.phpVersion && options.phpVersion !== 'latest') {
+		state.phpVersion = options.phpVersion;
 	}
 
 	const json = JSON.stringify(state);

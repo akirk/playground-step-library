@@ -3,7 +3,7 @@
  * Manages blueprint compilation, playground URL generation, and preview mode
  */
 
-import PlaygroundStepLibrary from '../index';
+import PlaygroundStepLibrary, { type CompileOptions } from '../index';
 import { isManualEditMode, getBlueprint } from './app-state';
 import { encodeStringAsBase64 } from './utils';
 import { generateLabel } from './label-generator';
@@ -46,25 +46,25 @@ export class BlueprintCompilationController {
 			const jsonInput = getBlueprint();
 
 			// Prepare compilation options from UI elements
-			const userDefined: any = {
-				'landingPage': '/',
-				'features': {}
+			const compileOptions: CompileOptions = {
+				landingPage: '/',
+				features: {}
 			};
 
 			const networkingEl = document.getElementById('networking') as HTMLInputElement;
 			if (networkingEl && !networkingEl.checked) {
-				userDefined.features.networking = false;
+				compileOptions.features!.networking = false;
 			}
 
 			const wpCliEl = document.getElementById('wp-cli') as HTMLInputElement;
 			if (wpCliEl && wpCliEl.checked) {
-				userDefined.extraLibraries = ['wp-cli'];
+				compileOptions.extraLibraries = ['wp-cli'];
 			}
 
 			const wpVersionEl = document.getElementById('wp-version') as HTMLSelectElement;
 			const phpVersionEl = document.getElementById('php-version') as HTMLSelectElement;
-			if (wpVersionEl && phpVersionEl && ('latest' !== wpVersionEl.value || 'latest' !== phpVersionEl.value)) {
-				userDefined.preferredVersions = {
+			if (wpVersionEl && phpVersionEl) {
+				compileOptions.preferredVersions = {
 					wp: wpVersionEl.value,
 					php: phpVersionEl.value
 				};
@@ -72,8 +72,7 @@ export class BlueprintCompilationController {
 
 			// Use the PlaygroundStepLibrary to compile the blueprint
 			const compiler = new PlaygroundStepLibrary();
-			const inputData = Object.assign(userDefined, JSON.parse(jsonInput));
-			outputData = compiler.compile(inputData, {}, useV2);
+			outputData = compiler.compile(JSON.parse(jsonInput), compileOptions, useV2);
 
 			// Extract query params from the compiler
 			const extractedQueryParams = compiler.getLastQueryParams();

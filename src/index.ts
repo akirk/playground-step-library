@@ -23,9 +23,14 @@ interface ValidationResult {
     error?: string;
 }
 
-interface CompileOptions {
+export interface CompileOptions {
     landingPage?: string;
     features?: Record<string, any>;
+    preferredVersions?: {
+        wp?: string;
+        php?: string;
+    };
+    extraLibraries?: string[];
 }
 
 interface StepInfo {
@@ -98,14 +103,23 @@ class PlaygroundStepLibrary {
         }
 
         // Default user-defined options
-        const userDefined = {
+        const userDefined: any = {
             landingPage: '/',
             features: {},
             ...options
         };
 
+        // Normalize preferredVersions from options: ensure both php and wp are set
+        if (options.preferredVersions) {
+            userDefined.preferredVersions = {
+                wp: options.preferredVersions.wp || 'latest',
+                php: options.preferredVersions.php || 'latest'
+            };
+        }
+
         // Merge user defined options with input data
         inputData = Object.assign(userDefined, inputData);
+
         // Create output blueprint with proper typing
         const outputData: Blueprint = {
             ...inputData,

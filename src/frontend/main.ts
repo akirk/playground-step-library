@@ -506,7 +506,7 @@ addEventListener('DOMContentLoaded', function () {
 		blueprintEventBus.emit('blueprint:updated');
 	});
 	document.addEventListener('change', (event) => {
-		if ( event.target.id === 'mode' || event.target.id === 'preview-mode' || event.target.id === 'exclude-meta' ) {
+		if ( event.target.id === 'mode' || event.target.id === 'preview-mode' || event.target.id === 'exclude-meta' || event.target.id === 'wp-version' || event.target.id === 'php-version' ) {
 			blueprintEventBus.emit('blueprint:updated');
 			return;
 		}
