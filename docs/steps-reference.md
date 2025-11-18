@@ -21,6 +21,7 @@ This document provides detailed information about all available steps, including
 - [`deleteAllPosts`](#deleteallposts)
 - [`disableWelcomeGuides`](#disablewelcomeguides)
 - [`doAction`](#doaction)
+- [`dontLogin`](#dontlogin)
 - [`enableMultisite`](#enablemultisite)
 - [`enqueueCss`](#enqueuecss)
 - [`enqueueJs`](#enqueuejs)
@@ -484,6 +485,24 @@ This document provides detailed information about all available steps, including
           "parameter3": "",
           "parameter4": "",
           "parameter5": ""
+    }
+```
+
+
+---
+
+## `dontLogin`
+
+**Type**: Custom Step  
+**Description**: Prevent automatic login (Playground logs in as admin by default).
+
+*No parameters defined.*
+
+### Example Usage
+
+```json
+    {
+          "step": "dontLogin"
     }
 ```
 

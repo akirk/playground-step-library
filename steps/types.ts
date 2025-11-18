@@ -163,6 +163,10 @@ export interface LoginStep extends BlueprintStep {
     landingPage?: boolean;
 }
 
+export interface DontLoginStep extends BlueprintStep {
+    // No parameters needed
+}
+
 export interface InstallPhpLiteAdminStep extends BlueprintStep {
     // No parameters needed
 }

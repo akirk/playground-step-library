@@ -212,7 +212,7 @@ class PlaygroundStepLibrary {
                 if ((outSteps as any).features) {
                     outputData.features = (outSteps as any).features;
                 }
-                if ((outSteps as any).login) {
+                if ((outSteps as any).login !== undefined) {
                     outputData.login = (outSteps as any).login;
                 }
 

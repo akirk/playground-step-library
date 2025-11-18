@@ -9,6 +9,7 @@ import { renameDefaultCategory } from '../steps/renameDefaultCategory.js';
 import { removeDashboardWidgets } from '../steps/removeDashboardWidgets.js';
 import { showAdminNotice } from '../steps/showAdminNotice.js';
 import { login } from '../steps/login.js';
+import { dontLogin } from '../steps/dontLogin.js';
 import { installPhpLiteAdmin } from '../steps/installPhpLiteAdmin.js';
 import { installAdminer } from '../steps/installAdminer.js';
 import { runWpCliCommand } from '../steps/runWpCliCommand.js';
@@ -75,6 +76,7 @@ export const stepsRegistry = {
     customPostType,
     deleteAllPosts,
     disableWelcomeGuides,
+    dontLogin,
     doAction,
     enqueueCss,
     enqueueJs,

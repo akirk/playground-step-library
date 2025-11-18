@@ -4,9 +4,9 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 📊 Overview
 
-- **Total Steps**: 49
+- **Total Steps**: 50
 - **Built-in Steps**: 8
-- **Custom Steps**: 41
+- **Custom Steps**: 42
 
 ## 🚀 Quick Start
 
@@ -57,6 +57,7 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`customPostType`](steps/customPostType.md) - Register a custom post type.
 - [`deleteAllPosts`](steps/deleteAllPosts.md) - Delete all posts, pages, attachments, revisions and menu items.
 - [`disableWelcomeGuides`](steps/disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
+- [`dontLogin`](steps/dontLogin.md) - Prevent automatic login (Playground logs in as admin by default).
 - [`doAction`](steps/doAction.md) - Execute a custom action.
 - [`enqueueCss`](steps/enqueueCss.md) - Enqueue custom CSS on frontend and/or admin.
 - [`enqueueJs`](steps/enqueueJs.md) - Enqueue custom JavaScript on frontend and/or admin.
