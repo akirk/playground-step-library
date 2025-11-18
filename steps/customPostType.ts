@@ -20,27 +20,31 @@ export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPos
 };
 
 customPostType.description = "Register a custom post type.";
-customPostType.vars = Object.entries({
-	slug: {
+customPostType.vars = [
+	{
+		name: "slug",
 		description: "Post type key",
 		regex: "^[a-z_]{0,20}$",
 		required: true,
 		samples: ["book", 'music', 'story']
 	},
-	name: {
+	{
+		name: "name",
 		description: "The user visible label",
 		required: true,
 		samples: ["Books", 'Music', 'Stories']
 	},
-	supports: {
+	{
+		name: "supports",
 		description: "Features this post type supports",
 		required: false,
 		samples: ["['title', 'editor']", "['title', 'editor', 'thumbnail']", "['title', 'editor', 'custom-fields']"]
 	},
-	public: {
+	{
+		name: "public",
 		description: "Whether the post type is public",
 		type: "boolean",
 		required: false,
 		samples: ["true", "false"]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

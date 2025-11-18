@@ -78,14 +78,16 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 
 githubPlugin.description = "Install a plugin from a Github repository.";
 githubPlugin.deprecated = true;
-githubPlugin.vars = Object.entries({
-	url: {
+githubPlugin.vars = [
+	{
+		name: "url",
 		description: "Github URL of the plugin.",
 		samples: [ "https://github.com/akirk/blueprint-recorder" ]
 	},
-	prs: {
+	{
+		name: "prs",
 		description: "Add support for submitting GitHub Pull Requests.",
 		type: "boolean",
 		samples: [ "false", "true" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

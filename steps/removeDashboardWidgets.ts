@@ -63,35 +63,41 @@ add_action(
 };
 
 removeDashboardWidgets.description = "Remove widgets from the wp-admin dashboard.";
-removeDashboardWidgets.vars = Object.entries({
-	welcome: {
+removeDashboardWidgets.vars = [
+	{
+		name: "welcome",
 		description: "Remove Welcome Panel",
 		type: 'boolean',
 		samples: [ "true" ]
 	},
-	glance: {
+	{
+		name: "glance",
 		description: "Remove At a Glance",
 		type: 'boolean',
 		samples: [ "true" ]
 	},
-	events: {
+	{
+		name: "events",
 		description: "Remove Upcoming Events",
 		type: 'boolean',
 		samples: [ "true" ]
 	},
-	quickpress: {
+	{
+		name: "quickpress",
 		description: "Remove Quick Draft",
 		type: 'boolean',
 		samples: [ "true" ]
 	},
-	activity: {
+	{
+		name: "activity",
 		description: "Remove Activity",
 		type: 'boolean',
 		samples: [ "true" ]
 	},
-	sitehealth: {
+	{
+		name: "sitehealth",
 		description: "Remove Site Health",
 		type: 'boolean',
 		samples: [ "true" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

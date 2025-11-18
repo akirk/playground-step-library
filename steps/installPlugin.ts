@@ -101,19 +101,21 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 
 installPlugin.description = "Install a plugin via WordPress.org or Github (branches, releases, PRs).";
 installPlugin.builtin = true;
-installPlugin.vars = Object.entries({
-	url: {
+installPlugin.vars = [
+	{
+		name: "url",
 		description: "URL of the plugin or WordPress.org slug.",
 		required: true,
 		samples: ["hello-dolly", 'https://wordpress.org/plugins/friends', 'woocommerce', 'create-block-theme', "https://github.com/akirk/blueprint-recorder", "https://github.com/Automattic/wordpress-activitypub/tree/trunk", "https://github.com/akirk/friends/pull/559"]
 	},
-	prs: {
+	{
+		name: "prs",
 		description: "Add support for submitting GitHub Pull Requests.",
 		show: function (step: any) {
-			const url = step.querySelector('input[name=url]')?.value;
-			return url && url.match(/^https:\/\/github.com\//);
+		const url = step.querySelector('input[name=url]')?.value;
+		return url && url.match(/^https:\/\/github.com\//);
 		},
 		type: "boolean",
 		samples: ["false", "true"]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

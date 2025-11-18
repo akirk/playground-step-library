@@ -8,10 +8,11 @@ export const setLandingPage: StepFunction<SetLandingPageStep> = (step: SetLandin
 };
 
 setLandingPage.description = "Set the landing page.";
-setLandingPage.vars = Object.entries({
-	landingPage: {
+setLandingPage.vars = [
+	{
+		name: "landingPage",
 		description: "The relative URL for the landing page",
 		required: true,
 		samples: [ "/", "/wp-admin/", "/wp-admin/post-new.php", "/wp-admin/post-new.php?post_type=page" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

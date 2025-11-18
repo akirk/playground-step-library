@@ -47,19 +47,21 @@ export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeS
 
 installTheme.description = "Install a theme via WordPress.org or Github.";
 installTheme.builtin = true;
-installTheme.vars = Object.entries({
-	url: {
+installTheme.vars = [
+	{
+		name: "url",
 		description: "URL of the theme or WordPress.org slug",
 		required: true,
 		samples: ["pendant", "https://github.com/richtabor/kanso", "ndiego/nautilus", "https://github.com/Automattic/themes/tree/trunk/aether", "link-folio"]
 	},
-	prs: {
+	{
+		name: "prs",
 		description: "Add support for submitting Github Requests.",
 		show: function (step: any) {
-			const url = step.querySelector('input[name=url]')?.value;
-			return url && url.match(/^https:\/\/github.com\//);
+		const url = step.querySelector('input[name=url]')?.value;
+		return url && url.match(/^https:\/\/github.com\//);
 		},
 		type: "boolean",
 		samples: ["false", "true"]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

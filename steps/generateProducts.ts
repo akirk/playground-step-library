@@ -234,35 +234,40 @@ error_log( "Generated " . count( $term_ids ) . " product categories" );
 };
 
 generateProducts.description = "Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)";
-generateProducts.vars = Object.entries({
-	count: {
+generateProducts.vars = [
+	{
+		name: "count",
 		description: "Number of products to generate",
 		type: "number",
 		required: false,
 		samples: ["10", "25", "50", "100"]
 	},
-	orders: {
+	{
+		name: "orders",
 		description: "Number of orders to generate (optional)",
 		type: "number",
 		required: false,
 		samples: ["5", "10", "20"]
 	},
-	customers: {
+	{
+		name: "customers",
 		description: "Number of customers to generate (optional)",
 		type: "number",
 		required: false,
 		samples: ["3", "5", "10"]
 	},
-	coupons: {
+	{
+		name: "coupons",
 		description: "Number of coupons to generate (optional)",
 		type: "number",
 		required: false,
 		samples: ["2", "5", "8"]
 	},
-	categories: {
+	{
+		name: "categories",
 		description: "Number of product categories to generate (optional)",
 		type: "number",
 		required: false,
 		samples: ["3", "5", "8"]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

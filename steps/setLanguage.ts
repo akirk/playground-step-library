@@ -27,10 +27,11 @@ export const setLanguage: StepFunction<SetLanguageStep> = (step: SetLanguageStep
 };
 
 setLanguage.description = "Set the WordPress site language.";
-setLanguage.vars = Object.entries({
-	language: {
+setLanguage.vars = [
+	{
+		name: "language",
 		description: "A valid WordPress language slug",
 		required: true,
 		samples: ["de", "fr", "es", "it", "pl", "ar"]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

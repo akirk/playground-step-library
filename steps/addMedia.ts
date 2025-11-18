@@ -72,10 +72,11 @@ foreach ( $iterator as $filename ) {
 };
 
 addMedia.description = "Add files to the media library.";
-addMedia.vars = Object.entries({
-	downloadUrl: {
+addMedia.vars = [
+	{
+		name: "downloadUrl",
 		description: "Where to download the media from (can be a zip).",
 		required: true,
 		samples: [ "https://s.w.org/style/images/about/WordPress-logotype-wmark.png" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

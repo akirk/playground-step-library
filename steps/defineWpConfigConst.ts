@@ -33,13 +33,15 @@ export const defineWpConfigConst: StepFunction<DefineWpConfigConstStep> = (step:
 defineWpConfigConst.description = "Define a wp-config PHP constant.";
 defineWpConfigConst.builtin = true;
 defineWpConfigConst.multiple = true;
-defineWpConfigConst.vars = Object.entries({
-	name: {
+defineWpConfigConst.vars = [
+	{
+		name: "name",
 		description: "Constant name",
 		samples: [ "WP_DEBUG" ]
 	},
-	value: {
+	{
+		name: "value",
 		description: "Constant value",
 		samples: [ "true" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

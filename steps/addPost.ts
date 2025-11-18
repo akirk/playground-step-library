@@ -56,55 +56,63 @@ $page_id = wp_insert_post( $page_args );`;
 };
 
 addPost.description = "Add a post with title, content, type, status, and date.";
-addPost.vars = Object.entries({
-	title: {
+addPost.vars = [
+	{
+		name: "title",
 		description: "The title of the post",
 		required: true,
 		samples: ["Hello World"]
 	},
-	content: {
+	{
+		name: "content",
 		description: "The HTML content of the post",
 		type: "textarea",
 		language: "markup",
 		required: true,
 		samples: ["<p>Hello World</p>"]
 	},
-	date: {
+	{
+		name: "date",
 		description: "The date of the post (optional)",
 		required: false,
 		samples: ["now", "2024-01-01 00:00:00"]
 	},
-	type: {
+	{
+		name: "type",
 		description: "The post type",
 		required: true,
 		regex: '^[a-z][a-z0-9_]+$',
 		samples: ["post", "page", "custom"]
 	},
-	status: {
+	{
+		name: "status",
 		description: "The post status",
 		required: false,
 		samples: ["publish", "draft", "private", "pending"]
 	},
-	postId: {
+	{
+		name: "postId",
 		description: "Post ID to use (optional)",
 		type: "text",
 		required: false,
 		samples: ["", "1000", "2000", "5000"]
 	},
-	landingPage: {
+	{
+		name: "landingPage",
 		description: "Set landing page to the post editor (requires postId)",
 		type: "boolean",
 		required: false,
 		samples: ["true", "false"]
 	},
-	// Backward compatibility - keep old variable names
-	postTitle: {
+	{
+		name: "postTitle",
 		description: "The title of the post (deprecated: use 'title')",
 		required: false,
 		samples: ["Hello World"],
 		deprecated: true
 	},
-	postContent: {
+	{
+		name: "postContent",
 		description: "The HTML content of the post (deprecated: use 'content')",
 		type: "textarea",
 		language: "markup",
@@ -112,26 +120,29 @@ addPost.vars = Object.entries({
 		samples: ["<p>Hello World</p>"],
 		deprecated: true
 	},
-	postDate: {
+	{
+		name: "postDate",
 		description: "The date of the post (deprecated: use 'date')",
 		required: false,
 		samples: ["now", "2024-01-01 00:00:00"],
 		deprecated: true
 	},
-	postType: {
+	{
+		name: "postType",
 		description: "The post type (deprecated: use 'type')",
 		required: false,
 		regex: '^[a-z][a-z0-9_]+$',
 		samples: ["post", "page", "custom"],
 		deprecated: true
 	},
-	postStatus: {
+	{
+		name: "postStatus",
 		description: "The post status (deprecated: use 'status')",
 		required: false,
 		samples: ["publish", "draft", "private", "pending"],
 		deprecated: true
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];
 
 // Add the onclick function to the vars config
 addPost.vars.push({

@@ -17,20 +17,23 @@ export const login: StepFunction<LoginStep> = (step: LoginStep) => {
 
 login.description = "Login to the site.";
 login.builtin = true;
-login.vars = Object.entries({
-	username: {
+login.vars = [
+	{
+		name: "username",
 		description: "Username",
 		required: true,
 		samples: ["admin"]
 	},
-	password: {
+	{
+		name: "password",
 		description: "Password",
 		required: true,
 		samples: ["password"]
 	},
-	landingPage: {
+	{
+		name: "landingPage",
 		description: "Change landing page to wp-admin",
 		type: "boolean",
 		samples: ["true", "false"]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

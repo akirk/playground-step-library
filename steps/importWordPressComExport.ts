@@ -38,10 +38,11 @@ foreach ( $iterator as $file ) {
 };
 
 importWordPressComExport.description = "Import a WordPress.com export file (WXR in a ZIP)";
-importWordPressComExport.vars = Object.entries({
-	url: {
+importWordPressComExport.vars = [
+	{
+		name: "url",
 		description: "URL of a WordPress.com export ZIP file",
 		required: true,
 		samples: [""]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

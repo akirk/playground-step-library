@@ -48,34 +48,40 @@ export const createUser: StepFunction<CreateUserStep> = (step: CreateUserStep) =
 };
 
 createUser.description = "Create a new user.";
-createUser.vars = Object.entries({
-	username: {
+createUser.vars = [
+	{
+		name: "username",
 		description: "Username",
 		required: true,
 		samples: ["user"]
 	},
-	password: {
+	{
+		name: "password",
 		description: "Password",
 		required: true,
 		samples: ["password"]
 	},
-	role: {
+	{
+		name: "role",
 		description: "Role",
 		required: true,
 		type: "text",
 		samples: ["administrator", "editor", "read", "client"]
 	},
-	display_name: {
+	{
+		name: "display_name",
 		description: "Display Name",
 		samples: ["User"]
 	},
-	email: {
+	{
+		name: "email",
 		description: "E-Mail",
 		samples: ['', "wordpress@example.org"]
 	},
-	login: {
+	{
+		name: "login",
 		description: "Immediately log the user in",
 		type: 'boolean',
 		samples: ['true']
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

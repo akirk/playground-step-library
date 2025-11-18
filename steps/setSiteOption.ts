@@ -25,13 +25,15 @@ export const setSiteOption: StepFunction<SetSiteOptionStep> = (step: SetSiteOpti
 setSiteOption.description = "Set a site option.";
 setSiteOption.builtin = true;
 setSiteOption.multiple = true;
-setSiteOption.vars = Object.entries({
-	name: {
+setSiteOption.vars = [
+	{
+		name: "name",
 		description: "Option name",
 		samples: [ "","permalink_structure" ]
 	},
-	value: {
+	{
+		name: "value",
 		description: "Option value",
 		samples: [ "", "/%postname%/" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

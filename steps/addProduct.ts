@@ -92,47 +92,54 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 };
 
 addProduct.description = "Add a WooCommerce product (will install WooCommerce if not present)";
-addProduct.vars = Object.entries({
-	title: {
+addProduct.vars = [
+	{
+		name: "title",
 		description: "The title of the product",
 		required: true,
 		samples: ["Sample Product", "T-Shirt", "Digital Download"]
 	},
-	description: {
+	{
+		name: "description",
 		description: "The description of the product",
 		type: "textarea",
 		language: "markup",
 		required: true,
 		samples: ["<p>This is a great product!</p>", "<p>High quality item with excellent features.</p>"]
 	},
-	price: {
+	{
+		name: "price",
 		description: "Regular price (without currency symbol)",
 		required: false,
 		samples: ["19.99", "29.95", "100.00"]
 	},
-	salePrice: {
+	{
+		name: "salePrice",
 		description: "Sale price (optional, must be less than regular price)",
 		required: false,
 		samples: ["15.99", "24.95", "80.00"]
 	},
-	sku: {
+	{
+		name: "sku",
 		description: "Product SKU/code (optional)",
 		required: false,
 		samples: ["PROD-001", "SHIRT-RED-M", "DL-GUIDE-2024"]
 	},
-	status: {
+	{
+		name: "status",
 		description: "Product status",
 		required: false,
 		samples: ["publish", "draft", "private"]
 	},
-	// Backward compatibility - keep old variable names
-	productTitle: {
+	{
+		name: "productTitle",
 		description: "The title of the product (deprecated: use 'title')",
 		required: false,
 		samples: ["Sample Product", "T-Shirt", "Digital Download"],
 		deprecated: true
 	},
-	productDescription: {
+	{
+		name: "productDescription",
 		description: "The description of the product (deprecated: use 'description')",
 		type: "textarea",
 		language: "markup",
@@ -140,28 +147,32 @@ addProduct.vars = Object.entries({
 		samples: ["<p>This is a great product!</p>", "<p>High quality item with excellent features.</p>"],
 		deprecated: true
 	},
-	productPrice: {
+	{
+		name: "productPrice",
 		description: "Regular price (deprecated: use 'price')",
 		required: false,
 		samples: ["19.99", "29.95", "100.00"],
 		deprecated: true
 	},
-	productSalePrice: {
+	{
+		name: "productSalePrice",
 		description: "Sale price (deprecated: use 'salePrice')",
 		required: false,
 		samples: ["15.99", "24.95", "80.00"],
 		deprecated: true
 	},
-	productSku: {
+	{
+		name: "productSku",
 		description: "Product SKU/code (deprecated: use 'sku')",
 		required: false,
 		samples: ["PROD-001", "SHIRT-RED-M", "DL-GUIDE-2024"],
 		deprecated: true
 	},
-	productStatus: {
+	{
+		name: "productStatus",
 		description: "Product status (deprecated: use 'status')",
 		required: false,
 		samples: ["publish", "draft", "private"],
 		deprecated: true
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

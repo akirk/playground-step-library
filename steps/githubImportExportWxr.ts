@@ -103,21 +103,25 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 };
 
 githubImportExportWxr.description = "Provide useful additional info.";
-githubImportExportWxr.vars = Object.entries({
-	repo: {
+githubImportExportWxr.vars = [
+	{
+		name: "repo",
 		description: "The WXR file resides in this GitHub repository.",
 		samples: [ "carstingaxion/gatherpress-demo-data" ]
 	},
-	branch: {
+	{
+		name: "branch",
 		description: "Which branch to use.",
 		samples: [ "main" ]
 	},
-	filename: {
+	{
+		name: "filename",
 		description: "Which filename and path to use.",
 		samples: [ "GatherPress-demo-data-2024.xml" ]
 	},
-	targetUrl: {
+	{
+		name: "targetUrl",
 		description: "Rewrite the exported paths to this destination URL.",
 		samples: [ "https://gatherpress.test" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

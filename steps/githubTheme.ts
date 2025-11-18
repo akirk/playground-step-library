@@ -55,14 +55,16 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 
 githubTheme.description = "Install a theme from a Github repository.";
 githubTheme.deprecated = true;
-githubTheme.vars = Object.entries({
-	url: {
+githubTheme.vars = [
+	{
+		name: "url",
 		description: "Github URL of the theme.",
 		samples: [ "https://github.com/richtabor/kanso", "ndiego/nautilus", "https://github.com/Automattic/themes/tree/trunk/aether" ]
 	},
-	prs: {
+	{
+		name: "prs",
 		description: "Add support for submitting Github Requests.",
 		type: "boolean",
 		samples: [ "false", "true" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

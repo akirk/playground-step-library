@@ -127,47 +127,53 @@ wp_insert_post( array(
 };
 
 blockExamples.description = "Creates a post with all block examples from registered blocks";
-blockExamples.vars = Object.entries({
-	blockNamespace: {
+blockExamples.vars = [
+	{
+		name: "blockNamespace",
 		description: "Limit to a specific plugin slug (leave empty for all plugins)",
 		type: "text",
 		required: false,
 		samples: ["", "gutenberg", "woocommerce", "blocktober"],
 		deprecated: false
 	},
-	postTitle: {
+	{
+		name: "postTitle",
 		description: "Title of the post to create",
 		type: "text",
 		required: false,
 		samples: ["Block Examples", "Plugin Blocks Showcase"],
 		deprecated: false
 	},
-	limit: {
+	{
+		name: "limit",
 		description: "Maximum number of blocks to include (leave empty for no limit)",
 		type: "text",
 		required: false,
 		samples: ["", "10", "20"],
 		deprecated: false
 	},
-	postId: {
+	{
+		name: "postId",
 		description: "Post ID to use (defaults to 1000)",
 		type: "text",
 		required: false,
 		samples: ["1000", "2000", "5000"],
 		deprecated: false
 	},
-	excludeCore: {
+	{
+		name: "excludeCore",
 		description: "Exclude core WordPress blocks",
 		type: "boolean",
 		required: false,
 		samples: ["false", "true"],
 		deprecated: false
 	},
-	landingPage: {
+	{
+		name: "landingPage",
 		description: "Set landing page to the post editor",
 		type: "boolean",
 		required: false,
 		samples: ["true", "false"],
 		deprecated: false
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

@@ -61,15 +61,17 @@ add_filter(
 };
 
 fakeHttpResponse.description = "Fake a wp_remote_request() response.";
-fakeHttpResponse.vars = Object.entries({
-	url: {
+fakeHttpResponse.vars = [
+	{
+		name: "url",
 		description: "URL like https://wordpress.org/",
 		type: "url",
 		samples: [ "" ]
 	},
-	response: {
+	{
+		name: "response",
 		description: "The data to return",
 		type: "textarea",
 		samples: [ "hello world" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

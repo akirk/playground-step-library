@@ -11,10 +11,11 @@ export const runWpCliCommand: StepFunction<RunWpCliCommandStep> = (step: RunWpCl
 };
 
 runWpCliCommand.description = "Run a wp-cli command.";
-runWpCliCommand.vars = Object.entries({
-	command: {
+runWpCliCommand.vars = [
+	{
+		name: "command",
 		description: "The wp-cli command to run",
 		required: true,
 		samples: [""]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

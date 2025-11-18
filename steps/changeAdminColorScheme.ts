@@ -14,20 +14,21 @@ export const changeAdminColorScheme: StepFunction<ChangeAdminColorSchemeStep> = 
 };
 
 changeAdminColorScheme.description = "Useful to combine with a login step.";
-changeAdminColorScheme.vars = Object.entries({
-	colorScheme: {
+changeAdminColorScheme.vars = [
+	{
+		name: "colorScheme",
 		description: "Color scheme",
 		required: true,
 		samples: [
-			'modern',
-			'light',
-			'fresh',
-			'blue',
-			'coffee',
-			'ectoplasm',
-			'midnight',
-			'ocean',
-			'sunrise'
+		'modern',
+		'light',
+		'fresh',
+		'blue',
+		'coffee',
+		'ectoplasm',
+		'midnight',
+		'ocean',
+		'sunrise'
 		]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

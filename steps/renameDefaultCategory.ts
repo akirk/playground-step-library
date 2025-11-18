@@ -19,15 +19,17 @@ export const renameDefaultCategory: StepFunction<RenameDefaultCategoryStep> = (s
 };
 
 renameDefaultCategory.description = "Change the default \"Uncategorized\".";
-renameDefaultCategory.vars = Object.entries({
-	categoryName: {
+renameDefaultCategory.vars = [
+	{
+		name: "categoryName",
 		description: "Change the default category name",
 		required: true,
 		samples: [ "" ]
 	},
-	categorySlug: {
+	{
+		name: "categorySlug",
 		description: "Change the default category slug",
 		required: true,
 		samples: [ "" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

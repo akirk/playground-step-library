@@ -76,21 +76,24 @@ add_action('admin_footer', function() {
 };
 
 showAdminNotice.description = "Show an admin notice in the dashboard.";
-showAdminNotice.vars = Object.entries({
-	text: {
+showAdminNotice.vars = [
+	{
+		name: "text",
 		description: "The notice to be displayed",
 		required: true,
 		samples: ["Welcome to WordPress Playground!", "This is a demo of the Step Library"]
 	},
-	type: {
+	{
+		name: "type",
 		description: "The type of notice",
 		type: "select",
 		options: ["success", "error", "warning", "info"],
 		samples: ["success"]
 	},
-	dismissible: {
+	{
+		name: "dismissible",
 		description: "Allow to dismiss",
 		type: "boolean",
 		samples: ["true"]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

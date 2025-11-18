@@ -51,22 +51,25 @@ export const addFilter: StepFunction<AddFilterStep> = (step: AddFilterStep) => {
 };
 
 addFilter.description = "Easily add a filtered value.";
-addFilter.vars = Object.entries({
-	filter: {
+addFilter.vars = [
+	{
+		name: "filter",
 		description: "Name of the filter",
 		required: true,
 		samples: [ "init" ]
 	},
-	code: {
+	{
+		name: "code",
 		description: "Code for the filter",
 		type: "textarea",
 		language: "php",
 		required: true,
 		samples: [ "'__return_false'", "'__return_true'", "function ( $a, $b ) {\nreturn $a;\n}" ]
 	},
-	priority: {
+	{
+		name: "priority",
 		description: "Priority of the filter",
 		required: false,
 		samples: [ "10" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

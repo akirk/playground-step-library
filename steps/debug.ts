@@ -49,26 +49,30 @@ export const debug: StepFunction<DebugStep> = (step: DebugStep, blueprint: any) 
 };
 
 debug.description = "Configure WordPress debug settings and optionally install Query Monitor plugin.";
-debug.vars = Object.entries({
-	wpDebug: {
+debug.vars = [
+	{
+		name: "wpDebug",
 		description: "Enable WordPress debug mode",
 		type: "boolean",
 		required: false
 	},
-	wpDebugDisplay: {
+	{
+		name: "wpDebugDisplay",
 		description: "Display errors in HTML output. Only applies when the above is enabled.",
 		type: "boolean",
 		required: false,
 		show: (step: DebugStep) => step.wpDebug !== false
 	},
-	scriptDebug: {
+	{
+		name: "scriptDebug",
 		description: "Use non-minified JavaScript and CSS files.",
 		type: "boolean",
 		required: false
 	},
-	queryMonitor: {
+	{
+		name: "queryMonitor",
 		description: "Install Query Monitor plugin.",
 		type: "boolean",
 		required: false
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

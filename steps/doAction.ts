@@ -24,41 +24,47 @@ export const doAction: StepFunction<DoActionStep> = (step: DoActionStep) => {
 };
 
 doAction.description = "Execute a custom action.";
-doAction.vars = Object.entries({
-	action: {
+doAction.vars = [
+	{
+		name: "action",
 		description: "Execute a custom action.",
 		type: "text",
 		required: true,
 		samples: [ "" ]
 	},
-	parameter1: {
+	{
+		name: "parameter1",
 		description: "First parameter for the action.",
 		type: "text",
 		required: false,
 		samples: [ "" ]
 	},
-	parameter2: {
+	{
+		name: "parameter2",
 		description: "Second parameter for the action.",
 		type: "text",
 		required: false,
 		samples: [ "" ]
 	},
-	parameter3: {
+	{
+		name: "parameter3",
 		description: "Third parameter for the action.",
 		type: "text",
 		required: false,
 		samples: [ "" ]
 	},
-	parameter4: {
+	{
+		name: "parameter4",
 		description: "Fourth parameter for the action.",
 		type: "text",
 		required: false,
 		samples: [ "" ]
 	},
-	parameter5: {
+	{
+		name: "parameter5",
 		description: "Fifth parameter for the action.",
 		type: "text",
 		required: false,
 		samples: [ "" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

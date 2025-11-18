@@ -43,15 +43,17 @@ export const jetpackOfflineMode: StepFunction<JetpackOfflineModeStep> = (step: J
 };
 
 jetpackOfflineMode.description = "Start Jetpack in Offline mode.";
-jetpackOfflineMode.vars = Object.entries({
-	blocks: {
+jetpackOfflineMode.vars = [
+	{
+		name: "blocks",
 		description: "Activate the Jetpack Blocks module.",
 		type: "boolean",
 		samples: [ "true", "false" ]
 	},
-	subscriptions: {
+	{
+		name: "subscriptions",
 		description: "Activate the Jetpack Subscriptions module.",
 		type: "boolean",
 		samples: [ "true", "false" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

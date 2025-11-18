@@ -67,10 +67,11 @@ add_action(
 };
 
 addClientRole.description = "Adds a role for clients with additional capabilities than editors, but not quite admin.";
-addClientRole.vars = Object.entries({
-	displayName: {
+addClientRole.vars = [
+	{
+		name: "displayName",
 		description: "Display name for the client role",
 		required: true,
 		samples: [ "Client" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

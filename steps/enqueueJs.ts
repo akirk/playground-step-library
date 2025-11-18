@@ -60,28 +60,32 @@ export const enqueueJs: StepFunction<EnqueueJsStep> = (step: EnqueueJsStep) => {
 };
 
 enqueueJs.description = "Enqueue custom JavaScript on frontend and/or admin.";
-enqueueJs.vars = Object.entries({
-	filename: {
+enqueueJs.vars = [
+	{
+		name: "filename",
 		description: "Filename for the JavaScript file (without .js extension)",
 		type: "text",
 		required: false,
 		samples: [ 'custom-script', 'interactive-features' ]
 	},
-	js: {
+	{
+		name: "js",
 		description: "JavaScript code to enqueue",
 		type: "textarea",
 		language: "javascript",
 		required: true,
 		samples: [ '' ]
 	},
-	frontend: {
+	{
+		name: "frontend",
 		description: "Enqueue on frontend",
 		type: "boolean",
 		samples: [ "true" ]
 	},
-	wpAdmin: {
+	{
+		name: "wpAdmin",
 		description: "Enqueue in wp-admin",
 		type: "boolean",
 		samples: [ "true" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

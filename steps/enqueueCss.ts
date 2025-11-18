@@ -60,28 +60,32 @@ export const enqueueCss: StepFunction<EnqueueCssStep> = (step: EnqueueCssStep) =
 };
 
 enqueueCss.description = "Enqueue custom CSS on frontend and/or admin.";
-enqueueCss.vars = Object.entries({
-	filename: {
+enqueueCss.vars = [
+	{
+		name: "filename",
 		description: "Filename for the CSS file (without .css extension)",
 		type: "text",
 		required: false,
 		samples: [ 'custom-styles', 'theme-overrides' ]
 	},
-	css: {
+	{
+		name: "css",
 		description: "CSS code to enqueue",
 		type: "textarea",
 		language: "css",
 		required: true,
 		samples: [ '' ]
 	},
-	frontend: {
+	{
+		name: "frontend",
 		description: "Enqueue on frontend",
 		type: "boolean",
 		samples: [ "true" ]
 	},
-	wpAdmin: {
+	{
+		name: "wpAdmin",
 		description: "Enqueue in wp-admin",
 		type: "boolean",
 		samples: [ "true" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

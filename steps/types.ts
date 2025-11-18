@@ -30,6 +30,7 @@ export interface StepVariable {
     language?: 'php' | 'markup' | 'html' | 'xml' | 'css' | 'javascript' | 'text';
     required?: boolean;
     samples?: string[];
+    options?: string[];
     show?: Function;
     label?: string;
     onclick?: Function;

@@ -29,17 +29,20 @@ export const githubPluginRelease: StepFunction<GithubPluginReleaseStep> = (step:
 
 githubPluginRelease.description = "Install a specific plugin release from a Github repository.";
 githubPluginRelease.deprecated = true;
-githubPluginRelease.vars = Object.entries({
-	repo: {
+githubPluginRelease.vars = [
+	{
+		name: "repo",
 		description: "The plugin resides in this GitHub repository.",
 		samples: [ "ryanwelcher/interactivity-api-todomvc" ]
 	},
-	release: {
+	{
+		name: "release",
 		description: "The release tag.",
 		samples: [ "v0.1.3" ]
 	},
-	filename: {
+	{
+		name: "filename",
 		description: "Which filename to use.",
 		samples: [ "to-do-mvc.zip" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

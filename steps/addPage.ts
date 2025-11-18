@@ -31,27 +31,30 @@ $page_id = wp_insert_post( $page_args );`;
 };
 
 addPage.description = "Add a page with title and content.";
-addPage.vars = Object.entries({
-	title: {
+addPage.vars = [
+	{
+		name: "title",
 		description: "The title of the page",
 		required: true,
 		samples: ["Hello World"]
 	},
-	content: {
+	{
+		name: "content",
 		description: "The HTML content of the page",
 		type: "textarea",
 		language: "markup",
 		required: true,
 		samples: ["<p>Hello World</p>"]
 	},
-	// Backward compatibility - keep old variable names
-	postTitle: {
+	{
+		name: "postTitle",
 		description: "The title of the page (deprecated: use 'title')",
 		required: false,
 		samples: ["Hello World"],
 		deprecated: true
 	},
-	postContent: {
+	{
+		name: "postContent",
 		description: "The HTML content of the page (deprecated: use 'content')",
 		type: "textarea",
 		language: "markup",
@@ -59,9 +62,10 @@ addPage.vars = Object.entries({
 		samples: ["<p>Hello World</p>"],
 		deprecated: true
 	},
-	homepage: {
+	{
+		name: "homepage",
 		description: "Set it as the Homepage",
 		type: "boolean",
 		samples: ["true", "false"]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];

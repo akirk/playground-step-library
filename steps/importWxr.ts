@@ -18,10 +18,11 @@ export const importWxr: StepFunction<ImportWxrFromUrlStep> = (step: ImportWxrFro
 
 importWxr.description = "Import a WXR from a URL.";
 importWxr.builtin = true;
-importWxr.vars = Object.entries({
-	url: {
+importWxr.vars = [
+	{
+		name: "url",
 		description: "URL of a WXR file",
 		required: true,
 		samples: [ "" ]
 	}
-}).map(([name, varConfig]) => ({ name, ...varConfig }));
+];
