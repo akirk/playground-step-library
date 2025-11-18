@@ -33,21 +33,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
         # Note: npm ci automatically runs the "prepare" script from package.json
-        # which builds the project (tsc) and generates docs
+        # which builds the library (tsc) and generates docs
+
+      - name: Build UI with Vite
+        run: npm run build:ui
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Prepare deployment files
-        run: |
-          mkdir deploy
-          mv index.html plugin-preview-pr.html style.css deploy/
-          mv lib steps vendor deploy/
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "deploy"
+          path: "dist"
 
   deploy:
     environment:

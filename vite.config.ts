@@ -51,9 +51,20 @@ function docsGeneratorPlugin() {
 
 export default defineConfig({
   root: '.',
+  base: '/playground-step-library/',
   server: {
     port: 8127,
     open: '/index.html'
+  },
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: './index.html',
+        'plugin-preview-pr': './plugin-preview-pr.html'
+      }
+    }
   },
   plugins: [docsGeneratorPlugin()]
 })

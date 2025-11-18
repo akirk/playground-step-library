@@ -9,5 +9,12 @@ export default defineConfig({
       'steps/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts}',
       'src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts}'
     ],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html', 'json'],
+      include: ['src/frontend/**/*.ts'],
+      exclude: ['src/frontend/**/*.test.ts', 'src/frontend/**/*.spec.ts'],
+      reportsDirectory: './coverage'
+    },
   },
 });

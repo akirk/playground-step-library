@@ -9,15 +9,19 @@
     "playground-compile": "bin/cli.js"
   },
   "scripts": {
-    "build": "tsc && node build.js",
+    "build:lib": "tsc && node build.js",
+    "build:ui": "vite build",
+    "build": "npm run build:lib && npm run docs:generate && npm run build:ui",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "docs:generate": "node bin/generate-docs.js",
-    "prepare": "npm run build && npm run docs:generate",
+    "prepare": "npm run build:lib && npm run docs:generate",
     "dev": "tsc --watch & vite"
   },
   "devDependencies": {
     "@types/node": "^20.19.13",
+    "@vitest/coverage-v8": "^3.2.4",
     "@wp-playground/blueprints": "^3.0.21",
     "ajv": "^8.17.1",
     "happy-dom": "^20.0.10",

@@ -7,3 +7,5 @@ lib/
 steps/*.js
 steps/*.d.ts
 steps/*.js.map
+dist/
+coverage/
