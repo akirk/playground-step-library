@@ -124,6 +124,7 @@ import { StepLibraryController, type StepLibraryControllerDependencies } from '.
 import { BlueprintCompilationController, type BlueprintCompilationControllerDependencies } from './blueprint-compilation-controller';
 import { PasteHandlerController, type PasteHandlerControllerDependencies } from './paste-handler-controller';
 import { StateController, type StateControllerDependencies } from './state-controller';
+import { EventHandlersController, type EventHandlersControllerDependencies } from './event-handlers-controller';
 import {
 	initWizard,
 	getWizardState,
@@ -195,6 +196,10 @@ addEventListener('DOMContentLoaded', function () {
 		stepList
 	};
 	const stateController = new StateController(stateControllerDeps);
+
+	// Create refs for mutable state shared with event handlers
+	const aceEditorRef = { current: null as any };
+	const linkedTextareaRef = { current: null as HTMLTextAreaElement | null };
 
 	function saveMyStep() {
 		const myStepNameEl = document.getElementById('my-step-name');
@@ -533,227 +538,22 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	});
 	// makeParentStepDraggable, makeParentStepUnDraggable, and fixMouseCursor are now imported from dom-utils.ts
-	document.addEventListener('click', (event) => {
-		let dialog;
-		if (event.target.closest('#blueprint-steps')) {
-			if (event.target.tagName === 'BUTTON') {
-				if (event.target.classList.contains('code-editor')) {
-					dialog = document.getElementById('code-editor');
-					linkedTextarea = event.target.closest('.step').querySelector('textarea');
-					const fieldName = linkedTextarea.name;
-					const stepElement = event.target.closest('.step');
-					const stepData = customSteps[stepElement.dataset.step];
-					const fieldConfig = stepData.vars?.find(v => v.name === fieldName);
-					const language = fieldConfig?.language || 'text';
 
-					const languageMap = {
-						'php': 'php',
-						'markup': 'html',
-						'html': 'html',
-						'xml': 'xml',
-						'none': 'text',
-						'text': 'text'
-					};
-					const aceMode = languageMap[language] || 'text';
+	// Initialize Event Handlers Controller
+	const eventHandlersControllerDeps: EventHandlersControllerDependencies = {
+		customSteps,
+		showCallbacks,
+		stateController,
+		insertStep: (target: EventTarget) => insertStep(target as Element),
+		saveMyStep,
+		loadCombinedExamples,
+		aceEditorRef,
+		linkedTextareaRef
+	};
+	const eventHandlersController = new EventHandlersController(eventHandlersControllerDeps);
+	eventHandlersController.setupEventListeners();
 
-					const editorContainer = document.getElementById('code-editor-container');
-					editorContainer.textContent = '';
-
-					dialog.showModal();
-
-					loadAceEditor().then(() => {
-						if (aceEditor) {
-							aceEditor.destroy();
-						}
-
-						aceEditor = ace.edit(editorContainer, {
-							mode: `ace/mode/${aceMode}`,
-							theme: getAceTheme(),
-							fontSize: 14,
-							showPrintMargin: false,
-							wrap: true,
-							value: linkedTextarea.value,
-							highlightActiveLine: true,
-							highlightGutterLine: true
-						});
-
-						aceEditor.getSession().on('change', () => {
-							linkedTextarea.value = aceEditor.getValue();
-							blueprintEventBus.emit('blueprint:updated');
-						});
-
-						const codeEditorStatus = document.getElementById('code-editor-status');
-						const modeDisplayName = {
-							'php': 'PHP',
-							'html': 'HTML',
-							'xml': 'XML',
-							'text': 'Plain Text'
-						}[aceMode] || aceMode.toUpperCase();
-
-						const updateCodeEditorStatus = () => {
-							updateAceStatusBar(aceEditor, codeEditorStatus, modeDisplayName);
-						};
-
-						aceEditor.getSession().selection.on('changeCursor', updateCodeEditorStatus);
-						aceEditor.getSession().selection.on('changeSelection', updateCodeEditorStatus);
-						updateCodeEditorStatus();
-
-						setTimeout(() => {
-							aceEditor.resize();
-							aceEditor.renderer.updateFull();
-							aceEditor.focus();
-						}, 0);
-					});
-
-					return;
-				}
-
-				if (event.target.classList.contains('save-step')) {
-					dialog = document.getElementById('save-step');
-					const stepData = getStepData(event.target.closest('.step'));
-					const myStep = Object.assign({}, customSteps[stepData.step]);
-					for (let i = 0; i < myStep.vars.length; i++) {
-						if (myStep.vars[i].name in stepData.vars && stepData.vars[myStep.vars[i].name]) {
-							myStep.vars[i].setValue = stepData.vars[myStep.vars[i].name];
-						}
-					}
-					dialog.querySelector('input').value = stepData.step + Object.values(stepData.vars).map(function (value) {
-						if (typeof value !== 'string') {
-							return '';
-						}
-						return value.split(/[^a-z0-9]/i).map(function (word: string) {
-							return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-						}).join('');
-					}).join('');
-					dialog.dataset.step = JSON.stringify(myStep);
-					dialog.showModal();
-					return;
-				}
-
-				if (event.target.classList.contains('add')) {
-					const table = event.target.closest('.step').querySelector('.vars');
-					const clone = table.cloneNode(true);
-					clone.querySelectorAll('input,textarea').forEach(fixMouseCursor);
-					clone.querySelectorAll('input,textarea').forEach(function (input: Element) {
-						if (input instanceof HTMLInputElement) {
-							if (input.type === 'text') {
-								input.value = '';
-							} else if (input.type === 'checkbox') {
-								input.checked = false;
-							}
-						} else if (input instanceof HTMLTextAreaElement) {
-							input.value = '';
-						}
-					});
-					table.parentNode.appendChild(clone);
-					return;
-				}
-
-
-				const stepConfig = customSteps[event.target.dataset.stepVar];
-				const varConfig = stepConfig?.vars?.find(v => v.name === event.target.dataset.stepName);
-				if (typeof varConfig?.onclick === 'function') {
-					return varConfig.onclick(event, loadCombinedExamples);
-				}
-				return;
-			}
-			if (event.target.tagName === 'SELECT') {
-				blueprintEventBus.emit('blueprint:updated');
-				return;
-			}
-
-			if (event.target.classList.contains('stepname')) {
-				event.target.closest('.step').classList.toggle('collapsed');
-				return false;
-			}
-		}
-
-		if (event.target.tagName === 'LABEL') {
-			const input = event.target.querySelector('input, select');
-			if (input.type === 'checkbox') {
-				blueprintEventBus.emit('blueprint:updated');
-			}
-			return;
-		}
-		if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'OPTION') {
-			if (event.target.type === 'checkbox' || event.target.parentNode.id === 'playground') {
-				blueprintEventBus.emit('blueprint:updated');
-			}
-			return;
-		}
-
-		const stepElement = event.target.closest('.step');
-		if (event.target.closest('#step-library') && stepElement && stepElement.classList.contains('mine')) {
-			if (event.target.classList.contains('delete')) {
-				const name = stepElement.dataset.id;
-				if (name && confirm('Are you sure you want to delete the step ' + name + '?')) {
-					stepElement.remove();
-					deleteMyStep(name);
-					blueprintEventBus.emit('blueprint:updated');
-				}
-				return false;
-			}
-			if (event.target.classList.contains('rename')) {
-				const name = stepElement.dataset.id;
-				const newName = prompt('Enter a new name for the step:', name);
-				if (newName && name && renameMyStep(name, newName)) {
-					const stepEl = event.target.closest('.step');
-					if (stepEl instanceof HTMLElement) {
-						stepEl.dataset.id = newName;
-						const stepNameEl = stepEl.querySelector('.stepname');
-						if (stepNameEl) stepNameEl.textContent = newName;
-					}
-					blueprintEventBus.emit('blueprint:updated');
-				}
-				return false;
-			}
-			if (event.target.classList.contains('share')) {
-				const data = location.href.replace(/#.*$/, '') + '#' + stateController.compressStateFromDOM([getStepData(event.target.closest('.step'))]);
-				navigator.clipboard.writeText(data);
-				event.target.innerText = 'Copied!';
-				setTimeout(function () {
-					event.target.innerText = 'Share';
-				}, 2000);
-				return false;
-			}
-		}
-
-		if (event.target.closest('.step') && event.target.closest('#step-library') && !event.target.closest('details')) {
-			insertStep(event.target);
-			return;
-		}
-		if (event.target.classList.contains('remove')) {
-			event.target.closest('.step').remove();
-			blueprintEventBus.emit('blueprint:updated');
-			event.preventDefault();
-			return false;
-		}
-		if (event.target.classList.contains('sample')) {
-			event.target.closest('td').querySelector('input,textarea').value = event.target.innerText === '<empty>' ? '' : event.target.innerText;
-			blueprintEventBus.emit('blueprint:updated');
-			return;
-		}
-		if (event.target.classList.contains('view-source')) {
-			event.preventDefault();
-			const sourceUrl = event.target.href;
-			initViewSourceAceEditor(sourceUrl);
-		}
-
-		if (event.target.tagName === 'BUTTON' && event.target.closest('#save-step')) {
-			return saveMyStep();
-		}
-		if (event.target.id === 'view-source-close') {
-			document.body.classList.remove('dialog-open');
-			return document.getElementById('view-source').close();
-		}
-		if (event.target.tagName === 'BUTTON' && event.target.closest('#code-editor')) {
-			if (aceEditor) {
-				aceEditor.destroy();
-				aceEditor = null;
-			}
-			return document.getElementById('code-editor').close();
-		}
-	});
+	// Click event handler moved to EventHandlersController
 	blueprintSteps.addEventListener('dragover', (event) => {
 		event.preventDefault();
 	});
