@@ -54,6 +54,7 @@ export class PasteHandlerController {
 
 	/**
 	 * Handle paste event
+	 * NOTE: When modifying paste handlers, update the "Smart Paste Handlers" section in docs/tips.md
 	 */
 	private async handlePaste(event: ClipboardEvent): Promise<void> {
 		const pastedText = event.clipboardData?.getData('text');

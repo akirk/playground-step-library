@@ -5,9 +5,11 @@ Power user tips for getting the most out of the WordPress Playground Step Librar
 ## Quick Navigation
 
 ### 🎯 Smart Features
-- [**Smart Paste Handlers**](#smart-paste-handlers) - Auto-detect PHP, HTML, and URLs to create steps
+- [**Smart Paste Handlers**](#smart-paste-handlers) - Auto-detect PHP, HTML, CSS, JavaScript, and URLs to create steps
   - [Paste PHP Code](#paste-php-code) - Auto-creates `muPlugin` or `runPHP` steps
   - [Paste HTML](#paste-html-content) - Auto-creates `addPost` steps with title extraction
+  - [Paste CSS](#paste-css) - Auto-creates `enqueueCSS` steps
+  - [Paste JavaScript](#paste-javascript) - Auto-creates `enqueueJS` steps
   - [Paste URLs](#paste-urls) - Auto-installs plugins/themes from WordPress.org or GitHub
   - [Paste Multiple URLs](#paste-multiple-urls) - Batch install multiple plugins
   - [Paste wp-admin URLs](#paste-wp-admin-urls) - Auto-sets landing page
@@ -83,6 +85,34 @@ Paste this → **Automatically creates `addPost` step** with:
 - Title extracted from first `<h1>` or `<h2>`
 - Content set to the HTML
 - Type set to "page"
+
+### Paste CSS
+
+Paste CSS code to automatically enqueue custom styles:
+
+```css
+body {
+    background-color: #f0f0f0;
+}
+.custom-class {
+    color: #333;
+}
+```
+
+Paste this → **Automatically creates `enqueueCSS` step** with your styles
+
+### Paste JavaScript
+
+Paste JavaScript code to automatically enqueue custom scripts:
+
+```javascript
+console.log('Hello from custom script!');
+document.addEventListener('DOMContentLoaded', function() {
+    // Your code here
+});
+```
+
+Paste this → **Automatically creates `enqueueJS` step** with your script
 
 ### Paste URLs
 
