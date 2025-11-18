@@ -1,0 +1,146 @@
+/* Blueprint file drag-and-drop visual feedback */
+body.blueprint-drop-active {
+  position: relative;
+}
+
+body.blueprint-drop-active::before {
+  content: 'Drop blueprint file to import';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: light-dark(
+    rgba(59, 130, 246, 0.1),
+    rgba(59, 130, 246, 0.2)
+  );
+  border: 4px dashed light-dark(var(--primary-500), var(--primary-400));
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: light-dark(var(--primary-700), var(--primary-300));
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+}
+
+body.blueprint-drop-active * {
+  pointer-events: none;
+}
+/* Blueprint file drag-and-drop visual feedback */
+body.blueprint-drop-active {
+  position: relative;
+}
+
+body.blueprint-drop-active::before {
+  content: 'Drop blueprint file to import';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: light-dark(
+    rgba(59, 130, 246, 0.1),
+    rgba(59, 130, 246, 0.2)
+  );
+  border: 4px dashed light-dark(var(--primary-500), var(--primary-400));
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: light-dark(var(--primary-700), var(--primary-300));
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+}
+
+body.blueprint-drop-active * {
+  pointer-events: none;
+}
+/* Blueprint Compiled Header */
+#blueprint-compiled-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
+}
+
+/* Blueprint Compiled Wrapper */
+#blueprint-compiled-wrapper {
+  position: relative;
+  height: 520px !important;
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  overflow: hidden;
+}
+
+#blueprint-compiled-ace {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 24px;
+  border: 1px solid light-dark(#e9ecef, #333333);
+  border-bottom: none;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: 0 1px 0 light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+  overflow: hidden;
+}
+
+#save-to-history-btn {
+  position: absolute;
+  top: var(--spacing-2);
+  right: var(--spacing-4);
+  background: transparent;
+  color: light-dark(var(--gray-700), var(--gray-300));
+  border: 1px solid light-dark(var(--gray-300), var(--gray-600));
+  padding: var(--spacing-2);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: 1.125rem;
+  line-height: 1;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+#save-to-history-btn:hover {
+  background: transparent;
+  color: light-dark(var(--primary-600), var(--primary-400));
+  border-color: light-dark(var(--primary-400), var(--primary-500));
+  transform: scale(1.05);
+}
+
+#save-to-history-btn:active {
+  transform: scale(0.95);
+}
+
+/* Manual Edit Mode Banner */
+#manual-edit-banner {
+  display: none !important;
+}
+
+#manual-edit-banner span {
+  color: light-dark(var(--warning-800), var(--warning-200));
+  font-weight: 500;
+}
+
+#resume-compilation {
+  background: light-dark(var(--warning-600), var(--warning-700));
+  color: white;
+  border: none;
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+#resume-compilation:hover {
+  background: light-dark(var(--warning-700), var(--warning-800));
+}
+

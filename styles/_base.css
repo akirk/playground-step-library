@@ -1,0 +1,46 @@
+
+html {
+  background-color: var(--background-color);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-optical-sizing: auto;
+  color: var(--text-color);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  font-weight: var(--font-weight-normal);
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: var(--spacing-6) var(--spacing-4);
+  background: linear-gradient(135deg, var(--background-color) 0%, var(--surface-color) 100%);
+  min-height: 100vh;
+}
+
+header {
+  margin-bottom: var(--spacing-6);
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  flex-wrap: nowrap;
+}
+
+header h1 {
+  margin: 0;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+#top-buttons {
+  display: flex;
+  gap: var(--spacing-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
