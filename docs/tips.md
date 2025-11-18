@@ -6,15 +6,15 @@ Power user tips for getting the most out of the WordPress Playground Step Librar
 
 ### 🎯 Smart Features
 - [**Smart Paste Handlers**](#smart-paste-handlers) - Auto-detect PHP, HTML, CSS, JavaScript, and URLs to create steps
-  - [Paste PHP Code](#paste-php-code) - Auto-creates `muPlugin` or `runPHP` steps
-  - [Paste HTML](#paste-html-content) - Auto-creates `addPost` steps with title extraction
-  - [Paste CSS](#paste-css) - Auto-creates `enqueueCSS` steps
-  - [Paste JavaScript](#paste-javascript) - Auto-creates `enqueueJS` steps
-  - [Paste URLs](#paste-urls) - Auto-installs plugins/themes from WordPress.org or GitHub
-  - [Paste Multiple URLs](#paste-multiple-urls) - Batch install multiple plugins
-  - [Paste wp-admin URLs](#paste-wp-admin-urls) - Auto-sets landing page
-  - [Paste Playground URLs](#paste-playground-urls) - Import and decompile blueprints
-  - [Paste Blueprint JSON](#paste-blueprint-json) - Paste raw blueprint JSON directly
+  - [Paste PHP Code](#paste-php-code) - Auto-creates muPlugin or runPHP steps
+  - [Paste HTML](#paste-html-content) - Auto-creates addPost steps with title extraction
+  - [Paste CSS](#paste-css) - Auto-creates enqueueCSS steps
+  - [Paste JavaScript](#paste-javascript) - Auto-creates enqueueJS steps
+  - [Paste URLs](#paste-urls) - Auto-creates install plugins/themes steps from WordPress.org or GitHub
+  - [Paste Multiple URLs](#paste-multiple-urls) - Add multiple steps to install plugins
+  - [Paste wp-admin URLs](#paste-wp-admin-urls) - Sets the landing page
+  - [Paste Playground URLs](#paste-playground-urls) - Add multiple steps from a Playground URL
+  - [Paste Blueprint JSON](#paste-blueprint-json) - Add multiple steps from a blueprint JSON
 
 ### ⌨️ Productivity
 - [**Keyboard Shortcuts**](#keyboard-shortcuts) - Speed up your workflow
@@ -116,7 +116,7 @@ Paste this → **Automatically creates `enqueueJS` step** with your script
 
 ### Paste URLs
 
-Paste WordPress.org or GitHub plugin/theme URLs to automatically install them:
+Paste WordPress.org or GitHub plugin/theme URLs to automatically create install steps:
 
 **WordPress.org plugins:**
 ```
@@ -153,17 +153,23 @@ Creates multiple install steps automatically!
 
 ### Paste wp-admin URLs
 
-Paste a WordPress admin URL to automatically set the landing page:
+Paste a WordPress admin URL to set the landing page:
 
 ```
 https://playground.wordpress.net/wp-admin/post-new.php
 ```
 
-The Step Library extracts `/wp-admin/post-new.php` and sets it as the landing page.
+Or paste just the path (which you can copy directly from the Playground URL bar):
+
+```
+/wp-admin/post-new.php
+```
+
+The Step Library extracts the path and sets it as the landing page.
 
 ### Paste Playground URLs
 
-Paste any WordPress Playground URL to import and decompile it into Step Library custom steps:
+Paste any WordPress Playground URL to add multiple steps from the blueprint:
 
 **Playground hash URLs:**
 ```
@@ -188,7 +194,7 @@ The Step Library will:
 
 ### Paste Blueprint JSON
 
-Paste blueprint JSON directly without needing a URL:
+Paste blueprint JSON directly to add multiple steps from the blueprint:
 
 **Example:**
 ```json
@@ -357,15 +363,15 @@ Click the **three dots** next to "Launch in Playground" for more options:
 
 ## Live Preview Mode
 
-Enable live preview to see your WordPress site as you build:
+Enable live preview to see the WordPress site as you build the blueprint:
 
 **Preview Bottom** - Split screen with preview below
 **Preview Right** - Split screen with preview on right
 
 **Pro Tips:**
 - Changes update automatically as you modify steps
-- Use preview to verify your setup works
-- Great for testing plugins/themes before sharing
+- Use preview to verify your blueprint works
+- Great for testing your blueprint before sharing
 
 ## Wizard Mode
 
@@ -518,31 +524,31 @@ Make sure:
 
 ### Common Workflows
 
+These workflows show which steps to add to your blueprint for common use cases.
+
 **Quick plugin test environment:**
-1. `installPlugin` - Your plugin
-2. `login` - Auto-login
-3. Enable preview mode
-4. Done!
+1. Add `installPlugin` step - Your plugin
+2. Enable preview mode
+3. Done!
 
 **Blog with sample content:**
-1. `setSiteName` - Site title
-2. `addPost` - Welcome post
-3. `addPage` - About page
-4. `sampleContent` - More pages
+1. Add `setSiteName` step - Site title
+2. Add `addPost` step - Welcome post
+3. Add `addPage` step - About page
+4. Add `sampleContent` step - More pages
 5. Done!
 
 **WooCommerce demo:**
-1. `addProduct` - Creates products (auto-installs WooCommerce)
-2. Or `generateProducts` - Bulk generate
-3. `skipWooCommerceWizard` - Skip setup
+1. Add `addProduct` step - Creates products when Playground boots (auto-installs WooCommerce)
+2. Or add `generateProducts` step - Bulk generate
+3. Add `skipWooCommerceWizard` step - Skip setup
 4. Done!
 
 **Development environment:**
-1. `debug` - Enable debugging + Query Monitor
-2. `githubPlugin` - Your plugin from GitHub (with `prs: true`)
-3. `installTheme` - Test theme
-4. `login` - Auto-login as admin
-5. Done!
+1. Add `debug` step - Enable debugging + Query Monitor
+2. Add `githubPlugin` step - Your plugin from GitHub (with `prs: true`)
+3. Add `installTheme` step - Test theme
+4. Done!
 
 ## Hidden Features
 
