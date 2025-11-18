@@ -6,7 +6,7 @@
 import { StepDefinition, ShowCallbacks } from './types';
 import { createStep } from './step-renderer';
 import { fixMouseCursor } from './dom-utils';
-import { detectUrlType } from './url-detection';
+import { detectUrlType } from './content-detection';
 import { shouldUseMuPlugin } from './playground-integration';
 import { blueprintEventBus } from './blueprint-event-bus';
 

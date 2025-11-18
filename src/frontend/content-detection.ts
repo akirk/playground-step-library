@@ -1,3 +1,13 @@
+/**
+ * Content Detection
+ * Functions for detecting different types of content in pasted text
+ */
+
+/**
+ * Detects the type of URL (plugin, theme, etc.)
+ * @param url - The URL to analyze
+ * @returns The URL type ('plugin' or 'theme') or null if not recognized
+ */
 export function detectUrlType(url: string): string | null {
 	if (!url || typeof url !== 'string') {
 		return null;
@@ -24,6 +34,11 @@ export function detectUrlType(url: string): string | null {
 	return null;
 }
 
+/**
+ * Detects WordPress admin URLs and extracts the admin path
+ * @param url - The URL to analyze
+ * @returns The admin path (e.g., '/wp-admin/index.php') or null if not an admin URL
+ */
 export function detectWpAdminUrl(url: string): string | null {
 	if (!url || typeof url !== 'string') {
 		return null;
@@ -49,6 +64,11 @@ export function detectWpAdminUrl(url: string): string | null {
 	return null;
 }
 
+/**
+ * Detects if text contains HTML code
+ * @param text - The text to analyze
+ * @returns true if text contains HTML with closing tags, false otherwise
+ */
 export function detectHtml(text: string): boolean {
 	if (!text || typeof text !== 'string') {
 		return false;
@@ -59,6 +79,11 @@ export function detectHtml(text: string): boolean {
 	return /<[^>]+>/.test(trimmed) && trimmed.includes('</');
 }
 
+/**
+ * Detects if text contains PHP code
+ * @param text - The text to analyze
+ * @returns true if text contains PHP opening tags, false otherwise
+ */
 export function detectPhp(text: string): boolean {
 	if (!text || typeof text !== 'string') {
 		return false;
@@ -69,10 +94,20 @@ export function detectPhp(text: string): boolean {
 	return trimmed.startsWith('<?php') || (trimmed.includes('<?php') && trimmed.includes('?>'));
 }
 
+/**
+ * Checks if a hostname is a WordPress Playground domain
+ * @param hostname - The hostname to check
+ * @returns true if hostname is playground.wordpress.net or 127.0.0.1, false otherwise
+ */
 export function isPlaygroundDomain(hostname: string): boolean {
 	return hostname === 'playground.wordpress.net' || hostname === '127.0.0.1';
 }
 
+/**
+ * Detects and parses WordPress Playground URLs with blueprint in hash fragment
+ * @param url - The URL to analyze
+ * @returns The parsed blueprint object or null if not a valid Playground URL
+ */
 export function detectPlaygroundUrl(url: string): any {
 	if (!url || typeof url !== 'string') {
 		return null;
@@ -94,6 +129,11 @@ export function detectPlaygroundUrl(url: string): any {
 	return null;
 }
 
+/**
+ * Detects WordPress Playground URLs with query parameters
+ * @param url - The URL to analyze
+ * @returns true if URL is a Playground URL with query parameters, false otherwise
+ */
 export function detectPlaygroundQueryApiUrl(url: string): boolean {
 	if (!url || typeof url !== 'string') {
 		return false;
@@ -111,4 +151,38 @@ export function detectPlaygroundQueryApiUrl(url: string): boolean {
 	}
 
 	return false;
+}
+
+/**
+ * Detects and parses WordPress Playground blueprint JSON strings
+ * Validates that the JSON contains at least one blueprint property
+ * (steps, landingPage, preferredVersions, features, siteOptions, login, plugins, constants, phpExtensionBundles)
+ * @param text - The text to analyze
+ * @returns The parsed blueprint object or null if not valid blueprint JSON
+ */
+export function detectBlueprintJson(text: string): any {
+	if (!text || typeof text !== 'string') {
+		return null;
+	}
+
+	const trimmed = text.trim();
+
+	if (!trimmed.startsWith('{') || !trimmed.endsWith('}')) {
+		return null;
+	}
+
+	try {
+		const parsed = JSON.parse(trimmed);
+		if (parsed && typeof parsed === 'object') {
+			const blueprintProps = ['steps', 'landingPage', 'preferredVersions', 'features', 'siteOptions', 'login', 'plugins', 'constants', 'phpExtensionBundles'];
+			const hasAnyBlueprintProp = blueprintProps.some(prop => prop in parsed);
+
+			if (hasAnyBlueprintProp) {
+				return parsed;
+			}
+		}
+		return null;
+	} catch (e) {
+		return null;
+	}
 }

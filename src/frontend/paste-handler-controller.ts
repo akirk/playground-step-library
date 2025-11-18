@@ -9,8 +9,9 @@ import {
 	detectHtml,
 	detectPhp,
 	detectPlaygroundUrl,
-	detectPlaygroundQueryApiUrl
-} from './url-detection';
+	detectPlaygroundQueryApiUrl,
+	detectBlueprintJson
+} from './content-detection';
 import { parsePlaygroundQueryApi } from './playground-integration';
 import {
 	addStepFromUrl,
@@ -55,6 +56,7 @@ export class PasteHandlerController {
 		// Detect content types
 		let hasPlaygroundUrl = false;
 		let hasPlaygroundQueryApiUrl = false;
+		let hasBlueprintJson = false;
 		let hasUrl = false;
 		let hasWpAdminUrl = false;
 		let hasHtml = false;
@@ -79,6 +81,10 @@ export class PasteHandlerController {
 			}
 		}
 
+		if (detectBlueprintJson(pastedText)) {
+			hasBlueprintJson = true;
+		}
+
 		if (detectPhp(pastedText)) {
 			hasPhp = true;
 		}
@@ -88,7 +94,7 @@ export class PasteHandlerController {
 		}
 
 		// If nothing detected, let default paste behavior happen
-		if (!hasPlaygroundUrl && !hasPlaygroundQueryApiUrl && !hasUrl && !hasWpAdminUrl && !hasHtml && !hasPhp) {
+		if (!hasPlaygroundUrl && !hasPlaygroundQueryApiUrl && !hasBlueprintJson && !hasUrl && !hasWpAdminUrl && !hasHtml && !hasPhp) {
 			return;
 		}
 
@@ -121,6 +127,13 @@ export class PasteHandlerController {
 						addedAny = true;
 					}
 					break;
+				}
+			}
+		} else if (hasBlueprintJson) {
+			const blueprintData = detectBlueprintJson(pastedText);
+			if (blueprintData) {
+				if (await this.handlePlaygroundBlueprint(blueprintData)) {
+					addedAny = true;
 				}
 			}
 		} else if (hasPhp && !hasUrl && !hasWpAdminUrl) {
