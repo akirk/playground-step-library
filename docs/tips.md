@@ -278,9 +278,8 @@ https://akirk.github.io/playground-step-library/#BASE64_ENCODED_BLUEPRINT
 ```
 
 **Pro Tips:**
-- Bookmark your work-in-progress blueprints
-- Browser history contains all your blueprint iterations
-- Close the tab and come back later - your work is in the URL
+- Bookmark your work-in-progress blueprints to save your work
+- Use browser Back/Forward buttons to undo/redo - Browser history contains all your blueprint iterations
 - Use "Copy Link" to share exact state with others
 
 ### Sharing Your Blueprint
