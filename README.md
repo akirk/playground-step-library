@@ -30,11 +30,18 @@ In the [Step Library UI](https://akirk.github.io/playground-step-library/) you c
 
 The final blueprint is immediately updated so that you can click the "Launch in Playground" to see if it achieves what you try to do.
 
-## Sharing
+## Sharing & Import/Export
 
 To make it easy to share what you are building, the URL of the page is updated with the blueprint. You can copy the URL and share it with others.
 
 You can also share the Playground URL which contains the final blueprint.
+
+**Import blueprints:**
+- **Drag & drop** any `.json` blueprint file to import it
+- **Paste Playground URLs** - Both [hash format](https://wordpress.github.io/wordpress-playground/blueprints/data-format) and [Query API](https://wordpress.github.io/wordpress-playground/developers/apis/query-api) URLs
+- Native Playground blueprints are automatically decompiled into custom steps
+
+See [Blueprint Import](docs/ui-components.md#blueprint-import) for details.
 
 ## Screenshot
 [![step-library](https://github.com/akirk/playground-step-library/assets/203408/c536785b-2c6b-44bd-b1cd-4f1b72c074d1)](https://akirk.github.io/playground-step-library/#eyJzdGVwcyI6W3sic3RlcCI6ImNyZWF0ZVVzZXIiLCJ2YXJzIjp7InVzZXJuYW1lIjoibWF0dCIsInBhc3N3b3JkIjoicGFzc3dvcmQiLCJyb2xlIjoiYWRtaW5pc3RyYXRvciIsImRpc3BsYXlfbmFtZSI6Ik1hdHQiLCJlbWFpbCI6IiIsImxvZ2luIjp0cnVlfX0seyJzdGVwIjoic2hvd0FkbWluTm90aWNlIiwidmFycyI6eyJ0ZXh0IjoiV2VsY29tZSB0byBXb3JkUHJlc3MgUGxheWdyb3VuZCEiLCJ0eXBlIjoiIiwiZGlzbWlzc2libGUiOnRydWV9fV19)

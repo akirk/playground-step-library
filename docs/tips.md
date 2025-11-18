@@ -11,6 +11,7 @@ Power user tips for getting the most out of the WordPress Playground Step Librar
   - [Paste URLs](#paste-urls) - Auto-installs plugins/themes from WordPress.org or GitHub
   - [Paste Multiple URLs](#paste-multiple-urls) - Batch install multiple plugins
   - [Paste wp-admin URLs](#paste-wp-admin-urls) - Auto-sets landing page
+  - [Paste Playground URLs](#paste-playground-urls) - Import and decompile blueprints
 
 ### ⌨️ Productivity
 - [**Keyboard Shortcuts**](#keyboard-shortcuts) - Speed up your workflow
@@ -128,6 +129,31 @@ https://playground.wordpress.net/wp-admin/post-new.php
 ```
 
 The Step Library extracts `/wp-admin/post-new.php` and sets it as the landing page.
+
+### Paste Playground URLs
+
+Paste any WordPress Playground URL to import and decompile it into Step Library custom steps:
+
+**Playground hash URLs:**
+```
+https://playground.wordpress.net/#{"steps":[...]}
+```
+
+**Playground Query API URLs:**
+```
+https://playground.wordpress.net/?plugin=woocommerce&wp=6.7&login=yes
+https://playground.wordpress.net/?plugin=friends&theme=twentytwentyfour
+```
+
+The Step Library will:
+1. Detect the Playground URL format
+2. Extract and parse the blueprint
+3. Automatically decompile native steps into custom steps
+4. Load the steps into your editor
+
+**Learn more:**
+- [Query API Documentation](https://wordpress.github.io/wordpress-playground/developers/apis/query-api)
+- [Blueprint Data Format](https://wordpress.github.io/wordpress-playground/blueprints/data-format)
 
 ## Keyboard Shortcuts
 
