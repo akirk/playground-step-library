@@ -21,6 +21,7 @@ export interface CompressedState {
 	excludeMeta?: boolean;
 	wpVersion?: string;
 	phpVersion?: string;
+	blueprintVersion?: string;
 }
 
 /**
@@ -37,6 +38,7 @@ export function compressState(
 		excludeMeta?: boolean;
 		wpVersion?: string;
 		phpVersion?: string;
+		blueprintVersion?: string;
 	}
 ): string {
 	const state: CompressedState = {
@@ -66,6 +68,9 @@ export function compressState(
 	}
 	if (options.phpVersion && options.phpVersion !== 'latest') {
 		state.phpVersion = options.phpVersion;
+	}
+	if (options.blueprintVersion && options.blueprintVersion !== 'v1') {
+		state.blueprintVersion = options.blueprintVersion;
 	}
 
 	const json = JSON.stringify(state);

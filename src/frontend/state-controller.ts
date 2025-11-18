@@ -32,6 +32,7 @@ export class StateController {
 		const excludeMetaEl = document.getElementById('exclude-meta') as HTMLInputElement;
 		const wpVersionEl = document.getElementById('wp-version') as HTMLSelectElement;
 		const phpVersionEl = document.getElementById('php-version') as HTMLSelectElement;
+		const blueprintVersionEl = document.querySelector('input[name="blueprint-version"]:checked') as HTMLInputElement;
 
 		return compressState(steps, {
 			title: titleEl?.value || undefined,
@@ -41,7 +42,8 @@ export class StateController {
 			previewMode: previewModeEl?.value || undefined,
 			excludeMeta: excludeMetaEl?.checked || undefined,
 			wpVersion: wpVersionEl?.value || undefined,
-			phpVersion: phpVersionEl?.value || undefined
+			phpVersion: phpVersionEl?.value || undefined,
+			blueprintVersion: blueprintVersionEl?.value || undefined
 		});
 	}
 
@@ -78,6 +80,12 @@ export class StateController {
 		}
 		if (state.phpVersion) {
 			(document.getElementById('php-version') as HTMLSelectElement).value = state.phpVersion;
+		}
+		if (state.blueprintVersion) {
+			const blueprintVersionEl = document.querySelector('input[name="blueprint-version"][value="' + state.blueprintVersion + '"]') as HTMLInputElement;
+			if (blueprintVersionEl) {
+				blueprintVersionEl.checked = true;
+			}
 		}
 		if (!(state.steps || []).length) {
 			return;
