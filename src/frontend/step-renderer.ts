@@ -32,9 +32,10 @@ export function createStep(
 	div.appendChild(span);
 	if (data.mine) {
 		step.classList.add('mine');
-		const options = document.createElement('details');
-		options.appendChild(document.createElement('summary'));
-		options.className = 'options';
+		const optionsHolder = document.createElement('details');
+		optionsHolder.appendChild(document.createElement('summary'));
+		optionsHolder.className = 'options';
+		const options = document.createElement('div');
 		const del = document.createElement('button');
 		del.innerText = 'Delete';
 		del.title = 'Delete this step';
@@ -66,7 +67,8 @@ export function createStep(
 		gh.className = 'submit-to-gh';
 		gh.title = 'Submit this step to GitHub';
 		options.appendChild(gh);
-		div.appendChild(options);
+		optionsHolder.appendChild(options);
+		div.appendChild(optionsHolder);
 
 	} else if (data.builtin) {
 		step.classList.add('builtin');

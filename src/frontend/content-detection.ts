@@ -262,3 +262,31 @@ export function detectWpCli(text: string): string[] | null {
 
 	return commands.length > 0 ? commands : null;
 }
+
+/**
+ * Detects and parses unwrapped step JSON (single step object)
+ * Validates that the JSON contains a "step" property
+ * @param text - The text to analyze
+ * @returns The parsed step object or null if not valid step JSON
+ */
+export function detectStepJson(text: string): any {
+	if (!text || typeof text !== 'string') {
+		return null;
+	}
+
+	const trimmed = text.trim();
+
+	if (!trimmed.startsWith('{') || !trimmed.endsWith('}')) {
+		return null;
+	}
+
+	try {
+		const parsed = JSON.parse(trimmed);
+		if (parsed && typeof parsed === 'object' && 'step' in parsed && typeof parsed.step === 'string') {
+			return parsed;
+		}
+		return null;
+	} catch (e) {
+		return null;
+	}
+}

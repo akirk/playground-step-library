@@ -13,7 +13,8 @@ import {
 	detectBlueprintJson,
 	detectCss,
 	detectJs,
-	detectWpCli
+	detectWpCli,
+	detectStepJson
 } from './content-detection';
 import { parsePlaygroundQueryApi, shouldUseMuPlugin } from './playground-integration';
 import {
@@ -66,6 +67,7 @@ export class PasteHandlerController {
 		let hasPlaygroundUrl = false;
 		let hasPlaygroundQueryApiUrl = false;
 		let hasBlueprintJson = false;
+		let hasStepJson = false;
 		let hasUrl = false;
 		let hasWpAdminUrl = false;
 		let hasHtml = false;
@@ -97,6 +99,10 @@ export class PasteHandlerController {
 			hasBlueprintJson = true;
 		}
 
+		if (detectStepJson(pastedText)) {
+			hasStepJson = true;
+		}
+
 		if (detectPhp(pastedText)) {
 			hasPhp = true;
 		}
@@ -116,7 +122,7 @@ export class PasteHandlerController {
 		}
 
 		// If nothing detected, let default paste behavior happen
-		if (!hasPlaygroundUrl && !hasPlaygroundQueryApiUrl && !hasBlueprintJson && !hasUrl && !hasWpAdminUrl && !hasHtml && !hasPhp && !hasCss && !hasJs && !wpCliCommands) {
+		if (!hasPlaygroundUrl && !hasPlaygroundQueryApiUrl && !hasBlueprintJson && !hasStepJson && !hasUrl && !hasWpAdminUrl && !hasHtml && !hasPhp && !hasCss && !hasJs && !wpCliCommands) {
 			return;
 		}
 
@@ -149,6 +155,14 @@ export class PasteHandlerController {
 						addedAny = true;
 					}
 					break;
+				}
+			}
+		} else if (hasStepJson) {
+			const stepData = detectStepJson(pastedText);
+			if (stepData) {
+				const blueprintData = { steps: [stepData] };
+				if (await this.handlePlaygroundBlueprint(blueprintData)) {
+					addedAny = true;
 				}
 			}
 		} else if (hasBlueprintJson) {

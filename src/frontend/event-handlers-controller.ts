@@ -335,9 +335,9 @@ export class EventHandlersController {
 	 * Handle share my step
 	 */
 	private handleShareMyStep(stepElement: HTMLElement, target: HTMLElement): void {
-		const data = location.href.replace(/#.*$/, '') + '#' + 
-			this.deps.stateController.compressStateFromDOM([extractStepDataFromElement(stepElement)]);
-		navigator.clipboard.writeText(data);
+		const stepData = extractStepDataFromElement(stepElement);
+		const jsonData = JSON.stringify(stepData, null, 2);
+		navigator.clipboard.writeText(jsonData);
 		target.innerText = 'Copied!';
 		setTimeout(() => {
 			target.innerText = 'Share';
