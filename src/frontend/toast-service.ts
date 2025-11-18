@@ -15,13 +15,13 @@ class ToastService {
 	private lastDeletedEntry: any = null;
 
 	/**
-	 * Show a simple toast message
+	 * Show a global toast message (always visible)
 	 */
-	show(message: string, options: ToastOptions = {}): void {
+	showGlobal(message: string, options: ToastOptions = {}): void {
 		const duration = options.duration || 3000;
-		const toast = document.getElementById('history-toast');
-		const toastMessage = document.getElementById('history-toast-message');
-		const undoBtn = document.getElementById('history-toast-undo');
+		const toast = document.getElementById('global-toast');
+		const toastMessage = document.getElementById('global-toast-message');
+		const undoBtn = document.getElementById('global-toast-undo');
 
 		if (!toast || !toastMessage || !undoBtn) return;
 
@@ -39,13 +39,13 @@ class ToastService {
 	}
 
 	/**
-	 * Show a toast message with optional undo button (for My Blueprints)
+	 * Show a toast message inside the My Blueprints dialog with optional undo button
 	 */
-	showWithUndo(message: string, undoCallback?: () => void): void {
+	showInBlueprintsDialog(message: string, undoCallback?: () => void): void {
 		const duration = undoCallback ? 5000 : 3000;
-		const toast = document.getElementById('undo-toast');
-		const toastMessage = document.getElementById('undo-toast-message');
-		const undoBtn = document.getElementById('undo-toast-undo');
+		const toast = document.getElementById('blueprints-dialog-toast');
+		const toastMessage = document.getElementById('blueprints-dialog-toast-message');
+		const undoBtn = document.getElementById('blueprints-dialog-toast-undo');
 
 		if (!toast || !toastMessage || !undoBtn) return;
 
@@ -78,12 +78,12 @@ class ToastService {
 	}
 
 	/**
-	 * Show save prompt toast with custom action
+	 * Show global toast with custom action button
 	 */
-	showSavePrompt(message: string, actionLabel: string, onAction: () => void): void {
-		const toast = document.getElementById('history-toast');
-		const toastMessage = document.getElementById('history-toast-message');
-		const undoBtn = document.getElementById('history-toast-undo');
+	showGlobalWithAction(message: string, actionLabel: string, onAction: () => void): void {
+		const toast = document.getElementById('global-toast');
+		const toastMessage = document.getElementById('global-toast-message');
+		const undoBtn = document.getElementById('global-toast-undo');
 
 		if (!toast || !toastMessage || !undoBtn) return;
 
@@ -99,14 +99,14 @@ class ToastService {
 	}
 
 	/**
-	 * Hide the toast notification
+	 * Hide the global toast notification
 	 */
 	hide(): void {
-		const toast = document.getElementById('history-toast');
+		const toast = document.getElementById('global-toast');
 		if (toast) {
 			toast.style.display = 'none';
 		}
-		const undoBtn = document.getElementById('history-toast-undo');
+		const undoBtn = document.getElementById('global-toast-undo');
 		if (undoBtn) {
 			undoBtn.textContent = 'Undo';
 		}

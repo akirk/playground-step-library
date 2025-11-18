@@ -126,7 +126,7 @@ export class HistoryController {
 		const success = addBlueprintToHistory(compiledBlueprint, stepConfig, title);
 
 		if (success) {
-			toastService.show('Saved to My Blueprints');
+			toastService.showGlobal('Saved to My Blueprints');
 			this.renderHistoryList();
 			this.updateHistoryButtonVisibility();
 		}
@@ -379,7 +379,7 @@ export class HistoryController {
 
 		this.renderHistoryList();
 
-		toastService.showWithUndo(`Deleted "${entry.title}"`, () => {
+		toastService.showInBlueprintsDialog(`Deleted "${entry.title}"`, () => {
 			this.undoDelete();
 		});
 	}
@@ -399,7 +399,7 @@ export class HistoryController {
 
 		toastService.setLastDeletedEntry(null);
 		this.renderHistoryList();
-		toastService.showWithUndo('Restored');
+		toastService.showInBlueprintsDialog('Restored');
 	}
 
 	/**
@@ -421,7 +421,7 @@ export class HistoryController {
 	exportAllBlueprints(): void {
 		const history = getHistory();
 		if (history.length === 0) {
-			toastService.showWithUndo('No blueprints to export');
+			toastService.showInBlueprintsDialog('No blueprints to export');
 			return;
 		}
 
@@ -441,7 +441,7 @@ export class HistoryController {
 		document.body.removeChild(a);
 		URL.revokeObjectURL(url);
 
-		toastService.show(`Exported ${history.length} blueprint${history.length !== 1 ? 's' : ''}`);
+		toastService.showGlobal(`Exported ${history.length} blueprint${history.length !== 1 ? 's' : ''}`);
 	}
 
 	/**
@@ -481,7 +481,7 @@ export class HistoryController {
 				);
 
 				if (validBlueprints.length === 0) {
-					toastService.showWithUndo('No valid blueprints found in file');
+					toastService.showInBlueprintsDialog('No valid blueprints found in file');
 					return;
 				}
 
@@ -498,10 +498,10 @@ export class HistoryController {
 				this.renderHistoryList();
 				this.updateHistoryButtonVisibility();
 
-				toastService.show(`Imported ${validBlueprints.length} blueprint${validBlueprints.length !== 1 ? 's' : ''}`);
+				toastService.showGlobal(`Imported ${validBlueprints.length} blueprint${validBlueprints.length !== 1 ? 's' : ''}`);
 			} catch (error) {
 				console.error('Import failed:', error);
-				toastService.showWithUndo('Failed to import blueprints. Invalid file format.');
+				toastService.showInBlueprintsDialog('Failed to import blueprints. Invalid file format.');
 			}
 
 			// Reset file input

@@ -26,6 +26,7 @@ import { stepsRegistry } from '../steps-registry';
 export interface PasteHandlerControllerDependencies {
 	stepInserterDeps: StepInserterDependencies;
 	restoreSteps: (stepsData: any, title: string) => void;
+	appendSteps: (stepsData: any) => void;
 }
 
 export class PasteHandlerController {
@@ -231,22 +232,24 @@ export class PasteHandlerController {
 				})
 			};
 
-			this.deps.restoreSteps(stepConfig, blueprintData.meta?.title);
+			this.deps.appendSteps(stepConfig);
 
-			if (unmappedSteps.length === 0) {
-				toastService.showWithUndo('Playground blueprint loaded successfully!');
-			} else {
+			if (unmappedSteps.length === 0 && warnings.length === 0) {
+				toastService.showGlobal('Playground blueprint loaded successfully!');
+			} else if (unmappedSteps.length > 0) {
 				const stepTypes = unmappedSteps
 					.map((s: any) => s.step || 'unknown')
 					.filter((v: string, i: number, a: string[]) => a.indexOf(v) === i);
 				const msg = 'Playground blueprint loaded. Ignored ' + unmappedSteps.length + ' step(s): ' + stepTypes.join(', ');
-				toastService.showWithUndo(msg);
+				toastService.showGlobal(msg, { duration: 5000 });
+			} else if (warnings.length > 0) {
+				toastService.showGlobal('Playground blueprint loaded with warnings. Check console for details.', { duration: 5000 });
 			}
 
 			return true;
 		} catch (error) {
 			console.error('Error handling playground blueprint:', error);
-			toastService.showWithUndo('Failed to load playground blueprint');
+			toastService.showGlobal('Failed to load playground blueprint', { duration: 5000 });
 			return false;
 		}
 	}

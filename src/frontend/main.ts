@@ -1217,8 +1217,8 @@ addEventListener('DOMContentLoaded', function () {
 	}
 
 	// showToast and showMyBlueprintsToast are now provided by toast-service.ts
-	const showToast = (message: string) => toastService.show(message);
-	const showMyBlueprintsToast = (message: string, undoCallback?: () => void) => toastService.showWithUndo(message, undoCallback);
+	const showToast = (message: string) => toastService.showGlobal(message);
+	const showMyBlueprintsToast = (message: string, undoCallback?: () => void) => toastService.showInBlueprintsDialog(message, undoCallback);
 
 
 	function isBlueprintAlreadySaved() {
@@ -1266,7 +1266,7 @@ addEventListener('DOMContentLoaded', function () {
 			actionLabel = 'Save';
 		}
 
-		toastService.showSavePrompt(message, actionLabel, () => {
+		toastService.showGlobalWithAction(message, actionLabel, () => {
 			if (existingEntry) {
 				const updatedHistory = history.filter(entry => entry.title !== blueprintTitle);
 				saveHistory(updatedHistory);
@@ -1374,17 +1374,70 @@ addEventListener('DOMContentLoaded', function () {
 
 
 	// Toast close button
-	document.getElementById('history-toast-close').addEventListener('click', function () {
+	document.getElementById('global-toast-close').addEventListener('click', function () {
 		hideSavePromptToast();
 	});
 
 	// Undo toast close button
-	document.getElementById('undo-toast-close').addEventListener('click', function () {
-		const toast = document.getElementById('undo-toast');
+	document.getElementById('blueprints-dialog-toast-close').addEventListener('click', function () {
+		const toast = document.getElementById('blueprints-dialog-toast');
 		toast.style.display = 'none';
 		// Timeout is managed by toast-service.ts
 	});
 
+
+	function appendSteps(stepsData) {
+		if (!stepsData || !stepsData.steps) {
+			return;
+		}
+
+		const blueprintStepsContainer = document.getElementById('blueprint-steps');
+		const draghint = document.getElementById('draghint');
+		if (draghint) {
+			draghint.remove();
+		}
+
+		const missingSteps = [];
+
+		stepsData.steps.forEach(function (stepData) {
+			const sourceStep = document.querySelector('#step-library .step[data-step="' + stepData.step + '"]');
+			if (!sourceStep) {
+				console.warn('Step not found in library:', stepData.step);
+				missingSteps.push(stepData.step);
+				return;
+			}
+
+			const stepBlock = sourceStep.cloneNode(true);
+			stepBlock.removeAttribute('id');
+			stepBlock.classList.remove('dragging');
+			stepBlock.classList.remove('hidden');
+			document.getElementById('blueprint-steps').appendChild(stepBlock);
+
+			if (stepData.vars) {
+				for (const key in stepData.vars) {
+					const input = stepBlock.querySelector('[name="' + key + '"]');
+					if (input) {
+						if (input.type === 'checkbox') {
+							input.checked = stepData.vars[key];
+						} else {
+							input.value = stepData.vars[key];
+						}
+					}
+				}
+			}
+
+			if (stepData.count) {
+				const countInput = stepBlock.querySelector('[name="count"]');
+				if (countInput) {
+					countInput.value = stepData.count;
+				}
+			}
+		});
+
+		if (missingSteps.length > 0) {
+			toastService.showGlobal('Warning: ' + missingSteps.length + ' step(s) not found: ' + missingSteps.join(', '));
+		}
+	}
 
 	function restoreSteps(stepsData, title) {
 		if (!stepsData || !stepsData.steps) {
@@ -1500,7 +1553,8 @@ addEventListener('DOMContentLoaded', function () {
 	// Initialize Paste Handler Controller
 	const pasteHandlerControllerDeps: PasteHandlerControllerDependencies = {
 		stepInserterDeps,
-		restoreSteps
+		restoreSteps,
+		appendSteps
 	};
 	const pasteHandlerController = new PasteHandlerController(pasteHandlerControllerDeps);
 

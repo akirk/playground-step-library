@@ -2829,7 +2829,7 @@ body.split-view-right #playground-iframe {
 
 
 /* History Toast Notification */
-#history-toast {
+#global-toast {
   position: fixed;
   bottom: 24px;
   right: 24px;
@@ -2847,14 +2847,14 @@ body.split-view-right #playground-iframe {
   max-width: max-content;
 }
 
-#history-toast-message {
+#global-toast-message {
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
   font-weight: 500;
 }
 
-#history-toast-message::before {
+#global-toast-message::before {
   content: '✓';
   display: inline-flex;
   align-items: center;
@@ -2866,7 +2866,7 @@ body.split-view-right #playground-iframe {
   font-weight: bold;
 }
 
-#history-toast-undo {
+#global-toast-undo {
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -2879,12 +2879,12 @@ body.split-view-right #playground-iframe {
   transition: all 0.2s;
 }
 
-#history-toast-undo:hover {
+#global-toast-undo:hover {
   background: rgba(255, 255, 255, 0.3);
   border-color: rgba(255, 255, 255, 0.5);
 }
 
-#history-toast-close {
+#global-toast-close {
   background: none;
   border: none;
   color: white;
@@ -2897,11 +2897,11 @@ body.split-view-right #playground-iframe {
   transition: opacity 0.2s;
 }
 
-#history-toast-close:hover {
+#global-toast-close:hover {
   opacity: 1;
 }
 
-#undo-toast {
+#blueprints-dialog-toast {
   position: absolute;
   bottom: 24px;
   right: 24px;
@@ -2919,14 +2919,14 @@ body.split-view-right #playground-iframe {
   max-width: max-content;
 }
 
-#undo-toast-message {
+#blueprints-dialog-toast-message {
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
   font-weight: 500;
 }
 
-#undo-toast-message::before {
+#blueprints-dialog-toast-message::before {
   content: '✓';
   display: inline-flex;
   align-items: center;
@@ -2938,7 +2938,7 @@ body.split-view-right #playground-iframe {
   font-weight: bold;
 }
 
-#undo-toast-undo {
+#blueprints-dialog-toast-undo {
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -2951,12 +2951,12 @@ body.split-view-right #playground-iframe {
   transition: all 0.2s;
 }
 
-#undo-toast-undo:hover {
+#blueprints-dialog-toast-undo:hover {
   background: rgba(255, 255, 255, 0.3);
   border-color: rgba(255, 255, 255, 0.5);
 }
 
-#undo-toast-close {
+#blueprints-dialog-toast-close {
   background: none;
   border: none;
   color: white;
@@ -2969,7 +2969,7 @@ body.split-view-right #playground-iframe {
   transition: opacity 0.2s;
 }
 
-#undo-toast-close:hover {
+#blueprints-dialog-toast-close:hover {
   opacity: 1;
 }
 
