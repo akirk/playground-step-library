@@ -83,7 +83,6 @@ class PlaygroundStepLibrary {
 
     /**
      * Compile a blueprint by transforming custom steps into native steps (v1 format)
-     * Uses the transformJson logic from script.js adapted for TypeScript
      */
     private compileToV1(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}): Blueprint {
         let inputData: StepLibraryBlueprint;

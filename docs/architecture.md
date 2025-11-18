@@ -209,14 +209,19 @@ playground-step-library/
 ├── src/
 │   ├── index.ts          # Main compiler
 │   ├── steps-registry.ts # Auto-generated registry
-│   └── v2-transpiler.ts  # Blueprint v2 support
+│   ├── v2-transpiler.ts  # Blueprint v2 support
+│   └── frontend/         # Frontend TypeScript modules
+│       └── main.ts       # UI entry point
+├── lib/                  # Compiled JavaScript output
+│   └── src/
+│       └── frontend/     # Compiled frontend modules
+│           └── main.js   # Compiled UI logic
 ├── bin/
 │   ├── cli.js            # Command-line interface
 │   ├── generate-docs.js  # Doc generator
 │   └── new-step.js       # Step scaffold
 ├── docs/                 # Generated documentation
-├── index.html            # Web UI
-└── script.js             # UI logic
+└── index.html            # Web UI
 ```
 
 ## Creating a New Step
