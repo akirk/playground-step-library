@@ -196,6 +196,8 @@ export class EventHandlersController {
 			'markup': 'html',
 			'html': 'html',
 			'xml': 'xml',
+			'css': 'css',
+			'javascript': 'javascript',
 			'none': 'text',
 			'text': 'text'
 		};
@@ -232,6 +234,8 @@ export class EventHandlersController {
 				'php': 'PHP',
 				'html': 'HTML',
 				'xml': 'XML',
+				'css': 'CSS',
+				'javascript': 'JavaScript',
 				'text': 'Plain Text'
 			};
 			const displayName = modeDisplayName[aceMode] || aceMode.toUpperCase();

@@ -20,6 +20,8 @@ import { setLandingPage } from '../steps/setLandingPage.js';
 import { addPost } from '../steps/addPost.js';
 import { enableMultisite } from '../steps/enableMultisite.js';
 import { setTT4Homepage } from '../steps/setTT4Homepage.js';
+import { enqueueCss } from '../steps/enqueueCss.js';
+import { enqueueJs } from '../steps/enqueueJs.js';
 import { addFilter } from '../steps/addFilter.js';
 import { githubPlugin } from '../steps/githubPlugin.js';
 import { githubPluginRelease } from '../steps/githubPluginRelease.js';
@@ -74,6 +76,8 @@ export const stepsRegistry = {
     deleteAllPosts,
     disableWelcomeGuides,
     doAction,
+    enqueueCss,
+    enqueueJs,
     fakeHttpResponse,
     githubImportExportWxr,
     githubPlugin,

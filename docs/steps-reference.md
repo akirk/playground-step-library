@@ -22,6 +22,8 @@ This document provides detailed information about all available steps, including
 - [`disableWelcomeGuides`](#disablewelcomeguides)
 - [`doAction`](#doaction)
 - [`enableMultisite`](#enablemultisite)
+- [`enqueueCss`](#enqueuecss)
+- [`enqueueJs`](#enqueuejs)
 - [`fakeHttpResponse`](#fakehttpresponse)
 - [`generateProducts`](#generateproducts)
 - [`githubImportExportWxr`](#githubimportexportwxr)
@@ -500,6 +502,62 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "enableMultisite"
+    }
+```
+
+
+---
+
+## `enqueueCss`
+
+**Type**: Custom Step  
+**Description**: Enqueue custom CSS on frontend and/or admin.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `filename` | text | ❌ No | Filename for the CSS file (without .css extension) |
+| `css` | textarea | ✅ Yes | CSS code to enqueue |
+| `frontend` | boolean | ❌ No | Enqueue on frontend |
+| `wpAdmin` | boolean | ❌ No | Enqueue in wp-admin |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "enqueueCss",
+          "filename": "custom-styles",
+          "css": "",
+          "frontend": "true",
+          "wpAdmin": "true"
+    }
+```
+
+
+---
+
+## `enqueueJs`
+
+**Type**: Custom Step  
+**Description**: Enqueue custom JavaScript on frontend and/or admin.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `filename` | text | ❌ No | Filename for the JavaScript file (without .js extension) |
+| `js` | textarea | ✅ Yes | JavaScript code to enqueue |
+| `frontend` | boolean | ❌ No | Enqueue on frontend |
+| `wpAdmin` | boolean | ❌ No | Enqueue in wp-admin |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "enqueueJs",
+          "filename": "custom-script",
+          "js": "",
+          "frontend": "true",
+          "wpAdmin": "true"
     }
 ```
 

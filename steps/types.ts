@@ -26,7 +26,8 @@ export interface BlueprintStep {
 export interface StepVariable {
     name: string;
     description?: string;
-    type?: string;
+    type?: 'text' | 'textarea' | 'boolean' | 'number' | 'select' | 'url' | 'button' | 'post' | 'page' | 'custom_type' | 'POST';
+    language?: 'php' | 'markup' | 'html' | 'xml' | 'css' | 'javascript' | 'text';
     required?: boolean;
     samples?: string[];
     show?: Function;
@@ -284,6 +285,20 @@ export interface MuPluginStep extends BlueprintStep {
     code: string;
 }
 
+export interface EnqueueCssStep extends BlueprintStep {
+    filename: string;
+    css: string;
+    frontend?: boolean;
+    wpAdmin?: boolean;
+}
+
+export interface EnqueueJsStep extends BlueprintStep {
+    filename: string;
+    js: string;
+    frontend?: boolean;
+    wpAdmin?: boolean;
+}
+
 export interface BlueprintRecorderStep extends BlueprintStep {
     // No parameters needed
 }
@@ -346,6 +361,8 @@ export type StepLibraryStepDefinition =
 	AddProductStep |
 	CustomPostTypeStep |
 	MuPluginStep |
+	EnqueueCssStep |
+	EnqueueJsStep |
 	BlueprintRecorderStep |
 	BlueprintExtractorStep |
 	GithubImportExportWxrStep |

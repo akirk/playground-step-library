@@ -162,3 +162,114 @@ export function addStepFromPhp(
 	blueprintEventBus.emit('blueprint:updated');
 	return true;
 }
+
+/**
+ * Add a CSS enqueue step from CSS code
+ */
+export function addStepFromCss(
+	cssCode: string,
+	deps: StepInserterDependencies
+): boolean {
+	if (!cssCode || !cssCode.trim()) {
+		return false;
+	}
+
+	const stepData = deps.customSteps['enqueueCss'];
+
+	if (!stepData) {
+		return false;
+	}
+
+	removeDragHint(deps.blueprintSteps);
+
+	const stepElement = createStep('enqueueCss', stepData, deps.showCallbacks);
+	deps.blueprintSteps.appendChild(stepElement);
+	stepElement.querySelectorAll('input,textarea').forEach(fixMouseCursor);
+
+	const cssInput = stepElement.querySelector('textarea[name="css"]');
+	if (cssInput instanceof HTMLTextAreaElement) {
+		cssInput.value = cssCode;
+	}
+
+	const filenameInput = stepElement.querySelector('input[name="filename"]');
+	if (filenameInput instanceof HTMLInputElement && !filenameInput.value) {
+		filenameInput.value = 'pasted-styles';
+	}
+
+	blueprintEventBus.emit('blueprint:updated');
+	return true;
+}
+
+/**
+ * Add a JS enqueue step from JavaScript code
+ */
+export function addStepFromJs(
+	jsCode: string,
+	deps: StepInserterDependencies
+): boolean {
+	if (!jsCode || !jsCode.trim()) {
+		return false;
+	}
+
+	const stepData = deps.customSteps['enqueueJs'];
+
+	if (!stepData) {
+		return false;
+	}
+
+	removeDragHint(deps.blueprintSteps);
+
+	const stepElement = createStep('enqueueJs', stepData, deps.showCallbacks);
+	deps.blueprintSteps.appendChild(stepElement);
+	stepElement.querySelectorAll('input,textarea').forEach(fixMouseCursor);
+
+	const jsInput = stepElement.querySelector('textarea[name="js"]');
+	if (jsInput instanceof HTMLTextAreaElement) {
+		jsInput.value = jsCode;
+	}
+
+	const filenameInput = stepElement.querySelector('input[name="filename"]');
+	if (filenameInput instanceof HTMLInputElement && !filenameInput.value) {
+		filenameInput.value = 'pasted-script';
+	}
+
+	blueprintEventBus.emit('blueprint:updated');
+	return true;
+}
+
+/**
+ * Add WP-CLI command steps from an array of commands
+ */
+export function addStepsFromWpCli(
+	commands: string[],
+	deps: StepInserterDependencies
+): number {
+	const stepData = deps.customSteps['runWpCliCommand'];
+
+	if (!stepData) {
+		return 0;
+	}
+
+	let addedCount = 0;
+
+	for (const command of commands) {
+		removeDragHint(deps.blueprintSteps);
+
+		const stepElement = createStep('runWpCliCommand', stepData, deps.showCallbacks);
+		deps.blueprintSteps.appendChild(stepElement);
+		stepElement.querySelectorAll('input,textarea').forEach(fixMouseCursor);
+
+		const commandInput = stepElement.querySelector('input[name="command"],textarea[name="command"]');
+		if (commandInput instanceof HTMLInputElement || commandInput instanceof HTMLTextAreaElement) {
+			commandInput.value = command;
+		}
+
+		addedCount++;
+	}
+
+	if (addedCount > 0) {
+		blueprintEventBus.emit('blueprint:updated');
+	}
+
+	return addedCount;
+}

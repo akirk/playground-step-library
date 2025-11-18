@@ -186,3 +186,79 @@ export function detectBlueprintJson(text: string): any {
 		return null;
 	}
 }
+
+/**
+ * Detects if text contains CSS code
+ * @param text - The text to analyze
+ * @returns true if text appears to be CSS, false otherwise
+ */
+export function detectCss(text: string): boolean {
+	if (!text || typeof text !== 'string') {
+		return false;
+	}
+
+	const trimmed = text.trim();
+
+	const cssPatterns = [
+		/^[.#]?[\w-]+\s*\{/,
+		/^\s*@(media|import|keyframes|font-face)/,
+		/\{\s*[\w-]+\s*:\s*[^}]+\}/,
+		/^\s*\/\*.*\*\//
+	];
+
+	return cssPatterns.some(pattern => pattern.test(trimmed));
+}
+
+/**
+ * Detects if text contains JavaScript code
+ * @param text - The text to analyze
+ * @returns true if text appears to be JavaScript, false otherwise
+ */
+export function detectJs(text: string): boolean {
+	if (!text || typeof text !== 'string') {
+		return false;
+	}
+
+	const trimmed = text.trim();
+
+	const jsPatterns = [
+		/^(var|let|const)\s+\w+/,
+		/^function\s+\w+/,
+		/^(async\s+)?function\s*\(/,
+		/=>\s*[{(]/,
+		/^import\s+/,
+		/^export\s+/,
+		/console\.(log|error|warn)/,
+		/document\.(querySelector|getElementById|addEventListener)/,
+		/window\.\w+/,
+		/^\s*\/\/.*/,
+		/^\s*\/\*[\s\S]*\*\//
+	];
+
+	return jsPatterns.some(pattern => pattern.test(trimmed));
+}
+
+/**
+ * Detects if text contains WP-CLI commands
+ * @param text - The text to analyze
+ * @returns Array of WP-CLI commands found, or null if none detected
+ */
+export function detectWpCli(text: string): string[] | null {
+	if (!text || typeof text !== 'string') {
+		return null;
+	}
+
+	const lines = text.split('\n').map(line => line.trim());
+	const commands: string[] = [];
+
+	for (const line of lines) {
+		if (line.startsWith('wp ') || line.match(/^\$\s+wp\s+/)) {
+			const command = line.replace(/^\$\s+/, '').replace(/^wp\s+/, '');
+			if (command) {
+				commands.push(command);
+			}
+		}
+	}
+
+	return commands.length > 0 ? commands : null;
+}

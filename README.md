@@ -221,7 +221,7 @@ Returns information about all available custom steps.
 - Returns: Object with step names as keys and step info as values
 ## Custom Steps
 
-This library provides **47** total steps (8 built-in enhanced steps + 39 custom steps):
+This library provides **49** total steps (8 built-in enhanced steps + 41 custom steps):
 
 ### Built-in Enhanced Steps
 - [`defineWpConfigConst`](docs/steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
@@ -250,6 +250,8 @@ This library provides **47** total steps (8 built-in enhanced steps + 39 custom 
 - [`deleteAllPosts`](docs/steps/deleteAllPosts.md) - Delete all posts, pages, attachments, revisions and menu items.
 - [`disableWelcomeGuides`](docs/steps/disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - [`doAction`](docs/steps/doAction.md) - Execute a custom action.
+- [`enqueueCss`](docs/steps/enqueueCss.md) - Enqueue custom CSS on frontend and/or admin.
+- [`enqueueJs`](docs/steps/enqueueJs.md) - Enqueue custom JavaScript on frontend and/or admin.
 - [`fakeHttpResponse`](docs/steps/fakeHttpResponse.md) - Fake a wp_remote_request() response.
 - [`generateProducts`](docs/steps/generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 - [`githubImportExportWxr`](docs/steps/githubImportExportWxr.md) - Provide useful additional info.

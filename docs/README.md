@@ -4,9 +4,9 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 📊 Overview
 
-- **Total Steps**: 47
+- **Total Steps**: 49
 - **Built-in Steps**: 8
-- **Custom Steps**: 39
+- **Custom Steps**: 41
 
 ## 🚀 Quick Start
 
@@ -58,6 +58,8 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`deleteAllPosts`](steps/deleteAllPosts.md) - Delete all posts, pages, attachments, revisions and menu items.
 - [`disableWelcomeGuides`](steps/disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - [`doAction`](steps/doAction.md) - Execute a custom action.
+- [`enqueueCss`](steps/enqueueCss.md) - Enqueue custom CSS on frontend and/or admin.
+- [`enqueueJs`](steps/enqueueJs.md) - Enqueue custom JavaScript on frontend and/or admin.
 - [`fakeHttpResponse`](steps/fakeHttpResponse.md) - Fake a wp_remote_request() response.
 - [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
 - [`githubPlugin`](steps/githubPlugin.md) - Install a plugin from a Github repository.

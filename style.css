@@ -2833,7 +2833,7 @@ body.split-view-right #playground-iframe {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  background: light-dark(var(--success-600), var(--success-700));
+  background: light-dark(var(--gray-700), var(--gray-700));
   color: white;
   padding: var(--spacing-3) var(--spacing-4);
   border-radius: var(--radius-lg);
@@ -2905,7 +2905,7 @@ body.split-view-right #playground-iframe {
   position: absolute;
   bottom: 24px;
   right: 24px;
-  background: light-dark(var(--success-600), var(--success-700));
+  background: light-dark(var(--gray-700), var(--gray-700));
   color: white;
   padding: var(--spacing-3) var(--spacing-4);
   border-radius: var(--radius-lg);

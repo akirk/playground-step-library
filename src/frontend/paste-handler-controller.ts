@@ -10,14 +10,20 @@ import {
 	detectPhp,
 	detectPlaygroundUrl,
 	detectPlaygroundQueryApiUrl,
-	detectBlueprintJson
+	detectBlueprintJson,
+	detectCss,
+	detectJs,
+	detectWpCli
 } from './content-detection';
-import { parsePlaygroundQueryApi } from './playground-integration';
+import { parsePlaygroundQueryApi, shouldUseMuPlugin } from './playground-integration';
 import {
 	addStepFromUrl,
 	addLandingPageStep,
 	addPostStepFromHtml,
 	addStepFromPhp,
+	addStepFromCss,
+	addStepFromJs,
+	addStepsFromWpCli,
 	type StepInserterDependencies
 } from './step-inserter';
 import { toastService } from './toast-service';
@@ -63,6 +69,9 @@ export class PasteHandlerController {
 		let hasWpAdminUrl = false;
 		let hasHtml = false;
 		let hasPhp = false;
+		let hasCss = false;
+		let hasJs = false;
+		let wpCliCommands: string[] | null = null;
 
 		for (const url of urls) {
 			if (detectPlaygroundUrl(url)) {
@@ -95,8 +104,18 @@ export class PasteHandlerController {
 			hasHtml = true;
 		}
 
+		wpCliCommands = detectWpCli(pastedText);
+
+		if (detectCss(pastedText)) {
+			hasCss = true;
+		}
+
+		if (detectJs(pastedText)) {
+			hasJs = true;
+		}
+
 		// If nothing detected, let default paste behavior happen
-		if (!hasPlaygroundUrl && !hasPlaygroundQueryApiUrl && !hasBlueprintJson && !hasUrl && !hasWpAdminUrl && !hasHtml && !hasPhp) {
+		if (!hasPlaygroundUrl && !hasPlaygroundQueryApiUrl && !hasBlueprintJson && !hasUrl && !hasWpAdminUrl && !hasHtml && !hasPhp && !hasCss && !hasJs && !wpCliCommands) {
 			return;
 		}
 
@@ -140,22 +159,50 @@ export class PasteHandlerController {
 			}
 		} else if (hasPhp && !hasUrl && !hasWpAdminUrl) {
 			if (addStepFromPhp(pastedText, this.deps.stepInserterDeps)) {
+				const stepType = shouldUseMuPlugin(pastedText) ? 'MU Plugin' : 'Run PHP';
+				toastService.showGlobal(`Added ${stepType} step from pasted PHP code`);
 				addedAny = true;
 			}
 		} else if (hasHtml && !hasUrl && !hasWpAdminUrl) {
 			if (addPostStepFromHtml(pastedText, this.deps.stepInserterDeps)) {
+				toastService.showGlobal('Added post step from pasted HTML content');
+				addedAny = true;
+			}
+		} else if (wpCliCommands && wpCliCommands.length > 0 && !hasUrl && !hasWpAdminUrl) {
+			const count = addStepsFromWpCli(wpCliCommands, this.deps.stepInserterDeps);
+			if (count > 0) {
+				const commandText = count === 1 ? 'WP-CLI command' : `${count} WP-CLI commands`;
+				toastService.showGlobal(`Added ${commandText} from pasted text`);
+				addedAny = true;
+			}
+		} else if (hasCss && !hasUrl && !hasWpAdminUrl && !hasHtml) {
+			if (addStepFromCss(pastedText, this.deps.stepInserterDeps)) {
+				toastService.showGlobal('Added CSS enqueue step from pasted styles');
+				addedAny = true;
+			}
+		} else if (hasJs && !hasUrl && !hasWpAdminUrl && !hasHtml) {
+			if (addStepFromJs(pastedText, this.deps.stepInserterDeps)) {
+				toastService.showGlobal('Added JS enqueue step from pasted script');
 				addedAny = true;
 			}
 		} else {
+			let urlCount = 0;
 			for (const url of urls) {
 				const wpAdminPath = detectWpAdminUrl(url);
 				if (wpAdminPath) {
 					if (addLandingPageStep(wpAdminPath, this.deps.stepInserterDeps)) {
+						toastService.showGlobal('Set landing page from pasted admin URL');
 						addedAny = true;
+						urlCount++;
 					}
 				} else if (addStepFromUrl(url, this.deps.stepInserterDeps)) {
 					addedAny = true;
+					urlCount++;
 				}
+			}
+			if (urlCount > 0 && !hasWpAdminUrl) {
+				const itemText = urlCount === 1 ? 'plugin/theme' : `${urlCount} plugins/themes`;
+				toastService.showGlobal(`Added ${itemText} from pasted URL${urlCount === 1 ? '' : 's'}`);
 			}
 		}
 
