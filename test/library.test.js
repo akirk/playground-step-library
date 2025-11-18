@@ -238,7 +238,7 @@ describe('PlaygroundStepLibrary', () => {
       expect(compiled.preferredVersions.wp).toBe('latest');
     });
 
-    it('should preserve preferredVersions with latest values', () => {
+    it('should omit preferredVersions when both are latest', () => {
       const blueprint = {
         steps: [
           {
@@ -257,9 +257,7 @@ describe('PlaygroundStepLibrary', () => {
       };
 
       const compiled = compiler.compile(blueprint, options);
-      expect(compiled.preferredVersions).toBeDefined();
-      expect(compiled.preferredVersions.wp).toBe('latest');
-      expect(compiled.preferredVersions.php).toBe('latest');
+      expect(compiled.preferredVersions).toBeUndefined();
     });
 
     it('should handle blueprint without preferredVersions', () => {

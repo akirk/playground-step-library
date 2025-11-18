@@ -120,15 +120,17 @@ class PlaygroundStepLibrary {
         // Merge user defined options with input data
         inputData = Object.assign(userDefined, inputData);
 
+        // Extract title from inputData to place it in meta
+        const { title, meta, ...inputWithoutTitle } = inputData as any;
+
         // Create output blueprint with proper typing
         const outputData: Blueprint = {
-            ...inputData,
-            steps: []
+            ...inputWithoutTitle,
+            steps: [],
+            meta: title && !meta?.title
+                ? { ...meta, title }
+                : meta
         };
-
-        if ('title' in outputData) {
-            delete (outputData as any).title;
-        }
 
         inputData.steps!.forEach((stepItem, index) => {
             // Filter out null, undefined, false values and strings
@@ -205,13 +207,13 @@ class PlaygroundStepLibrary {
             if (Array.isArray(outSteps)) {
                 // Check for blueprint-level properties even on empty arrays
                 if ((outSteps as any).landingPage) {
-                    (outputData as any).landingPage = (outSteps as any).landingPage;
+                    outputData.landingPage = (outSteps as any).landingPage;
                 }
                 if ((outSteps as any).features) {
-                    (outputData as any).features = (outSteps as any).features;
+                    outputData.features = (outSteps as any).features;
                 }
                 if ((outSteps as any).login) {
-                    (outputData as any).login = (outSteps as any).login;
+                    outputData.login = (outSteps as any).login;
                 }
 
                 // Only process steps if there are any
@@ -266,12 +268,19 @@ class PlaygroundStepLibrary {
         outputData.steps = this.deduplicateSteps(outputData.steps!);
 
         // Clean up output data
-        if ((outputData as any).landingPage === '/') {
-            delete (outputData as any).landingPage;
+        if (outputData.landingPage === '/') {
+            delete outputData.landingPage;
         }
 
-        if ((outputData as any).features && Object.keys((outputData as any).features).length === 0) {
-            delete (outputData as any).features;
+        if (outputData.features && Object.keys(outputData.features).length === 0) {
+            delete outputData.features;
+        }
+
+        if (outputData.preferredVersions) {
+            const pv = outputData.preferredVersions;
+            if (pv.wp === 'latest' && pv.php === 'latest') {
+                delete outputData.preferredVersions;
+            }
         }
 
         if (outputData.steps!.length === 0) {

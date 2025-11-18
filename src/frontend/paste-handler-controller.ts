@@ -21,6 +21,7 @@ import {
 	type StepInserterDependencies
 } from './step-inserter';
 import { toastService } from './toast-service';
+import { stepsRegistry } from '../steps-registry';
 
 export interface PasteHandlerControllerDependencies {
 	stepInserterDeps: StepInserterDependencies;
@@ -163,7 +164,7 @@ export class PasteHandlerController {
 	}
 
 	/**
-	 * Handle playground blueprint by decompiling and loading it
+	 * Handle playground blueprint by checking for custom steps first, then decompiling native steps
 	 */
 	private async handlePlaygroundBlueprint(blueprintData: any): Promise<boolean> {
 		if (!blueprintData) {
@@ -171,16 +172,52 @@ export class PasteHandlerController {
 		}
 
 		try {
-			const { BlueprintDecompiler } = await import('../decompiler');
-			const decompiler = new BlueprintDecompiler();
-			const result = decompiler.decompile(blueprintData);
+			const allSteps: any[] = [];
+			const customSteps: any[] = [];
+			const nativeSteps: any[] = [];
+			let unmappedSteps: any[] = [];
+			let warnings: string[] = [];
 
-			if (result.warnings.length > 0) {
-				console.warn('Decompiler warnings:', result.warnings);
+			if (blueprintData.preferredVersions) {
+				const wpVersionEl = document.getElementById('wp-version') as HTMLSelectElement;
+				const phpVersionEl = document.getElementById('php-version') as HTMLSelectElement;
+
+				if (wpVersionEl && blueprintData.preferredVersions.wp) {
+					wpVersionEl.value = blueprintData.preferredVersions.wp;
+				}
+				if (phpVersionEl && blueprintData.preferredVersions.php) {
+					phpVersionEl.value = blueprintData.preferredVersions.php;
+				}
+			}
+
+			const blueprintSteps = blueprintData.steps || [];
+
+			for (const step of blueprintSteps) {
+				if (step.step && step.step in stepsRegistry) {
+					customSteps.push(step);
+				} else {
+					nativeSteps.push(step);
+				}
+			}
+
+			allSteps.push(...customSteps);
+
+			if (nativeSteps.length > 0) {
+				const { BlueprintDecompiler } = await import('../decompiler');
+				const decompiler = new BlueprintDecompiler();
+				const result = decompiler.decompile({...blueprintData, steps: nativeSteps});
+
+				if (result.warnings.length > 0) {
+					warnings = result.warnings;
+					console.warn('Decompiler warnings:', warnings);
+				}
+
+				allSteps.push(...result.steps);
+				unmappedSteps = result.unmappedSteps;
 			}
 
 			const stepConfig = {
-				steps: result.steps.map((step: any) => {
+				steps: allSteps.map((step: any) => {
 					const vars: Record<string, any> = {};
 					for (const key in step) {
 						if (key !== 'step') {
@@ -194,15 +231,15 @@ export class PasteHandlerController {
 				})
 			};
 
-			this.deps.restoreSteps(stepConfig, 'Playground Blueprint');
+			this.deps.restoreSteps(stepConfig, blueprintData.meta?.title);
 
-			if (result.unmappedSteps.length === 0) {
+			if (unmappedSteps.length === 0) {
 				toastService.showWithUndo('Playground blueprint loaded successfully!');
 			} else {
-				const stepTypes = result.unmappedSteps
+				const stepTypes = unmappedSteps
 					.map((s: any) => s.step || 'unknown')
 					.filter((v: string, i: number, a: string[]) => a.indexOf(v) === i);
-				const msg = 'Playground blueprint loaded. Ignored ' + result.unmappedSteps.length + ' step(s): ' + stepTypes.join(', ');
+				const msg = 'Playground blueprint loaded. Ignored ' + unmappedSteps.length + ' step(s): ' + stepTypes.join(', ');
 				toastService.showWithUndo(msg);
 			}
 
