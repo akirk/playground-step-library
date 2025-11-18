@@ -6,10 +6,11 @@ import {
 	detectPhp,
 	isPlaygroundDomain,
 	detectPlaygroundUrl,
-	detectPlaygroundQueryApiUrl
-} from './url-detection';
+	detectPlaygroundQueryApiUrl,
+	detectBlueprintJson
+} from './content-detection';
 
-describe('url-detection', () => {
+describe('content-detection', () => {
 	describe('detectUrlType', () => {
 		it('should detect WordPress.org plugin URLs', () => {
 			expect(detectUrlType('https://wordpress.org/plugins/hello-dolly/')).toBe('plugin');
@@ -289,6 +290,116 @@ describe('url-detection', () => {
 
 		it('should handle complex query strings', () => {
 			expect(detectPlaygroundQueryApiUrl('https://playground.wordpress.net/?plugin=test&theme=astra')).toBe(true);
+		});
+	});
+
+	describe('detectBlueprintJson', () => {
+		it('should detect valid blueprint JSON with steps', () => {
+			const blueprint = { steps: [] };
+			const json = JSON.stringify(blueprint);
+			const result = detectBlueprintJson(json);
+			expect(result).toEqual(blueprint);
+		});
+
+		it('should detect blueprint JSON with multiple properties', () => {
+			const blueprint = {
+				steps: [
+					{ step: 'login', username: 'admin' }
+				],
+				landingPage: '/wp-admin/',
+				preferredVersions: { php: '8.0', wp: '6.4' }
+			};
+			const json = JSON.stringify(blueprint);
+			const result = detectBlueprintJson(json);
+			expect(result).toEqual(blueprint);
+		});
+
+		it('should detect blueprint JSON with only landingPage', () => {
+			const blueprint = { landingPage: '/wp-admin/' };
+			const json = JSON.stringify(blueprint);
+			const result = detectBlueprintJson(json);
+			expect(result).toEqual(blueprint);
+		});
+
+		it('should detect blueprint JSON with only preferredVersions', () => {
+			const blueprint = { preferredVersions: { php: '8.0' } };
+			const json = JSON.stringify(blueprint);
+			const result = detectBlueprintJson(json);
+			expect(result).toEqual(blueprint);
+		});
+
+		it('should detect blueprint JSON with plugins', () => {
+			const blueprint = { plugins: ['hello-dolly'] };
+			const json = JSON.stringify(blueprint);
+			const result = detectBlueprintJson(json);
+			expect(result).toEqual(blueprint);
+		});
+
+		it('should return null for non-blueprint JSON objects', () => {
+			const nonBlueprint = { foo: 'bar', baz: 123 };
+			const json = JSON.stringify(nonBlueprint);
+			expect(detectBlueprintJson(json)).toBe(null);
+		});
+
+		it('should return null for JSON arrays', () => {
+			const arr = [1, 2, 3];
+			const json = JSON.stringify(arr);
+			expect(detectBlueprintJson(json)).toBe(null);
+		});
+
+		it('should return null for invalid JSON', () => {
+			expect(detectBlueprintJson('{ invalid json }')).toBe(null);
+			expect(detectBlueprintJson('{ "steps": }')).toBe(null);
+		});
+
+		it('should return null for non-JSON strings', () => {
+			expect(detectBlueprintJson('not json')).toBe(null);
+			expect(detectBlueprintJson('<?php echo "test"; ?>')).toBe(null);
+			expect(detectBlueprintJson('<div>test</div>')).toBe(null);
+		});
+
+		it('should return null for strings not starting with {', () => {
+			expect(detectBlueprintJson('  "steps": [] }')).toBe(null);
+		});
+
+		it('should return null for strings not ending with }', () => {
+			expect(detectBlueprintJson('{ "steps": []  ')).toBe(null);
+		});
+
+		it('should handle whitespace', () => {
+			const blueprint = { steps: [] };
+			const json = '  ' + JSON.stringify(blueprint) + '  ';
+			const result = detectBlueprintJson(json);
+			expect(result).toEqual(blueprint);
+		});
+
+		it('should return null for empty or null input', () => {
+			expect(detectBlueprintJson('')).toBe(null);
+			expect(detectBlueprintJson(null as any)).toBe(null);
+			expect(detectBlueprintJson(undefined as any)).toBe(null);
+		});
+
+		it('should return null for non-string input', () => {
+			expect(detectBlueprintJson(123 as any)).toBe(null);
+			expect(detectBlueprintJson({} as any)).toBe(null);
+		});
+
+		it('should handle complex nested blueprint structures', () => {
+			const blueprint = {
+				steps: [
+					{
+						step: 'installPlugin',
+						pluginZipFile: { resource: 'url', url: 'test.zip' }
+					}
+				],
+				landingPage: '/wp-admin/',
+				preferredVersions: { php: '8.0', wp: '6.4' },
+				features: { networking: true },
+				siteOptions: { blogname: 'Test Site' }
+			};
+			const json = JSON.stringify(blueprint);
+			const result = detectBlueprintJson(json);
+			expect(result).toEqual(blueprint);
 		});
 	});
 });

@@ -12,6 +12,7 @@ Power user tips for getting the most out of the WordPress Playground Step Librar
   - [Paste Multiple URLs](#paste-multiple-urls) - Batch install multiple plugins
   - [Paste wp-admin URLs](#paste-wp-admin-urls) - Auto-sets landing page
   - [Paste Playground URLs](#paste-playground-urls) - Import and decompile blueprints
+  - [Paste Blueprint JSON](#paste-blueprint-json) - Paste raw blueprint JSON directly
 
 ### ⌨️ Productivity
 - [**Keyboard Shortcuts**](#keyboard-shortcuts) - Speed up your workflow
@@ -154,6 +155,43 @@ The Step Library will:
 **Learn more:**
 - [Query API Documentation](https://wordpress.github.io/wordpress-playground/developers/apis/query-api)
 - [Blueprint Data Format](https://wordpress.github.io/wordpress-playground/blueprints/data-format)
+
+### Paste Blueprint JSON
+
+Paste blueprint JSON directly without needing a URL:
+
+**Example:**
+```json
+{
+  "steps": [
+    { "step": "login" }
+  ],
+  "landingPage": "/wp-admin/",
+  "preferredVersions": {
+    "php": "8.0",
+    "wp": "6.4"
+  }
+}
+```
+
+The Step Library will:
+1. Detect that it's a valid blueprint JSON object
+2. Automatically parse and validate it
+3. Decompile native steps into custom steps
+4. Load the steps into your editor
+
+**Valid blueprint properties:**
+- `steps` - Array of step objects
+- `landingPage` - Where to navigate after loading
+- `preferredVersions` - PHP/WordPress versions
+- `features` - Feature flags (networking, etc.)
+- `siteOptions` - WordPress site options
+- `login` - Auto-login configuration
+- `plugins` - List of plugins to install
+- `constants` - PHP constants to define
+- `phpExtensionBundles` - PHP extensions
+
+**Pro Tip:** This is perfect for copying blueprints from documentation or sharing raw JSON!
 
 ## Keyboard Shortcuts
 

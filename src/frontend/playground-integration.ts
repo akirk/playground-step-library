@@ -3,7 +3,7 @@
  * Handles parsing playground URLs and query API format
  */
 
-import { isPlaygroundDomain } from './url-detection';
+import { isPlaygroundDomain } from './content-detection';
 
 export function parsePlaygroundQueryApi(url: string): any {
 	if (!url || typeof url !== 'string') {

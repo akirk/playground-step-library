@@ -6,7 +6,7 @@
  * - types.ts - TypeScript interfaces
  * - utils.ts - Utility functions
  * - app-state.ts - Shared application state
- * - url-detection.ts - URL and content type detection
+ * - content-detection.ts - URL and content type detection
  * - dom-utils.ts - DOM manipulation utilities
  * - ace-editor.ts - Ace Editor management
  * - my-blueprints.ts - Blueprint history/saved blueprints
@@ -75,7 +75,7 @@ import {
 	isPlaygroundDomain,
 	detectPlaygroundUrl,
 	detectPlaygroundQueryApiUrl
-} from './url-detection';
+} from './content-detection';
 import { showCallbacks, isManualEditMode, setBlueprint, setLinkedTextarea, getBlueprint } from './app-state';
 import {
 	getHistory,
@@ -158,7 +158,7 @@ addEventListener('DOMContentLoaded', function () {
 	const blueprintSteps = document.getElementById('blueprint-steps')!;
 
 	// Note: showCallbacks and isManualEditMode are imported from app-state.ts
-	// URL detection functions are imported from url-detection.ts
+	// URL detection functions are imported from content-detection.ts
 	// DOM utility functions (fixMouseCursor, etc.) are imported from dom-utils.ts
 	// createStep is now imported from step-renderer.ts
 
@@ -601,11 +601,11 @@ addEventListener('DOMContentLoaded', function () {
 		blueprintEventBus.emit('blueprint:updated');
 	});
 
-	// detectUrlType, detectWpAdminUrl are now imported from url-detection.ts
+	// detectUrlType, detectWpAdminUrl are now imported from content-detection.ts
 	// Step insertion functions are now imported from step-inserter.ts
 
 	// detectHtml, detectPhp, isPlaygroundDomain, detectPlaygroundUrl, and detectPlaygroundQueryApiUrl
-	// are now imported from url-detection.ts
+	// are now imported from content-detection.ts
 	// parsePlaygroundQueryApi is now imported from playground-integration.ts
 
 	// Paste handler is now managed by paste-handler-controller.ts
