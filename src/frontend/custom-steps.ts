@@ -64,3 +64,20 @@ export function myStepExists(name: string): boolean {
 	const mySteps = getMySteps();
 	return name in mySteps;
 }
+
+/**
+ * Import personal steps from data object
+ */
+export function importMySteps(stepsData: Record<string, StepDefinition>, merge: boolean = true): number {
+	const currentSteps = merge ? getMySteps() : {};
+	const importedSteps = { ...currentSteps, ...stepsData };
+	localStorage.setItem(MY_STEPS_STORAGE_KEY, JSON.stringify(importedSteps));
+	return Object.keys(stepsData).length;
+}
+
+/**
+ * Clear all personal steps
+ */
+export function clearMySteps(): void {
+	localStorage.removeItem(MY_STEPS_STORAGE_KEY);
+}

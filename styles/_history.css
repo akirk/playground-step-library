@@ -205,6 +205,16 @@
   background: light-dark(var(--primary-100), var(--primary-800));
 }
 
+.history-entry.personal-step-entry {
+  background: var(--mine-step-background);
+  border-color: var(--mine-step-border);
+}
+
+.history-entry.personal-step-entry:hover {
+  background: var(--mine-step-hover-background);
+  border-color: var(--mine-step-border);
+}
+
 .history-entry-content {
   flex: 1;
   cursor: pointer;

@@ -27,6 +27,7 @@ export interface StepDefinition {
 	mine?: boolean;
 	builtin?: boolean;
 	deprecated?: boolean;
+	date?: string;
 }
 
 export interface StepData {

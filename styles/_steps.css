@@ -119,17 +119,44 @@
 
 #step-library .step .options[open] div {
 	display: flex;
-  align-items: center;
-  justify-content: space-between;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--spacing-2);
+	flex-wrap: wrap;
 }
 
 #step-library .step .options div button, #step-library .step .options div a.submit-to-gh {
-	padding: 2px 5px;
-  font-weight: var(--font-weight-medium);
+	padding: var(--spacing-2);
+	font-weight: var(--font-weight-medium);
 	font-size: var(--font-size-xs);
 	cursor: pointer;
 	text-align: center;
-  border-radius: var(--radius-md);
+	border-radius: var(--radius-md);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--spacing-2);
+	transition: all var(--transition-fast) var(--transition-ease);
+	color: var(--text-color);
+	border: 1px solid var(--border-color);
+	background: var(--button-background);
+}
+
+#step-library .step .options div button.delete,
+#step-library .step .options div button.rename {
+	padding: var(--spacing-2);
+	min-width: 32px;
+	min-height: 32px;
+}
+
+#step-library .step .options div button.delete svg,
+#step-library .step .options div button.rename svg {
+	display: block;
+}
+
+#step-library .step .options div button.share,
+#step-library .step .options div a.submit-to-gh {
+	padding: var(--spacing-2) var(--spacing-3);
 }
 
 #step-library .step.mine div.header {
@@ -140,10 +167,17 @@
 
 }
 
-.step .options button:hover {
+#step-library .step .options div button:hover,
+#step-library .step .options div a.submit-to-gh:hover {
 	background: var(--button-hover-background);
 	border-color: var(--primary-400);
 	box-shadow: var(--shadow-sm);
+}
+
+#step-library .step .options div button.delete:hover {
+	background: light-dark(rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.2));
+	border-color: light-dark(rgb(239, 68, 68), rgb(248, 113, 113));
+	color: light-dark(rgb(185, 28, 28), rgb(254, 202, 202));
 }
 
 

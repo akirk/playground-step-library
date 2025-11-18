@@ -214,6 +214,7 @@ addEventListener('DOMContentLoaded', function () {
 		if (!stepData) return;
 
 		const myStep = JSON.parse(stepData);
+		myStep.date = new Date().toISOString();
 		stepLibraryController.insertMyStep(myStepName, myStep);
 		saveMyStepToStorage(myStepName, myStep);
 		saveStepEl.close();
