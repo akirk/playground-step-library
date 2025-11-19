@@ -10,7 +10,7 @@ export let aceEditor: AceEditorInstance = null;
 
 export function getAceTheme(): string {
 	const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-	return isDark ? 'ace/theme/monokai' : 'ace/theme/textmate';
+	return isDark ? 'ace/theme/tomorrow_night_bright' : 'ace/theme/textmate';
 }
 
 export async function loadAceEditor(): Promise<void> {
@@ -32,10 +32,10 @@ export async function loadAceEditor(): Promise<void> {
 			});
 		};
 
-		await loadScript('vendor/ace/ace.js');
-		await loadScript('vendor/ace/theme-textmate.js');
-		await loadScript('vendor/ace/theme-monokai.js');
-		(window as any).ace.config.set('basePath', 'vendor/ace');
+		await loadScript('ace/ace.js');
+		await loadScript('ace/theme-textmate.js');
+		await loadScript('ace/theme-tomorrow_night_bright.js');
+		(window as any).ace.config.set('basePath', 'ace');
 		aceLoaded = true;
 	})();
 
