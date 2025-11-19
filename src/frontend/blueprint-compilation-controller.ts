@@ -3,7 +3,7 @@
  * Manages blueprint compilation, playground URL generation, and preview mode
  */
 
-import PlaygroundStepLibrary, { type CompileOptions } from '../index';
+import PlaygroundStepLibrary, { PlaygroundStepLibraryV2, type CompileOptions } from '../index';
 import { isManualEditMode, getBlueprint } from './app-state';
 import { encodeStringAsBase64 } from './utils';
 import { generateLabel } from './label-generator';
@@ -70,16 +70,27 @@ export class BlueprintCompilationController {
 				};
 			}
 
-			// Use the PlaygroundStepLibrary to compile the blueprint
-			const compiler = new PlaygroundStepLibrary();
-			outputData = compiler.compile(JSON.parse(jsonInput), compileOptions, useV2);
+			// Use the appropriate compiler based on version selection
+			if (useV2) {
+				const compilerV2 = new PlaygroundStepLibraryV2();
+				outputData = compilerV2.compile(JSON.parse(jsonInput), compileOptions);
 
-			// Extract query params from the compiler
-			const extractedQueryParams = compiler.getLastQueryParams();
-			for (const key in extractedQueryParams) {
-				queries.push(key + '=' + encodeURIComponent(extractedQueryParams[key]));
+				// Extract query params from the v2 compiler
+				const extractedQueryParams = compilerV2.getLastQueryParams();
+				for (const key in extractedQueryParams) {
+					queries.push(key + '=' + encodeURIComponent(extractedQueryParams[key]));
+				}
+			} else {
+				const compiler = new PlaygroundStepLibrary();
+				outputData = compiler.compile(JSON.parse(jsonInput), compileOptions);
+
+				// Extract query params from the v1 compiler
+				const extractedQueryParams = compiler.getLastQueryParams();
+				for (const key in extractedQueryParams) {
+					queries.push(key + '=' + encodeURIComponent(extractedQueryParams[key]));
+				}
 			}
-		}
+	}
 
 		// Add metadata indicating compilation by step library (only if there are steps)
 		const excludeMetaEl = document.getElementById('exclude-meta') as HTMLInputElement;

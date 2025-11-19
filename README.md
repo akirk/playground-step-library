@@ -143,7 +143,11 @@ console.log('Available steps:', Object.keys(steps));
 
 ### How It Works
 
-This compiler takes WordPress Playground blueprints that use custom steps (like `setSiteName`, `addPage`, etc.) and transforms them into blueprints that only use native WordPress Playground steps (like `runPHP`, `setSiteOptions`, etc.).
+The library provides two compilers:
+- **V1 Compiler** (`PlaygroundStepLibrary`) - Outputs imperative blueprints with `steps` array
+- **V2 Compiler** (`PlaygroundStepLibraryV2`) - Outputs declarative blueprints with schema properties
+
+Both compilers transform blueprints with custom steps (like `setSiteName`, `addPage`) into native WordPress Playground steps.
 
 #### Input Example
 
@@ -165,7 +169,7 @@ This compiler takes WordPress Playground blueprints that use custom steps (like 
 }
 ```
 
-#### Output Example
+#### V1 Output Example (Imperative)
 
 ```json
 {
@@ -185,9 +189,33 @@ This compiler takes WordPress Playground blueprints that use custom steps (like 
 }
 ```
 
+#### V2 Output Example (Declarative)
+
+```json
+{
+  "siteOptions": {
+    "blogname": "My Demo Site",
+    "blogdescription": "A WordPress Playground demo"
+  },
+  "content": [
+    {
+      "type": "posts",
+      "source": {
+        "post_title": "Welcome Page",
+        "post_content": "<p>Welcome to my WordPress site!</p>",
+        "post_type": "page",
+        "post_status": "publish"
+      }
+    }
+  ]
+}
+```
+
 ### API Reference
 
-#### `PlaygroundStepLibrary`
+#### `PlaygroundStepLibrary` (V1 Compiler)
+
+Compiles to imperative Blueprint v1 format.
 
 ##### Constructor
 
@@ -200,25 +228,48 @@ No parameters required - all steps are statically imported.
 ##### Methods
 
 ###### `compile(blueprint, options?)`
-Compiles a blueprint with custom steps into a blueprint with native steps.
+Compiles a blueprint with custom steps into a v1 blueprint with native steps.
 
 - `blueprint` (Object|string): Blueprint object or JSON string
 - `options` (Object, optional): Compilation options
   - `options.landingPage` (string): Default landing page path
   - `options.features` (Object): Feature configuration
-- Returns: Compiled blueprint object
+- Returns: Compiled v1 blueprint object with `steps` array
 - Throws: Error if compilation fails
 
 ###### `validateBlueprint(blueprint)`
 Validates a blueprint structure and required variables.
 
-- `blueprint` (Object|string): Blueprint object or JSON string  
+- `blueprint` (Object|string): Blueprint object or JSON string
 - Returns: `{valid: boolean, error?: string}`
 
 ###### `getAvailableSteps()`
 Returns information about all available custom steps.
 
 - Returns: Object with step names as keys and step info as values
+
+#### `PlaygroundStepLibraryV2` (V2 Compiler)
+
+Compiles to declarative Blueprint v2 format.
+
+##### Constructor
+
+```javascript
+import { PlaygroundStepLibraryV2 } from 'playground-step-library';
+const compiler = new PlaygroundStepLibraryV2();
+```
+
+##### Methods
+
+###### `compile(blueprint, options?)`
+Compiles a blueprint with custom steps into a v2 blueprint with declarative schema.
+
+- `blueprint` (Object|string): Blueprint object or JSON string
+- `options` (Object, optional): Same as v1 compiler
+- Returns: Compiled v2 blueprint with declarative properties (`content`, `users`, `plugins`, etc.)
+- Throws: Error if compilation fails
+
+See [Architecture Documentation](docs/architecture.md) for details on how steps implement both v1 and v2 compilation.
 ## Custom Steps
 
 This library provides **50** total steps (8 built-in enhanced steps + 42 custom steps):

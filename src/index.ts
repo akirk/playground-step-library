@@ -7,7 +7,6 @@ import type {
     StepResult
 } from '../steps/types.js';
 import type { Blueprint, StepDefinition } from '@wp-playground/blueprints';
-import { transpileToV2, shouldTranspileToV2 } from './v2-transpiler.js';
 
 interface CustomStepDefinition {
     (step: BlueprintStep, inputData?: any): any[] | StepResult;
@@ -84,21 +83,14 @@ class PlaygroundStepLibrary {
     }
 
     /**
-     * Compile a blueprint and optionally transpile to v2 format
+     * Compile a blueprint to v1 format
      * @param blueprint The blueprint to compile
      * @param options Compilation options
-     * @param toV2 If true, transpile the result to Blueprint v2 format
-     * @returns Compiled blueprint (v1 or v2 depending on toV2 parameter)
+     * @returns Compiled v1 blueprint
      */
-    compile(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}, toV2: boolean = false): Blueprint | any {
+    compile(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}): Blueprint {
         this.lastQueryParams = {};
-        const compiledV1 = this.compileToV1(blueprint, options);
-
-        if (toV2) {
-            return transpileToV2(compiledV1);
-        }
-
-        return compiledV1;
+        return this.compileToV1(blueprint, options);
     }
 
     /**
