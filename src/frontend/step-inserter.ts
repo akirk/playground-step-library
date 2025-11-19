@@ -6,7 +6,7 @@
 import { StepDefinition, ShowCallbacks } from './types';
 import { createStep } from './step-renderer';
 import { fixMouseCursor } from './dom-utils';
-import { detectUrlType } from './content-detection';
+import { detectUrlType, normalizeWordPressUrl } from './content-detection';
 import { shouldUseMuPlugin } from './playground-integration';
 import { blueprintEventBus } from './blueprint-event-bus';
 
@@ -38,6 +38,8 @@ export function addStepFromUrl(
 		return false;
 	}
 
+	const normalizedUrl = normalizeWordPressUrl(url, urlType);
+
 	const stepType = urlType === 'theme' ? 'installTheme' : 'installPlugin';
 	const stepData = deps.customSteps[stepType];
 
@@ -53,7 +55,7 @@ export function addStepFromUrl(
 
 	const urlInput = stepElement.querySelector('input[name="url"]');
 	if (urlInput instanceof HTMLInputElement) {
-		urlInput.value = url;
+		urlInput.value = normalizedUrl;
 	}
 
 	blueprintEventBus.emit('blueprint:updated');

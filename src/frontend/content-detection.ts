@@ -290,3 +290,34 @@ export function detectStepJson(text: string): any {
 		return null;
 	}
 }
+
+/**
+ * Normalizes WordPress plugin/theme download URLs to their canonical wordpress.org URLs
+ * Converts downloads.wordpress.org URLs to wordpress.org/plugins or wordpress.org/themes URLs
+ * @param url - The URL to normalize
+ * @param urlType - The type of URL ('plugin' or 'theme')
+ * @returns The normalized URL, or the original URL if no normalization is needed
+ */
+export function normalizeWordPressUrl(url: string, urlType: string | null): string {
+	if (!url || !urlType) {
+		return url;
+	}
+
+	if (urlType === 'plugin') {
+		const pluginMatch = url.match(/^https?:\/\/downloads\.wordpress\.org\/plugin\/([^.]+)\..*\.zip$/);
+		if (pluginMatch) {
+			const slug = pluginMatch[1];
+			return `https://wordpress.org/plugins/${slug}/`;
+		}
+	}
+
+	if (urlType === 'theme') {
+		const themeMatch = url.match(/^https?:\/\/downloads\.wordpress\.org\/theme\/([^.]+)\..*\.zip$/);
+		if (themeMatch) {
+			const slug = themeMatch[1];
+			return `https://wordpress.org/themes/${slug}/`;
+		}
+	}
+
+	return url;
+}

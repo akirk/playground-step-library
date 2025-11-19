@@ -7,7 +7,8 @@ import {
 	isPlaygroundDomain,
 	detectPlaygroundUrl,
 	detectPlaygroundQueryApiUrl,
-	detectBlueprintJson
+	detectBlueprintJson,
+	normalizeWordPressUrl
 } from './content-detection';
 
 describe('content-detection', () => {
@@ -400,6 +401,62 @@ describe('content-detection', () => {
 			const json = JSON.stringify(blueprint);
 			const result = detectBlueprintJson(json);
 			expect(result).toEqual(blueprint);
+		});
+	});
+
+	describe('normalizeWordPressUrl', () => {
+		it('should normalize downloads.wordpress.org plugin URL to wordpress.org', () => {
+			const url = 'https://downloads.wordpress.org/plugin/hello-dolly.1.7.2.zip';
+			const normalized = normalizeWordPressUrl(url, 'plugin');
+			expect(normalized).toBe('https://wordpress.org/plugins/hello-dolly/');
+		});
+
+		it('should normalize downloads.wordpress.org plugin URL with latest-stable', () => {
+			const url = 'https://downloads.wordpress.org/plugin/nosuchplugin.latest-stable.zip';
+			const normalized = normalizeWordPressUrl(url, 'plugin');
+			expect(normalized).toBe('https://wordpress.org/plugins/nosuchplugin/');
+		});
+
+		it('should normalize downloads.wordpress.org theme URL to wordpress.org', () => {
+			const url = 'https://downloads.wordpress.org/theme/twentytwentyfour.1.0.zip';
+			const normalized = normalizeWordPressUrl(url, 'theme');
+			expect(normalized).toBe('https://wordpress.org/themes/twentytwentyfour/');
+		});
+
+		it('should normalize http downloads.wordpress.org URLs', () => {
+			const url = 'http://downloads.wordpress.org/plugin/woocommerce.8.5.2.zip';
+			const normalized = normalizeWordPressUrl(url, 'plugin');
+			expect(normalized).toBe('https://wordpress.org/plugins/woocommerce/');
+		});
+
+		it('should not modify non-downloads.wordpress.org URLs', () => {
+			const url = 'https://wordpress.org/plugins/hello-dolly/';
+			const normalized = normalizeWordPressUrl(url, 'plugin');
+			expect(normalized).toBe('https://wordpress.org/plugins/hello-dolly/');
+		});
+
+		it('should not modify GitHub URLs', () => {
+			const url = 'https://github.com/user/repo';
+			const normalized = normalizeWordPressUrl(url, 'plugin');
+			expect(normalized).toBe('https://github.com/user/repo');
+		});
+
+		it('should not modify other ZIP URLs', () => {
+			const url = 'https://example.com/my-plugin.zip';
+			const normalized = normalizeWordPressUrl(url, 'plugin');
+			expect(normalized).toBe('https://example.com/my-plugin.zip');
+		});
+
+		it('should return original URL if urlType is null', () => {
+			const url = 'https://downloads.wordpress.org/plugin/test.zip';
+			const normalized = normalizeWordPressUrl(url, null);
+			expect(normalized).toBe('https://downloads.wordpress.org/plugin/test.zip');
+		});
+
+		it('should return original URL if url is empty', () => {
+			const url = '';
+			const normalized = normalizeWordPressUrl(url, 'plugin');
+			expect(normalized).toBe('');
 		});
 	});
 });
