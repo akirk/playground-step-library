@@ -1,8 +1,39 @@
 import { defineConfig } from 'vite'
 import { exec } from 'child_process'
 import { promisify } from 'util'
+import { copyFileSync, mkdirSync, readdirSync } from 'fs'
+import { join } from 'path'
 
 const execAsync = promisify(exec)
+
+function copyDirectoryRecursive(source: string, destination: string) {
+  mkdirSync(destination, { recursive: true })
+  const entries = readdirSync(source, { withFileTypes: true })
+
+  for (const entry of entries) {
+    const srcPath = join(source, entry.name)
+    const destPath = join(destination, entry.name)
+
+    if (entry.isDirectory()) {
+      copyDirectoryRecursive(srcPath, destPath)
+    } else {
+      copyFileSync(srcPath, destPath)
+    }
+  }
+}
+
+function copyVendorPlugin() {
+  return {
+    name: 'copy-vendor',
+    closeBundle() {
+      const vendorSrc = join(process.cwd(), 'vendor')
+      const vendorDest = join(process.cwd(), 'dist', 'vendor')
+      console.log('Copying vendor directory to dist...')
+      copyDirectoryRecursive(vendorSrc, vendorDest)
+      console.log('Vendor directory copied successfully')
+    }
+  }
+}
 
 function docsGeneratorPlugin() {
   let timeout = null
@@ -66,5 +97,5 @@ export default defineConfig({
       }
     }
   },
-  plugins: [docsGeneratorPlugin()]
+  plugins: [docsGeneratorPlugin(), copyVendorPlugin()]
 })
