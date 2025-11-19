@@ -44,6 +44,39 @@ export class EventHandlersController {
 		const target = event.target as HTMLElement;
 		let dialog: HTMLDialogElement | null;
 
+		// Handle backdrop clicks on code editor dialog
+		if (target.id === 'code-editor' && target.tagName === 'DIALOG') {
+			const rect = (target as HTMLDialogElement).getBoundingClientRect();
+			if (
+				event.clientX < rect.left ||
+				event.clientX > rect.right ||
+				event.clientY < rect.top ||
+				event.clientY > rect.bottom
+			) {
+				if (this.deps.aceEditorRef.current) {
+					this.deps.aceEditorRef.current.destroy();
+					this.deps.aceEditorRef.current = null;
+				}
+				(target as HTMLDialogElement).close();
+				return;
+			}
+		}
+
+		// Handle backdrop clicks on view source dialog
+		if (target.id === 'view-source' && target.tagName === 'DIALOG') {
+			const rect = (target as HTMLDialogElement).getBoundingClientRect();
+			if (
+				event.clientX < rect.left ||
+				event.clientX > rect.right ||
+				event.clientY < rect.top ||
+				event.clientY > rect.bottom
+			) {
+				document.body.classList.remove('dialog-open');
+				(target as HTMLDialogElement).close();
+				return;
+			}
+		}
+
 		// Handle clicks within blueprint steps
 		if (target.closest('#blueprint-steps')) {
 			if (target.tagName === 'BUTTON') {
@@ -108,15 +141,15 @@ export class EventHandlersController {
 		// Handle My Steps actions (delete, rename, share)
 		const stepElement = target.closest('.step') as HTMLElement;
 		if (target.closest('#step-library') && stepElement?.classList.contains('mine')) {
-			if (target.classList.contains('delete')) {
+			if (target.closest('.delete')) {
 				this.handleDeleteMyStep(stepElement);
 				return;
 			}
-			if (target.classList.contains('rename')) {
+			if (target.closest('.rename')) {
 				this.handleRenameMyStep(stepElement, target);
 				return;
 			}
-			if (target.classList.contains('share')) {
+			if (target.closest('.share')) {
 				this.handleShareMyStep(stepElement, target);
 				return;
 			}

@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import { exec } from 'child_process'
 import { promisify } from 'util'
+import { copyFileSync, mkdirSync, readdirSync, existsSync } from 'fs'
+import { join } from 'path'
 
 const execAsync = promisify(exec)
 
@@ -49,6 +51,29 @@ function docsGeneratorPlugin() {
   }
 }
 
+function copyStepsPlugin() {
+  return {
+    name: 'copy-steps',
+    closeBundle() {
+      const stepsDir = 'steps'
+      const distStepsDir = join('dist', 'steps')
+
+      if (!existsSync(distStepsDir)) {
+        mkdirSync(distStepsDir, { recursive: true })
+      }
+
+      const files = readdirSync(stepsDir)
+      files.forEach(file => {
+        if (file.endsWith('.ts')) {
+          copyFileSync(join(stepsDir, file), join(distStepsDir, file))
+        }
+      })
+
+      console.log(`\x1b[36m[vite]\x1b[0m Copied ${files.filter(f => f.endsWith('.ts')).length} TypeScript files from steps/ to dist/steps/`)
+    }
+  }
+}
+
 export default defineConfig({
   root: '.',
   base: '/playground-step-library/',
@@ -66,5 +91,5 @@ export default defineConfig({
       }
     }
   },
-  plugins: [docsGeneratorPlugin()]
+  plugins: [docsGeneratorPlugin(), copyStepsPlugin()]
 })
