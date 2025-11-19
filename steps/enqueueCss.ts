@@ -1,6 +1,8 @@
-import type { StepFunction, EnqueueCssStep } from './types.js';
+import type { StepFunction, EnqueueCssStep , StepResult, V2SchemaFragments } from './types.js';
 
-export const enqueueCss: StepFunction<EnqueueCssStep> = (step: EnqueueCssStep) => {
+export const enqueueCss: StepFunction<EnqueueCssStep> = (step: EnqueueCssStep): StepResult => {
+	return {
+		toV1() {
 	if (!step.css || !step.css.trim()) {
 		return [];
 	}
@@ -57,6 +59,18 @@ export const enqueueCss: StepFunction<EnqueueCssStep> = (step: EnqueueCssStep) =
 			"data": phpCode
 		}
 	];
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 enqueueCss.description = "Enqueue custom CSS on frontend and/or admin.";

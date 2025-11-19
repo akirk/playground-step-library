@@ -8,7 +8,7 @@ describe('installTheme', () => {
             url: 'pendant'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -24,7 +24,7 @@ describe('installTheme', () => {
             url: 'https://wordpress.org/themes/twentytwentyfour'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         expect(result[0].themeData.slug).toBe('twentytwentyfour');
         expect(result[0].themeData.resource).toBe('wordpress.org/themes');
@@ -36,7 +36,7 @@ describe('installTheme', () => {
             url: 'https://github.com/richtabor/kanso'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         // Since this calls githubTheme, we just verify it's handled
         expect(Array.isArray(result)).toBe(true);
@@ -48,7 +48,7 @@ describe('installTheme', () => {
             url: 'ndiego/nautilus'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
     });
@@ -59,7 +59,7 @@ describe('installTheme', () => {
             url: 'https://github.com/Automattic/themes/tree/trunk/aether'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
     });
@@ -70,7 +70,7 @@ describe('installTheme', () => {
             url: 'https://external-site.com/theme.zip'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         // Note: Same regex issue as installPlugin - extracts 'https:' as slug
         // but since theme.match(/^https?:/) is true, it gets treated as external URL
@@ -84,7 +84,7 @@ describe('installTheme', () => {
             url: 'http://external-site.com/theme.zip'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         // Note: Same regex bug - extracts 'http:' as slug
         expect(result[0].themeData.resource).toBe('url');
@@ -97,7 +97,7 @@ describe('installTheme', () => {
             url: ''
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         expect(result).toEqual([]);
     });
@@ -108,7 +108,7 @@ describe('installTheme', () => {
             url: 'https://wordpress.org/themes/link-folio/'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         expect(result[0].themeData.slug).toBe('link-folio');
     });
@@ -119,7 +119,7 @@ describe('installTheme', () => {
             url: 'simple-theme-name'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         expect(result[0].themeData.slug).toBe('simple-theme-name');
         expect(result[0].themeData.resource).toBe('wordpress.org/themes');
@@ -150,7 +150,7 @@ describe('installTheme', () => {
             url: 'twentytwentyfour'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         // Validate the structure matches WordPress Playground step format
         expect(result[0]).toHaveProperty('step');

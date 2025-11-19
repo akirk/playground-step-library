@@ -9,7 +9,7 @@ describe('setLandingPage', () => {
             landingPage: '/wp-admin/post-new.php'
         };
 
-        const result = setLandingPage(step);
+        const result = setLandingPage(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(0);
@@ -22,7 +22,7 @@ describe('setLandingPage', () => {
             landingPage: '/'
         };
 
-        const result = setLandingPage(step);
+        const result = setLandingPage(step).toV1();
 
         expect((result as any).landingPage).toBe('/');
     });
@@ -33,7 +33,7 @@ describe('setLandingPage', () => {
             landingPage: '/wp-admin/'
         };
 
-        const result = setLandingPage(step);
+        const result = setLandingPage(step).toV1();
 
         expect((result as any).landingPage).toBe('/wp-admin/');
     });
@@ -44,7 +44,7 @@ describe('setLandingPage', () => {
             landingPage: '/wp-admin/post-new.php?post_type=page'
         };
 
-        const result = setLandingPage(step);
+        const result = setLandingPage(step).toV1();
 
         expect((result as any).landingPage).toBe('/wp-admin/post-new.php?post_type=page');
     });
@@ -80,7 +80,7 @@ describe('setLandingPage', () => {
                 landingPage: path
             };
 
-            const result = setLandingPage(step);
+            const result = setLandingPage(step).toV1();
             expect((result as any).landingPage).toBe(path);
         });
     });

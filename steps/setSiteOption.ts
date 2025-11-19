@@ -1,7 +1,9 @@
-import type { StepFunction, SetSiteOptionStep} from './types.js';
+import type { StepFunction, SetSiteOptionStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const setSiteOption: StepFunction<SetSiteOptionStep> = (step: SetSiteOptionStep) => {
+export const setSiteOption: StepFunction<SetSiteOptionStep> = (step: SetSiteOptionStep): StepResult => {
+	return {
+		toV1() {
 	if ( ! step.name ) {
 		return [];
 	}
@@ -20,6 +22,18 @@ export const setSiteOption: StepFunction<SetSiteOptionStep> = (step: SetSiteOpti
 		optionStep.options[step.name] = step.value;
 	}
 	return [ optionStep ];
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 setSiteOption.description = "Set a site option.";

@@ -1,6 +1,5 @@
 import type { StepFunction, AddProductStep, StepResult, V2SchemaFragments } from './types.js';
 import { installPlugin } from './installPlugin.js';
-import { toV1Steps } from './types.js';
 
 
 export const addProduct: StepFunction<AddProductStep> = (step: AddProductStep, blueprint: any): StepResult => {
@@ -83,7 +82,7 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 				}
 			}
 			if (!hasWoocommercePlugin) {
-				steps = toV1Steps(installPlugin({ step: 'installPlugin', url: 'woocommerce', permalink: true })).concat(steps);
+				steps = installPlugin({ step: 'installPlugin', url: 'woocommerce', permalink: true }).toV1().concat(steps);
 			}
 
 			steps.push({

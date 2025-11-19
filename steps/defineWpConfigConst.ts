@@ -1,7 +1,9 @@
-import type { StepFunction, DefineWpConfigConstStep} from './types.js';
+import type { StepFunction, DefineWpConfigConstStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const defineWpConfigConst: StepFunction<DefineWpConfigConstStep> = (step: DefineWpConfigConstStep) => {
+export const defineWpConfigConst: StepFunction<DefineWpConfigConstStep> = (step: DefineWpConfigConstStep): StepResult => {
+	return {
+		toV1() {
 	if ( ! step.name ) {
 		return [];
 	}
@@ -28,6 +30,18 @@ export const defineWpConfigConst: StepFunction<DefineWpConfigConstStep> = (step:
 		constStep.consts[step.name] = step.value;
 	}
 	return [ constStep ];
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 defineWpConfigConst.description = "Define a wp-config PHP constant.";

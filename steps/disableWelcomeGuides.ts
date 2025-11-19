@@ -1,6 +1,8 @@
-import type { StepFunction, DisableWelcomeGuidesStep } from './types.js';
+import type { StepFunction, DisableWelcomeGuidesStep , StepResult, V2SchemaFragments } from './types.js';
 
-export const disableWelcomeGuides: StepFunction<DisableWelcomeGuidesStep> = (step: DisableWelcomeGuidesStep) => {
+export const disableWelcomeGuides: StepFunction<DisableWelcomeGuidesStep> = (step: DisableWelcomeGuidesStep): StepResult => {
+	return {
+		toV1() {
 	return [
 		{
 			"step": "mkdir",
@@ -23,6 +25,18 @@ add_action( 'enqueue_block_editor_assets', 'my_disable_welcome_guides', 20 );
 `
 		}
 	];
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 disableWelcomeGuides.description = "Disable the welcome guides in the site editor.";

@@ -1,8 +1,10 @@
-import type { StepFunction, ImportFriendFeedsStep} from './types.js';
+import type { StepFunction, ImportFriendFeedsStep, StepResult, V2SchemaFragments } from './types.js';
 import { installPlugin } from './installPlugin.js';
 
 
-export const importFriendFeeds: StepFunction<ImportFriendFeedsStep> = (step: ImportFriendFeedsStep, blueprint: any) => {
+export const importFriendFeeds: StepFunction<ImportFriendFeedsStep> = (step: ImportFriendFeedsStep, blueprint: any): StepResult => {
+	return {
+		toV1() {
 	let opml = step.opml || '';
 	let phpCode = '';
 
@@ -94,10 +96,22 @@ if ( class_exists('Friends\\Import') ) {
 		}
 	}
 	if ( ! hasFriendsPlugin ) {
-		steps = installPlugin( { step: 'installPlugin', url: 'friends', permalink: true } ).concat( steps );
+		steps = installPlugin( { step: 'installPlugin', url: 'friends', permalink: true } ).toV1().concat( steps );
 	}
 	(steps as any).landingPage = '/friends/?refresh&welcome';
 	return steps;
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 importFriendFeeds.description = "Add subscriptions to the Friends plugin.";

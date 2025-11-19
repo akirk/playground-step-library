@@ -1,7 +1,9 @@
-import type { StepFunction, DoActionStep} from './types.js';
+import type { StepFunction, DoActionStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const doAction: StepFunction<DoActionStep> = (step: DoActionStep) => {
+export const doAction: StepFunction<DoActionStep> = (step: DoActionStep): StepResult => {
+	return {
+		toV1() {
 	if ( !step?.action ) {
 		return [];
 	}
@@ -21,6 +23,18 @@ export const doAction: StepFunction<DoActionStep> = (step: DoActionStep) => {
 			}
 		}
 	];
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 doAction.description = "Execute a custom action.";

@@ -1,7 +1,9 @@
-import type { StepFunction, ChangeAdminColorSchemeStep} from './types.js';
+import type { StepFunction, ChangeAdminColorSchemeStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const changeAdminColorScheme: StepFunction<ChangeAdminColorSchemeStep> = (step: ChangeAdminColorSchemeStep) => {
+export const changeAdminColorScheme: StepFunction<ChangeAdminColorSchemeStep> = (step: ChangeAdminColorSchemeStep): StepResult => {
+	return {
+		toV1() {
 	return [
 		{
 			"step": "updateUserMeta",
@@ -11,6 +13,18 @@ export const changeAdminColorScheme: StepFunction<ChangeAdminColorSchemeStep> = 
 			"userId": 1
 		}
 	];
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 changeAdminColorScheme.description = "Useful to combine with a login step.";

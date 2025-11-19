@@ -1,7 +1,9 @@
-import type { StepFunction, AddFilterStep} from './types.js';
+import type { StepFunction, AddFilterStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const addFilter: StepFunction<AddFilterStep> = (step: AddFilterStep) => {
+export const addFilter: StepFunction<AddFilterStep> = (step: AddFilterStep): StepResult => {
+	return {
+		toV1() {
 	let code = "<?php add_filter( '" + step.filter + "', ";
 	// Automatically put code in a function if it is not already.
 	const codeText = step.code || '';
@@ -48,6 +50,18 @@ export const addFilter: StepFunction<AddFilterStep> = (step: AddFilterStep) => {
 			}
 		}
 	];
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 addFilter.description = "Easily add a filtered value.";

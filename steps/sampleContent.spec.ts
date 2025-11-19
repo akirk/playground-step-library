@@ -3,7 +3,7 @@ import type { SampleContentStep } from './types.js';
 
 describe('sampleContent', () => {
     it('should create 5 sample content posts', () => {
-        const result = sampleContent();
+        const result = sampleContent().toV1();
         
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(5);
@@ -20,7 +20,7 @@ describe('sampleContent', () => {
     });
 
     it('should create posts with correct titles', () => {
-        const result = sampleContent();
+        const result = sampleContent().toV1();
         
         expect(result[0].code).toContain('Hello Sample Content');
         expect(result[1].code).toContain('Second Sample Content');
@@ -30,7 +30,7 @@ describe('sampleContent', () => {
     });
 
     it('should include WordPress require statement in all steps', () => {
-        const result = sampleContent();
+        const result = sampleContent().toV1();
         
         result.forEach(step => {
             expect(step.code).toContain('require_once \'/wordpress/wp-load.php\'');
@@ -38,7 +38,7 @@ describe('sampleContent', () => {
     });
 
     it('should set all posts to publish status', () => {
-        const result = sampleContent();
+        const result = sampleContent().toV1();
         
         result.forEach(step => {
             expect(step.code).toContain('\'post_status\' => \'publish\'');
@@ -46,7 +46,7 @@ describe('sampleContent', () => {
     });
 
     it('should use proper PHP syntax', () => {
-        const result = sampleContent();
+        const result = sampleContent().toV1();
         
         result.forEach(step => {
             expect(step.code).toMatch(/^<\?php/);
@@ -56,7 +56,7 @@ describe('sampleContent', () => {
     });
 
     it('should have unique titles for each post', () => {
-        const result = sampleContent();
+        const result = sampleContent().toV1();
         
         const titles = result.map(step => {
             const match = step.code.match(/'post_title' => '([^']+)'/);
@@ -72,7 +72,7 @@ describe('sampleContent', () => {
         // Function should work without any parameters
         expect(() => sampleContent()).not.toThrow();
         
-        const result = sampleContent();
+        const result = sampleContent().toV1();
         expect(result).toHaveLength(5);
     });
 
@@ -82,7 +82,7 @@ describe('sampleContent', () => {
     });
 
     it('should return valid WordPress Playground steps', () => {
-        const result = sampleContent();
+        const result = sampleContent().toV1();
         
         result.forEach(step => {
             // Validate the structure matches WordPress Playground step format
@@ -95,7 +95,7 @@ describe('sampleContent', () => {
     });
 
     it('should create posts with proper WordPress function calls', () => {
-        const result = sampleContent();
+        const result = sampleContent().toV1();
         
         result.forEach(step => {
             expect(step.code).toContain('wp_insert_post');
@@ -106,7 +106,7 @@ describe('sampleContent', () => {
     });
 
     it('should have consistent PHP code structure', () => {
-        const result = sampleContent();
+        const result = sampleContent().toV1();
         
         result.forEach(step => {
             // Each step should follow the same pattern

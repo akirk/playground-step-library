@@ -1,6 +1,8 @@
-import type { StepFunction, InstallPhpLiteAdminStep } from './types.js';
+import type { StepFunction, InstallPhpLiteAdminStep , StepResult, V2SchemaFragments } from './types.js';
 
-export const installPhpLiteAdmin: StepFunction<InstallPhpLiteAdminStep> = (step: InstallPhpLiteAdminStep) => {
+export const installPhpLiteAdmin: StepFunction<InstallPhpLiteAdminStep> = (step: InstallPhpLiteAdminStep): StepResult => {
+	return {
+		toV1() {
 	const steps: any = [
 		{
 			"step": "mkdir",
@@ -44,6 +46,18 @@ $directory = false;
 		}
 	];
 	return steps;
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 installPhpLiteAdmin.description = "Provide phpLiteAdmin. Password: admin";

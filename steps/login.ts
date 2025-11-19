@@ -1,7 +1,9 @@
-import type { StepFunction, LoginStep } from './types.js';
+import type { StepFunction, LoginStep , StepResult, V2SchemaFragments } from './types.js';
 
 
-export const login: StepFunction<LoginStep> = (step: LoginStep) => {
+export const login: StepFunction<LoginStep> = (step: LoginStep): StepResult => {
+	return {
+		toV1() {
 	const steps = [
 		{
 			"step": "login",
@@ -13,6 +15,18 @@ export const login: StepFunction<LoginStep> = (step: LoginStep) => {
 		(steps as any).landingPage = '/wp-admin/';
 	}
 	return steps;
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 login.description = "Login to the site.";

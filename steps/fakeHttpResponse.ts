@@ -1,7 +1,9 @@
-import type { StepFunction, FakeHttpResponseStep} from './types.js';
+import type { StepFunction, FakeHttpResponseStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const fakeHttpResponse: StepFunction<FakeHttpResponseStep> = (step: FakeHttpResponseStep, blueprint?: any) => {
+export const fakeHttpResponse: StepFunction<FakeHttpResponseStep> = (step: FakeHttpResponseStep, blueprint?: any): StepResult => {
+	return {
+		toV1() {
 	const steps = [];
 
 	if ( step.url ) {
@@ -58,6 +60,18 @@ add_filter(
 		} );
 	}
 	return steps;
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 fakeHttpResponse.description = "Fake a wp_remote_request() response.";

@@ -1,6 +1,8 @@
-import type { StepFunction, EnqueueJsStep } from './types.js';
+import type { StepFunction, EnqueueJsStep , StepResult, V2SchemaFragments } from './types.js';
 
-export const enqueueJs: StepFunction<EnqueueJsStep> = (step: EnqueueJsStep) => {
+export const enqueueJs: StepFunction<EnqueueJsStep> = (step: EnqueueJsStep): StepResult => {
+	return {
+		toV1() {
 	if (!step.js || !step.js.trim()) {
 		return [];
 	}
@@ -57,6 +59,18 @@ export const enqueueJs: StepFunction<EnqueueJsStep> = (step: EnqueueJsStep) => {
 			"data": phpCode
 		}
 	];
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 enqueueJs.description = "Enqueue custom JavaScript on frontend and/or admin.";

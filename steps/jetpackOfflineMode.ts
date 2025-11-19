@@ -1,8 +1,10 @@
 import { installPlugin } from './installPlugin.js';
-import type { StepFunction, JetpackOfflineModeStep} from './types.js';
+import type { StepFunction, JetpackOfflineModeStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const jetpackOfflineMode: StepFunction<JetpackOfflineModeStep> = (step: JetpackOfflineModeStep, blueprint?: any) => {
+export const jetpackOfflineMode: StepFunction<JetpackOfflineModeStep> = (step: JetpackOfflineModeStep, blueprint?: any): StepResult => {
+	return {
+		toV1() {
 	let jetpack_active_modules = [];
 	if ( step.blocks ) {
 		jetpack_active_modules.push( 'blocks' );
@@ -36,10 +38,22 @@ export const jetpackOfflineMode: StepFunction<JetpackOfflineModeStep> = (step: J
 		}
 	}
 	if ( ! hasJetpackPlugin ) {
-		const installJetpackSteps = installPlugin({ step: 'installPlugin', url: 'jetpack'});
+		const installJetpackSteps = installPlugin({ step: 'installPlugin', url: 'jetpack'}).toV1();
 		steps = installJetpackSteps.concat( steps );
 	}
 	return steps;
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 jetpackOfflineMode.description = "Start Jetpack in Offline mode.";

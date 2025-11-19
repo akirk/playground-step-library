@@ -3,7 +3,7 @@ import { dontLogin } from './dontLogin.js';
 
 describe('dontLogin', () => {
 	it('should set login to false', () => {
-		const result = dontLogin({ step: 'dontLogin' }) as any;
+		const result = dontLogin({ step: 'dontLogin' }).toV1() as any;
 		expect(result.login).toBe(false);
 		expect(result.length).toBe(0);
 	});

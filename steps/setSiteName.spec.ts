@@ -9,7 +9,7 @@ describe('setSiteName', () => {
             tagline: 'Just another WordPress site'
         };
         
-        const result = setSiteName(step);
+        const result = setSiteName(step).toV1();
         
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -26,7 +26,7 @@ describe('setSiteName', () => {
             tagline: 'Testing playground'
         };
         
-        const result = setSiteName(step);
+        const result = setSiteName(step).toV1();
         
         // The step should use template variables that will be substituted later
         expect(result[0].options.blogname).toBe('${sitename}');
@@ -40,7 +40,7 @@ describe('setSiteName', () => {
             tagline: ''
         };
         
-        const result = setSiteName(step);
+        const result = setSiteName(step).toV1();
         
         expect(result[0].step).toBe('setSiteOptions');
         expect(result[0].options.blogname).toBe('${sitename}');
@@ -54,7 +54,7 @@ describe('setSiteName', () => {
             tagline: 'A tagline with <HTML> & symbols'
         };
         
-        const result = setSiteName(step);
+        const result = setSiteName(step).toV1();
         
         // Template variables should remain unchanged
         expect(result[0].options.blogname).toBe('${sitename}');
@@ -86,7 +86,7 @@ describe('setSiteName', () => {
             tagline: 'My awesome site'
         };
         
-        const result = setSiteName(step);
+        const result = setSiteName(step).toV1();
         
         // Validate the structure matches WordPress Playground step format
         expect(result[0]).toHaveProperty('step');

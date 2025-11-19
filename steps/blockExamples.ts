@@ -1,6 +1,8 @@
-import type { StepFunction, BlockExamplesStep } from './types.js';
+import type { StepFunction, BlockExamplesStep , StepResult, V2SchemaFragments } from './types.js';
 
-export const blockExamples: StepFunction<BlockExamplesStep> = (step: BlockExamplesStep, blueprint?: any) => {
+export const blockExamples: StepFunction<BlockExamplesStep> = (step: BlockExamplesStep, blueprint?: any): StepResult => {
+	return {
+		toV1() {
 	const blockNamespace = (step.blockNamespace || '').replace(/'/g, "\\'");
 	const postTitle = (step.postTitle || 'Block Examples').replace(/'/g, "\\'");
 	const limit = (step.limit !== undefined && step.limit !== null && String(step.limit) !== '') ? Number(step.limit) : 0;
@@ -124,6 +126,18 @@ wp_insert_post( array(
 	}
 
 	return result;
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 blockExamples.description = "Creates a post with all block examples from registered blocks";

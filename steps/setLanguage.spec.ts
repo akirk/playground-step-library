@@ -8,7 +8,7 @@ describe('setLanguage', () => {
             language: 'de'
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -22,7 +22,7 @@ describe('setLanguage', () => {
             language: 'fr'
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(result[0].language).toBe('fr_FR');
     });
@@ -33,7 +33,7 @@ describe('setLanguage', () => {
             language: 'es'
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(result[0].language).toBe('es_ES');
     });
@@ -44,7 +44,7 @@ describe('setLanguage', () => {
             language: 'it'
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(result[0].language).toBe('it_IT');
     });
@@ -55,7 +55,7 @@ describe('setLanguage', () => {
             language: 'ja'
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(result[0].language).toBe('ja');
     });
@@ -66,7 +66,7 @@ describe('setLanguage', () => {
             language: 'pl'
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(result[0].language).toBe('pl_PL');
     });
@@ -77,7 +77,7 @@ describe('setLanguage', () => {
             language: 'ar'
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(result[0].language).toBe('ar');
     });
@@ -88,7 +88,7 @@ describe('setLanguage', () => {
             language: 'en_US'
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(result[0].language).toBe('en_US');
     });
@@ -99,7 +99,7 @@ describe('setLanguage', () => {
             language: 'pt_BR'
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(result[0].language).toBe('pt_BR');
     });
@@ -110,7 +110,7 @@ describe('setLanguage', () => {
             language: ''
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(result).toEqual([]);
     });
@@ -121,7 +121,7 @@ describe('setLanguage', () => {
             language: ''
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(result).toEqual([]);
     });
@@ -132,7 +132,7 @@ describe('setLanguage', () => {
             language: null as any
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(result).toEqual([]);
     });
@@ -143,7 +143,7 @@ describe('setLanguage', () => {
             language: undefined as any
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(result).toEqual([]);
     });
@@ -154,7 +154,7 @@ describe('setLanguage', () => {
             language: 'zh_CN'
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         expect(result[0].language).toBe('zh_CN');
     });
@@ -178,7 +178,7 @@ describe('setLanguage', () => {
             language: 'fr'
         };
         
-        const result = setLanguage(step);
+        const result = setLanguage(step).toV1();
         
         // Validate the structure matches WordPress Playground step format
         expect(result[0]).toHaveProperty('step');

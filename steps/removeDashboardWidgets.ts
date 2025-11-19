@@ -1,7 +1,9 @@
-import type { StepFunction, RemoveDashboardWidgetsStep} from './types.js';
+import type { StepFunction, RemoveDashboardWidgetsStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const removeDashboardWidgets: StepFunction<RemoveDashboardWidgetsStep> = (step: RemoveDashboardWidgetsStep) => {
+export const removeDashboardWidgets: StepFunction<RemoveDashboardWidgetsStep> = (step: RemoveDashboardWidgetsStep): StepResult => {
+	return {
+		toV1() {
 	return [
 		{
 			"step": "mkdir",
@@ -60,6 +62,18 @@ add_action(
 `
 		}
 	];
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 removeDashboardWidgets.description = "Remove widgets from the wp-admin dashboard.";

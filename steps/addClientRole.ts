@@ -1,7 +1,9 @@
-import type { StepFunction, AddClientRoleStep} from './types.js';
+import type { StepFunction, AddClientRoleStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const addClientRole: StepFunction<AddClientRoleStep> = (step: AddClientRoleStep) => {
+export const addClientRole: StepFunction<AddClientRoleStep> = (step: AddClientRoleStep): StepResult => {
+	return {
+		toV1() {
 	return [
 		{
 			"step": "mkdir",
@@ -64,6 +66,18 @@ add_action(
 `
 		}
 	];
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 addClientRole.description = "Adds a role for clients with additional capabilities than editors, but not quite admin.";

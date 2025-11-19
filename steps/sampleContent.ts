@@ -1,6 +1,8 @@
-import type { StepFunction, SampleContentStep } from './types.js';
+import type { StepFunction, SampleContentStep , StepResult, V2SchemaFragments } from './types.js';
 
-export const sampleContent: StepFunction<SampleContentStep> = () => {
+export const sampleContent: StepFunction<SampleContentStep> = (): StepResult => {
+	return {
+		toV1() {
     const steps = [
         {
             "step": "runPHP",
@@ -39,6 +41,18 @@ export const sampleContent: StepFunction<SampleContentStep> = () => {
         }
     ];
     return steps;
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 sampleContent.count = 5;

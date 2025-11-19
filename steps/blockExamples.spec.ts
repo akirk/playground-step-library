@@ -8,7 +8,7 @@ describe('blockExamples', () => {
 			step: 'blockExamples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result).toHaveLength(1);
 		expect(result[0].step).toBe('runPHP');
@@ -23,7 +23,7 @@ describe('blockExamples', () => {
 			postTitle: 'My Custom Block Examples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result[0].code).toContain('My Custom Block Examples');
 	});
@@ -34,7 +34,7 @@ describe('blockExamples', () => {
 			blockNamespace: 'gutenberg'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result[0].code).toContain('gutenberg');
 		expect(result[0].code).toContain("$block_namespace = 'gutenberg'");
@@ -45,7 +45,7 @@ describe('blockExamples', () => {
 			step: 'blockExamples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result[0].code).toContain("'post_status'  => 'draft'");
 	});
@@ -56,7 +56,7 @@ describe('blockExamples', () => {
 			postTitle: "Block's Examples"
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result[0].code).toContain("Block\\'s Examples");
 	});
@@ -66,7 +66,7 @@ describe('blockExamples', () => {
 			step: 'blockExamples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result[0].code).toContain('WP_Block_Type_Registry');
 		expect(result[0].code).toContain('get_all_registered');
@@ -77,7 +77,7 @@ describe('blockExamples', () => {
 			step: 'blockExamples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result[0].code).toContain('serialize_block');
 	});
@@ -87,7 +87,7 @@ describe('blockExamples', () => {
 			step: 'blockExamples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result.landingPage).toBe('/wp-admin/post.php?post=1000&action=edit');
 	});
@@ -98,7 +98,7 @@ describe('blockExamples', () => {
 			landingPage: false
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result.landingPage).toBeUndefined();
 	});
@@ -109,7 +109,7 @@ describe('blockExamples', () => {
 			postId: 5000
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result[0].code).toContain('$post_id = 5000');
 		expect(result.landingPage).toBe('/wp-admin/post.php?post=5000&action=edit');
@@ -120,7 +120,7 @@ describe('blockExamples', () => {
 			step: 'blockExamples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result[0].code).toContain('$exclude_core = false');
 	});
@@ -131,7 +131,7 @@ describe('blockExamples', () => {
 			excludeCore: true
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result[0].code).toContain('$exclude_core = true');
 		expect(result[0].code).toContain("if ( $exclude_core && 0 === stripos( $block_name, 'core/' ) ) {");
@@ -143,7 +143,7 @@ describe('blockExamples', () => {
 			excludeCore: 'true'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result[0].code).toContain('$exclude_core = true');
 	});
@@ -154,7 +154,7 @@ describe('blockExamples', () => {
 			limit: 10
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result[0].code).toContain('$limit = 10');
 	});

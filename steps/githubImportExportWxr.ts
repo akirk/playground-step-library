@@ -1,8 +1,10 @@
-import type { StepFunction, GithubImportExportWxrStep} from './types.js';
+import type { StepFunction, GithubImportExportWxrStep, StepResult, V2SchemaFragments } from './types.js';
 import { deleteAllPosts } from './deleteAllPosts.js';
 
 
-export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (step: GithubImportExportWxrStep) => {
+export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (step: GithubImportExportWxrStep): StepResult => {
+	return {
+		toV1() {
 	// modelled after https://github.com/carstingaxion/crud-the-docs-playground
 	// props @carstingaxion
 	const repoTest = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/.exec( step.repo );
@@ -100,6 +102,18 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 	};
 
 	return steps;
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 githubImportExportWxr.description = "Provide useful additional info.";

@@ -8,7 +8,7 @@ describe('installPlugin', () => {
             url: 'hello-dolly'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -24,7 +24,7 @@ describe('installPlugin', () => {
             url: 'https://wordpress.org/plugins/woocommerce'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(result[0].pluginData.slug).toBe('woocommerce');
         expect(result[0].pluginData.resource).toBe('wordpress.org/plugins');
@@ -36,7 +36,7 @@ describe('installPlugin', () => {
             url: 'https://external-site.com/plugin.zip'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(result[0].pluginData.resource).toBe('url');
         expect(result[0].pluginData.url).toBe('https://external-site.com/plugin.zip');
@@ -48,7 +48,7 @@ describe('installPlugin', () => {
             url: 'https://github.com/akirk/blueprint-recorder'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -67,7 +67,7 @@ describe('installPlugin', () => {
             url: 'akirk/blueprint-recorder'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -86,7 +86,7 @@ describe('installPlugin', () => {
             url: 'https://github.com/user/repo/releases/download/v1.0.0/plugin.zip'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         // Since this calls githubPluginRelease, we just verify it's handled
         expect(Array.isArray(result)).toBe(true);
@@ -98,7 +98,7 @@ describe('installPlugin', () => {
             url: 'https://github.com/Automattic/wordpress-activitypub/tree/trunk'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -117,7 +117,7 @@ describe('installPlugin', () => {
             url: 'https://github.com/akirk/friends/tree/BRANCHNAME'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -136,7 +136,7 @@ describe('installPlugin', () => {
             url: 'https://github.com/akirk/friends/tree/feature/new-thing'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -155,7 +155,7 @@ describe('installPlugin', () => {
             url: 'https://github.com/akirk/friends/tree/feature/branch//some/directory'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -174,7 +174,7 @@ describe('installPlugin', () => {
             url: 'https://github.com/akirk/friends/tree/feature/'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -193,7 +193,7 @@ describe('installPlugin', () => {
             url: 'https://github.com/akirk/friends/tree/feature/br'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -212,7 +212,7 @@ describe('installPlugin', () => {
             url: 'https://github.com/akirk/friends/tree/feature/br/'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -231,7 +231,7 @@ describe('installPlugin', () => {
             url: 'https://github.com/akirk/friends/tree/feature//br'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -250,7 +250,7 @@ describe('installPlugin', () => {
             url: 'https://github.com/WordPress/gutenberg/tree/trunk/packages/components'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -269,7 +269,7 @@ describe('installPlugin', () => {
             url: 'https://github.com/akirk/friends/pull/559'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -289,7 +289,7 @@ describe('installPlugin', () => {
             prs: true
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -317,7 +317,7 @@ describe('installPlugin', () => {
             prs: true
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -333,7 +333,7 @@ describe('installPlugin', () => {
             url: 'hello-dolly'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(result).toHaveLength(1);
         expect(result[0].step).toBe('installPlugin');
@@ -345,7 +345,7 @@ describe('installPlugin', () => {
             url: 'http://external-site.com/plugin.zip'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         // Note: Same regex bug as above - extracts 'http:' as slug
         expect(result[0].pluginData.resource).toBe('url');
@@ -358,7 +358,7 @@ describe('installPlugin', () => {
             url: 'https://wordpress.org/plugins/friends/'
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(result[0].pluginData.slug).toBe('friends');
     });
@@ -387,7 +387,7 @@ describe('installPlugin', () => {
             url: ''
         };
 
-        const result = installPlugin(step);
+        const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);

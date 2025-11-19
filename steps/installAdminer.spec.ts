@@ -8,7 +8,7 @@ describe('installAdminer', () => {
       step: 'installAdminer'
     };
 
-    const result = installAdminer(step);
+    const result = installAdminer(step).toV1();
 
     expect(result).toHaveLength(5);
 

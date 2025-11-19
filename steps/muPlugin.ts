@@ -1,7 +1,9 @@
-import type { StepFunction, MuPluginStep} from './types.js';
+import type { StepFunction, MuPluginStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const muPlugin: StepFunction<MuPluginStep> = (step: MuPluginStep) => {
+export const muPlugin: StepFunction<MuPluginStep> = (step: MuPluginStep): StepResult => {
+	return {
+		toV1() {
 	const code = '<?php ' + (step.code || '').replace( /<\?php/, '' );
 	const pluginName = step.name || 'mu-plugin';
 	return [
@@ -15,6 +17,18 @@ export const muPlugin: StepFunction<MuPluginStep> = (step: MuPluginStep) => {
 			"data": code
 		}
 	];
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 muPlugin.description = "Add code for a plugin.";

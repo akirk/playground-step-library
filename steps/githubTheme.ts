@@ -1,7 +1,9 @@
-import type { StepFunction, GithubThemeStep} from './types.js';
+import type { StepFunction, GithubThemeStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep) => {
+export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep): StepResult => {
+	return {
+		toV1() {
 	const urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.url );
 	if ( ! urlTest ) {
 		return [];
@@ -51,6 +53,18 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 	};
 
 	return [ outStep ];
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 githubTheme.description = "Install a theme from a Github repository.";

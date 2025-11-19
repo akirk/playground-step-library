@@ -55,22 +55,8 @@ export interface StepResult {
     toV2(): V2SchemaFragments;
 }
 
-/**
- * Helper function to normalize step results to v1 format (array)
- * Handles both old format (array) and new format (StepResult with toV1/toV2)
- */
-export function toV1Steps(result: any[] | StepResult): any[] {
-    if (Array.isArray(result)) {
-        return result;
-    }
-    if (result && typeof result === 'object' && typeof result.toV1 === 'function') {
-        return result.toV1();
-    }
-    return [];
-}
-
 export interface StepFunction<T extends BlueprintStep = BlueprintStep> {
-    (step: T, blueprint?: any): any[] | StepResult;
+    (step: T, blueprint?: any): StepResult;
     description?: string;
     vars?: StepVariable[];
     builtin?: boolean;

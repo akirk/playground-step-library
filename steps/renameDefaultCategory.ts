@@ -1,7 +1,9 @@
-import type { StepFunction, RenameDefaultCategoryStep} from './types.js';
+import type { StepFunction, RenameDefaultCategoryStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const renameDefaultCategory: StepFunction<RenameDefaultCategoryStep> = (step: RenameDefaultCategoryStep) => {
+export const renameDefaultCategory: StepFunction<RenameDefaultCategoryStep> = (step: RenameDefaultCategoryStep): StepResult => {
+	return {
+		toV1() {
 	const name = (step.categoryName || '').replace( /'/g, "\\'" ).trim();
 	if ( ! name ) {
 		return [];
@@ -16,6 +18,18 @@ export const renameDefaultCategory: StepFunction<RenameDefaultCategoryStep> = (s
 			}
 		}
 	];
+		},
+
+		toV2(): V2SchemaFragments {
+			const v1Steps = this.toV1();
+			if (v1Steps.length === 0) {
+				return {};
+			}
+			return {
+				additionalSteps: v1Steps
+			};
+		}
+	};
 };
 
 renameDefaultCategory.description = "Change the default \"Uncategorized\".";

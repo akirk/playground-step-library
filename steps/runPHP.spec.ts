@@ -8,7 +8,7 @@ describe('runPHP', () => {
             code: '<?php echo "Hello World"; ?>'
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -22,7 +22,7 @@ describe('runPHP', () => {
             code: ''
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
         expect(result[0].code).toBe('');
     });
@@ -40,7 +40,7 @@ foreach ($users as $user) {
             code: code
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
         expect(result[0].code).toBe(code);
     });
@@ -51,7 +51,7 @@ foreach ($users as $user) {
             code: 'wp_insert_post(array("post_title" => "Test Post"));'
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
         expect(result[0].code).toBe('wp_insert_post(array("post_title" => "Test Post"));');
     });
@@ -62,7 +62,7 @@ foreach ($users as $user) {
             code: '<?php echo "Hello \"World\" & \'PHP\'"; ?>'
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
         expect(result[0].code).toBe('<?php echo "Hello \"World\" & \'PHP\'"; ?>');
     });
@@ -73,7 +73,7 @@ foreach ($users as $user) {
             code: '<?php update_option("blog_name", "My WordPress Site"); ?>'
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
         expect(result[0].code).toBe('<?php update_option("blog_name", "My WordPress Site"); ?>');
     });
@@ -84,7 +84,7 @@ foreach ($users as $user) {
             code: '<?php echo "<h1>Welcome to WordPress</h1>"; ?>'
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
         expect(result[0].code).toBe('<?php echo "<h1>Welcome to WordPress</h1>"; ?>');
     });
@@ -95,7 +95,7 @@ foreach ($users as $user) {
             code: undefined as any
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
         expect(result[0].code).toBeUndefined();
     });
@@ -106,7 +106,7 @@ foreach ($users as $user) {
             code: null as any
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
         expect(result[0].code).toBeNull();
     });
@@ -131,7 +131,7 @@ foreach ($users as $user) {
             code: '<?php wp_insert_post(array("post_title" => "Test")); ?>'
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
         // Validate the structure matches WordPress Playground step format
         expect(result[0]).toHaveProperty('step');
