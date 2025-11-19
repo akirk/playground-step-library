@@ -1,13 +1,19 @@
-import type { StepFunction, AddPostStep } from './types.js';
+import type { StepFunction, AddPostStep, StepResult, V2SchemaFragments } from './types.js';
 
-export const addPost: StepFunction<AddPostStep> = (step: AddPostStep) => {
-	const postTitle = (step.title || step.postTitle || '').replace(/'/g, "\\'");
-	const postContent = (step.content || step.postContent || '').replace(/'/g, "\\'");
+export const addPost: StepFunction<AddPostStep> = (step: AddPostStep): StepResult => {
+	const title = step.title || step.postTitle || '';
+	const content = step.content || step.postContent || '';
 	const postType = step.type || step.postType;
 	const postStatus = step.status || step.postStatus || 'publish';
 	const postId = (step.postId !== undefined && step.postId !== null && String(step.postId) !== '') ? Number(step.postId) : 0;
+	const dateValue = step.date || step.postDate;
 
-	let code = `
+	return {
+		toV1() {
+			const postTitle = title.replace(/'/g, "\\'");
+			const postContent = content.replace(/'/g, "\\'");
+
+			let code = `
 <?php require_once '/wordpress/wp-load.php';
 $page_args = array(
 	'post_type'    => '${postType}',
@@ -15,44 +21,91 @@ $page_args = array(
 	'post_title'   => '${postTitle}',
 	'post_content' => '${postContent}',`;
 
-	// Add import_id only if postId is provided
-	if (postId > 0) {
-		code += `
+			// Add import_id only if postId is provided
+			if (postId > 0) {
+				code += `
 	'import_id'    => ${postId},`;
-	}
+			}
 
-	// Add post_date only if provided
-	const dateValue = step.date || step.postDate;
-	if (dateValue) {
-		const postDate = dateValue.replace(/'/g, "\\'");
-		code += `
+			// Add post_date only if provided
+			if (dateValue) {
+				const postDate = dateValue.replace(/'/g, "\\'");
+				code += `
 	'post_date'    => strtotime('${postDate}'),`;
-	}
+			}
 
-	code += `
+			code += `
 );
 $page_id = wp_insert_post( $page_args );`;
 
-	if (step.homepage) {
-		code += "update_option( 'page_on_front', $page_id );";
-		code += "update_option( 'show_on_front', 'page' );";
-	}
-
-	const result = [
-		{
-			"step": "runPHP",
-			code,
-			"progress": {
-				"caption": `addPost: ${postTitle}`
+			if (step.homepage) {
+				code += "update_option( 'page_on_front', $page_id );";
+				code += "update_option( 'show_on_front', 'page' );";
 			}
+
+			const result = [
+				{
+					step: "runPHP",
+					code,
+					progress: {
+						caption: `addPost: ${title}`
+					}
+				}
+			] as any;
+
+			if (step.landingPage !== false && postId > 0) {
+				result.landingPage = `/wp-admin/post.php?post=${postId}&action=edit`;
+			}
+
+			return result;
+		},
+
+		toV2(): V2SchemaFragments {
+			const fragments: V2SchemaFragments = {};
+
+			const postData: any = {
+				post_title: title,
+				post_content: content,
+				post_type: postType,
+				post_status: postStatus
+			};
+
+			// Add post_date if provided
+			if (dateValue) {
+				postData.post_date = dateValue;
+			}
+
+			// Add import_id if provided (not standard v2, but useful for imports)
+			if (postId > 0) {
+				postData.import_id = postId;
+			}
+
+			fragments.content = [{
+				type: 'posts',
+				source: postData
+			}];
+
+			// Handle homepage setting
+			if (step.homepage) {
+				fragments.siteOptions = {
+					show_on_front: 'page'
+				};
+
+				fragments.additionalSteps = [{
+					step: 'runPHP',
+					code: `<?php
+require_once '/wordpress/wp-load.php';
+$pages = get_posts( array( 'post_type' => 'page', 'posts_per_page' => 1, 'orderby' => 'ID', 'order' => 'ASC' ) );
+if ( ! empty( $pages ) ) {
+	update_option( 'page_on_front', $pages[0]->ID );
+	update_option( 'show_on_front', 'page' );
+}`
+				}];
+			}
+
+			return fragments;
 		}
-	] as any;
-
-	if (step.landingPage !== false && postId > 0) {
-		result.landingPage = `/wp-admin/post.php?post=${postId}&action=edit`;
-	}
-
-	return result;
+	};
 };
 
 addPost.description = "Add a post with title, content, type, status, and date.";

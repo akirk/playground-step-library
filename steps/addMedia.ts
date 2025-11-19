@@ -1,45 +1,49 @@
-import type { StepFunction, AddMediaStep} from './types.js';
+import type { StepFunction, AddMediaStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const addMedia: StepFunction<AddMediaStep> = (step: AddMediaStep) => {
-	if ( ! step.downloadUrl || ! step.downloadUrl.match( /^https?:/ ) ) {
-		return [];
-	}
+export const addMedia: StepFunction<AddMediaStep> = (step: AddMediaStep): StepResult => {
+	const downloadUrl = step.downloadUrl;
 
-	const steps: any[] = [
-	{
-		"step": "mkdir",
-		"path": "/tmp/media"
-	}
-	];
-
-	if ( step.downloadUrl.match( /\.zip$/ ) ) {
-		steps.push( {
-			"step": "unzip",
-			"zipFile": {
-                "resource": "url",
-                "url": step.downloadUrl,
-	            "caption": "Downloading " + step.downloadUrl,
-            },
-            "extractToPath": "/tmp/media"
-		} );
-	} else {
-		const filename = step.downloadUrl.split( '/' ).pop();
-		steps.push( {
-			"step": "writeFile",
-			"path": "/tmp/media/" + filename,
-			"data": {
-				"resource": "url",
-				"url": step.downloadUrl,
+	return {
+		toV1() {
+			if ( ! downloadUrl || ! downloadUrl.match( /^https?:/ ) ) {
+				return [];
 			}
-		} );
-	}
-	steps.push( {
-		"step": "runPHP",
-		"progress": {
-			"caption": "Importing media to library"
-		},
-		"code": `<?php
+
+			const steps: any[] = [
+			{
+				step: "mkdir",
+				path: "/tmp/media"
+			}
+			];
+
+			if ( downloadUrl.match( /\.zip$/ ) ) {
+				steps.push( {
+					step: "unzip",
+					zipFile: {
+		                resource: "url",
+		                url: downloadUrl,
+			            caption: "Downloading " + downloadUrl,
+		            },
+		            extractToPath: "/tmp/media"
+				} );
+			} else {
+				const filename = downloadUrl.split( '/' ).pop();
+				steps.push( {
+					step: "writeFile",
+					path: "/tmp/media/" + filename,
+					data: {
+						resource: "url",
+						url: downloadUrl,
+					}
+				} );
+			}
+			steps.push( {
+				step: "runPHP",
+				progress: {
+					caption: "Importing media to library"
+				},
+				code: `<?php
 // DEDUP_STRATEGY: keep_last
 require_once '/wordpress/wp-load.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -67,8 +71,31 @@ foreach ( $iterator as $filename ) {
 }
 
 `
-	} );
-	return steps;
+			} );
+			return steps;
+		},
+
+		toV2(): V2SchemaFragments {
+			if ( ! downloadUrl || ! downloadUrl.match( /^https?:/ ) ) {
+				return {};
+			}
+
+			const fragments: V2SchemaFragments = {};
+
+			// V2 media array - much simpler than v1!
+			// For single files, just add the URL
+			// For zips, v2 doesn't support them directly yet, so fallback to v1 logic
+			if ( downloadUrl.match( /\.zip$/ ) ) {
+				// Zip files need the complex v1 logic in additionalSteps
+				fragments.additionalSteps = this.toV1();
+			} else {
+				// Single file - use v2 media array
+				fragments.media = [downloadUrl];
+			}
+
+			return fragments;
+		}
+	};
 };
 
 addMedia.description = "Add files to the media library.";

@@ -1,22 +1,50 @@
-import type { StepFunction, CustomPostTypeStep} from './types.js';
+import type { StepFunction, CustomPostTypeStep, StepResult, V2SchemaFragments } from './types.js';
 
 
-export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPostTypeStep) => {
-	var steps = [
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/mu-plugins",
+export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPostTypeStep): StepResult => {
+	const slug = step.slug;
+	const name = step.name;
+	const supports = step.supports;
+	const isPublic = step.public !== false;
+
+	return {
+		toV1() {
+			const steps = [
+				{
+					step: "mkdir",
+					path: "/wordpress/wp-content/mu-plugins",
+				},
+				{
+					step: "writeFile",
+					path: "/wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
+					data: `<?php add_action( 'init', function() { register_post_type('${slug}', array('public' => ${isPublic ? 'true' : 'false'}, 'label' => '${name}', 'supports' => ${supports ? JSON.stringify(supports) : "array( 'title', 'editor' )"})); } ); ?>`,
+					progress: {
+						caption: `customPostType: ${name}`
+					}
+				}
+			];
+			return steps;
 		},
-		{
-			"step": "writeFile",
-			"path": "/wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
-			"data": `<?php add_action( 'init', function() { register_post_type('${step.slug}', array('public' => ${step.public !== false ? 'true' : 'false'}, 'label' => '${step.name}', 'supports' => ${step.supports ? JSON.stringify(step.supports) : "array( 'title', 'editor' )"})); } ); ?>`,
-			"progress": {
-				"caption": `customPostType: ${step.name}`
-			}
+
+		toV2(): V2SchemaFragments {
+			const fragments: V2SchemaFragments = {};
+
+			// V2 postTypes - declarative custom post type registration
+			// Note: This requires the 'secure-custom-fields' plugin in v2
+			fragments.postTypes = {
+				[slug]: {
+					label: name,
+					public: isPublic,
+					supports: supports || ['title', 'editor']
+				}
+			};
+
+			// Ensure secure-custom-fields plugin is included
+			fragments.plugins = ['secure-custom-fields'];
+
+			return fragments;
 		}
-	];
-	return steps;
+	};
 };
 
 customPostType.description = "Register a custom post type.";

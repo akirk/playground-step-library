@@ -10,7 +10,7 @@ describe('addPage', () => {
       content: '<p>Test content</p>'
     };
 
-    const result = addPage(step);
+    const result = addPage(step).toV1();
 
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({
@@ -32,7 +32,7 @@ describe('addPage', () => {
       postContent: '<p>Test content</p>'
     };
 
-    const result = addPage(step);
+    const result = addPage(step).toV1();
 
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({
@@ -55,7 +55,7 @@ describe('addPage', () => {
       homepage: true
     };
 
-    const result = addPage(step);
+    const result = addPage(step).toV1();
 
     expect(result).toHaveLength(1);
     expect(result[0].code).toContain("update_option( 'page_on_front', $page_id )");
@@ -69,7 +69,7 @@ describe('addPage', () => {
       content: "<p>Here's some content</p>"
     };
 
-    const result = addPage(step);
+    const result = addPage(step).toV1();
 
     expect(result[0].code).toContain("'post_title'   => 'John\\'s Page'");
     expect(result[0].code).toContain("'post_content' => '<p>Here\\'s some content</p>'");
@@ -84,7 +84,7 @@ describe('addPage', () => {
       postContent: '<p>Old Content</p>'
     };
 
-    const result = addPage(step);
+    const result = addPage(step).toV1();
 
     expect(result[0].code).toContain("'post_title'   => 'New Title'");
     expect(result[0].code).toContain("'post_content' => '<p>New Content</p>'");

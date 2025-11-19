@@ -11,7 +11,7 @@ describe('addPost', () => {
             type: 'post'
         };
 
-        const result = addPost(step);
+        const result = addPost(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -30,7 +30,7 @@ describe('addPost', () => {
             postType: 'post'
         };
 
-        const result = addPost(step);
+        const result = addPost(step).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -50,7 +50,7 @@ describe('addPost', () => {
             status: 'draft'
         };
 
-        const result = addPost(step);
+        const result = addPost(step).toV1();
 
         expect(result[0].code).toContain("'post_status'  => 'draft'");
     });
@@ -64,7 +64,7 @@ describe('addPost', () => {
             date: '2024-12-25 10:00:00'
         };
 
-        const result = addPost(step);
+        const result = addPost(step).toV1();
 
         expect(result[0].code).toContain("'post_date'    => strtotime('2024-12-25 10:00:00')");
     });
@@ -77,7 +77,7 @@ describe('addPost', () => {
             type: 'post'
         };
 
-        const result = addPost(step);
+        const result = addPost(step).toV1();
 
         expect(result[0].code).not.toContain('post_date');
     });
@@ -91,7 +91,7 @@ describe('addPost', () => {
             homepage: true
         };
 
-        const result = addPost(step);
+        const result = addPost(step).toV1();
 
         expect(result[0].code).toContain("update_option( 'page_on_front', $page_id )");
         expect(result[0].code).toContain("update_option( 'show_on_front', 'page' )");
@@ -106,7 +106,7 @@ describe('addPost', () => {
             homepage: false
         };
 
-        const result = addPost(step);
+        const result = addPost(step).toV1();
 
         expect(result[0].code).not.toContain("update_option( 'page_on_front'");
         expect(result[0].code).not.toContain("update_option( 'show_on_front'");
@@ -120,7 +120,7 @@ describe('addPost', () => {
             type: 'post'
         };
 
-        const result = addPost(step);
+        const result = addPost(step).toV1();
 
         expect(result[0].code).toContain("'post_title'   => 'Title with \\'single quotes\\''");
         expect(result[0].code).toContain("'post_content' => '<p>Content with \\'quotes\\' here</p>'");
@@ -135,7 +135,7 @@ describe('addPost', () => {
             date: "2024-01-01 12:00:00 O'Clock"
         };
 
-        const result = addPost(step);
+        const result = addPost(step).toV1();
 
         expect(result[0].code).toContain("'post_date'    => strtotime('2024-01-01 12:00:00 O\\'Clock')");
     });
@@ -148,7 +148,7 @@ describe('addPost', () => {
             type: 'custom_type'
         };
 
-        const result = addPost(step);
+        const result = addPost(step).toV1();
 
         expect(result[0].code).toContain("'post_type'    => 'custom_type'");
     });
@@ -168,7 +168,7 @@ describe('addPost', () => {
             postDate: '2025-01-01'
         };
 
-        const result = addPost(step);
+        const result = addPost(step).toV1();
 
         expect(result[0].code).toContain("'post_title'   => 'New Title'");
         expect(result[0].code).toContain("'post_content' => '<p>New Content</p>'");

@@ -38,8 +38,39 @@ export interface StepVariable {
     deprecated?: boolean;
 }
 
+export interface V2SchemaFragments {
+    content?: any[];
+    users?: any[];
+    media?: any[];
+    plugins?: any[];
+    themes?: any[];
+    siteOptions?: Record<string, any>;
+    constants?: Record<string, any>;
+    postTypes?: Record<string, any>;
+    additionalSteps?: any[];
+}
+
+export interface StepResult {
+    toV1(): any[];
+    toV2(): V2SchemaFragments;
+}
+
+/**
+ * Helper function to normalize step results to v1 format (array)
+ * Handles both old format (array) and new format (StepResult with toV1/toV2)
+ */
+export function toV1Steps(result: any[] | StepResult): any[] {
+    if (Array.isArray(result)) {
+        return result;
+    }
+    if (result && typeof result === 'object' && typeof result.toV1 === 'function') {
+        return result.toV1();
+    }
+    return [];
+}
+
 export interface StepFunction<T extends BlueprintStep = BlueprintStep> {
-    (step: T, blueprint?: any): any[];
+    (step: T, blueprint?: any): any[] | StepResult;
     description?: string;
     vars?: StepVariable[];
     builtin?: boolean;

@@ -10,7 +10,7 @@ describe('createUser', () => {
             role: 'editor'
         };
         
-        const result = createUser(step);
+        const result = createUser(step).toV1();
         
         expect(Array.isArray(result)).toBe(true);
         expect(result).toHaveLength(1);
@@ -29,7 +29,7 @@ describe('createUser', () => {
             display_name: 'Test User'
         };
         
-        const result = createUser(step);
+        const result = createUser(step).toV1();
         
         expect(result[0].code).toContain("'display_name' => 'Test User'");
     });
@@ -43,7 +43,7 @@ describe('createUser', () => {
             email: 'test@example.com'
         };
         
-        const result = createUser(step);
+        const result = createUser(step).toV1();
         
         expect(result[0].code).toContain("'user_email' => 'test@example.com'");
     });
@@ -58,7 +58,7 @@ describe('createUser', () => {
             email: 'author@example.com'
         };
         
-        const result = createUser(step);
+        const result = createUser(step).toV1();
         
         expect(result[0].code).toContain("'display_name' => 'Test Author'");
         expect(result[0].code).toContain("'user_email' => 'author@example.com'");
@@ -73,7 +73,7 @@ describe('createUser', () => {
             login: true
         };
         
-        const result = createUser(step);
+        const result = createUser(step).toV1();
         
         expect(result).toHaveLength(2);
         expect(result[0].step).toBe('runPHP');
@@ -92,7 +92,7 @@ describe('createUser', () => {
             login: false
         };
         
-        const result = createUser(step);
+        const result = createUser(step).toV1();
         
         expect(result).toHaveLength(1);
         expect(result[0].step).toBe('runPHP');
@@ -106,7 +106,7 @@ describe('createUser', () => {
             role: 'subscriber'
         };
         
-        const result = createUser(step);
+        const result = createUser(step).toV1();
         
         expect(result).toEqual([]);
     });
@@ -118,7 +118,7 @@ describe('createUser', () => {
             role: 'subscriber'
         };
         
-        const result = createUser(step);
+        const result = createUser(step).toV1();
         
         expect(result).toEqual([]);
     });
@@ -130,7 +130,7 @@ describe('createUser', () => {
             password: 'testpass'
         };
         
-        const result = createUser(step);
+        const result = createUser(step).toV1();
         
         expect(result).toEqual([]);
     });
@@ -143,7 +143,7 @@ describe('createUser', () => {
             role: ''
         };
         
-        const result = createUser(step);
+        const result = createUser(step).toV1();
         
         expect(result).toEqual([]);
     });
@@ -156,7 +156,7 @@ describe('createUser', () => {
             role: undefined as any
         };
         
-        const result = createUser(step);
+        const result = createUser(step).toV1();
         
         expect(result).toEqual([]);
     });
@@ -169,7 +169,7 @@ describe('createUser', () => {
             role: 'administrator'
         };
         
-        const result = createUser(step);
+        const result = createUser(step).toV1();
         
         expect(result[0].code).toMatch(/^<\?php require_once '\/wordpress\/wp-load\.php';/);
         expect(result[0].code).toContain('wp_insert_user( $data )');

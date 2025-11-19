@@ -3,13 +3,14 @@ import type {
     StepVariable,
     StepFunction,
     BlueprintStep,
-    StepLibraryBlueprint
+    StepLibraryBlueprint,
+    StepResult
 } from '../steps/types.js';
 import type { Blueprint, StepDefinition } from '@wp-playground/blueprints';
 import { transpileToV2, shouldTranspileToV2 } from './v2-transpiler.js';
 
 interface CustomStepDefinition {
-    (step: BlueprintStep, inputData?: any): any[];
+    (step: BlueprintStep, inputData?: any): any[] | StepResult;
     description?: string;
     vars?: StepVariable[];
     builtin?: boolean;
@@ -57,6 +58,29 @@ class PlaygroundStepLibrary {
      */
     private loadCustomSteps(): void {
         Object.assign(this.customSteps, stepsRegistry);
+    }
+
+    /**
+     * Execute a custom step and handle both old format (returns array)
+     * and new format (returns object with toV1/toV2 methods)
+     */
+    private executeCustomStep(stepName: string, step: BlueprintStep, inputData: any): StepDefinition[] {
+        const result = this.customSteps[stepName](step, inputData);
+
+        // Check if this is a StepResult (new format)
+        if (this.isStepResult(result)) {
+            return result.toV1();
+        }
+
+        // Old format - return array directly
+        return result;
+    }
+
+    /**
+     * Type guard to check if result is a StepResult object
+     */
+    private isStepResult(result: any[] | StepResult): result is StepResult {
+        return result && typeof result === 'object' && !Array.isArray(result) && typeof result.toV1 === 'function';
     }
 
     /**
@@ -166,7 +190,7 @@ class PlaygroundStepLibrary {
             if (step.step === 'installPlugin') {
                 if ('url' in step) {
                     // Custom installPlugin step - transform it
-                    outSteps = this.customSteps[step.step](step, inputData);
+                    outSteps = this.executeCustomStep(step.step, step, inputData);
                 } else {
                     // Builtin installPlugin step - pass through
                     outSteps.push(step as StepDefinition);
@@ -174,7 +198,7 @@ class PlaygroundStepLibrary {
             } else if (step.step === 'installTheme') {
                 if ('url' in step) {
                     // Custom installTheme step - transform it
-                    outSteps = this.customSteps[step.step](step, inputData);
+                    outSteps = this.executeCustomStep(step.step, step, inputData);
                 } else {
                     // Builtin installTheme step - pass through
                     outSteps.push(step as StepDefinition);
@@ -182,7 +206,7 @@ class PlaygroundStepLibrary {
             } else if (step.step === 'defineWpConfigConst') {
                 if ('name' in step && 'value' in step) {
                     // Custom defineWpConfigConst step - transform it
-                    outSteps = this.customSteps[step.step](step, inputData);
+                    outSteps = this.executeCustomStep(step.step, step, inputData);
                 } else {
                     // Builtin defineWpConfigConsts step - pass through
                     outSteps.push(step as StepDefinition);
@@ -190,14 +214,14 @@ class PlaygroundStepLibrary {
             } else if (step.step === 'setSiteOptions') {
                 if ('name' in step && 'value' in step) {
                     // Custom setSiteOptions step - transform it
-                    outSteps = this.customSteps[step.step](step, inputData);
+                    outSteps = this.executeCustomStep(step.step, step, inputData);
                 } else {
                     // Builtin setSiteOptions step - pass through
                     outSteps.push(step as StepDefinition);
                 }
             } else if (this.customSteps[step.step]) {
                 // For other custom steps (no builtin equivalent), always transform
-                outSteps = this.customSteps[step.step](step, inputData);
+                outSteps = this.executeCustomStep(step.step, step, inputData);
             } else {
                 // Pure builtin step - pass through
                 outSteps.push(step as StepDefinition);
@@ -455,3 +479,4 @@ class PlaygroundStepLibrary {
 }
 
 export default PlaygroundStepLibrary;
+export { default as PlaygroundStepLibraryV2 } from './v2-compiler.js';

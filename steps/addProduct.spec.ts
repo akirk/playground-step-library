@@ -11,7 +11,7 @@ describe('addProduct', () => {
             price: '29.99'
         };
 
-        const result = addProduct(step, { steps: [] });
+        const result = addProduct(step, { steps: [] }).toV1();
 
         expect(Array.isArray(result)).toBe(true);
         expect(result.length).toBeGreaterThanOrEqual(1);
@@ -33,7 +33,7 @@ describe('addProduct', () => {
             productPrice: '29.99'
         };
 
-        const result = addProduct(step, { steps: [] });
+        const result = addProduct(step, { steps: [] }).toV1();
 
         const phpStep = result.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain("'post_title'   => 'Test Product'");
@@ -54,7 +54,7 @@ describe('addProduct', () => {
             productSalePrice: '25.99'
         };
 
-        const result = addProduct(step, { steps: [] });
+        const result = addProduct(step, { steps: [] }).toV1();
 
         const phpStep = result.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain("'post_title'   => 'New Title'");
@@ -73,7 +73,7 @@ describe('addProduct', () => {
             salePrice: '80.00'
         };
 
-        const result = addProduct(step, { steps: [] });
+        const result = addProduct(step, { steps: [] }).toV1();
 
         const phpStep = result.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain('$regular_price = floatval(\'100.00\')');
@@ -92,7 +92,7 @@ describe('addProduct', () => {
             salePrice: '60.00' // Higher than regular price
         };
 
-        const result = addProduct(step, { steps: [] });
+        const result = addProduct(step, { steps: [] }).toV1();
 
         const phpStep = result.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain("'_regular_price', '50.00'");
@@ -113,7 +113,7 @@ describe('addProduct', () => {
             status: 'draft'
         };
 
-        const result = addProduct(step, { steps: [] });
+        const result = addProduct(step, { steps: [] }).toV1();
 
         const phpStep = result.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain("'post_status'  => 'draft'");
@@ -129,7 +129,7 @@ describe('addProduct', () => {
         };
 
         const blueprint = { steps: [] }; // No WooCommerce plugin
-        const result = addProduct(step, blueprint);
+        const result = addProduct(step, blueprint).toV1();
 
         // Should include installPlugin step for WooCommerce
         const installStep = result.find(r => r.step === 'installPlugin');
@@ -149,7 +149,7 @@ describe('addProduct', () => {
                 { step: 'installPlugin', vars: { url: 'woocommerce' } }
             ]
         };
-        const result = addProduct(step, blueprint);
+        const result = addProduct(step, blueprint).toV1();
 
         // Should not include additional installPlugin step
         const installSteps = result.filter(r => r.step === 'installPlugin');
