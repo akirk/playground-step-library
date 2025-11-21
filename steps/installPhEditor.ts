@@ -1,5 +1,6 @@
 import type { StepFunction, InstallPhEditorStep, StepResult } from './types.js';
-import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
+import { v1ToV2Fallback } from './types.js';
+import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 
 const adminBarCode = `<?php
 add_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {
@@ -33,7 +34,7 @@ export const installPhEditor: StepFunction<InstallPhEditorStep> = (step: Install
 							resource: "git:directory",
 							url: "https://github.com/akirk/pheditor",
 							ref: "HEAD"
-						},
+						} as any,
 						extractToPath: "/wordpress/"
 					}
 				]
@@ -42,30 +43,7 @@ export const installPhEditor: StepFunction<InstallPhEditorStep> = (step: Install
 		},
 
 		toV2() {
-			const result: BlueprintV2Declaration = {
-				version: 2,
-				landingPage: "/pheditor-main/pheditor.php",
-				muPlugins: [
-					{
-						file: {
-							filename: "phEditor.php",
-							content: adminBarCode
-						}
-					}
-				],
-				steps: [
-					{
-						step: "unzip",
-						zipFile: {
-							resource: "git:directory",
-							url: "https://github.com/akirk/pheditor",
-							ref: "HEAD"
-						},
-						extractToPath: "/wordpress/"
-					}
-				]
-			};
-			return result;
+			return v1ToV2Fallback(this.toV1());
 		}
 	};
 };

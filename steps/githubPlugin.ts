@@ -1,5 +1,6 @@
 import type { StepFunction, GithubPluginStep, StepResult } from './types.js';
 import { v1ToV2Fallback } from './types.js';
+import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 
 
 export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginStep): StepResult => {
@@ -77,7 +78,7 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 			const result: BlueprintV1Declaration = {
 				steps: [{
 					"step": "installPlugin",
-					"pluginData": pluginData,
+					"pluginData": pluginData as any,
 					"options": {
 						"activate": true
 					},
@@ -88,7 +89,7 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 			};
 
 			if (step.prs) {
-				(result.steps[0] as any).queryParams = {
+				(result.steps![0] as any).queryParams = {
 					'gh-ensure-auth': 'yes',
 					'ghexport-repo-url': repoUrl,
 					'ghexport-content-type': 'plugin',

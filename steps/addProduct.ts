@@ -154,7 +154,7 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 					tax_input: {
 						'product_type': ['simple']
 					}
-				}
+				} as any
 			}];
 
 			return result;

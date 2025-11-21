@@ -1,5 +1,6 @@
 import type { StepFunction, InstallAdminerStep, StepResult } from './types.js';
-import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
+import { v1ToV2Fallback } from './types.js';
+import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 
 const adminBarCode = `<?php
 add_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {
@@ -100,37 +101,7 @@ export const installAdminer: StepFunction<InstallAdminerStep> = (step: InstallAd
 		},
 
 		toV2() {
-			const result: BlueprintV2Declaration = {
-				version: 2,
-				muPlugins: [
-					{
-						file: {
-							filename: "adminer-link.php",
-							content: adminBarCode
-						}
-					}
-				],
-				steps: [
-					{
-						step: "mkdir",
-						path: "/wordpress/adminer",
-					},
-					{
-						step: "writeFile",
-						path: "/wordpress/adminer/index.php",
-						data: adminerIndexCode
-					},
-					{
-						step: "writeFile",
-						path: "/wordpress/adminer/adminer.php",
-						data: {
-							resource: "url",
-							url: "https://github.com/vrana/adminer/releases/download/v5.3.0/adminer-5.3.0-en.php"
-						}
-					}
-				]
-			};
-			return result;
+			return v1ToV2Fallback(this.toV1());
 		}
 	};
 };

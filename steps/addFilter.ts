@@ -1,4 +1,4 @@
-import type { StepFunction, AddFilterStep } from './types.js';
+import type { StepFunction, AddFilterStep, StepResult } from './types.js';
 import { muPlugin } from './muPlugin.js';
 
 export const addFilter: StepFunction<AddFilterStep> = (step: AddFilterStep): StepResult => {

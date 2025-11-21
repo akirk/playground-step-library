@@ -35,7 +35,7 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 	const result: BlueprintV1Declaration = {
 		steps: [{
 			"step": "installTheme",
-			"themeData": themeData,
+			"themeData": themeData as any,
 			"options": {
 				"activate": true
 			},
@@ -46,7 +46,7 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 	};
 
 	if ( step.prs ) {
-		(result.steps[0] as any).queryParams = {
+		(result.steps![0] as any).queryParams = {
 			'gh-ensure-auth': 'yes',
 			'ghexport-repo-url': 'https://github.com/' + repo,
 			'ghexport-content-type': 'theme',

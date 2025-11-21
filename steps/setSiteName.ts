@@ -4,6 +4,7 @@ import { setSiteOption } from './setSiteOption.js';
 
 export const setSiteName: StepFunction<SetSiteNameStep> = (step: SetSiteNameStep): StepResult => {
 	return setSiteOption({
+		step: 'setSiteOption',
 		name: ['blogname', 'blogdescription'],
 		value: ['${sitename}', '${tagline}']
 	});

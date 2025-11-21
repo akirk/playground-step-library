@@ -40,7 +40,7 @@ export const createUser: StepFunction<CreateUserStep> = (step: CreateUserStep): 
 			};
 
 			if (step.login) {
-				result.steps.push({
+				result.steps!.push({
 					step: "login",
 					username: username,
 					password: password
@@ -93,7 +93,7 @@ if ( $user ) {
 			}
 
 			if (additionalSteps.length > 0) {
-				result.additionalStepsAfterExecution = additionalSteps;
+				(result as any).additionalStepsAfterExecution = additionalSteps;
 			}
 
 			return result;

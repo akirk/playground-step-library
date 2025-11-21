@@ -1,4 +1,4 @@
-import type { StepFunction, DisableWelcomeGuidesStep } from './types.js';
+import type { StepFunction, DisableWelcomeGuidesStep, StepResult } from './types.js';
 import { muPlugin } from './muPlugin.js';
 
 export const disableWelcomeGuides: StepFunction<DisableWelcomeGuidesStep> = (step: DisableWelcomeGuidesStep): StepResult => {

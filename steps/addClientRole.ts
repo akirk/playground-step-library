@@ -1,4 +1,4 @@
-import type { StepFunction, AddClientRoleStep } from './types.js';
+import type { StepFunction, AddClientRoleStep, StepResult } from './types.js';
 import { muPlugin } from './muPlugin.js';
 
 export const addClientRole: StepFunction<AddClientRoleStep> = (step: AddClientRoleStep): StepResult => {

@@ -6,7 +6,7 @@ import type {
     StepLibraryBlueprint,
     StepResult
 } from '../steps/types.js';
-import type { Blueprint, StepDefinition } from '@wp-playground/blueprints';
+import type { Blueprint, StepDefinition, BlueprintV1Declaration } from '@wp-playground/blueprints';
 
 interface CustomStepDefinition {
     (step: BlueprintStep, inputData?: any): any[] | StepResult;
@@ -243,7 +243,8 @@ class PlaygroundStepLibrary {
 
 			// Process each step for variable substitution and cleanup
 			for (let i = 0; i < outSteps.length; i++) {
-				const processedStep = { ...outSteps[i] } as any;
+				if (!outSteps[i] || typeof outSteps[i] !== 'object') continue;
+				const processedStep = { ...(outSteps[i] as object) } as any;
 
 				// Preserve or add progress caption from original step
 				if (step.progress) {

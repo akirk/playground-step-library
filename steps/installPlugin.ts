@@ -1,6 +1,7 @@
 import { githubPlugin } from './githubPlugin.js';
 import { githubPluginRelease } from './githubPluginRelease.js';
-import type { StepFunction, InstallPluginStep, StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, InstallPluginStep, StepResult } from './types.js';
+import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
 export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPluginStep): StepResult => {
@@ -75,8 +76,9 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 			return { steps: [pluginStep] };
 		},
 
-		toV2(): V2SchemaFragments {
+		toV2(): BlueprintV2Declaration {
 			return {
+				version: 2,
 				plugins: [plugin]
 			};
 		}

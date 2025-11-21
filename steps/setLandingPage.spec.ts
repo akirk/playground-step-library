@@ -70,6 +70,43 @@ describe('setLandingPage', () => {
         });
     });
 
+    describe('toV2()', () => {
+        it('should set landingPage via applicationOptions', () => {
+            const step: SetLandingPageStep = {
+                step: 'setLandingPage',
+                landingPage: '/wp-admin/post-new.php'
+            };
+
+            const result = setLandingPage(step).toV2();
+
+            expect(result.version).toBe(2);
+            expect(result.applicationOptions).toBeDefined();
+            expect(result.applicationOptions['wordpress-playground'].landingPage).toBe('/wp-admin/post-new.php');
+        });
+
+        it('should work with root path', () => {
+            const step: SetLandingPageStep = {
+                step: 'setLandingPage',
+                landingPage: '/'
+            };
+
+            const result = setLandingPage(step).toV2();
+
+            expect(result.applicationOptions['wordpress-playground'].landingPage).toBe('/');
+        });
+
+        it('should work with complex admin paths', () => {
+            const step: SetLandingPageStep = {
+                step: 'setLandingPage',
+                landingPage: '/wp-admin/post-new.php?post_type=page'
+            };
+
+            const result = setLandingPage(step).toV2();
+
+            expect(result.applicationOptions['wordpress-playground'].landingPage).toBe('/wp-admin/post-new.php?post_type=page');
+        });
+    });
+
     it('should have correct metadata', () => {
         expect(setLandingPage.description).toBe('Set the landing page.');
         expect(Array.isArray(setLandingPage.vars)).toBe(true);

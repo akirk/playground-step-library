@@ -64,28 +64,30 @@ $page_id = wp_insert_post( $page_args );`;
 		},
 
 		toV2() {
-			const result: BlueprintV2Declaration = {
-				version: 2,
-				content: [{
-					type: 'posts',
-					source: {
-						post_title: title,
-						post_content: content,
-						post_type: postType,
-						post_status: postStatus
-					}
-				}]
+			const postData: any = {
+				post_title: title,
+				post_content: content,
+				post_type: postType,
+				post_status: postStatus
 			};
 
 			// Add post_date if provided
 			if (dateValue) {
-				result.content![0].source.post_date = dateValue;
+				postData.post_date = dateValue;
 			}
 
 			// Add import_id if provided (not standard v2, but useful for imports)
 			if (postId > 0) {
-				result.content![0].source.import_id = postId;
+				postData.import_id = postId;
 			}
+
+			const result: BlueprintV2Declaration = {
+				version: 2,
+				content: [{
+					type: 'posts',
+					source: postData
+				}]
+			};
 
 			// Handle homepage setting
 			if (step.homepage) {
@@ -94,7 +96,7 @@ $page_id = wp_insert_post( $page_args );`;
 				};
 
 				// Find the page we just created by title (since we don't have an ID in v2 declarative format)
-				result.additionalStepsAfterExecution = [{
+				(result as any).additionalStepsAfterExecution = [{
 					step: 'runPHP',
 					code: `<?php
 require_once '/wordpress/wp-load.php';

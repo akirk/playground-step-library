@@ -41,8 +41,8 @@ export interface StepVariable {
 }
 
 export interface StepResult {
-    toV1(): BlueprintV1Declaration;
-    toV2(): BlueprintV2Declaration;
+    toV1(): BlueprintV1Declaration | any[] | any;
+    toV2(): BlueprintV2Declaration | any;
 }
 
 /**
@@ -56,7 +56,11 @@ export function v1ToV2Fallback(v1Result: BlueprintV1Declaration): BlueprintV2Dec
     };
 
     if (v1Result.steps && v1Result.steps.length > 0) {
-        result.additionalStepsAfterExecution = v1Result.steps;
+        // Filter out falsy values and cast to the expected type
+        const validSteps = v1Result.steps.filter((s): s is StepDefinition => !!s && typeof s === 'object');
+        if (validSteps.length > 0) {
+            (result as any).additionalStepsAfterExecution = validSteps;
+        }
     }
 
     if (v1Result.landingPage !== undefined || v1Result.login !== undefined) {
@@ -65,11 +69,11 @@ export function v1ToV2Fallback(v1Result: BlueprintV1Declaration): BlueprintV2Dec
         };
 
         if (v1Result.landingPage !== undefined) {
-            result.applicationOptions['wordpress-playground'].landingPage = v1Result.landingPage;
+            result.applicationOptions!['wordpress-playground'].landingPage = v1Result.landingPage;
         }
 
         if (v1Result.login !== undefined) {
-            result.applicationOptions['wordpress-playground'].login = v1Result.login;
+            result.applicationOptions!['wordpress-playground'].login = v1Result.login;
         }
     }
 

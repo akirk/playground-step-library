@@ -34,6 +34,7 @@ interface ValidationResult {
  */
 class PlaygroundStepLibraryV2 {
     private customSteps: Record<string, CustomStepDefinition> = {};
+    private lastQueryParams: Record<string, string> = {};
 
     constructor() {
         this.loadCustomSteps();
@@ -41,6 +42,10 @@ class PlaygroundStepLibraryV2 {
 
     private loadCustomSteps(): void {
         Object.assign(this.customSteps, stepsRegistry);
+    }
+
+    getLastQueryParams(): Record<string, string> {
+        return this.lastQueryParams;
     }
 
     /**
@@ -66,7 +71,7 @@ class PlaygroundStepLibraryV2 {
 
         // Handle title -> meta.title
         if ((inputData as any).title) {
-            v2Blueprint.meta = { title: (inputData as any).title };
+            (v2Blueprint as any).meta = { title: (inputData as any).title };
         }
 
         // Handle preferredVersions
@@ -146,8 +151,8 @@ class PlaygroundStepLibraryV2 {
             if (Array.isArray(result) && result.length > 0) {
                 return {
                     version: 2,
-                    steps: result as StepDefinition[]
-                };
+                    additionalStepsAfterExecution: result as StepDefinition[]
+                } as BlueprintV2Declaration;
             }
 
             return null;
@@ -156,8 +161,8 @@ class PlaygroundStepLibraryV2 {
         // Unknown step - pass through as-is
         return {
             version: 2,
-            steps: [step as StepDefinition]
-        };
+            additionalStepsAfterExecution: [step as StepDefinition]
+        } as BlueprintV2Declaration;
     }
 
     private isStepResult(result: any[] | StepResult): result is StepResult {
@@ -169,36 +174,36 @@ class PlaygroundStepLibraryV2 {
      */
     private mergeFragments(target: BlueprintV2Declaration, source: BlueprintV2Declaration): void {
         // Arrays: concatenate
-        const arrayKeys: (keyof BlueprintV2Declaration)[] = [
+        const arrayKeys: string[] = [
             'content', 'users', 'media', 'plugins', 'themes', 'muPlugins',
-            'steps', 'additionalStepsAfterExecution'
+            'additionalStepsAfterExecution'
         ];
 
         for (const key of arrayKeys) {
-            if (source[key]) {
-                (target as any)[key] = [...((target as any)[key] || []), ...(source[key] as any[])];
+            if ((source as any)[key]) {
+                (target as any)[key] = [...((target as any)[key] || []), ...((source as any)[key] as any[])];
             }
         }
 
         // Objects: spread merge
-        const objectKeys: (keyof BlueprintV2Declaration)[] = [
+        const objectKeys: string[] = [
             'siteOptions', 'constants', 'postTypes'
         ];
 
         for (const key of objectKeys) {
-            if (source[key]) {
-                (target as any)[key] = { ...((target as any)[key] || {}), ...(source[key] as object) };
+            if ((source as any)[key]) {
+                (target as any)[key] = { ...((target as any)[key] || {}), ...((source as any)[key] as object) };
             }
         }
 
         // applicationOptions: deep merge
         if (source.applicationOptions) {
             if (!target.applicationOptions) {
-                target.applicationOptions = {};
+                (target as any).applicationOptions = { 'wordpress-playground': {} };
             }
             if (source.applicationOptions['wordpress-playground']) {
-                target.applicationOptions['wordpress-playground'] = {
-                    ...(target.applicationOptions['wordpress-playground'] || {}),
+                (target.applicationOptions as any)['wordpress-playground'] = {
+                    ...((target.applicationOptions as any)['wordpress-playground'] || {}),
                     ...source.applicationOptions['wordpress-playground']
                 };
             }

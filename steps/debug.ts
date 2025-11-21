@@ -1,7 +1,7 @@
-import type { StepFunction, DebugStep, StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, DebugStep, StepResult } from './types.js';
 import { v1ToV2Fallback } from './types.js';
 import { installPlugin } from './installPlugin.js';
-import type { StepDefinition, BlueprintV1Declaration } from '@wp-playground/blueprints';
+import type { StepDefinition, BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 export const debug: StepFunction<DebugStep> = (step: DebugStep, blueprint: any): StepResult => {
 	return {
@@ -46,7 +46,7 @@ export const debug: StepFunction<DebugStep> = (step: DebugStep, blueprint: any):
 			return { steps };
 		},
 
-		toV2(): V2SchemaFragments {
+		toV2(): BlueprintV2Declaration {
 			return v1ToV2Fallback(this.toV1());
 		}
 	};

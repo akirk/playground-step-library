@@ -1,5 +1,6 @@
 import type { StepFunction, DoActionStep, StepResult } from './types.js';
-import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
+import { v1ToV2Fallback } from './types.js';
+import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 
 
 export const doAction: StepFunction<DoActionStep> = (step: DoActionStep): StepResult => {
@@ -41,16 +42,7 @@ export const doAction: StepFunction<DoActionStep> = (step: DoActionStep): StepRe
 		},
 
 		toV2() {
-			const result: BlueprintV2Declaration = {
-				version: 2,
-				steps: [
-					{
-						step: "runPHP",
-						code
-					}
-				]
-			};
-			return result;
+			return v1ToV2Fallback(this.toV1());
 		}
 	};
 };

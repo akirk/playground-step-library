@@ -52,6 +52,7 @@ add_action(
 );`;
 
 	return muPlugin({
+		step: 'muPlugin',
 		name: 'remove-dashboard-widgets',
 		code
 	});

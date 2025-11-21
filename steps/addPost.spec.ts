@@ -3,7 +3,8 @@ import { addPost } from './addPost.js';
 import type { AddPostStep } from './types.js';
 
 describe('addPost', () => {
-    it('should create a basic post with new variable names', () => {
+    describe('toV1()', () => {
+        it('should create a basic post with new variable names', () => {
         const step: AddPostStep = {
             step: 'addPost',
             title: 'Test Post',
@@ -175,6 +176,74 @@ describe('addPost', () => {
         expect(result.steps[0].code).toContain("'post_type'    => 'post'");
         expect(result.steps[0].code).toContain("'post_status'  => 'draft'");
         expect(result.steps[0].code).toContain("strtotime('2024-01-01')");
+    });
+    });
+
+    describe('toV2()', () => {
+        it('should create a post using content array', () => {
+            const step: AddPostStep = {
+                step: 'addPost',
+                title: 'Test Post',
+                content: '<p>Test content</p>',
+                type: 'post'
+            };
+
+            const result = addPost(step).toV2();
+
+            expect(result.version).toBe(2);
+            expect(result.content).toHaveLength(1);
+            expect(result.content[0].type).toBe('posts');
+            expect(result.content[0].source.post_title).toBe('Test Post');
+            expect(result.content[0].source.post_content).toBe('<p>Test content</p>');
+            expect(result.content[0].source.post_type).toBe('post');
+            expect(result.content[0].source.post_status).toBe('publish');
+        });
+
+        it('should include post_date when provided', () => {
+            const step: AddPostStep = {
+                step: 'addPost',
+                title: 'Dated Post',
+                content: '<p>Content</p>',
+                type: 'post',
+                date: '2024-12-25 10:00:00'
+            };
+
+            const result = addPost(step).toV2();
+
+            expect(result.content[0].source.post_date).toBe('2024-12-25 10:00:00');
+        });
+
+        it('should set homepage with siteOptions and additionalStepsAfterExecution', () => {
+            const step: AddPostStep = {
+                step: 'addPost',
+                title: 'Home Page',
+                content: '<p>Welcome</p>',
+                type: 'page',
+                homepage: true
+            };
+
+            const result = addPost(step).toV2();
+
+            expect(result.siteOptions).toBeDefined();
+            expect(result.siteOptions.show_on_front).toBe('page');
+            expect(result.additionalStepsAfterExecution).toHaveLength(1);
+            expect(result.additionalStepsAfterExecution[0].step).toBe('runPHP');
+        });
+
+        it('should use deprecated variable names when new ones not provided', () => {
+            const step: AddPostStep = {
+                step: 'addPost',
+                postTitle: 'Old Title',
+                postContent: '<p>Old Content</p>',
+                postType: 'post'
+            };
+
+            const result = addPost(step).toV2();
+
+            expect(result.content[0].source.post_title).toBe('Old Title');
+            expect(result.content[0].source.post_content).toBe('<p>Old Content</p>');
+            expect(result.content[0].source.post_type).toBe('post');
+        });
     });
 
     it('should have correct metadata', () => {

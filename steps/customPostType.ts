@@ -1,5 +1,6 @@
-import type { StepFunction, CustomPostTypeStep, StepResult, V2SchemaFragments } from './types.js';
-import type { StepDefinition } from '@wp-playground/blueprints';
+import type { StepFunction, CustomPostTypeStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
+import type { StepDefinition, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
 export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPostTypeStep): StepResult => {
@@ -27,23 +28,8 @@ export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPos
 			return { steps };
 		},
 
-		toV2(): V2SchemaFragments {
-			const fragments: V2SchemaFragments = {};
-
-			// V2 postTypes - declarative custom post type registration
-			// Note: This requires the 'secure-custom-fields' plugin in v2
-			fragments.postTypes = {
-				[slug]: {
-					label: name,
-					public: isPublic,
-					supports: supports || ['title', 'editor']
-				}
-			};
-
-			// Ensure secure-custom-fields plugin is included
-			fragments.plugins = ['secure-custom-fields'];
-
-			return fragments;
+		toV2(): BlueprintV2Declaration {
+			return v1ToV2Fallback(this.toV1());
 		}
 	};
 };

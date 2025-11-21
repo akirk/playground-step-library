@@ -1,5 +1,6 @@
 import type { StepFunction, InstallPhpLiteAdminStep, StepResult } from './types.js';
-import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
+import { v1ToV2Fallback } from './types.js';
+import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 
 const adminBarCode = `<?php
 add_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {
@@ -56,33 +57,7 @@ export const installPhpLiteAdmin: StepFunction<InstallPhpLiteAdminStep> = (step:
 		},
 
 		toV2() {
-			const result: BlueprintV2Declaration = {
-				version: 2,
-				muPlugins: [
-					{
-						file: {
-							filename: "phpliteadmin.php",
-							content: adminBarCode
-						}
-					}
-				],
-				steps: [
-					{
-						step: "writeFile",
-						path: "/wordpress/phpliteadmin.config.php",
-						data: configCode
-					},
-					{
-						step: "writeFile",
-						path: "/wordpress/phpliteadmin.php",
-						data: {
-							resource: "url",
-							url: "https://gist.githubusercontent.com/akirk/c88d7e5f4a0e93c07b437b43fc62ac0c/raw/879692a465c5393cfceaa03dcdf16fef4edea108/phpliteadmin.php"
-						}
-					}
-				]
-			};
-			return result;
+			return v1ToV2Fallback(this.toV1());
 		}
 	};
 };
