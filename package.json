@@ -15,7 +15,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "docs:generate": "node bin/generate-docs.js",
+    "schema:generate": "node bin/generate-schema.js",
+    "docs:generate": "node bin/generate-schema.js && node bin/generate-docs.js",
     "prepare": "npm run build:lib && npm run docs:generate",
     "dev": "tsc --watch & vite"
   },

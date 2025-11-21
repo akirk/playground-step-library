@@ -1,4 +1,5 @@
 {
+	"$schema": "../../step-library-schema.json",
 	"meta": {
 		"title": "Show the available PHP extensions + PHPinfo"
 	},

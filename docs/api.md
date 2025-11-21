@@ -82,6 +82,51 @@ const steps = compiler.getAvailableSteps();
 console.log('Available steps:', Object.keys(steps));
 ```
 
+## Step Library Blueprint Format
+
+Step library blueprints use a custom format with the `vars` object for step parameters. This format is different from native WordPress Playground blueprints.
+
+### JSON Schema
+
+A JSON schema is available for validation and IDE autocompletion:
+
+```json
+{
+    "$schema": "https://akirk.github.io/playground-step-library/step-library-schema.json",
+    "steps": [
+        {
+            "step": "setSiteName",
+            "vars": {
+                "sitename": "My Site",
+                "tagline": "A WordPress site"
+            }
+        }
+    ]
+}
+```
+
+### Format Structure
+
+```typescript
+interface StepLibraryBlueprint {
+    $schema?: string;                    // Schema reference for validation
+    meta?: { title?: string };           // Blueprint metadata
+    title?: string;                      // Alternative to meta.title
+    landingPage?: string;                // Page to navigate to after setup
+    preferredVersions?: {
+        wp?: string;                     // WordPress version
+        php?: string;                    // PHP version
+    };
+    steps: Array<{
+        step: string;                    // Step type name
+        vars?: Record<string, any>;      // Step parameters (nested format)
+        [key: string]: any;              // Step parameters (flat format)
+    }>;
+}
+```
+
+Both nested (`vars: { sitename: "..." }`) and flat (`sitename: "..."`) formats are supported for step parameters.
+
 ## V1 vs V2 Compilation
 
 The library supports two output formats via the main `PlaygroundStepLibrary` class:

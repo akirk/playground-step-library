@@ -69,16 +69,24 @@ npm install playground-step-library
 import PlaygroundStepLibrary from 'playground-step-library';
 
 const compiler = new PlaygroundStepLibrary();
-const compiled = compiler.compile({
+
+// Compile to V1 format (imperative, with steps array)
+const v1 = compiler.compile({
     steps: [
         { step: 'setSiteName', sitename: 'My Site', tagline: 'A WordPress site' }
     ]
 });
-```
 
-The library provides two compilers:
-- **V1 Compiler** (`PlaygroundStepLibrary`) - Outputs imperative blueprints with `steps` array
-- **V2 Compiler** (`PlaygroundStepLibraryV2`) - Outputs declarative blueprints with schema properties
+// Compile to V2 format (declarative, with schema properties)
+const v2 = compiler.compileV2({
+    steps: [
+        { step: 'setSiteName', sitename: 'My Site', tagline: 'A WordPress site' }
+    ]
+});
+
+// Transpile native V1 blueprints to V2
+const result = compiler.transpile(nativeV1Blueprint);
+```
 
 See the **[Programmatic API Documentation](docs/api.md)** for full details on CLI usage, methods, and examples.
 ## Custom Steps

@@ -1,4 +1,5 @@
 {
+	"$schema": "../../step-library-schema.json",
 	"meta": {
 		"title": "Load Feeds into the Friends plugin"
 	},
