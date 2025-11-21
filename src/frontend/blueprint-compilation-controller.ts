@@ -90,30 +90,59 @@ export class BlueprintCompilationController {
 					queries.push(key + '=' + encodeURIComponent(extractedQueryParams[key]));
 				}
 			}
-	}
-
-		// Add metadata indicating compilation by step library (only if there are steps)
-		const excludeMetaEl = document.getElementById('exclude-meta') as HTMLInputElement;
-		if (outputData.steps && outputData.steps.length > 0 && (!excludeMetaEl || !excludeMetaEl.checked)) {
-			if (!outputData.meta) {
-				outputData.meta = {};
-			}
-			// Ensure meta has a title (required by schema)
-			if (!outputData.meta.title) {
-				const titleInput = document.getElementById('title') as HTMLInputElement;
-				const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
-				outputData.meta.title = blueprintTitle || generateLabel();
-			}
-			outputData.meta.author = 'https://github.com/akirk/playground-step-library';
 		}
 
-		// If exclude-meta is checked, remove the meta property entirely
-		if (excludeMetaEl && excludeMetaEl.checked && outputData.meta) {
-			delete outputData.meta;
+		// Add metadata indicating compilation by step library
+		const excludeMetaEl = document.getElementById('exclude-meta') as HTMLInputElement;
+		const shouldAddMeta = !excludeMetaEl || !excludeMetaEl.checked;
+
+		if (shouldAddMeta) {
+			const titleInput = document.getElementById('title') as HTMLInputElement;
+			const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
+
+			// Add $schema for validation support
+			if (!outputData.$schema) {
+				outputData.$schema = 'https://playground.wordpress.net/blueprint-schema.json';
+			}
+
+			if (useV2) {
+				// V2 uses blueprintMeta
+				if (!outputData.blueprintMeta) {
+					outputData.blueprintMeta = {};
+				}
+				if (!outputData.blueprintMeta.name && blueprintTitle) {
+					outputData.blueprintMeta.name = blueprintTitle;
+				}
+				outputData.blueprintMeta.moreInfo = 'https://akirk.github.io/playground-step-library/';
+			} else if (outputData.steps && outputData.steps.length > 0) {
+				// V1 uses meta
+				if (!outputData.meta) {
+					outputData.meta = {};
+				}
+				if (!outputData.meta.title) {
+					outputData.meta.title = blueprintTitle || generateLabel();
+				}
+				outputData.meta.author = 'https://github.com/akirk/playground-step-library';
+			}
+		}
+
+		// If exclude-meta is checked, remove the meta properties entirely
+		if (excludeMetaEl && excludeMetaEl.checked) {
+			if (outputData.$schema) {
+				delete outputData.$schema;
+			}
+			if (outputData.meta) {
+				delete outputData.meta;
+			}
+			if (outputData.blueprintMeta) {
+				delete outputData.blueprintMeta;
+			}
 		}
 
 		if (!isManualEditMode.value) {
-			this.deps.setBlueprintValue(JSON.stringify(outputData, null, 2));
+			// Reorder properties to put blueprintMeta/meta at the end
+			const orderedOutput = this.reorderBlueprintProperties(outputData);
+			this.deps.setBlueprintValue(JSON.stringify(orderedOutput, null, 2));
 		}
 
 		// Add autosave query params
@@ -190,5 +219,23 @@ export class BlueprintCompilationController {
 
 		// Handle split view mode
 		handleSplitViewMode(href, this.deps.blueprintUIDeps);
+	}
+
+	/**
+	 * Reorder blueprint properties to put metadata at the end
+	 */
+	private reorderBlueprintProperties(blueprint: any): any {
+		const { blueprintMeta, meta, ...rest } = blueprint;
+		const result: any = { ...rest };
+
+		// Add meta properties at the end
+		if (meta) {
+			result.meta = meta;
+		}
+		if (blueprintMeta) {
+			result.blueprintMeta = blueprintMeta;
+		}
+
+		return result;
 	}
 }

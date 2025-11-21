@@ -69,9 +69,9 @@ class PlaygroundStepLibraryV2 {
             version: 2
         };
 
-        // Handle title -> meta.title
+        // Handle title -> blueprintMeta.name
         if ((inputData as any).title) {
-            (v2Blueprint as any).meta = { title: (inputData as any).title };
+            v2Blueprint.blueprintMeta = { name: (inputData as any).title };
         }
 
         // Handle preferredVersions

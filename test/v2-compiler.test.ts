@@ -128,8 +128,8 @@ describe('PlaygroundStepLibraryV2', () => {
 
             const result = compiler.compile(blueprint);
 
-            expect(result.meta).toBeDefined();
-            expect(result.meta.title).toBe('My Blueprint');
+            expect(result.blueprintMeta).toBeDefined();
+            expect(result.blueprintMeta!.name).toBe('My Blueprint');
         });
 
         it('should handle landingPage from input blueprint', () => {

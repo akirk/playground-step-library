@@ -57,9 +57,11 @@ $page_id = wp_insert_post( $page_args );`;
 				};
 
 				// Find the page we just created by title (since we don't have an ID in v2 declarative format)
-				(result as any).additionalStepsAfterExecution = [{
+				result.additionalStepsAfterExecution = [{
 					step: 'runPHP',
-					code: `<?php
+					code: {
+						filename: 'set-homepage.php',
+						content: `<?php
 require_once '/wordpress/wp-load.php';
 $pages = get_posts( array(
 	'post_type' => 'page',
@@ -72,6 +74,7 @@ if ( ! empty( $pages ) ) {
 	update_option( 'page_on_front', $pages[0]->ID );
 	update_option( 'show_on_front', 'page' );
 }`
+					}
 				}];
 			}
 

@@ -46,9 +46,26 @@ export interface StepResult {
 }
 
 /**
+ * Convert a runPHP step's code property to v2 InlineFile format if it's a string.
+ */
+function convertRunPHPStep(step: StepDefinition): StepDefinition {
+    if (step.step === 'runPHP' && typeof step.code === 'string') {
+        return {
+            ...step,
+            code: {
+                filename: 'code.php',
+                content: step.code
+            }
+        };
+    }
+    return step;
+}
+
+/**
  * Helper function to convert v1 blueprint result to v2 blueprint with additionalStepsAfterExecution.
  * Use this in toV2() when you want to reuse the v1 implementation.
  * Handles steps, landingPage, and login properties.
+ * Automatically converts runPHP steps with string code to InlineFile format.
  */
 export function v1ToV2Fallback(v1Result: BlueprintV1Declaration): BlueprintV2Declaration {
     const result: BlueprintV2Declaration = {
@@ -56,10 +73,15 @@ export function v1ToV2Fallback(v1Result: BlueprintV1Declaration): BlueprintV2Dec
     };
 
     if (v1Result.steps && v1Result.steps.length > 0) {
-        // Filter out falsy values and cast to the expected type
-        const validSteps = v1Result.steps.filter((s): s is StepDefinition => !!s && typeof s === 'object');
+        // Filter out falsy values, convert runPHP steps, and cast to the expected type
+        const validSteps = v1Result.steps
+            .filter((s): s is StepDefinition => !!s && typeof s === 'object')
+            .map(convertRunPHPStep);
         if (validSteps.length > 0) {
-            (result as any).additionalStepsAfterExecution = validSteps;
+            // Cast needed: v1 StepDefinition (from @wp-playground/blueprints/lib/steps) differs from
+            // v2 Step (from appendix-A-blueprint-v2-schema) in type definitions, but they're
+            // compatible at runtime. The v2 schema is stricter about DataReference types.
+            result.additionalStepsAfterExecution = validSteps as any;
         }
     }
 
