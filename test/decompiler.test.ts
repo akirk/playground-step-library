@@ -1703,4 +1703,280 @@ $page_id = wp_insert_post( $page_args );`,
 			expect(stepTypes).toContain('login');
 		});
 	});
+
+	describe('hidden steps decompilation', () => {
+		it('should decompile activatePlugin step', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'activatePlugin',
+						pluginPath: 'hello-dolly/hello.php',
+						pluginName: 'Hello Dolly'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps).toHaveLength(1);
+			expect(result.steps[0]).toMatchObject({
+				step: 'activatePlugin',
+				pluginPath: 'hello-dolly/hello.php',
+				pluginName: 'Hello Dolly'
+			});
+			expect(result.confidence).toBe('high');
+		});
+
+		it('should decompile activateTheme step', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'activateTheme',
+						themeFolderName: 'flavor'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps).toHaveLength(1);
+			expect(result.steps[0]).toMatchObject({
+				step: 'activateTheme',
+				themeFolderName: 'flavor'
+			});
+		});
+
+		it('should decompile activateTheme with v2 property name', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'activateTheme',
+						themeDirectoryName: 'flavor'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'activateTheme',
+				themeFolderName: 'flavor'
+			});
+		});
+
+		it('should decompile cp step with path translation', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'cp',
+						fromPath: '/wordpress/wp-content/themes/flavor/style.css',
+						toPath: '/wordpress/wp-content/themes/flavor/style-backup.css'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps).toHaveLength(1);
+			expect(result.steps[0]).toMatchObject({
+				step: 'cp',
+				fromPath: '/wp-content/themes/flavor/style.css',
+				toPath: '/wp-content/themes/flavor/style-backup.css'
+			});
+		});
+
+		it('should decompile mv step', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'mv',
+						fromPath: '/wordpress/wp-content/plugins/old-plugin',
+						toPath: '/wordpress/wp-content/plugins/new-plugin'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'mv',
+				fromPath: '/wp-content/plugins/old-plugin',
+				toPath: '/wp-content/plugins/new-plugin'
+			});
+		});
+
+		it('should decompile rm step', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'rm',
+						path: '/wordpress/wp-content/plugins/hello.php'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'rm',
+				path: '/wp-content/plugins/hello.php'
+			});
+		});
+
+		it('should decompile rmdir step', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'rmdir',
+						path: '/wordpress/wp-content/plugins/old-plugin'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'rmdir',
+				path: '/wp-content/plugins/old-plugin'
+			});
+		});
+
+		it('should decompile mkdir step for non-standard directories', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'mkdir',
+						path: '/wordpress/wp-content/custom-folder'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps).toHaveLength(1);
+			expect(result.steps[0]).toMatchObject({
+				step: 'mkdir',
+				path: '/wp-content/custom-folder'
+			});
+		});
+
+		it('should skip mkdir for standard setup directories', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'mkdir',
+						path: '/wordpress/wp-content/mu-plugins'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps).toHaveLength(0);
+		});
+
+		it('should decompile unzip step', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'unzip',
+						zipFile: { resource: 'url', url: 'https://example.com/plugin.zip' },
+						extractToPath: '/wordpress/wp-content/plugins'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'unzip',
+				extractToPath: '/wp-content/plugins'
+			});
+			expect((result.steps[0] as any).zipFile).toBeDefined();
+		});
+
+		it('should decompile unzip step with zipPath', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'unzip',
+						zipPath: '/wordpress/tmp/plugin.zip',
+						extractToPath: '/wordpress/wp-content/plugins'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'unzip',
+				zipPath: '/tmp/plugin.zip',
+				extractToPath: '/wp-content/plugins'
+			});
+		});
+
+		it('should decompile runSql step', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'runSql',
+						sql: { resource: 'literal', contents: 'DELETE FROM wp_posts WHERE ID > 1;' }
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'runSQL',
+				sql: { resource: 'literal', contents: 'DELETE FROM wp_posts WHERE ID > 1;' }
+			});
+		});
+
+		it('should decompile importWxr step', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'importWxr',
+						file: { resource: 'url', url: 'https://example.com/export.xml' }
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'importWxr',
+				file: { resource: 'url', url: 'https://example.com/export.xml' }
+			});
+		});
+
+		it('should decompile multiple hidden steps together', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'mkdir',
+						path: '/wordpress/wp-content/custom'
+					},
+					{
+						step: 'cp',
+						fromPath: '/wordpress/wp-content/themes/flavor/style.css',
+						toPath: '/wordpress/wp-content/custom/style.css'
+					},
+					{
+						step: 'activatePlugin',
+						pluginPath: 'akismet/akismet.php'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps).toHaveLength(3);
+			expect(result.steps[0].step).toBe('mkdir');
+			expect(result.steps[1].step).toBe('cp');
+			expect(result.steps[2].step).toBe('activatePlugin');
+			expect(result.confidence).toBe('high');
+		});
+	});
 });

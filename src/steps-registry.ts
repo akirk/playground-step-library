@@ -50,6 +50,18 @@ import { generateProducts } from '../steps/generateProducts.js';
 import { blockExamples } from '../steps/blockExamples.js';
 import { debug } from '../steps/debug.js';
 
+// Hidden steps (for decompilation/compilation only, not shown in UI)
+import { activatePlugin } from '../steps/activatePlugin.js';
+import { activateTheme } from '../steps/activateTheme.js';
+import { cp } from '../steps/cp.js';
+import { mv } from '../steps/mv.js';
+import { rm } from '../steps/rm.js';
+import { rmdir } from '../steps/rmdir.js';
+import { mkdir } from '../steps/mkdir.js';
+import { unzip } from '../steps/unzip.js';
+import { runSQL } from '../steps/runSQL.js';
+import { writeFile } from '../steps/writeFile.js';
+
 /**
  * Registry of all available steps using ES6 object property shorthand
  * This eliminates the need to name each step twice
@@ -106,4 +118,16 @@ export const stepsRegistry = {
     generateProducts,
     blockExamples,
     debug,
+
+    // Hidden steps (for decompilation/compilation only)
+    activatePlugin,
+    activateTheme,
+    cp,
+    mv,
+    rm,
+    rmdir,
+    mkdir,
+    unzip,
+    runSQL,
+    writeFile,
 };

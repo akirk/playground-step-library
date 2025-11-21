@@ -30,8 +30,8 @@ export class StepLibraryController {
 		for (const name in this.deps.customSteps) {
 			const data = this.deps.customSteps[name];
 
-			// Skip deprecated steps
-			if (data.deprecated) {
+			// Skip deprecated or hidden steps
+			if ( data.deprecated || data.hidden ) {
 				continue;
 			}
 

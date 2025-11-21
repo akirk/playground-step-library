@@ -430,8 +430,35 @@ export class BlueprintDecompiler {
 			case 'wp-cli':
 				return this.decompileWpCli(nativeStep);
 
+			case 'activatePlugin':
+				return this.decompileActivatePlugin(nativeStep);
+
+			case 'activateTheme':
+				return this.decompileActivateTheme(nativeStep);
+
+			case 'cp':
+				return this.decompileCp(nativeStep);
+
+			case 'mv':
+				return this.decompileMv(nativeStep);
+
+			case 'rm':
+				return this.decompileRm(nativeStep);
+
+			case 'rmdir':
+				return this.decompileRmdir(nativeStep);
+
 			case 'mkdir':
-				return null;
+				return this.decompileMkdir(nativeStep);
+
+			case 'unzip':
+				return this.decompileUnzip(nativeStep);
+
+			case 'runSql':
+				return this.decompileRunSQL(nativeStep);
+
+			case 'importWxr':
+				return this.decompileImportWxr(nativeStep);
 
 			default:
 				this.warnings.push(`Unknown native step type: ${nativeStep.step}`);
@@ -739,6 +766,120 @@ export class BlueprintDecompiler {
 			password,
 			landingPage: false
 		};
+	}
+
+	private decompileActivatePlugin(nativeStep: any): StepLibraryStepDefinition | null {
+		return {
+			step: 'activatePlugin',
+			pluginPath: nativeStep.pluginPath || '',
+			pluginName: nativeStep.pluginName
+		};
+	}
+
+	private decompileActivateTheme(nativeStep: any): StepLibraryStepDefinition | null {
+		return {
+			step: 'activateTheme',
+			themeFolderName: nativeStep.themeFolderName || nativeStep.themeDirectoryName || ''
+		};
+	}
+
+	private decompileCp(nativeStep: any): StepLibraryStepDefinition | null {
+		return {
+			step: 'cp',
+			fromPath: this.translatePath( nativeStep.fromPath || '' ),
+			toPath: this.translatePath( nativeStep.toPath || '' )
+		};
+	}
+
+	private decompileMv(nativeStep: any): StepLibraryStepDefinition | null {
+		return {
+			step: 'mv',
+			fromPath: this.translatePath( nativeStep.fromPath || '' ),
+			toPath: this.translatePath( nativeStep.toPath || '' )
+		};
+	}
+
+	private decompileRm(nativeStep: any): StepLibraryStepDefinition | null {
+		return {
+			step: 'rm',
+			path: this.translatePath( nativeStep.path || '' )
+		};
+	}
+
+	private decompileRmdir(nativeStep: any): StepLibraryStepDefinition | null {
+		return {
+			step: 'rmdir',
+			path: this.translatePath( nativeStep.path || '' )
+		};
+	}
+
+	private decompileMkdir(nativeStep: any): StepLibraryStepDefinition | null {
+		const path = nativeStep.path || '';
+
+		// Skip common setup directories that are usually just noise
+		const setupDirectories = [
+			'/wordpress/wp-content/mu-plugins',
+			'wp-content/mu-plugins',
+			'/wordpress/wp-content/plugins',
+			'wp-content/plugins',
+			'/wordpress/wp-content/themes',
+			'wp-content/themes',
+			'/wordpress/wp-content/uploads',
+			'wp-content/uploads'
+		];
+
+		if ( setupDirectories.includes( path ) ) {
+			return null;
+		}
+
+		return {
+			step: 'mkdir',
+			path: this.translatePath( path )
+		};
+	}
+
+	private decompileUnzip(nativeStep: any): StepLibraryStepDefinition | null {
+		const step: any = {
+			step: 'unzip',
+			extractToPath: this.translatePath( nativeStep.extractToPath || '' )
+		};
+
+		if ( nativeStep.zipFile ) {
+			step.zipFile = nativeStep.zipFile;
+		}
+		if ( nativeStep.zipPath ) {
+			step.zipPath = this.translatePath( nativeStep.zipPath );
+		}
+
+		return step;
+	}
+
+	private decompileRunSQL(nativeStep: any): StepLibraryStepDefinition | null {
+		return {
+			step: 'runSQL',
+			sql: nativeStep.sql
+		};
+	}
+
+	private decompileImportWxr(nativeStep: any): StepLibraryStepDefinition | null {
+		return {
+			step: 'importWxr',
+			file: nativeStep.file
+		};
+	}
+
+	private translatePath( path: string ): string {
+		if ( !path ) {
+			return path;
+		}
+		// Remove /wordpress/ prefix if present
+		if ( path.startsWith( '/wordpress/' ) ) {
+			return path.substring( 10 );
+		}
+		if ( path.startsWith( 'wordpress/' ) ) {
+			return path.substring( 10 );
+		}
+		return path;
 	}
 
 	private calculateConfidence(mappedCount: number, unmappedCount: number): 'high' | 'medium' | 'low' {

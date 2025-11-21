@@ -135,6 +135,8 @@ The library supports two output formats via the main `PlaygroundStepLibrary` cla
 
 Additionally, the `transpile()` method converts native V1 blueprints to V2 format.
 
+> **Note:** Transpilation is not a fully-featured capability. It's a byproduct of the decompilation functionality that was added to allow pasting native blueprints in the UI. Complex blueprints (especially those with custom `runPHP` code) may not transpile accurately.
+
 ### V1 Compilation Example
 
 ```javascript
@@ -254,6 +256,8 @@ const v2Blueprint = compiler.compileV2({
 
 ##### `transpile(v1Blueprint)`
 Transpiles a native V1 blueprint to V2 format. Decompiles to step library format, then compiles to V2.
+
+> **Limited support:** This method leverages decompilation capabilities that were primarily added to enable pasting native blueprints in the UI. It works best with blueprints using common native steps (`installPlugin`, `setSiteOptions`, `login`, etc.) but may not accurately handle complex `runPHP` code or unusual step configurations.
 
 - `v1Blueprint` (Object): Native WordPress Playground V1 blueprint
 - Returns: `TranspileResult` object

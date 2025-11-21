@@ -84,7 +84,7 @@ const v2 = compiler.compileV2({
     ]
 });
 
-// Transpile native V1 blueprints to V2
+// Transpile native V1 blueprints to V2 (limited support - see docs)
 const result = compiler.transpile(nativeV1Blueprint);
 ```
 

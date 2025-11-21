@@ -110,6 +110,7 @@ export interface StepFunction<T extends BlueprintStep = BlueprintStep> {
     count?: number;
     multiple?: boolean;
     deprecated?: boolean;
+    hidden?: boolean;
 }
 
 // Step-specific interfaces (flattened, no vars wrapper)
