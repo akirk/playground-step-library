@@ -6,7 +6,10 @@ import type {
     StepLibraryBlueprint,
     StepResult
 } from '../steps/types.js';
-import type { Blueprint, StepDefinition, BlueprintV1Declaration } from '@wp-playground/blueprints';
+import type { Blueprint, StepDefinition, BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
+import PlaygroundStepLibraryV2 from './v2-compiler.js';
+import { BlueprintDecompiler } from './decompiler.js';
+import type { DecompilerResult } from './decompiler.js';
 
 interface CustomStepDefinition {
     (step: BlueprintStep, inputData?: any): any[] | StepResult;
@@ -21,6 +24,12 @@ interface CustomStepDefinition {
 interface ValidationResult {
     valid: boolean;
     error?: string;
+}
+
+export interface TranspileResult {
+    v2Blueprint: BlueprintV2Declaration;
+    stepLibraryBlueprint: { steps: Array<any> };
+    decompilerResult: DecompilerResult;
 }
 
 export interface CompileOptions {
@@ -91,6 +100,36 @@ class PlaygroundStepLibrary {
     compile(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}): Blueprint {
         this.lastQueryParams = {};
         return this.compileToV1(blueprint, options);
+    }
+
+    /**
+     * Compile a blueprint to v2 format
+     * @param blueprint The blueprint to compile
+     * @param options Compilation options
+     * @returns Compiled v2 blueprint
+     */
+    compileV2(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}): BlueprintV2Declaration {
+        const v2Compiler = new PlaygroundStepLibraryV2();
+        return v2Compiler.compile(blueprint, options);
+    }
+
+    /**
+     * Transpile a native v1 blueprint to v2 format
+     * Decompiles to step library format, then compiles to v2
+     * @param v1Blueprint Native v1 blueprint
+     * @returns Transpile result with v2 blueprint and metadata
+     */
+    transpile(v1Blueprint: any): TranspileResult {
+        const decompiler = new BlueprintDecompiler();
+        const decompilerResult = decompiler.decompile(v1Blueprint);
+        const stepLibraryBlueprint = { steps: decompilerResult.steps };
+        const v2Blueprint = this.compileV2(stepLibraryBlueprint);
+
+        return {
+            v2Blueprint,
+            stepLibraryBlueprint,
+            decompilerResult
+        };
     }
 
     /**
@@ -475,6 +514,5 @@ class PlaygroundStepLibrary {
 }
 
 export default PlaygroundStepLibrary;
-export { default as PlaygroundStepLibraryV2 } from './v2-compiler.js';
-export { BlueprintDecompiler, transpileV1ToV2 } from './decompiler.js';
-export type { DecompilerResult, TranspileResult } from './decompiler.js';
+export { BlueprintDecompiler } from './decompiler.js';
+export type { DecompilerResult } from './decompiler.js';

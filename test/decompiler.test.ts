@@ -1,11 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { BlueprintDecompiler } from '../src/decompiler';
-import PlaygroundStepLibrary, { PlaygroundStepLibraryV2 } from '../src/index';
+import PlaygroundStepLibrary from '../src/index';
 
 describe('BlueprintDecompiler', () => {
 	const decompiler = new BlueprintDecompiler();
 	const compiler = new PlaygroundStepLibrary();
-	const compilerV2 = new PlaygroundStepLibraryV2();
 
 	describe('installPlugin decompilation', () => {
 		it('should decompile wordpress.org plugin', () => {
@@ -1447,7 +1446,7 @@ wp_insert_post( array(
 			};
 
 			const stepLibrary = decompiler.decompile(v1Native);
-			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+			const v2Native = compiler.compileV2({ steps: stepLibrary.steps });
 
 			expect(v2Native.version).toBe(2);
 			expect(v2Native.plugins).toContain('gutenberg');
@@ -1464,7 +1463,7 @@ wp_insert_post( array(
 			};
 
 			const stepLibrary = decompiler.decompile(v1Native);
-			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+			const v2Native = compiler.compileV2({ steps: stepLibrary.steps });
 
 			expect(v2Native.version).toBe(2);
 			expect(v2Native.siteOptions).toBeDefined();
@@ -1485,7 +1484,7 @@ wp_insert_post( array(
 			};
 
 			const stepLibrary = decompiler.decompile(v1Native);
-			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+			const v2Native = compiler.compileV2({ steps: stepLibrary.steps });
 
 			expect(v2Native.version).toBe(2);
 			// Verify theme goes to themes array, not additionalStepsAfterExecution
@@ -1500,7 +1499,7 @@ wp_insert_post( array(
 			};
 
 			const stepLibrary = decompiler.decompile(v1Native);
-			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+			const v2Native = compiler.compileV2({ steps: stepLibrary.steps });
 
 			expect(v2Native.version).toBe(2);
 			expect(v2Native.applicationOptions?.['wordpress-playground']?.login).toBeDefined();
@@ -1513,7 +1512,7 @@ wp_insert_post( array(
 			};
 
 			const stepLibrary = decompiler.decompile(v1Native);
-			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+			const v2Native = compiler.compileV2({ steps: stepLibrary.steps });
 
 			expect(v2Native.version).toBe(2);
 			expect(v2Native.applicationOptions?.['wordpress-playground']?.landingPage).toBe('/wp-admin/');
@@ -1540,7 +1539,7 @@ $page_id = wp_insert_post( $page_args );`,
 			const stepLibrary = decompiler.decompile(v1Native);
 			expect(stepLibrary.steps[0].step).toBe('addPage');
 
-			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+			const v2Native = compiler.compileV2({ steps: stepLibrary.steps });
 
 			expect(v2Native.version).toBe(2);
 			expect(v2Native.content).toHaveLength(1);
@@ -1567,7 +1566,7 @@ $page_id = wp_insert_post( $page_args );`,
 			const stepLibrary = decompiler.decompile(v1Native);
 			expect(stepLibrary.confidence).toBe('high');
 
-			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+			const v2Native = compiler.compileV2({ steps: stepLibrary.steps });
 
 			expect(v2Native.version).toBe(2);
 			expect(v2Native.plugins).toContain('woocommerce');
@@ -1593,7 +1592,7 @@ $page_id = wp_insert_post( $page_args );`,
 			};
 
 			const stepLibrary = decompiler.decompile(v1Native);
-			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+			const v2Native = compiler.compileV2({ steps: stepLibrary.steps });
 
 			expect(v2Native.plugins).toContain('jetpack');
 			expect(v2Native.plugins).toContain('akismet');
@@ -1609,7 +1608,7 @@ $page_id = wp_insert_post( $page_args );`,
 				]
 			};
 
-			const compiled = compilerV2.compile(original);
+			const compiled = compiler.compileV2(original);
 			expect(compiled.version).toBe(2);
 
 			const decompiled = decompiler.decompile(compiled);
@@ -1626,7 +1625,7 @@ $page_id = wp_insert_post( $page_args );`,
 				]
 			};
 
-			const compiled = compilerV2.compile(original);
+			const compiled = compiler.compileV2(original);
 			const decompiled = decompiler.decompile(compiled);
 
 			expect(decompiled.steps).toHaveLength(1);
@@ -1641,7 +1640,7 @@ $page_id = wp_insert_post( $page_args );`,
 				]
 			};
 
-			const compiled = compilerV2.compile(original);
+			const compiled = compiler.compileV2(original);
 			const decompiled = decompiler.decompile(compiled);
 
 			expect(decompiled.steps).toHaveLength(1);
@@ -1657,7 +1656,7 @@ $page_id = wp_insert_post( $page_args );`,
 				]
 			};
 
-			const compiled = compilerV2.compile(original);
+			const compiled = compiler.compileV2(original);
 			const decompiled = decompiler.decompile(compiled);
 
 			expect(decompiled.steps).toHaveLength(1);
@@ -1673,7 +1672,7 @@ $page_id = wp_insert_post( $page_args );`,
 				]
 			};
 
-			const compiled = compilerV2.compile(original);
+			const compiled = compiler.compileV2(original);
 			const decompiled = decompiler.decompile(compiled);
 
 			expect(decompiled.steps).toHaveLength(1);
@@ -1691,7 +1690,7 @@ $page_id = wp_insert_post( $page_args );`,
 				]
 			};
 
-			const compiled = compilerV2.compile(original);
+			const compiled = compiler.compileV2(original);
 			const decompiled = decompiler.decompile(compiled);
 
 			expect(decompiled.confidence).toBe('high');

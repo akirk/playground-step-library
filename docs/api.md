@@ -82,72 +82,83 @@ const steps = compiler.getAvailableSteps();
 console.log('Available steps:', Object.keys(steps));
 ```
 
-## V1 vs V2 Compilers
+## V1 vs V2 Compilation
 
-The library provides two compilers:
-- **V1 Compiler** (`PlaygroundStepLibrary`) - Outputs imperative blueprints with `steps` array
-- **V2 Compiler** (`PlaygroundStepLibraryV2`) - Outputs declarative blueprints with schema properties
+The library supports two output formats via the main `PlaygroundStepLibrary` class:
+- **V1 Format** (`compile()`) - Outputs imperative blueprints with `steps` array
+- **V2 Format** (`compileV2()`) - Outputs declarative blueprints with schema properties
 
-### Input Example
+Additionally, the `transpile()` method converts native V1 blueprints to V2 format.
 
-```json
-{
-  "steps": [
-    {
-      "step": "setSiteName",
-      "sitename": "My Demo Site",
-      "tagline": "A WordPress Playground demo"
-    },
-    {
-      "step": "addPage",
-      "title": "Welcome Page",
-      "content": "<p>Welcome to my WordPress site!</p>",
-      "homepage": false
-    }
-  ]
-}
+### V1 Compilation Example
+
+```javascript
+import PlaygroundStepLibrary from 'playground-step-library';
+
+const compiler = new PlaygroundStepLibrary();
+
+const blueprint = {
+    steps: [
+        { step: 'setSiteName', sitename: 'My Demo Site', tagline: 'A WordPress Playground demo' },
+        { step: 'addPage', title: 'Welcome Page', content: '<p>Welcome!</p>' }
+    ]
+};
+
+const v1 = compiler.compile(blueprint);
+// {
+//   "steps": [
+//     { "step": "setSiteOptions", "options": { "blogname": "My Demo Site", "blogdescription": "A WordPress Playground demo" } },
+//     { "step": "runPHP", "code": "<?php require_once '/wordpress/wp-load.php';\n$page_args = array(...);", "progress": { "caption": "addPage: Welcome Page" } }
+//   ]
+// }
 ```
 
-### V1 Output Example (Imperative)
+### V2 Compilation Example
 
-```json
-{
-  "steps": [
-    {
-      "step": "setSiteOptions",
-      "options": {
-        "blogname": "My Demo Site",
-        "blogdescription": "A WordPress Playground demo"
-      }
-    },
-    {
-      "step": "runPHP",
-      "code": "\n<?php require_once '/wordpress/wp-load.php';\n$page_args = array(\n\t'post_type'    => 'page',\n\t'post_status'  => 'publish',\n\t'post_title'   => 'Welcome Page',\n\t'post_content' => '<p>Welcome to my WordPress site!</p>',\n);\n$page_id = wp_insert_post( $page_args );"
-    }
-  ]
-}
+```javascript
+import PlaygroundStepLibrary from 'playground-step-library';
+
+const compiler = new PlaygroundStepLibrary();
+
+const blueprint = {
+    steps: [
+        { step: 'setSiteName', sitename: 'My Demo Site', tagline: 'A WordPress Playground demo' },
+        { step: 'addPage', title: 'Welcome Page', content: '<p>Welcome!</p>' }
+    ]
+};
+
+const v2 = compiler.compileV2(blueprint);
+// {
+//   "version": 2,
+//   "siteOptions": { "blogname": "My Demo Site", "blogdescription": "A WordPress Playground demo" },
+//   "content": [
+//     { "type": "posts", "source": { "post_title": "Welcome Page", "post_content": "<p>Welcome!</p>", "post_type": "page", "post_status": "publish" } }
+//   ]
+// }
 ```
 
-### V2 Output Example (Declarative)
+### Transpilation Example (V1 Native → V2)
 
-```json
-{
-  "siteOptions": {
-    "blogname": "My Demo Site",
-    "blogdescription": "A WordPress Playground demo"
-  },
-  "content": [
-    {
-      "type": "posts",
-      "source": {
-        "post_title": "Welcome Page",
-        "post_content": "<p>Welcome to my WordPress site!</p>",
-        "post_type": "page",
-        "post_status": "publish"
-      }
-    }
-  ]
-}
+```javascript
+// Native V1 blueprint (from WordPress Playground)
+const nativeV1 = {
+    landingPage: '/wp-admin/',
+    steps: [
+        { step: 'installPlugin', pluginData: { resource: 'wordpress.org/plugins', slug: 'woocommerce' } },
+        { step: 'setSiteOptions', options: { blogname: 'My Store' } },
+        { step: 'login' }
+    ]
+};
+
+const result = compiler.transpile(nativeV1);
+// result.v2Blueprint:
+// {
+//   "version": 2,
+//   "plugins": ["woocommerce"],
+//   "siteOptions": { "blogname": "My Store" },
+//   "applicationOptions": { "wordpress-playground": { "login": true, "landingPage": "/wp-admin/" } }
+// }
+// result.decompilerResult.confidence: "high"
 ```
 
 ## API Reference
@@ -176,6 +187,59 @@ Compiles a blueprint with custom steps into a v1 blueprint with native steps.
 - Returns: Compiled v1 blueprint object with `steps` array
 - Throws: Error if compilation fails
 
+##### `compileV2(blueprint, options?)`
+Compiles a blueprint with custom steps into a v2 blueprint with declarative schema.
+
+- `blueprint` (Object|string): Blueprint object or JSON string
+- `options` (Object, optional): Same as `compile()`
+- Returns: Compiled v2 blueprint with declarative properties (`plugins`, `themes`, `siteOptions`, `content`, etc.)
+- Throws: Error if compilation fails
+
+```javascript
+const compiler = new PlaygroundStepLibrary();
+
+const v2Blueprint = compiler.compileV2({
+    steps: [
+        { step: 'installPlugin', url: 'https://wordpress.org/plugins/gutenberg/' },
+        { step: 'setSiteName', sitename: 'My Site', tagline: 'A tagline' }
+    ]
+});
+// Output: { version: 2, plugins: ['gutenberg'], siteOptions: { blogname: 'My Site', blogdescription: 'A tagline' } }
+```
+
+##### `transpile(v1Blueprint)`
+Transpiles a native V1 blueprint to V2 format. Decompiles to step library format, then compiles to V2.
+
+- `v1Blueprint` (Object): Native WordPress Playground V1 blueprint
+- Returns: `TranspileResult` object
+
+```typescript
+interface TranspileResult {
+    v2Blueprint: BlueprintV2Declaration;           // The transpiled V2 blueprint
+    stepLibraryBlueprint: { steps: Array<any> };   // Intermediate step library format
+    decompilerResult: DecompilerResult;            // Decompilation metadata
+}
+```
+
+```javascript
+const compiler = new PlaygroundStepLibrary();
+
+// Native V1 blueprint from WordPress Playground
+const v1Native = {
+    landingPage: '/wp-admin/',
+    steps: [
+        { step: 'installPlugin', pluginData: { resource: 'wordpress.org/plugins', slug: 'woocommerce' } },
+        { step: 'setSiteOptions', options: { blogname: 'My Store' } },
+        { step: 'login' }
+    ]
+};
+
+const result = compiler.transpile(v1Native);
+console.log(result.v2Blueprint);
+// Output: { version: 2, plugins: ['woocommerce'], siteOptions: { blogname: 'My Store' }, applicationOptions: { 'wordpress-playground': { login: true, landingPage: '/wp-admin/' } } }
+console.log(result.decompilerResult.confidence); // 'high'
+```
+
 ##### `validateBlueprint(blueprint)`
 Validates a blueprint structure and required variables.
 
@@ -186,29 +250,6 @@ Validates a blueprint structure and required variables.
 Returns information about all available custom steps.
 
 - Returns: Object with step names as keys and step info as values
-
-### `PlaygroundStepLibraryV2` (V2 Compiler)
-
-Compiles to declarative Blueprint v2 format.
-
-#### Constructor
-
-```javascript
-import { PlaygroundStepLibraryV2 } from 'playground-step-library';
-const compiler = new PlaygroundStepLibraryV2();
-```
-
-#### Methods
-
-##### `compile(blueprint, options?)`
-Compiles a blueprint with custom steps into a v2 blueprint with declarative schema.
-
-- `blueprint` (Object|string): Blueprint object or JSON string
-- `options` (Object, optional): Same as v1 compiler
-- Returns: Compiled v2 blueprint with declarative properties (`content`, `users`, `plugins`, etc.)
-- Throws: Error if compilation fails
-
-See [Architecture Documentation](architecture.md) for details on how steps implement both v1 and v2 compilation.
 
 ### `BlueprintDecompiler`
 

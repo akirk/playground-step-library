@@ -1,15 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import PlaygroundStepLibraryV2 from '../src/v2-compiler.js';
+import PlaygroundStepLibrary from '../src/index.js';
 
-describe('PlaygroundStepLibraryV2', () => {
+describe('compileV2', () => {
     describe('Basic functionality', () => {
-        it('should instantiate without errors', () => {
-            const compiler = new PlaygroundStepLibraryV2();
-            expect(compiler).toBeDefined();
-        });
-
         it('should compile a simple addPage step to v2 format', () => {
-            const compiler = new PlaygroundStepLibraryV2();
+            const compiler = new PlaygroundStepLibrary();
             const blueprint = {
                 steps: [
                     {
@@ -20,7 +15,7 @@ describe('PlaygroundStepLibraryV2', () => {
                 ]
             };
 
-            const result = compiler.compile(blueprint);
+            const result = compiler.compileV2(blueprint);
 
             // Should have content array
             expect(result.content).toBeDefined();
@@ -40,7 +35,7 @@ describe('PlaygroundStepLibraryV2', () => {
         });
 
         it('should compile addPage with homepage flag', () => {
-            const compiler = new PlaygroundStepLibraryV2();
+            const compiler = new PlaygroundStepLibrary();
             const blueprint = {
                 steps: [
                     {
@@ -52,7 +47,7 @@ describe('PlaygroundStepLibraryV2', () => {
                 ]
             };
 
-            const result = compiler.compile(blueprint);
+            const result = compiler.compileV2(blueprint);
 
             // Should have content array
             expect(result.content).toBeDefined();
@@ -69,7 +64,7 @@ describe('PlaygroundStepLibraryV2', () => {
         });
 
         it('should merge multiple addPage steps', () => {
-            const compiler = new PlaygroundStepLibraryV2();
+            const compiler = new PlaygroundStepLibrary();
             const blueprint = {
                 steps: [
                     {
@@ -85,7 +80,7 @@ describe('PlaygroundStepLibraryV2', () => {
                 ]
             };
 
-            const result = compiler.compile(blueprint);
+            const result = compiler.compileV2(blueprint);
 
             // Should have merged content array
             expect(result.content).toBeDefined();
@@ -95,7 +90,7 @@ describe('PlaygroundStepLibraryV2', () => {
         });
 
         it('should handle steps that return old format (array)', () => {
-            const compiler = new PlaygroundStepLibraryV2();
+            const compiler = new PlaygroundStepLibrary();
             const blueprint = {
                 steps: [
                     {
@@ -105,7 +100,7 @@ describe('PlaygroundStepLibraryV2', () => {
                 ]
             };
 
-            const result = compiler.compile(blueprint);
+            const result = compiler.compileV2(blueprint);
 
             // Old format steps should go to additionalStepsAfterExecution
             expect(result.additionalStepsAfterExecution).toBeDefined();
@@ -114,7 +109,7 @@ describe('PlaygroundStepLibraryV2', () => {
         });
 
         it('should preserve meta and title', () => {
-            const compiler = new PlaygroundStepLibraryV2();
+            const compiler = new PlaygroundStepLibrary();
             const blueprint = {
                 title: 'My Blueprint',
                 steps: [
@@ -126,14 +121,14 @@ describe('PlaygroundStepLibraryV2', () => {
                 ]
             };
 
-            const result = compiler.compile(blueprint);
+            const result = compiler.compileV2(blueprint);
 
             expect(result.blueprintMeta).toBeDefined();
             expect(result.blueprintMeta!.name).toBe('My Blueprint');
         });
 
         it('should handle landingPage from input blueprint', () => {
-            const compiler = new PlaygroundStepLibraryV2();
+            const compiler = new PlaygroundStepLibrary();
             const blueprint = {
                 landingPage: '/about',
                 steps: [
@@ -145,13 +140,13 @@ describe('PlaygroundStepLibraryV2', () => {
                 ]
             };
 
-            const result = compiler.compile(blueprint);
+            const result = compiler.compileV2(blueprint);
 
             expect(result.applicationOptions?.['wordpress-playground']?.landingPage).toBe('/about');
         });
 
         it('should omit default landingPage', () => {
-            const compiler = new PlaygroundStepLibraryV2();
+            const compiler = new PlaygroundStepLibrary();
             const blueprint = {
                 landingPage: '/',
                 steps: [
@@ -163,13 +158,13 @@ describe('PlaygroundStepLibraryV2', () => {
                 ]
             };
 
-            const result = compiler.compile(blueprint);
+            const result = compiler.compileV2(blueprint);
 
             expect(result.applicationOptions?.['wordpress-playground']?.landingPage).toBeUndefined();
         });
 
         it('should handle setLandingPage step', () => {
-            const compiler = new PlaygroundStepLibraryV2();
+            const compiler = new PlaygroundStepLibrary();
             const blueprint = {
                 steps: [
                     {
@@ -179,14 +174,14 @@ describe('PlaygroundStepLibraryV2', () => {
                 ]
             };
 
-            const result = compiler.compile(blueprint);
+            const result = compiler.compileV2(blueprint);
 
             expect(result.applicationOptions).toBeDefined();
             expect(result.applicationOptions['wordpress-playground'].landingPage).toBe('/wp-admin/themes.php');
         });
 
         it('should handle dontLogin step', () => {
-            const compiler = new PlaygroundStepLibraryV2();
+            const compiler = new PlaygroundStepLibrary();
             const blueprint = {
                 steps: [
                     {
@@ -195,14 +190,14 @@ describe('PlaygroundStepLibraryV2', () => {
                 ]
             };
 
-            const result = compiler.compile(blueprint);
+            const result = compiler.compileV2(blueprint);
 
             expect(result.applicationOptions).toBeDefined();
             expect(result.applicationOptions['wordpress-playground'].login).toBe(false);
         });
 
         it('should convert preferredVersions to wordpressVersion and phpVersion', () => {
-            const compiler = new PlaygroundStepLibraryV2();
+            const compiler = new PlaygroundStepLibrary();
             const blueprint = {
                 steps: [
                     {
@@ -213,7 +208,7 @@ describe('PlaygroundStepLibraryV2', () => {
                 ]
             };
 
-            const result = compiler.compile(blueprint, {
+            const result = compiler.compileV2(blueprint, {
                 preferredVersions: {
                     wp: '6.4',
                     php: '8.2'
@@ -228,7 +223,7 @@ describe('PlaygroundStepLibraryV2', () => {
 
     describe('Validation', () => {
         it('should validate a valid blueprint', () => {
-            const compiler = new PlaygroundStepLibraryV2();
+            const compiler = new PlaygroundStepLibrary();
             const blueprint = {
                 steps: [
                     {
@@ -245,7 +240,7 @@ describe('PlaygroundStepLibraryV2', () => {
         });
 
         it('should reject blueprint without steps', () => {
-            const compiler = new PlaygroundStepLibraryV2();
+            const compiler = new PlaygroundStepLibrary();
             const blueprint = {};
 
             const validation = compiler.validateBlueprint(blueprint as any);
@@ -254,7 +249,7 @@ describe('PlaygroundStepLibraryV2', () => {
         });
 
         it('should handle JSON string input', () => {
-            const compiler = new PlaygroundStepLibraryV2();
+            const compiler = new PlaygroundStepLibrary();
             const blueprintStr = JSON.stringify({
                 steps: [
                     {
@@ -265,7 +260,7 @@ describe('PlaygroundStepLibraryV2', () => {
                 ]
             });
 
-            const result = compiler.compile(blueprintStr);
+            const result = compiler.compileV2(blueprintStr);
             expect(result.content).toBeDefined();
             expect(result.content).toHaveLength(1);
         });
