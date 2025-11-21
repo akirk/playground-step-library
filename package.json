@@ -46,10 +46,8 @@
   "files": [
     "lib/",
     "bin/",
-    "steps/",
-    "src/",
-    "docs/",
-    "README.md"
+    "README.md",
+    "step-library-schema.json"
   ],
   "engines": {
     "node": ">=14.0.0"
