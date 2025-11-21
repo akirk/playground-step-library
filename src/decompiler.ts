@@ -1,4 +1,5 @@
 import type { StepLibraryBlueprint, StepLibraryStepDefinition } from '../steps/types';
+import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 interface NativeBlueprint {
 	steps?: Array<any>;
@@ -757,4 +758,33 @@ export class BlueprintDecompiler {
 
 		return 'low';
 	}
+}
+
+export interface TranspileResult {
+	v2Blueprint: BlueprintV2Declaration;
+	stepLibraryBlueprint: { steps: Array<StepLibraryStepDefinition> };
+	decompilerResult: DecompilerResult;
+}
+
+/**
+ * Transpile a V1 native blueprint to V2 format.
+ * This is a convenience function that decompiles V1 to step library format,
+ * then compiles to V2.
+ */
+export async function transpileV1ToV2( v1Blueprint: NativeBlueprint ): Promise<TranspileResult> {
+	// Dynamic import to avoid circular dependency
+	const { default: PlaygroundStepLibraryV2 } = await import( './v2-compiler.js' );
+
+	const decompiler = new BlueprintDecompiler();
+	const compilerV2 = new PlaygroundStepLibraryV2();
+
+	const decompilerResult = decompiler.decompile( v1Blueprint );
+	const stepLibraryBlueprint = { steps: decompilerResult.steps };
+	const v2Blueprint = compilerV2.compile( stepLibraryBlueprint );
+
+	return {
+		v2Blueprint,
+		stepLibraryBlueprint,
+		decompilerResult
+	};
 }

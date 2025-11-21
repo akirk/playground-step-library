@@ -476,5 +476,5 @@ class PlaygroundStepLibrary {
 
 export default PlaygroundStepLibrary;
 export { default as PlaygroundStepLibraryV2 } from './v2-compiler.js';
-export { BlueprintDecompiler } from './decompiler.js';
-export type { DecompilerResult } from './decompiler.js';
+export { BlueprintDecompiler, transpileV1ToV2 } from './decompiler.js';
+export type { DecompilerResult, TranspileResult } from './decompiler.js';
