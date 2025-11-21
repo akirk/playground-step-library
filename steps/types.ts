@@ -436,7 +436,9 @@ export type StepLibraryStepDefinition =
 	BlueprintRecorderStep |
 	BlueprintExtractorStep |
 	GithubImportExportWxrStep |
-	BlockExamplesStep;
+	BlockExamplesStep |
+	AddTemplatePartStep |
+	AddTemplateStep;
 
 // Extended Blueprint type that supports both builtin and Step Library custom steps
 export interface StepLibraryBlueprintDeclaration extends Omit<WPBlueprintDeclaration, 'steps'> {
@@ -466,5 +468,20 @@ export interface DebugStep extends BlueprintStep {
 	wpDebugDisplay?: boolean;
 	scriptDebug?: boolean;
 	queryMonitor?: boolean;
+}
+
+export interface AddTemplatePartStep extends BlueprintStep {
+	slug: string;
+	theme?: string;
+	content: string;
+	area?: 'header' | 'footer' | 'general';
+	title?: string;
+}
+
+export interface AddTemplateStep extends BlueprintStep {
+	slug: string;
+	theme?: string;
+	content: string;
+	title?: string;
 }
 

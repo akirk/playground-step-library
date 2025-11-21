@@ -14,6 +14,8 @@ interface CustomStepDefinition {
     builtin?: boolean;
     multiple?: boolean;
     count?: number;
+    hidden?: boolean;
+    deprecated?: boolean;
 }
 
 export interface CompileV2Options {

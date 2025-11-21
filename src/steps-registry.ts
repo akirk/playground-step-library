@@ -49,6 +49,8 @@ import { setSiteName } from '../steps/setSiteName.js';
 import { generateProducts } from '../steps/generateProducts.js';
 import { blockExamples } from '../steps/blockExamples.js';
 import { debug } from '../steps/debug.js';
+import { addTemplate } from '../steps/addTemplate.js';
+import { addTemplatePart } from '../steps/addTemplatePart.js';
 
 // Hidden steps (for decompilation/compilation only, not shown in UI)
 import { activatePlugin } from '../steps/activatePlugin.js';
@@ -67,13 +69,10 @@ import { writeFile } from '../steps/writeFile.js';
  * This eliminates the need to name each step twice
  */
 export const stepsRegistry = {
-    defineWpConfigConst,
     importWxr,
     installPlugin,
     installTheme,
-    login,
     runPHP,
-    setSiteOption,
 
     addClientRole,
     addFilter,
@@ -81,11 +80,15 @@ export const stepsRegistry = {
     addPage,
     addPost,
     addProduct,
+    addTemplate,
+    addTemplatePart,
+    blockExamples,
     blueprintExtractor,
     blueprintRecorder,
     changeAdminColorScheme,
     createUser,
     customPostType,
+    debug,
     deleteAllPosts,
     disableWelcomeGuides,
     dontLogin,
@@ -97,6 +100,7 @@ export const stepsRegistry = {
     githubPlugin,
     githubPluginRelease,
     githubTheme,
+    generateProducts,
     importFriendFeeds,
     importWordPressComExport,
     installAdminer,
@@ -115,9 +119,9 @@ export const stepsRegistry = {
     showAdminNotice,
     skipWooCommerceWizard,
     enableMultisite,
-    generateProducts,
-    blockExamples,
-    debug,
+    login,
+    setSiteOption,
+    defineWpConfigConst,
 
     // Hidden steps (for decompilation/compilation only)
     activatePlugin,

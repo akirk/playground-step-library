@@ -289,6 +289,10 @@ div.header button, div.header a {
   white-space: nowrap;
 }
 
+.examples ul li.sample {
+  margin-bottom: var(--spacing-2);
+}
+
 .examples.for-textarea ul li {
   list-style-type: none;
   color: var(--example-text-color);

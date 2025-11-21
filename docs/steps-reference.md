@@ -214,6 +214,64 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`addTemplate`](steps/addTemplate.md)
+
+**Type**: Custom Step
+**Description**: Add a template (home, single, page, etc.) for a block theme.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `slug` | text | ✅ Yes | The template slug (e.g., "home", "single", "page", "archive") |
+| `theme` | text | ❌ No | The theme slug (empty = current active theme) |
+| `content` | textarea | ✅ Yes | The block markup content |
+| `title` | text | ❌ No | Display title (defaults to slug) |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "addTemplate",
+          "slug": "home",
+          "theme": "",
+          "content": "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\",\"area\":\"header\"} /-->\n\n<!-- wp:post-content /-->\n\n<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\",\"area\":\"footer\"} /-->",
+          "title": "Home"
+    }
+```
+
+
+---
+
+## [`addTemplatePart`](steps/addTemplatePart.md)
+
+**Type**: Custom Step
+**Description**: Add a template part (header, footer, etc.) for a block theme.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `slug` | text | ✅ Yes | The template part slug (e.g., "header", "footer", "sidebar") |
+| `theme` | text | ❌ No | The theme slug (empty = current active theme) |
+| `content` | textarea | ✅ Yes | The block markup content |
+| `area` | select | ❌ No | The template part area |
+| `title` | text | ❌ No | Display title (defaults to slug) |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "addTemplatePart",
+          "slug": "header",
+          "theme": "",
+          "content": "<!-- wp:site-title /-->",
+          "area": "header",
+          "title": "Header"
+    }
+```
+
+
+---
+
 ## [`blockExamples`](steps/blockExamples.md)
 
 **Type**: Custom Step

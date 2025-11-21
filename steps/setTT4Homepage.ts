@@ -1,36 +1,8 @@
-import type { StepFunction, SetTT4HomepageStep , StepResult } from './types.js';
+import type { StepFunction, SetTT4HomepageStep, StepResult } from './types.js';
 import { v1ToV2Fallback } from './types.js';
+import { addTemplate } from './addTemplate.js';
 
-export const setTT4Homepage: StepFunction<SetTT4HomepageStep> = (step: SetTT4HomepageStep): StepResult => {
-	return {
-		toV1() {
-	return [
-		{
-			"step": "runPHP",
-			"progress": {
-				"caption": "Setting up Twenty Twenty-Four homepage"
-			},
-			"code": `
-<?php require_once '/wordpress/wp-load.php';
-$term = get_term_by('slug', 'twentytwentyfour', 'wp_theme');
-if ( ! $term) {
-	$term = wp_insert_term(
-	    'twentytwentyfour',
-	    'wp_theme'
-	);
-	$term_id = $term['term_id'];
-} else {
-	$term_id = $term->term_id;
-}
-$post_id = wp_insert_post(array(
-	'post_title' => 'Home',
-	'post_name' => 'home',
-	'post_type' => 'wp_template',
-	'post_status' => 'publish',
-	'tax_input' => array(
-		'wp_theme' => array( $term_id )
-	),
-	'post_content' => '<!-- wp:template-part {"slug":"header","theme":"twentytwentyfour","tagName":"header","area":"header"} /-->
+const homeTemplateContent = `<!-- wp:template-part {"slug":"header","theme":"twentytwentyfour","tagName":"header","area":"header"} /-->
 
 <!-- wp:group {"tagName":"main","style":{"spacing":{"blockGap":"0","margin":{"top":"0"},"padding":{"right":"var:preset|spacing|20","left":"var:preset|spacing|20"}}},"layout":{"type":"default"}} -->
 <main class="wp-block-group" style="margin-top:0;padding-right:var(--wp--preset--spacing--20);padding-left:var(--wp--preset--spacing--20)"><!-- wp:query {"queryId":5,"query":{"perPage":"30","pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false}} -->
@@ -56,16 +28,32 @@ $post_id = wp_insert_post(array(
 <!-- /wp:query --></main>
 <!-- /wp:group -->
 
-<!-- wp:template-part {"slug":"footer","theme":"twentytwentyfour","tagName":"footer","area":"footer"} /-->',
-));
-wp_set_object_terms($post_id, $term_id, 'wp_theme');
-`
-		}
-	];
+<!-- wp:template-part {"slug":"footer","theme":"twentytwentyfour","tagName":"footer","area":"footer"} /-->`;
+
+export const setTT4Homepage: StepFunction<SetTT4HomepageStep> = ( step: SetTT4HomepageStep ): StepResult => {
+	return {
+		toV1() {
+			const templateResult = addTemplate( {
+				step: 'addTemplate',
+				slug: 'home',
+				theme: 'twentytwentyfour',
+				title: 'Home',
+				content: homeTemplateContent
+			} );
+
+			const v1Result = templateResult.toV1();
+
+			if ( v1Result.steps && v1Result.steps[0] ) {
+				v1Result.steps[0].progress = {
+					caption: 'Setting up Twenty Twenty-Four homepage'
+				};
+			}
+
+			return v1Result;
 		},
 
 		toV2() {
-			return v1ToV2Fallback(this.toV1());
+			return v1ToV2Fallback( this.toV1() );
 		}
 	};
 };

@@ -4,9 +4,9 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 📊 Overview
 
-- **Total Steps**: 60
+- **Total Steps**: 62
 - **Built-in Steps**: 8
-- **Custom Steps**: 52
+- **Custom Steps**: 54
 
 ## 🚀 Quick Start
 
@@ -32,14 +32,14 @@ const compiled = compiler.compile(blueprint);
 ### Built-in Steps
 Built-in steps are core WordPress Playground steps that are enhanced with additional functionality.
 
-- [`defineWpConfigConst`](steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
 - [`importWxr`](steps/importWxr.md) - Import a WXR from a URL.
 - [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Github (branches, releases, PRs).
 - [`installTheme`](steps/installTheme.md) - Install a theme via WordPress.org or Github.
-- [`login`](steps/login.md) - Login to the site.
 - [`runPHP`](steps/runPHP.md) - Run code in the context of WordPress.
-- [`setSiteOption`](steps/setSiteOption.md) - Set a site option.
 - [`enableMultisite`](steps/enableMultisite.md) - Enable WordPress Multisite functionality.
+- [`login`](steps/login.md) - Login to the site.
+- [`setSiteOption`](steps/setSiteOption.md) - Set a site option.
+- [`defineWpConfigConst`](steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
 
 ### Custom Steps  
 Custom steps provide additional functionality beyond the core WordPress Playground capabilities.
@@ -50,11 +50,15 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`addPage`](steps/addPage.md) - Add a page with title and content.
 - [`addPost`](steps/addPost.md) - Add a post with title, content, type, status, and date.
 - [`addProduct`](steps/addProduct.md) - Add a WooCommerce product (will install WooCommerce if not present)
+- [`addTemplate`](steps/addTemplate.md) - Add a template (home, single, page, etc.) for a block theme.
+- [`addTemplatePart`](steps/addTemplatePart.md) - Add a template part (header, footer, etc.) for a block theme.
+- [`blockExamples`](steps/blockExamples.md) - Creates a post with all block examples from registered blocks
 - [`blueprintExtractor`](steps/blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
 - [`blueprintRecorder`](steps/blueprintRecorder.md) - Record steps made and compile a new blueprint.
 - [`changeAdminColorScheme`](steps/changeAdminColorScheme.md) - Useful to combine with a login step.
 - [`createUser`](steps/createUser.md) - Create a new user.
 - [`customPostType`](steps/customPostType.md) - Register a custom post type.
+- [`debug`](steps/debug.md) - Configure WordPress debug settings and optionally install Query Monitor plugin.
 - [`deleteAllPosts`](steps/deleteAllPosts.md) - Delete all posts, pages, attachments, revisions and menu items.
 - [`disableWelcomeGuides`](steps/disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - [`dontLogin`](steps/dontLogin.md) - Prevent automatic login (Playground logs in as admin by default).
@@ -66,6 +70,7 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`githubPlugin`](steps/githubPlugin.md) - Install a plugin from a Github repository.
 - [`githubPluginRelease`](steps/githubPluginRelease.md) - Install a specific plugin release from a Github repository.
 - [`githubTheme`](steps/githubTheme.md) - Install a theme from a Github repository.
+- [`generateProducts`](steps/generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 - [`importFriendFeeds`](steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.
 - [`importWordPressComExport`](steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
 - [`installAdminer`](steps/installAdminer.md) - Install Adminer with auto login link.
@@ -83,9 +88,6 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`setTT4Homepage`](steps/setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
 - [`showAdminNotice`](steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
-- [`generateProducts`](steps/generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
-- [`blockExamples`](steps/blockExamples.md) - Creates a post with all block examples from registered blocks
-- [`debug`](steps/debug.md) - Configure WordPress debug settings and optionally install Query Monitor plugin.
 - [`activatePlugin`](steps/activatePlugin.md) - Activate an already installed plugin.
 - [`activateTheme`](steps/activateTheme.md) - Activate an already installed theme.
 - [`cp`](steps/cp.md) - Copy a file or directory.

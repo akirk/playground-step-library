@@ -38,9 +38,6 @@
       "items": {
         "oneOf": [
           {
-            "$ref": "#/definitions/defineWpConfigConst"
-          },
-          {
             "$ref": "#/definitions/importWxr"
           },
           {
@@ -50,13 +47,7 @@
             "$ref": "#/definitions/installTheme"
           },
           {
-            "$ref": "#/definitions/login"
-          },
-          {
             "$ref": "#/definitions/runPHP"
-          },
-          {
-            "$ref": "#/definitions/setSiteOption"
           },
           {
             "$ref": "#/definitions/addClientRole"
@@ -77,6 +68,15 @@
             "$ref": "#/definitions/addProduct"
           },
           {
+            "$ref": "#/definitions/addTemplate"
+          },
+          {
+            "$ref": "#/definitions/addTemplatePart"
+          },
+          {
+            "$ref": "#/definitions/blockExamples"
+          },
+          {
             "$ref": "#/definitions/blueprintExtractor"
           },
           {
@@ -90,6 +90,9 @@
           },
           {
             "$ref": "#/definitions/customPostType"
+          },
+          {
+            "$ref": "#/definitions/debug"
           },
           {
             "$ref": "#/definitions/deleteAllPosts"
@@ -123,6 +126,9 @@
           },
           {
             "$ref": "#/definitions/githubTheme"
+          },
+          {
+            "$ref": "#/definitions/generateProducts"
           },
           {
             "$ref": "#/definitions/importFriendFeeds"
@@ -179,13 +185,13 @@
             "$ref": "#/definitions/enableMultisite"
           },
           {
-            "$ref": "#/definitions/generateProducts"
+            "$ref": "#/definitions/login"
           },
           {
-            "$ref": "#/definitions/blockExamples"
+            "$ref": "#/definitions/setSiteOption"
           },
           {
-            "$ref": "#/definitions/debug"
+            "$ref": "#/definitions/defineWpConfigConst"
           },
           {
             "$ref": "#/definitions/activatePlugin"
@@ -225,36 +231,6 @@
     "steps"
   ],
   "definitions": {
-    "defineWpConfigConst": {
-      "type": "object",
-      "properties": {
-        "step": {
-          "const": "defineWpConfigConst"
-        },
-        "vars": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "description": "Constant name"
-            },
-            "value": {
-              "type": "string",
-              "description": "Constant value"
-            }
-          },
-          "required": [
-            "name",
-            "value"
-          ],
-          "additionalProperties": true
-        }
-      },
-      "required": [
-        "step"
-      ],
-      "description": "Define a wp-config PHP constant."
-    },
     "importWxr": {
       "type": "object",
       "properties": {
@@ -338,40 +314,6 @@
       ],
       "description": "Install a theme via WordPress.org or Github."
     },
-    "login": {
-      "type": "object",
-      "properties": {
-        "step": {
-          "const": "login"
-        },
-        "vars": {
-          "type": "object",
-          "properties": {
-            "username": {
-              "type": "string",
-              "description": "Username"
-            },
-            "password": {
-              "type": "string",
-              "description": "Password"
-            },
-            "landingPage": {
-              "type": "boolean",
-              "description": "Change landing page to wp-admin"
-            }
-          },
-          "required": [
-            "username",
-            "password"
-          ],
-          "additionalProperties": true
-        }
-      },
-      "required": [
-        "step"
-      ],
-      "description": "Login to the site."
-    },
     "runPHP": {
       "type": "object",
       "properties": {
@@ -396,32 +338,6 @@
         "step"
       ],
       "description": "Run code in the context of WordPress."
-    },
-    "setSiteOption": {
-      "type": "object",
-      "properties": {
-        "step": {
-          "const": "setSiteOption"
-        },
-        "vars": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "description": "Option name"
-            },
-            "value": {
-              "type": "string",
-              "description": "Option value"
-            }
-          },
-          "additionalProperties": true
-        }
-      },
-      "required": [
-        "step"
-      ],
-      "description": "Set a site option."
     },
     "addClientRole": {
       "type": "object",
@@ -642,6 +558,128 @@
       ],
       "description": "Add a WooCommerce product (will install WooCommerce if not present)"
     },
+    "addTemplate": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "addTemplate"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "description": "The template slug (e.g., \"home\", \"single\", \"page\", \"archive\")"
+            },
+            "theme": {
+              "type": "string",
+              "description": "The theme slug (empty = current active theme)"
+            },
+            "content": {
+              "type": "string",
+              "description": "The block markup content"
+            },
+            "title": {
+              "type": "string",
+              "description": "Display title (defaults to slug)"
+            }
+          },
+          "required": [
+            "slug",
+            "content"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Add a template (home, single, page, etc.) for a block theme."
+    },
+    "addTemplatePart": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "addTemplatePart"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "description": "The template part slug (e.g., \"header\", \"footer\", \"sidebar\")"
+            },
+            "theme": {
+              "type": "string",
+              "description": "The theme slug (empty = current active theme)"
+            },
+            "content": {
+              "type": "string",
+              "description": "The block markup content"
+            },
+            "area": {
+              "type": "string",
+              "description": "The template part area"
+            },
+            "title": {
+              "type": "string",
+              "description": "Display title (defaults to slug)"
+            }
+          },
+          "required": [
+            "slug",
+            "content"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Add a template part (header, footer, etc.) for a block theme."
+    },
+    "blockExamples": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "blockExamples"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "blockNamespace": {
+              "type": "string",
+              "description": "Limit to a specific plugin slug (leave empty for all plugins)"
+            },
+            "postTitle": {
+              "type": "string",
+              "description": "Title of the post to create"
+            },
+            "limit": {
+              "type": "string",
+              "description": "Maximum number of blocks to include (leave empty for no limit)"
+            },
+            "postId": {
+              "type": "string",
+              "description": "Post ID to use (defaults to 1000)"
+            },
+            "excludeCore": {
+              "type": "boolean",
+              "description": "Exclude core WordPress blocks"
+            },
+            "landingPage": {
+              "type": "boolean",
+              "description": "Set landing page to the post editor"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Creates a post with all block examples from registered blocks"
+    },
     "blueprintExtractor": {
       "type": "object",
       "properties": {
@@ -785,6 +823,40 @@
         "step"
       ],
       "description": "Register a custom post type."
+    },
+    "debug": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "debug"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "wpDebug": {
+              "type": "boolean",
+              "description": "Enable WordPress debug mode"
+            },
+            "wpDebugDisplay": {
+              "type": "boolean",
+              "description": "Display errors in HTML output. Only applies when the above is enabled."
+            },
+            "scriptDebug": {
+              "type": "boolean",
+              "description": "Use non-minified JavaScript and CSS files."
+            },
+            "queryMonitor": {
+              "type": "boolean",
+              "description": "Install Query Monitor plugin."
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Configure WordPress debug settings and optionally install Query Monitor plugin."
     },
     "deleteAllPosts": {
       "type": "object",
@@ -1115,6 +1187,44 @@
         "step"
       ],
       "description": "Install a theme from a Github repository."
+    },
+    "generateProducts": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "generateProducts"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "count": {
+              "type": "number",
+              "description": "Number of products to generate"
+            },
+            "orders": {
+              "type": "number",
+              "description": "Number of orders to generate (optional)"
+            },
+            "customers": {
+              "type": "number",
+              "description": "Number of customers to generate (optional)"
+            },
+            "coupons": {
+              "type": "number",
+              "description": "Number of coupons to generate (optional)"
+            },
+            "categories": {
+              "type": "number",
+              "description": "Number of product categories to generate (optional)"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)"
     },
     "importFriendFeeds": {
       "type": "object",
@@ -1550,110 +1660,56 @@
       ],
       "description": "Enable WordPress Multisite functionality."
     },
-    "generateProducts": {
+    "login": {
       "type": "object",
       "properties": {
         "step": {
-          "const": "generateProducts"
+          "const": "login"
         },
         "vars": {
           "type": "object",
           "properties": {
-            "count": {
-              "type": "number",
-              "description": "Number of products to generate"
-            },
-            "orders": {
-              "type": "number",
-              "description": "Number of orders to generate (optional)"
-            },
-            "customers": {
-              "type": "number",
-              "description": "Number of customers to generate (optional)"
-            },
-            "coupons": {
-              "type": "number",
-              "description": "Number of coupons to generate (optional)"
-            },
-            "categories": {
-              "type": "number",
-              "description": "Number of product categories to generate (optional)"
-            }
-          },
-          "additionalProperties": true
-        }
-      },
-      "required": [
-        "step"
-      ],
-      "description": "Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)"
-    },
-    "blockExamples": {
-      "type": "object",
-      "properties": {
-        "step": {
-          "const": "blockExamples"
-        },
-        "vars": {
-          "type": "object",
-          "properties": {
-            "blockNamespace": {
+            "username": {
               "type": "string",
-              "description": "Limit to a specific plugin slug (leave empty for all plugins)"
+              "description": "Username"
             },
-            "postTitle": {
+            "password": {
               "type": "string",
-              "description": "Title of the post to create"
-            },
-            "limit": {
-              "type": "string",
-              "description": "Maximum number of blocks to include (leave empty for no limit)"
-            },
-            "postId": {
-              "type": "string",
-              "description": "Post ID to use (defaults to 1000)"
-            },
-            "excludeCore": {
-              "type": "boolean",
-              "description": "Exclude core WordPress blocks"
+              "description": "Password"
             },
             "landingPage": {
               "type": "boolean",
-              "description": "Set landing page to the post editor"
+              "description": "Change landing page to wp-admin"
             }
           },
+          "required": [
+            "username",
+            "password"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "description": "Creates a post with all block examples from registered blocks"
+      "description": "Login to the site."
     },
-    "debug": {
+    "setSiteOption": {
       "type": "object",
       "properties": {
         "step": {
-          "const": "debug"
+          "const": "setSiteOption"
         },
         "vars": {
           "type": "object",
           "properties": {
-            "wpDebug": {
-              "type": "boolean",
-              "description": "Enable WordPress debug mode"
+            "name": {
+              "type": "string",
+              "description": "Option name"
             },
-            "wpDebugDisplay": {
-              "type": "boolean",
-              "description": "Display errors in HTML output. Only applies when the above is enabled."
-            },
-            "scriptDebug": {
-              "type": "boolean",
-              "description": "Use non-minified JavaScript and CSS files."
-            },
-            "queryMonitor": {
-              "type": "boolean",
-              "description": "Install Query Monitor plugin."
+            "value": {
+              "type": "string",
+              "description": "Option value"
             }
           },
           "additionalProperties": true
@@ -1662,7 +1718,37 @@
       "required": [
         "step"
       ],
-      "description": "Configure WordPress debug settings and optionally install Query Monitor plugin."
+      "description": "Set a site option."
+    },
+    "defineWpConfigConst": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "defineWpConfigConst"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Constant name"
+            },
+            "value": {
+              "type": "string",
+              "description": "Constant value"
+            }
+          },
+          "required": [
+            "name",
+            "value"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Define a wp-config PHP constant."
     },
     "activatePlugin": {
       "type": "object",

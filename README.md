@@ -91,7 +91,7 @@ const result = compiler.transpile(nativeV1Blueprint);
 See the **[Programmatic API Documentation](docs/api.md)** for full details on CLI usage, methods, and examples.
 ## Custom Steps
 
-This library provides **60** total steps (8 built-in enhanced steps + 52 custom steps):
+This library provides **62** total steps (8 built-in enhanced steps + 54 custom steps):
 
 ### Built-in Enhanced Steps
 - [`defineWpConfigConst`](docs/steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
@@ -112,6 +112,8 @@ This library provides **60** total steps (8 built-in enhanced steps + 52 custom 
 - [`addPage`](docs/steps/addPage.md) - Add a page with title and content.
 - [`addPost`](docs/steps/addPost.md) - Add a post with title, content, type, status, and date.
 - [`addProduct`](docs/steps/addProduct.md) - Add a WooCommerce product (will install WooCommerce if not present)
+- [`addTemplate`](docs/steps/addTemplate.md) - Add a template (home, single, page, etc.) for a block theme.
+- [`addTemplatePart`](docs/steps/addTemplatePart.md) - Add a template part (header, footer, etc.) for a block theme.
 - [`blockExamples`](docs/steps/blockExamples.md) - Creates a post with all block examples from registered blocks
 - [`blueprintExtractor`](docs/steps/blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
 - [`blueprintRecorder`](docs/steps/blueprintRecorder.md) - Record steps made and compile a new blueprint.

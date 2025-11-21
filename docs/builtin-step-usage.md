@@ -156,12 +156,14 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `runPHP`
 
-**Used by 13 steps:**
+**Used by 16 steps:**
 
 - ⚡ [`addMedia`](steps/addMedia.md) - Add files to the media library.
 - ⚡ [`addPage`](steps/addPage.md) - Add a page with title and content.
 - ⚡ [`addPost`](steps/addPost.md) - Add a post with title, content, type, status, and date.
 - ⚡ [`addProduct`](steps/addProduct.md) - Add a WooCommerce product (will install WooCommerce if not present)
+- ⚡ [`addTemplate`](steps/addTemplate.md) - Add a template (home, single, page, etc.) for a block theme.
+- ⚡ [`addTemplatePart`](steps/addTemplatePart.md) - Add a template part (header, footer, etc.) for a block theme.
 - ⚡ [`blockExamples`](steps/blockExamples.md) - Creates a post with all block examples from registered blocks
 - ⚡ [`createUser`](steps/createUser.md) - Create a new user.
 - ⚡ [`deleteAllPosts`](steps/deleteAllPosts.md) - Delete all posts, pages, attachments, revisions and menu items.
@@ -170,6 +172,7 @@ This page shows which custom steps compile to each built-in WordPress Playground
 - ⚡ [`importFriendFeeds`](steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.
 - 🔧 [`runPHP`](steps/runPHP.md) - Run code in the context of WordPress.
 - ⚡ [`sampleContent`](steps/sampleContent.md) - Inserts sample pages to the site.
+- ⚡ [`setTT4Homepage`](steps/setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
 - ⚡ [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 
 ---

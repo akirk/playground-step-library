@@ -18,6 +18,8 @@ interface CustomStepDefinition {
     builtin?: boolean;
     multiple?: boolean;
     count?: number;
+    hidden?: boolean;
+    deprecated?: boolean;
 }
 
 
@@ -47,6 +49,8 @@ interface StepInfo {
     vars: StepVariable[];
     builtin: boolean;
     multiple: boolean;
+    hidden: boolean;
+    deprecated: boolean;
 }
 
 /**
@@ -360,7 +364,9 @@ class PlaygroundStepLibrary {
                 description: stepDef.description || '',
                 vars: stepDef.vars || [],
                 builtin: stepDef.builtin || false,
-                multiple: stepDef.multiple || false
+                multiple: stepDef.multiple || false,
+                hidden: stepDef.hidden || false,
+                deprecated: stepDef.deprecated || false
             };
         }
 
