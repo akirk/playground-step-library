@@ -4,6 +4,52 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`activatePlugin`](steps/activatePlugin.md)
+
+**Type**: Custom Step
+**Description**: Activate an already installed plugin.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `pluginPath` | string | ✅ Yes | Path to the plugin file relative to wp-content/plugins/ |
+| `pluginName` | string | ❌ No | Human-readable plugin name for progress display |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "activatePlugin",
+          "pluginPath": "/example/path",
+          "pluginName": "example-name"
+    }
+```
+
+
+---
+
+## [`activateTheme`](steps/activateTheme.md)
+
+**Type**: Custom Step
+**Description**: Activate an already installed theme.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `themeFolderName` | string | ✅ Yes | The theme folder name in wp-content/themes/ |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "activateTheme",
+          "themeFolderName": "example-name"
+    }
+```
+
+
+---
+
 ## [`addClientRole`](steps/addClientRole.md)
 
 **Type**: Custom Step
@@ -252,6 +298,30 @@ This document provides detailed information about all available steps, including
     {
           "step": "changeAdminColorScheme",
           "colorScheme": "modern"
+    }
+```
+
+
+---
+
+## [`cp`](steps/cp.md)
+
+**Type**: Custom Step
+**Description**: Copy a file or directory.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `fromPath` | string | ✅ Yes | Source path |
+| `toPath` | string | ✅ Yes | Destination path |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "cp",
+          "fromPath": "/example/path",
+          "toPath": "/example/path"
     }
 ```
 
@@ -904,6 +974,28 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`mkdir`](steps/mkdir.md)
+
+**Type**: Custom Step
+**Description**: Create a directory.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | string | ✅ Yes | Path to the directory to create |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "mkdir",
+          "path": "/example/path"
+    }
+```
+
+
+---
+
 ## [`muPlugin`](steps/muPlugin.md)
 
 **Type**: Custom Step
@@ -922,6 +1014,30 @@ This document provides detailed information about all available steps, including
           "step": "muPlugin",
           "name": "my-plugin",
           "code": ""
+    }
+```
+
+
+---
+
+## [`mv`](steps/mv.md)
+
+**Type**: Custom Step
+**Description**: Move a file or directory.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `fromPath` | string | ✅ Yes | Source path |
+| `toPath` | string | ✅ Yes | Destination path |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "mv",
+          "fromPath": "/example/path",
+          "toPath": "/example/path"
     }
 ```
 
@@ -984,6 +1100,50 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`rm`](steps/rm.md)
+
+**Type**: Custom Step
+**Description**: Remove a file.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | string | ✅ Yes | Path to the file to remove |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "rm",
+          "path": "/example/path"
+    }
+```
+
+
+---
+
+## [`rmdir`](steps/rmdir.md)
+
+**Type**: Custom Step
+**Description**: Remove a directory.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | string | ✅ Yes | Path to the directory to remove |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "rmdir",
+          "path": "/example/path"
+    }
+```
+
+
+---
+
 ## [`runPHP`](steps/runPHP.md)
 
 **Type**: Built-in Step
@@ -1000,6 +1160,28 @@ This document provides detailed information about all available steps, including
     {
           "step": "runPHP",
           "code": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
+    }
+```
+
+
+---
+
+## [`runSQL`](steps/runSQL.md)
+
+**Type**: Custom Step
+**Description**: Execute SQL queries.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `sql` | textarea | ✅ Yes | SQL query or file reference to execute |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "runSQL",
+          "sql": "example-value"
     }
 ```
 
@@ -1194,6 +1376,56 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "skipWooCommerceWizard"
+    }
+```
+
+
+---
+
+## [`unzip`](steps/unzip.md)
+
+**Type**: Custom Step
+**Description**: Extract a zip file.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `zipFile` | string | ❌ No | The zip file resource to extract |
+| `zipPath` | string | ❌ No | Path to an existing zip file in the filesystem |
+| `extractToPath` | string | ✅ Yes | Path where the zip contents should be extracted |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "unzip",
+          "zipFile": "example-value",
+          "zipPath": "/example/path",
+          "extractToPath": "/example/path"
+    }
+```
+
+
+---
+
+## [`writeFile`](steps/writeFile.md)
+
+**Type**: Custom Step
+**Description**: Write content to a file.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `path` | string | ✅ Yes | Path to the file to write |
+| `data` | textarea | ✅ Yes | Content to write to the file |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "writeFile",
+          "path": "/example/path",
+          "data": "example-value"
     }
 ```
 

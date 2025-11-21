@@ -2015,6 +2015,354 @@
               "step"
             ],
             "additionalProperties": true
+          },
+          {
+            "type": "object",
+            "description": "Activate an already installed plugin.",
+            "properties": {
+              "step": {
+                "type": "string",
+                "const": "activatePlugin",
+                "description": "Activate an already installed plugin."
+              },
+              "pluginPath": {
+                "description": "Path to the plugin file relative to wp-content/plugins/",
+                "type": "string"
+              },
+              "pluginName": {
+                "description": "Human-readable plugin name for progress display",
+                "type": "string"
+              },
+              "vars": {
+                "type": "object",
+                "description": "Step parameters (nested format)",
+                "properties": {
+                  "pluginPath": {
+                    "description": "Path to the plugin file relative to wp-content/plugins/",
+                    "type": "string"
+                  },
+                  "pluginName": {
+                    "description": "Human-readable plugin name for progress display",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "step"
+            ],
+            "additionalProperties": true
+          },
+          {
+            "type": "object",
+            "description": "Activate an already installed theme.",
+            "properties": {
+              "step": {
+                "type": "string",
+                "const": "activateTheme",
+                "description": "Activate an already installed theme."
+              },
+              "themeFolderName": {
+                "description": "The theme folder name in wp-content/themes/",
+                "type": "string"
+              },
+              "vars": {
+                "type": "object",
+                "description": "Step parameters (nested format)",
+                "properties": {
+                  "themeFolderName": {
+                    "description": "The theme folder name in wp-content/themes/",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "step"
+            ],
+            "additionalProperties": true
+          },
+          {
+            "type": "object",
+            "description": "Copy a file or directory.",
+            "properties": {
+              "step": {
+                "type": "string",
+                "const": "cp",
+                "description": "Copy a file or directory."
+              },
+              "fromPath": {
+                "description": "Source path",
+                "type": "string"
+              },
+              "toPath": {
+                "description": "Destination path",
+                "type": "string"
+              },
+              "vars": {
+                "type": "object",
+                "description": "Step parameters (nested format)",
+                "properties": {
+                  "fromPath": {
+                    "description": "Source path",
+                    "type": "string"
+                  },
+                  "toPath": {
+                    "description": "Destination path",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "step"
+            ],
+            "additionalProperties": true
+          },
+          {
+            "type": "object",
+            "description": "Move a file or directory.",
+            "properties": {
+              "step": {
+                "type": "string",
+                "const": "mv",
+                "description": "Move a file or directory."
+              },
+              "fromPath": {
+                "description": "Source path",
+                "type": "string"
+              },
+              "toPath": {
+                "description": "Destination path",
+                "type": "string"
+              },
+              "vars": {
+                "type": "object",
+                "description": "Step parameters (nested format)",
+                "properties": {
+                  "fromPath": {
+                    "description": "Source path",
+                    "type": "string"
+                  },
+                  "toPath": {
+                    "description": "Destination path",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "step"
+            ],
+            "additionalProperties": true
+          },
+          {
+            "type": "object",
+            "description": "Remove a file.",
+            "properties": {
+              "step": {
+                "type": "string",
+                "const": "rm",
+                "description": "Remove a file."
+              },
+              "path": {
+                "description": "Path to the file to remove",
+                "type": "string"
+              },
+              "vars": {
+                "type": "object",
+                "description": "Step parameters (nested format)",
+                "properties": {
+                  "path": {
+                    "description": "Path to the file to remove",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "step"
+            ],
+            "additionalProperties": true
+          },
+          {
+            "type": "object",
+            "description": "Remove a directory.",
+            "properties": {
+              "step": {
+                "type": "string",
+                "const": "rmdir",
+                "description": "Remove a directory."
+              },
+              "path": {
+                "description": "Path to the directory to remove",
+                "type": "string"
+              },
+              "vars": {
+                "type": "object",
+                "description": "Step parameters (nested format)",
+                "properties": {
+                  "path": {
+                    "description": "Path to the directory to remove",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "step"
+            ],
+            "additionalProperties": true
+          },
+          {
+            "type": "object",
+            "description": "Create a directory.",
+            "properties": {
+              "step": {
+                "type": "string",
+                "const": "mkdir",
+                "description": "Create a directory."
+              },
+              "path": {
+                "description": "Path to the directory to create",
+                "type": "string"
+              },
+              "vars": {
+                "type": "object",
+                "description": "Step parameters (nested format)",
+                "properties": {
+                  "path": {
+                    "description": "Path to the directory to create",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "step"
+            ],
+            "additionalProperties": true
+          },
+          {
+            "type": "object",
+            "description": "Extract a zip file.",
+            "properties": {
+              "step": {
+                "type": "string",
+                "const": "unzip",
+                "description": "Extract a zip file."
+              },
+              "zipFile": {
+                "description": "The zip file resource to extract",
+                "type": "string"
+              },
+              "zipPath": {
+                "description": "Path to an existing zip file in the filesystem",
+                "type": "string"
+              },
+              "extractToPath": {
+                "description": "Path where the zip contents should be extracted",
+                "type": "string"
+              },
+              "vars": {
+                "type": "object",
+                "description": "Step parameters (nested format)",
+                "properties": {
+                  "zipFile": {
+                    "description": "The zip file resource to extract",
+                    "type": "string"
+                  },
+                  "zipPath": {
+                    "description": "Path to an existing zip file in the filesystem",
+                    "type": "string"
+                  },
+                  "extractToPath": {
+                    "description": "Path where the zip contents should be extracted",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "step"
+            ],
+            "additionalProperties": true
+          },
+          {
+            "type": "object",
+            "description": "Execute SQL queries.",
+            "properties": {
+              "step": {
+                "type": "string",
+                "const": "runSQL",
+                "description": "Execute SQL queries."
+              },
+              "sql": {
+                "description": "SQL query or file reference to execute",
+                "type": "string"
+              },
+              "vars": {
+                "type": "object",
+                "description": "Step parameters (nested format)",
+                "properties": {
+                  "sql": {
+                    "description": "SQL query or file reference to execute",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "step"
+            ],
+            "additionalProperties": true
+          },
+          {
+            "type": "object",
+            "description": "Write content to a file.",
+            "properties": {
+              "step": {
+                "type": "string",
+                "const": "writeFile",
+                "description": "Write content to a file."
+              },
+              "path": {
+                "description": "Path to the file to write",
+                "type": "string"
+              },
+              "data": {
+                "description": "Content to write to the file",
+                "type": "string"
+              },
+              "vars": {
+                "type": "object",
+                "description": "Step parameters (nested format)",
+                "properties": {
+                  "path": {
+                    "description": "Path to the file to write",
+                    "type": "string"
+                  },
+                  "data": {
+                    "description": "Content to write to the file",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "step"
+            ],
+            "additionalProperties": true
           }
         ]
       }
@@ -3983,6 +4331,354 @@
             "queryMonitor": {
               "description": "Install Query Monitor plugin.",
               "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "additionalProperties": true
+    },
+    "activatePlugin": {
+      "type": "object",
+      "description": "Activate an already installed plugin.",
+      "properties": {
+        "step": {
+          "type": "string",
+          "const": "activatePlugin",
+          "description": "Activate an already installed plugin."
+        },
+        "pluginPath": {
+          "description": "Path to the plugin file relative to wp-content/plugins/",
+          "type": "string"
+        },
+        "pluginName": {
+          "description": "Human-readable plugin name for progress display",
+          "type": "string"
+        },
+        "vars": {
+          "type": "object",
+          "description": "Step parameters (nested format)",
+          "properties": {
+            "pluginPath": {
+              "description": "Path to the plugin file relative to wp-content/plugins/",
+              "type": "string"
+            },
+            "pluginName": {
+              "description": "Human-readable plugin name for progress display",
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "additionalProperties": true
+    },
+    "activateTheme": {
+      "type": "object",
+      "description": "Activate an already installed theme.",
+      "properties": {
+        "step": {
+          "type": "string",
+          "const": "activateTheme",
+          "description": "Activate an already installed theme."
+        },
+        "themeFolderName": {
+          "description": "The theme folder name in wp-content/themes/",
+          "type": "string"
+        },
+        "vars": {
+          "type": "object",
+          "description": "Step parameters (nested format)",
+          "properties": {
+            "themeFolderName": {
+              "description": "The theme folder name in wp-content/themes/",
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "additionalProperties": true
+    },
+    "cp": {
+      "type": "object",
+      "description": "Copy a file or directory.",
+      "properties": {
+        "step": {
+          "type": "string",
+          "const": "cp",
+          "description": "Copy a file or directory."
+        },
+        "fromPath": {
+          "description": "Source path",
+          "type": "string"
+        },
+        "toPath": {
+          "description": "Destination path",
+          "type": "string"
+        },
+        "vars": {
+          "type": "object",
+          "description": "Step parameters (nested format)",
+          "properties": {
+            "fromPath": {
+              "description": "Source path",
+              "type": "string"
+            },
+            "toPath": {
+              "description": "Destination path",
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "additionalProperties": true
+    },
+    "mv": {
+      "type": "object",
+      "description": "Move a file or directory.",
+      "properties": {
+        "step": {
+          "type": "string",
+          "const": "mv",
+          "description": "Move a file or directory."
+        },
+        "fromPath": {
+          "description": "Source path",
+          "type": "string"
+        },
+        "toPath": {
+          "description": "Destination path",
+          "type": "string"
+        },
+        "vars": {
+          "type": "object",
+          "description": "Step parameters (nested format)",
+          "properties": {
+            "fromPath": {
+              "description": "Source path",
+              "type": "string"
+            },
+            "toPath": {
+              "description": "Destination path",
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "additionalProperties": true
+    },
+    "rm": {
+      "type": "object",
+      "description": "Remove a file.",
+      "properties": {
+        "step": {
+          "type": "string",
+          "const": "rm",
+          "description": "Remove a file."
+        },
+        "path": {
+          "description": "Path to the file to remove",
+          "type": "string"
+        },
+        "vars": {
+          "type": "object",
+          "description": "Step parameters (nested format)",
+          "properties": {
+            "path": {
+              "description": "Path to the file to remove",
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "additionalProperties": true
+    },
+    "rmdir": {
+      "type": "object",
+      "description": "Remove a directory.",
+      "properties": {
+        "step": {
+          "type": "string",
+          "const": "rmdir",
+          "description": "Remove a directory."
+        },
+        "path": {
+          "description": "Path to the directory to remove",
+          "type": "string"
+        },
+        "vars": {
+          "type": "object",
+          "description": "Step parameters (nested format)",
+          "properties": {
+            "path": {
+              "description": "Path to the directory to remove",
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "additionalProperties": true
+    },
+    "mkdir": {
+      "type": "object",
+      "description": "Create a directory.",
+      "properties": {
+        "step": {
+          "type": "string",
+          "const": "mkdir",
+          "description": "Create a directory."
+        },
+        "path": {
+          "description": "Path to the directory to create",
+          "type": "string"
+        },
+        "vars": {
+          "type": "object",
+          "description": "Step parameters (nested format)",
+          "properties": {
+            "path": {
+              "description": "Path to the directory to create",
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "additionalProperties": true
+    },
+    "unzip": {
+      "type": "object",
+      "description": "Extract a zip file.",
+      "properties": {
+        "step": {
+          "type": "string",
+          "const": "unzip",
+          "description": "Extract a zip file."
+        },
+        "zipFile": {
+          "description": "The zip file resource to extract",
+          "type": "string"
+        },
+        "zipPath": {
+          "description": "Path to an existing zip file in the filesystem",
+          "type": "string"
+        },
+        "extractToPath": {
+          "description": "Path where the zip contents should be extracted",
+          "type": "string"
+        },
+        "vars": {
+          "type": "object",
+          "description": "Step parameters (nested format)",
+          "properties": {
+            "zipFile": {
+              "description": "The zip file resource to extract",
+              "type": "string"
+            },
+            "zipPath": {
+              "description": "Path to an existing zip file in the filesystem",
+              "type": "string"
+            },
+            "extractToPath": {
+              "description": "Path where the zip contents should be extracted",
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "additionalProperties": true
+    },
+    "runSQL": {
+      "type": "object",
+      "description": "Execute SQL queries.",
+      "properties": {
+        "step": {
+          "type": "string",
+          "const": "runSQL",
+          "description": "Execute SQL queries."
+        },
+        "sql": {
+          "description": "SQL query or file reference to execute",
+          "type": "string"
+        },
+        "vars": {
+          "type": "object",
+          "description": "Step parameters (nested format)",
+          "properties": {
+            "sql": {
+              "description": "SQL query or file reference to execute",
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "additionalProperties": true
+    },
+    "writeFile": {
+      "type": "object",
+      "description": "Write content to a file.",
+      "properties": {
+        "step": {
+          "type": "string",
+          "const": "writeFile",
+          "description": "Write content to a file."
+        },
+        "path": {
+          "description": "Path to the file to write",
+          "type": "string"
+        },
+        "data": {
+          "description": "Content to write to the file",
+          "type": "string"
+        },
+        "vars": {
+          "type": "object",
+          "description": "Step parameters (nested format)",
+          "properties": {
+            "path": {
+              "description": "Path to the file to write",
+              "type": "string"
+            },
+            "data": {
+              "description": "Content to write to the file",
+              "type": "string"
             }
           },
           "additionalProperties": true

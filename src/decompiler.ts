@@ -479,23 +479,7 @@ export class BlueprintDecompiler {
 		}
 
 		if (resource === 'git:directory' && pluginData.url) {
-			const urlMatch = pluginData.url.match(/github\.com\/([^/]+)\/([^/]+)/);
-			const refMatch = pluginData.ref?.match(/refs\/pull\/(\d+)\//);
-
-			if (urlMatch && refMatch) {
-				const [, owner, repo] = urlMatch;
-				const prNumber = refMatch[1];
-				return {
-					step: 'installPlugin',
-					url: `https://github.com/${owner}/${repo}/pull/${prNumber}`,
-					auth: true,
-					prs: false,
-					permalink: false
-				};
-			}
-
-			this.warnings.push(`Could not parse git:directory plugin: ${pluginData.url}`);
-			return null;
+			return this.decompileGitResource( pluginData, 'installPlugin' );
 		}
 
 		if (resource === 'url' && pluginData.url) {
@@ -517,6 +501,36 @@ export class BlueprintDecompiler {
 			};
 		}
 
+		// Handle literal/inline content
+		if ( resource === 'literal' ) {
+			return {
+				step: 'installPlugin',
+				pluginData: pluginData,
+				prs: false,
+				permalink: false
+			};
+		}
+
+		// Handle VFS (virtual filesystem) paths
+		if ( resource === 'vfs' && pluginData.path ) {
+			return {
+				step: 'installPlugin',
+				pluginData: pluginData,
+				prs: false,
+				permalink: false
+			};
+		}
+
+		// Handle core plugins (bundled with WordPress)
+		if ( resource === 'core-plugin' && pluginData.slug ) {
+			return {
+				step: 'installPlugin',
+				pluginData: pluginData,
+				prs: false,
+				permalink: false
+			};
+		}
+
 		this.warnings.push(`Unknown plugin resource type: ${resource}`);
 		return null;
 	}
@@ -531,6 +545,10 @@ export class BlueprintDecompiler {
 				url: `https://wordpress.org/themes/${themeData.slug}/`,
 				prs: false
 			};
+		}
+
+		if (resource === 'git:directory' && themeData.url) {
+			return this.decompileGitResource( themeData, 'installTheme' );
 		}
 
 		if (resource === 'url' && themeData.url) {
@@ -552,8 +570,116 @@ export class BlueprintDecompiler {
 			};
 		}
 
+		// Handle literal/inline content
+		if ( resource === 'literal' ) {
+			return {
+				step: 'installTheme',
+				themeData: themeData,
+				prs: false,
+				permalink: false
+			};
+		}
+
+		// Handle VFS (virtual filesystem) paths
+		if ( resource === 'vfs' && themeData.path ) {
+			return {
+				step: 'installTheme',
+				themeData: themeData,
+				prs: false,
+				permalink: false
+			};
+		}
+
+		// Handle core themes (bundled with WordPress)
+		if ( resource === 'core-theme' && themeData.slug ) {
+			return {
+				step: 'installTheme',
+				themeData: themeData,
+				prs: false,
+				permalink: false
+			};
+		}
+
 		this.warnings.push(`Unknown theme resource type: ${resource}`);
 		return null;
+	}
+
+	private decompileGitResource( resourceData: any, stepType: 'installPlugin' | 'installTheme' ): StepLibraryStepDefinition | null {
+		const urlMatch = resourceData.url?.match( /github\.com\/([^/]+)\/([^/]+)/ );
+		if ( !urlMatch ) {
+			this.warnings.push( `Could not parse git:directory URL: ${resourceData.url}` );
+			return null;
+		}
+
+		const [, owner, repo] = urlMatch;
+		const ref = resourceData.ref || 'HEAD';
+		const directory = resourceData.path || '';
+
+		// Check for PR reference
+		const prMatch = ref.match( /refs\/pull\/(\d+)\// );
+		if ( prMatch ) {
+			const prNumber = prMatch[1];
+			const result: any = {
+				step: stepType,
+				url: `https://github.com/${owner}/${repo}/pull/${prNumber}`,
+				auth: true,
+				prs: false,
+				permalink: false
+			};
+			return result;
+		}
+
+		// Check for branch reference (refs/heads/branch-name or just branch-name)
+		const branchMatch = ref.match( /^(?:refs\/heads\/)?(.+)$/ );
+		if ( branchMatch && ref !== 'HEAD' ) {
+			const branch = branchMatch[1];
+			let url = `https://github.com/${owner}/${repo}/tree/${branch}`;
+
+			// If there's a directory path, append it with double slash convention
+			if ( directory ) {
+				url = `https://github.com/${owner}/${repo}/tree/${branch}//${directory}`;
+			}
+
+			const result: any = {
+				step: stepType,
+				url: url,
+				prs: false,
+				permalink: false
+			};
+			return result;
+		}
+
+		// Check for commit SHA (40 hex characters)
+		const commitMatch = ref.match( /^[a-f0-9]{40}$/i );
+		if ( commitMatch ) {
+			let url = `https://github.com/${owner}/${repo}/tree/${ref}`;
+
+			if ( directory ) {
+				url = `https://github.com/${owner}/${repo}/tree/${ref}//${directory}`;
+			}
+
+			const result: any = {
+				step: stepType,
+				url: url,
+				prs: false,
+				permalink: false
+			};
+			return result;
+		}
+
+		// Default: just use the repo URL
+		let url = `https://github.com/${owner}/${repo}`;
+		if ( directory ) {
+			url = `https://github.com/${owner}/${repo}/tree/HEAD//${directory}`;
+		}
+
+		const result: any = {
+			step: stepType,
+			url: url,
+			prs: false,
+			permalink: false
+		};
+		return result;
 	}
 
 	private decompileRunPHP(nativeStep: any): StepLibraryStepDefinition | null {

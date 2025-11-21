@@ -9,19 +9,50 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## Table of Contents
 
+- [`activatePlugin`](#activateplugin)
+- [`activateTheme`](#activatetheme)
+- [`cp`](#cp)
 - [`defineWpConfigConsts`](#definewpconfigconsts)
 - [`enableMultisite`](#enablemultisite)
 - [`installPlugin`](#installplugin)
 - [`installTheme`](#installtheme)
 - [`login`](#login)
 - [`mkdir`](#mkdir)
+- [`mv`](#mv)
+- [`rm`](#rm)
+- [`rmdir`](#rmdir)
 - [`runPHP`](#runphp)
+- [`runSql`](#runsql)
 - [`setSiteLanguage`](#setsitelanguage)
 - [`setSiteOptions`](#setsiteoptions)
 - [`unzip`](#unzip)
 - [`updateUserMeta`](#updateusermeta)
 - [`wp-cli`](#wp-cli)
 - [`writeFile`](#writefile)
+
+---
+
+## `activatePlugin`
+
+**Used by 1 step:**
+
+- ⚡ [`activatePlugin`](steps/activatePlugin.md) - Activate an already installed plugin.
+
+---
+
+## `activateTheme`
+
+**Used by 1 step:**
+
+- ⚡ [`activateTheme`](steps/activateTheme.md) - Activate an already installed theme.
+
+---
+
+## `cp`
+
+**Used by 1 step:**
+
+- ⚡ [`cp`](steps/cp.md) - Copy a file or directory.
 
 ---
 
@@ -80,7 +111,7 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `mkdir`
 
-**Used by 13 steps:**
+**Used by 14 steps:**
 
 - ⚡ [`addClientRole`](steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
 - ⚡ [`addFilter`](steps/addFilter.md) - Easily add a filtered value.
@@ -91,10 +122,35 @@ This page shows which custom steps compile to each built-in WordPress Playground
 - ⚡ [`installAdminer`](steps/installAdminer.md) - Install Adminer with auto login link.
 - ⚡ [`installPhEditor`](steps/installPhEditor.md) - Install phEditor. Password: admin
 - ⚡ [`installPhpLiteAdmin`](steps/installPhpLiteAdmin.md) - Provide phpLiteAdmin. Password: admin
+- ⚡ [`mkdir`](steps/mkdir.md) - Create a directory.
 - ⚡ [`muPlugin`](steps/muPlugin.md) - Add code for a plugin.
 - ⚡ [`removeDashboardWidgets`](steps/removeDashboardWidgets.md) - Remove widgets from the wp-admin dashboard.
 - ⚡ [`showAdminNotice`](steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - ⚡ [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
+
+---
+
+## `mv`
+
+**Used by 1 step:**
+
+- ⚡ [`mv`](steps/mv.md) - Move a file or directory.
+
+---
+
+## `rm`
+
+**Used by 1 step:**
+
+- ⚡ [`rm`](steps/rm.md) - Remove a file.
+
+---
+
+## `rmdir`
+
+**Used by 1 step:**
+
+- ⚡ [`rmdir`](steps/rmdir.md) - Remove a directory.
 
 ---
 
@@ -118,6 +174,14 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ---
 
+## `runSql`
+
+**Used by 1 step:**
+
+- ⚡ [`runSQL`](steps/runSQL.md) - Execute SQL queries.
+
+---
+
 ## `setSiteLanguage`
 
 **Used by 1 step:**
@@ -138,10 +202,11 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `unzip`
 
-**Used by 2 steps:**
+**Used by 3 steps:**
 
 - ⚡ [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
 - ⚡ [`installPhEditor`](steps/installPhEditor.md) - Install phEditor. Password: admin
+- ⚡ [`unzip`](steps/unzip.md) - Extract a zip file.
 
 ---
 
@@ -163,7 +228,7 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `writeFile`
 
-**Used by 14 steps:**
+**Used by 15 steps:**
 
 - ⚡ [`addClientRole`](steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
 - ⚡ [`addFilter`](steps/addFilter.md) - Easily add a filtered value.
@@ -179,6 +244,7 @@ This page shows which custom steps compile to each built-in WordPress Playground
 - ⚡ [`removeDashboardWidgets`](steps/removeDashboardWidgets.md) - Remove widgets from the wp-admin dashboard.
 - ⚡ [`showAdminNotice`](steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - ⚡ [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
+- ⚡ [`writeFile`](steps/writeFile.md) - Write content to a file.
 
 ---
 

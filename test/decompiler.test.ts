@@ -1704,6 +1704,342 @@ $page_id = wp_insert_post( $page_args );`,
 		});
 	});
 
+	describe('Git resource handling', () => {
+		it('should decompile git:directory with branch reference', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installPlugin',
+						pluginData: {
+							resource: 'git:directory',
+							url: 'https://github.com/WordPress/gutenberg',
+							ref: 'refs/heads/trunk'
+						}
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps).toHaveLength(1);
+			expect(result.steps[0]).toMatchObject({
+				step: 'installPlugin',
+				url: 'https://github.com/WordPress/gutenberg/tree/trunk',
+				prs: false
+			});
+		});
+
+		it('should decompile git:directory with simple branch name', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installPlugin',
+						pluginData: {
+							resource: 'git:directory',
+							url: 'https://github.com/WordPress/gutenberg',
+							ref: 'feature-branch'
+						}
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'installPlugin',
+				url: 'https://github.com/WordPress/gutenberg/tree/feature-branch'
+			});
+		});
+
+		it('should decompile git:directory with commit SHA', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installPlugin',
+						pluginData: {
+							resource: 'git:directory',
+							url: 'https://github.com/WordPress/gutenberg',
+							ref: 'abc123def456789012345678901234567890abcd'
+						}
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'installPlugin',
+				url: 'https://github.com/WordPress/gutenberg/tree/abc123def456789012345678901234567890abcd'
+			});
+		});
+
+		it('should decompile git:directory with branch and directory path', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installPlugin',
+						pluginData: {
+							resource: 'git:directory',
+							url: 'https://github.com/WordPress/wordpress-develop',
+							ref: 'trunk',
+							path: 'src/wp-content/plugins/akismet'
+						}
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'installPlugin',
+				url: 'https://github.com/WordPress/wordpress-develop/tree/trunk//src/wp-content/plugins/akismet'
+			});
+		});
+
+		it('should decompile git:directory for themes with branch', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installTheme',
+						themeData: {
+							resource: 'git:directory',
+							url: 'https://github.com/WordPress/flavor',
+							ref: 'main'
+						}
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'installTheme',
+				url: 'https://github.com/WordPress/flavor/tree/main'
+			});
+		});
+
+		it('should decompile git:directory with HEAD ref as default', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installPlugin',
+						pluginData: {
+							resource: 'git:directory',
+							url: 'https://github.com/akirk/blueprint-recorder'
+						}
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'installPlugin',
+				url: 'https://github.com/akirk/blueprint-recorder'
+			});
+		});
+	});
+
+	describe('resource type handling', () => {
+		it('should decompile literal resource for plugin', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installPlugin',
+						pluginData: {
+							resource: 'literal',
+							name: 'my-plugin.zip',
+							contents: 'base64encodedcontenthere'
+						}
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps).toHaveLength(1);
+			expect(result.steps[0]).toMatchObject({
+				step: 'installPlugin',
+				pluginData: {
+					resource: 'literal',
+					name: 'my-plugin.zip'
+				}
+			});
+		});
+
+		it('should decompile VFS resource for plugin', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installPlugin',
+						pluginData: {
+							resource: 'vfs',
+							path: '/tmp/my-plugin.zip'
+						}
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'installPlugin',
+				pluginData: {
+					resource: 'vfs',
+					path: '/tmp/my-plugin.zip'
+				}
+			});
+		});
+
+		it('should decompile core-plugin resource', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installPlugin',
+						pluginData: {
+							resource: 'core-plugin',
+							slug: 'hello-dolly'
+						}
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'installPlugin',
+				pluginData: {
+					resource: 'core-plugin',
+					slug: 'hello-dolly'
+				}
+			});
+		});
+
+		it('should decompile literal resource for theme', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installTheme',
+						themeData: {
+							resource: 'literal',
+							name: 'my-theme.zip',
+							contents: 'base64encodedcontenthere'
+						}
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'installTheme',
+				themeData: {
+					resource: 'literal'
+				}
+			});
+		});
+
+		it('should decompile VFS resource for theme', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installTheme',
+						themeData: {
+							resource: 'vfs',
+							path: '/tmp/my-theme.zip'
+						}
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'installTheme',
+				themeData: {
+					resource: 'vfs',
+					path: '/tmp/my-theme.zip'
+				}
+			});
+		});
+
+		it('should decompile core-theme resource', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installTheme',
+						themeData: {
+							resource: 'core-theme',
+							slug: 'flavor'
+						}
+					}
+				]
+			};
+
+			const result = decompiler.decompile(nativeBlueprint);
+
+			expect(result.steps[0]).toMatchObject({
+				step: 'installTheme',
+				themeData: {
+					resource: 'core-theme',
+					slug: 'flavor'
+				}
+			});
+		});
+
+		it('should roundtrip literal plugin resource through v2 compilation', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installPlugin',
+						pluginData: {
+							resource: 'literal',
+							name: 'my-plugin.zip',
+							contents: 'base64content'
+						}
+					}
+				]
+			};
+
+			const decompiled = decompiler.decompile(nativeBlueprint);
+			expect(decompiled.steps[0]).toMatchObject({
+				step: 'installPlugin',
+				pluginData: { resource: 'literal', contents: 'base64content' }
+			});
+
+			// Compile to v2 - should preserve the step in additionalStepsAfterExecution
+			const v2 = compiler.compileV2({ steps: decompiled.steps });
+			expect(v2.additionalStepsAfterExecution).toHaveLength(1);
+			expect(v2.additionalStepsAfterExecution![0]).toMatchObject({
+				step: 'installPlugin',
+				pluginData: { resource: 'literal', name: 'my-plugin.zip', contents: 'base64content' }
+			});
+		});
+
+		it('should roundtrip VFS theme resource through v2 compilation', () => {
+			const nativeBlueprint = {
+				steps: [
+					{
+						step: 'installTheme',
+						themeData: {
+							resource: 'vfs',
+							path: '/tmp/theme.zip'
+						}
+					}
+				]
+			};
+
+			const decompiled = decompiler.decompile(nativeBlueprint);
+			const v2 = compiler.compileV2({ steps: decompiled.steps });
+
+			expect(v2.additionalStepsAfterExecution).toHaveLength(1);
+			expect(v2.additionalStepsAfterExecution![0]).toMatchObject({
+				step: 'installTheme',
+				themeData: { resource: 'vfs', path: '/tmp/theme.zip' }
+			});
+		});
+	});
+
 	describe('hidden steps decompilation', () => {
 		it('should decompile activatePlugin step', () => {
 			const nativeBlueprint = {

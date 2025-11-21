@@ -3,9 +3,9 @@
 Browse detailed documentation for each WordPress Playground step.
 
 ## 📊 Quick Stats
-- **50** total steps
+- **60** total steps
 - **8** built-in steps  
-- **42** custom steps
+- **52** custom steps
 
 ## 🔧 Built-in Steps
 Enhanced core WordPress Playground steps with additional functionality.
@@ -22,6 +22,8 @@ Enhanced core WordPress Playground steps with additional functionality.
 ## ⚡ Custom Steps
 Extended functionality beyond core WordPress Playground capabilities.
 
+- [`activatePlugin`](./activatePlugin.md) - Activate an already installed plugin.
+- [`activateTheme`](./activateTheme.md) - Activate an already installed theme.
 - [`addClientRole`](./addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
 - [`addFilter`](./addFilter.md) - Easily add a filtered value.
 - [`addMedia`](./addMedia.md) - Add files to the media library.
@@ -32,6 +34,7 @@ Extended functionality beyond core WordPress Playground capabilities.
 - [`blueprintExtractor`](./blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
 - [`blueprintRecorder`](./blueprintRecorder.md) - Record steps made and compile a new blueprint.
 - [`changeAdminColorScheme`](./changeAdminColorScheme.md) - Useful to combine with a login step.
+- [`cp`](./cp.md) - Copy a file or directory.
 - [`createUser`](./createUser.md) - Create a new user.
 - [`customPostType`](./customPostType.md) - Register a custom post type.
 - [`debug`](./debug.md) - Configure WordPress debug settings and optionally install Query Monitor plugin.
@@ -53,9 +56,14 @@ Extended functionality beyond core WordPress Playground capabilities.
 - [`installPhEditor`](./installPhEditor.md) - Install phEditor. Password: admin
 - [`installPhpLiteAdmin`](./installPhpLiteAdmin.md) - Provide phpLiteAdmin. Password: admin
 - [`jetpackOfflineMode`](./jetpackOfflineMode.md) - Start Jetpack in Offline mode.
+- [`mkdir`](./mkdir.md) - Create a directory.
 - [`muPlugin`](./muPlugin.md) - Add code for a plugin.
+- [`mv`](./mv.md) - Move a file or directory.
 - [`removeDashboardWidgets`](./removeDashboardWidgets.md) - Remove widgets from the wp-admin dashboard.
 - [`renameDefaultCategory`](./renameDefaultCategory.md) - Change the default "Uncategorized".
+- [`rm`](./rm.md) - Remove a file.
+- [`rmdir`](./rmdir.md) - Remove a directory.
+- [`runSQL`](./runSQL.md) - Execute SQL queries.
 - [`runWpCliCommand`](./runWpCliCommand.md) - Run a wp-cli command.
 - [`sampleContent`](./sampleContent.md) - Inserts sample pages to the site.
 - [`setLandingPage`](./setLandingPage.md) - Set the landing page.
@@ -64,6 +72,8 @@ Extended functionality beyond core WordPress Playground capabilities.
 - [`setTT4Homepage`](./setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
 - [`showAdminNotice`](./showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](./skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
+- [`unzip`](./unzip.md) - Extract a zip file.
+- [`writeFile`](./writeFile.md) - Write content to a file.
 
 ## 📖 Other Documentation
 

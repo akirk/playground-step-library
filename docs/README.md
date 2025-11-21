@@ -4,9 +4,9 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 📊 Overview
 
-- **Total Steps**: 50
+- **Total Steps**: 60
 - **Built-in Steps**: 8
-- **Custom Steps**: 42
+- **Custom Steps**: 52
 
 ## 🚀 Quick Start
 
@@ -86,6 +86,16 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`generateProducts`](steps/generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 - [`blockExamples`](steps/blockExamples.md) - Creates a post with all block examples from registered blocks
 - [`debug`](steps/debug.md) - Configure WordPress debug settings and optionally install Query Monitor plugin.
+- [`activatePlugin`](steps/activatePlugin.md) - Activate an already installed plugin.
+- [`activateTheme`](steps/activateTheme.md) - Activate an already installed theme.
+- [`cp`](steps/cp.md) - Copy a file or directory.
+- [`mv`](steps/mv.md) - Move a file or directory.
+- [`rm`](steps/rm.md) - Remove a file.
+- [`rmdir`](steps/rmdir.md) - Remove a directory.
+- [`mkdir`](steps/mkdir.md) - Create a directory.
+- [`unzip`](steps/unzip.md) - Extract a zip file.
+- [`runSQL`](steps/runSQL.md) - Execute SQL queries.
+- [`writeFile`](steps/writeFile.md) - Write content to a file.
 
 ## 🔗 Cross-References
 

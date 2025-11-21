@@ -137,6 +137,26 @@ class PlaygroundStepLibraryV2 {
      * Get v2 fragments from a step
      */
     private getV2Fragments(step: BlueprintStep, inputData: any): BlueprintV2Declaration | null {
+        // Use discriminated union logic for steps that have both custom and builtin variants
+        // Custom variants have specific properties (like 'url'), builtin variants have resource data
+        if ( step.step === 'installPlugin' ) {
+            if ( !( 'url' in step ) ) {
+                // Builtin installPlugin with pluginData - pass through as-is
+                return {
+                    version: 2,
+                    additionalStepsAfterExecution: [step as StepDefinition]
+                } as BlueprintV2Declaration;
+            }
+        } else if ( step.step === 'installTheme' ) {
+            if ( !( 'url' in step ) ) {
+                // Builtin installTheme with themeData - pass through as-is
+                return {
+                    version: 2,
+                    additionalStepsAfterExecution: [step as StepDefinition]
+                } as BlueprintV2Declaration;
+            }
+        }
+
         const stepFn = this.customSteps[step.step];
 
         if (stepFn) {
