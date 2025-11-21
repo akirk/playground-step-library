@@ -1,65 +1,65 @@
 # Complete Steps Reference
 
-This document provides detailed information about all available steps, including their parameters, types, and usage examples.
+This document provides detailed information about all available steps, including their parameters, types, and usage examples. Click on a step name to view its detailed documentation.
 
 ## Table of Contents
 
-- [`addClientRole`](#addclientrole)
-- [`addFilter`](#addfilter)
-- [`addMedia`](#addmedia)
-- [`addPage`](#addpage)
-- [`addPost`](#addpost)
-- [`addProduct`](#addproduct)
-- [`blockExamples`](#blockexamples)
-- [`blueprintExtractor`](#blueprintextractor)
-- [`blueprintRecorder`](#blueprintrecorder)
-- [`changeAdminColorScheme`](#changeadmincolorscheme)
-- [`createUser`](#createuser)
-- [`customPostType`](#customposttype)
-- [`debug`](#debug)
-- [`defineWpConfigConst`](#definewpconfigconst)
-- [`deleteAllPosts`](#deleteallposts)
-- [`disableWelcomeGuides`](#disablewelcomeguides)
-- [`doAction`](#doaction)
-- [`dontLogin`](#dontlogin)
-- [`enableMultisite`](#enablemultisite)
-- [`enqueueCss`](#enqueuecss)
-- [`enqueueJs`](#enqueuejs)
-- [`fakeHttpResponse`](#fakehttpresponse)
-- [`generateProducts`](#generateproducts)
-- [`githubImportExportWxr`](#githubimportexportwxr)
-- [`githubPlugin`](#githubplugin)
-- [`githubPluginRelease`](#githubpluginrelease)
-- [`githubTheme`](#githubtheme)
-- [`importFriendFeeds`](#importfriendfeeds)
-- [`importWordPressComExport`](#importwordpresscomexport)
-- [`importWxr`](#importwxr)
-- [`installAdminer`](#installadminer)
-- [`installPhEditor`](#installpheditor)
-- [`installPhpLiteAdmin`](#installphpliteadmin)
-- [`installPlugin`](#installplugin)
-- [`installTheme`](#installtheme)
-- [`jetpackOfflineMode`](#jetpackofflinemode)
-- [`login`](#login)
-- [`muPlugin`](#muplugin)
-- [`removeDashboardWidgets`](#removedashboardwidgets)
-- [`renameDefaultCategory`](#renamedefaultcategory)
-- [`runPHP`](#runphp)
-- [`runWpCliCommand`](#runwpclicommand)
-- [`sampleContent`](#samplecontent)
-- [`setLandingPage`](#setlandingpage)
-- [`setLanguage`](#setlanguage)
-- [`setSiteName`](#setsitename)
-- [`setSiteOption`](#setsiteoption)
-- [`setTT4Homepage`](#settt4homepage)
-- [`showAdminNotice`](#showadminnotice)
-- [`skipWooCommerceWizard`](#skipwoocommercewizard)
+- [`addClientRole`](steps/addClientRole.md)
+- [`addFilter`](steps/addFilter.md)
+- [`addMedia`](steps/addMedia.md)
+- [`addPage`](steps/addPage.md)
+- [`addPost`](steps/addPost.md)
+- [`addProduct`](steps/addProduct.md)
+- [`blockExamples`](steps/blockExamples.md)
+- [`blueprintExtractor`](steps/blueprintExtractor.md)
+- [`blueprintRecorder`](steps/blueprintRecorder.md)
+- [`changeAdminColorScheme`](steps/changeAdminColorScheme.md)
+- [`createUser`](steps/createUser.md)
+- [`customPostType`](steps/customPostType.md)
+- [`debug`](steps/debug.md)
+- [`defineWpConfigConst`](steps/defineWpConfigConst.md)
+- [`deleteAllPosts`](steps/deleteAllPosts.md)
+- [`disableWelcomeGuides`](steps/disableWelcomeGuides.md)
+- [`doAction`](steps/doAction.md)
+- [`dontLogin`](steps/dontLogin.md)
+- [`enableMultisite`](steps/enableMultisite.md)
+- [`enqueueCss`](steps/enqueueCss.md)
+- [`enqueueJs`](steps/enqueueJs.md)
+- [`fakeHttpResponse`](steps/fakeHttpResponse.md)
+- [`generateProducts`](steps/generateProducts.md)
+- [`githubImportExportWxr`](steps/githubImportExportWxr.md)
+- [`githubPlugin`](steps/githubPlugin.md)
+- [`githubPluginRelease`](steps/githubPluginRelease.md)
+- [`githubTheme`](steps/githubTheme.md)
+- [`importFriendFeeds`](steps/importFriendFeeds.md)
+- [`importWordPressComExport`](steps/importWordPressComExport.md)
+- [`importWxr`](steps/importWxr.md)
+- [`installAdminer`](steps/installAdminer.md)
+- [`installPhEditor`](steps/installPhEditor.md)
+- [`installPhpLiteAdmin`](steps/installPhpLiteAdmin.md)
+- [`installPlugin`](steps/installPlugin.md)
+- [`installTheme`](steps/installTheme.md)
+- [`jetpackOfflineMode`](steps/jetpackOfflineMode.md)
+- [`login`](steps/login.md)
+- [`muPlugin`](steps/muPlugin.md)
+- [`removeDashboardWidgets`](steps/removeDashboardWidgets.md)
+- [`renameDefaultCategory`](steps/renameDefaultCategory.md)
+- [`runPHP`](steps/runPHP.md)
+- [`runWpCliCommand`](steps/runWpCliCommand.md)
+- [`sampleContent`](steps/sampleContent.md)
+- [`setLandingPage`](steps/setLandingPage.md)
+- [`setLanguage`](steps/setLanguage.md)
+- [`setSiteName`](steps/setSiteName.md)
+- [`setSiteOption`](steps/setSiteOption.md)
+- [`setTT4Homepage`](steps/setTT4Homepage.md)
+- [`showAdminNotice`](steps/showAdminNotice.md)
+- [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md)
 
 ---
 
-## `addClientRole`
+## [`addClientRole`](steps/addClientRole.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Adds a role for clients with additional capabilities than editors, but not quite admin.
 
 | Parameter | Type | Required | Description |
@@ -79,9 +79,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `addFilter`
+## [`addFilter`](steps/addFilter.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Easily add a filtered value.
 
 | Parameter | Type | Required | Description |
@@ -105,9 +105,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `addMedia`
+## [`addMedia`](steps/addMedia.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Add files to the media library.
 
 | Parameter | Type | Required | Description |
@@ -127,9 +127,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `addPage`
+## [`addPage`](steps/addPage.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Add a page with title and content.
 
 | Parameter | Type | Required | Description |
@@ -153,9 +153,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `addPost`
+## [`addPost`](steps/addPost.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Add a post with title, content, type, status, and date.
 
 | Parameter | Type | Required | Description |
@@ -189,9 +189,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `addProduct`
+## [`addProduct`](steps/addProduct.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Add a WooCommerce product (will install WooCommerce if not present)
 
 | Parameter | Type | Required | Description |
@@ -221,9 +221,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `blockExamples`
+## [`blockExamples`](steps/blockExamples.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Creates a post with all block examples from registered blocks
 
 | Parameter | Type | Required | Description |
@@ -253,9 +253,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `blueprintExtractor`
+## [`blueprintExtractor`](steps/blueprintExtractor.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Generate a new blueprint after modifying the WordPress.
 
 *No parameters defined.*
@@ -271,9 +271,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `blueprintRecorder`
+## [`blueprintRecorder`](steps/blueprintRecorder.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Record steps made and compile a new blueprint.
 
 *No parameters defined.*
@@ -289,9 +289,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `changeAdminColorScheme`
+## [`changeAdminColorScheme`](steps/changeAdminColorScheme.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Useful to combine with a login step.
 
 | Parameter | Type | Required | Description |
@@ -311,9 +311,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `createUser`
+## [`createUser`](steps/createUser.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Create a new user.
 
 | Parameter | Type | Required | Description |
@@ -343,9 +343,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `customPostType`
+## [`customPostType`](steps/customPostType.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Register a custom post type.
 
 | Parameter | Type | Required | Description |
@@ -371,9 +371,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `debug`
+## [`debug`](steps/debug.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Configure WordPress debug settings and optionally install Query Monitor plugin.
 
 | Parameter | Type | Required | Description |
@@ -399,9 +399,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `defineWpConfigConst`
+## [`defineWpConfigConst`](steps/defineWpConfigConst.md)
 
-**Type**: Built-in Step  
+**Type**: Built-in Step
 **Description**: Define a wp-config PHP constant.
 
 | Parameter | Type | Required | Description |
@@ -423,9 +423,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `deleteAllPosts`
+## [`deleteAllPosts`](steps/deleteAllPosts.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Delete all posts, pages, attachments, revisions and menu items.
 
 *No parameters defined.*
@@ -441,9 +441,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `disableWelcomeGuides`
+## [`disableWelcomeGuides`](steps/disableWelcomeGuides.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Disable the welcome guides in the site editor.
 
 *No parameters defined.*
@@ -459,9 +459,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `doAction`
+## [`doAction`](steps/doAction.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Execute a custom action.
 
 | Parameter | Type | Required | Description |
@@ -491,9 +491,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `dontLogin`
+## [`dontLogin`](steps/dontLogin.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Prevent automatic login (Playground logs in as admin by default).
 
 *No parameters defined.*
@@ -509,9 +509,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `enableMultisite`
+## [`enableMultisite`](steps/enableMultisite.md)
 
-**Type**: Built-in Step  
+**Type**: Built-in Step
 **Description**: Enable WordPress Multisite functionality.
 
 *No parameters defined.*
@@ -527,9 +527,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `enqueueCss`
+## [`enqueueCss`](steps/enqueueCss.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Enqueue custom CSS on frontend and/or admin.
 
 | Parameter | Type | Required | Description |
@@ -555,9 +555,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `enqueueJs`
+## [`enqueueJs`](steps/enqueueJs.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Enqueue custom JavaScript on frontend and/or admin.
 
 | Parameter | Type | Required | Description |
@@ -583,9 +583,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `fakeHttpResponse`
+## [`fakeHttpResponse`](steps/fakeHttpResponse.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Fake a wp_remote_request() response.
 
 | Parameter | Type | Required | Description |
@@ -607,9 +607,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `generateProducts`
+## [`generateProducts`](steps/generateProducts.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 
 | Parameter | Type | Required | Description |
@@ -637,9 +637,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `githubImportExportWxr`
+## [`githubImportExportWxr`](steps/githubImportExportWxr.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Provide useful additional info.
 
 | Parameter | Type | Required | Description |
@@ -665,9 +665,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `githubPlugin`
+## [`githubPlugin`](steps/githubPlugin.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Install a plugin from a Github repository.
 
 | Parameter | Type | Required | Description |
@@ -689,9 +689,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `githubPluginRelease`
+## [`githubPluginRelease`](steps/githubPluginRelease.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Install a specific plugin release from a Github repository.
 
 | Parameter | Type | Required | Description |
@@ -715,9 +715,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `githubTheme`
+## [`githubTheme`](steps/githubTheme.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Install a theme from a Github repository.
 
 | Parameter | Type | Required | Description |
@@ -739,9 +739,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `importFriendFeeds`
+## [`importFriendFeeds`](steps/importFriendFeeds.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Add subscriptions to the Friends plugin.
 
 | Parameter | Type | Required | Description |
@@ -761,9 +761,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `importWordPressComExport`
+## [`importWordPressComExport`](steps/importWordPressComExport.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Import a WordPress.com export file (WXR in a ZIP)
 
 | Parameter | Type | Required | Description |
@@ -783,9 +783,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `importWxr`
+## [`importWxr`](steps/importWxr.md)
 
-**Type**: Built-in Step  
+**Type**: Built-in Step
 **Description**: Import a WXR from a URL.
 
 | Parameter | Type | Required | Description |
@@ -805,9 +805,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `installAdminer`
+## [`installAdminer`](steps/installAdminer.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Install Adminer with auto login link.
 
 *No parameters defined.*
@@ -823,9 +823,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `installPhEditor`
+## [`installPhEditor`](steps/installPhEditor.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Install phEditor. Password: admin
 
 *No parameters defined.*
@@ -841,9 +841,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `installPhpLiteAdmin`
+## [`installPhpLiteAdmin`](steps/installPhpLiteAdmin.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Provide phpLiteAdmin. Password: admin
 
 *No parameters defined.*
@@ -859,9 +859,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `installPlugin`
+## [`installPlugin`](steps/installPlugin.md)
 
-**Type**: Built-in Step  
+**Type**: Built-in Step
 **Description**: Install a plugin via WordPress.org or Github (branches, releases, PRs).
 
 | Parameter | Type | Required | Description |
@@ -883,9 +883,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `installTheme`
+## [`installTheme`](steps/installTheme.md)
 
-**Type**: Built-in Step  
+**Type**: Built-in Step
 **Description**: Install a theme via WordPress.org or Github.
 
 | Parameter | Type | Required | Description |
@@ -907,9 +907,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `jetpackOfflineMode`
+## [`jetpackOfflineMode`](steps/jetpackOfflineMode.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Start Jetpack in Offline mode.
 
 | Parameter | Type | Required | Description |
@@ -931,9 +931,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `login`
+## [`login`](steps/login.md)
 
-**Type**: Built-in Step  
+**Type**: Built-in Step
 **Description**: Login to the site.
 
 | Parameter | Type | Required | Description |
@@ -957,9 +957,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `muPlugin`
+## [`muPlugin`](steps/muPlugin.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Add code for a plugin.
 
 | Parameter | Type | Required | Description |
@@ -981,9 +981,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `removeDashboardWidgets`
+## [`removeDashboardWidgets`](steps/removeDashboardWidgets.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Remove widgets from the wp-admin dashboard.
 
 | Parameter | Type | Required | Description |
@@ -1013,9 +1013,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `renameDefaultCategory`
+## [`renameDefaultCategory`](steps/renameDefaultCategory.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Change the default "Uncategorized".
 
 | Parameter | Type | Required | Description |
@@ -1037,9 +1037,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `runPHP`
+## [`runPHP`](steps/runPHP.md)
 
-**Type**: Built-in Step  
+**Type**: Built-in Step
 **Description**: Run code in the context of WordPress.
 
 | Parameter | Type | Required | Description |
@@ -1059,9 +1059,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `runWpCliCommand`
+## [`runWpCliCommand`](steps/runWpCliCommand.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Run a wp-cli command.
 
 | Parameter | Type | Required | Description |
@@ -1081,9 +1081,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `sampleContent`
+## [`sampleContent`](steps/sampleContent.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Inserts sample pages to the site.
 
 *No parameters defined.*
@@ -1099,9 +1099,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `setLandingPage`
+## [`setLandingPage`](steps/setLandingPage.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Set the landing page.
 
 | Parameter | Type | Required | Description |
@@ -1121,9 +1121,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `setLanguage`
+## [`setLanguage`](steps/setLanguage.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Set the WordPress site language.
 
 | Parameter | Type | Required | Description |
@@ -1143,9 +1143,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `setSiteName`
+## [`setSiteName`](steps/setSiteName.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Set the site name and tagline.
 
 | Parameter | Type | Required | Description |
@@ -1167,9 +1167,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `setSiteOption`
+## [`setSiteOption`](steps/setSiteOption.md)
 
-**Type**: Built-in Step  
+**Type**: Built-in Step
 **Description**: Set a site option.
 
 | Parameter | Type | Required | Description |
@@ -1191,9 +1191,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `setTT4Homepage`
+## [`setTT4Homepage`](steps/setTT4Homepage.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Set the homepage for the twentytwentyfour theme.
 
 *No parameters defined.*
@@ -1209,9 +1209,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `showAdminNotice`
+## [`showAdminNotice`](steps/showAdminNotice.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: Show an admin notice in the dashboard.
 
 | Parameter | Type | Required | Description |
@@ -1235,9 +1235,9 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## `skipWooCommerceWizard`
+## [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md)
 
-**Type**: Custom Step  
+**Type**: Custom Step
 **Description**: When running WooCommerce, don't show the wizard.
 
 *No parameters defined.*

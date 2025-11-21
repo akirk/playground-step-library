@@ -275,11 +275,11 @@ See our [Contributing Guide](../CONTRIBUTING.md) for details on:
 
         let content = `# Complete Steps Reference
 
-This document provides detailed information about all available steps, including their parameters, types, and usage examples.
+This document provides detailed information about all available steps, including their parameters, types, and usage examples. Click on a step name to view its detailed documentation.
 
 ## Table of Contents
 
-${stepEntries.map(([name]) => `- [\`${name}\`](#${name.toLowerCase()})`).join('\n')}
+${stepEntries.map(([name]) => `- [\`${name}\`](steps/${name}.md)`).join('\n')}
 
 ---
 
@@ -488,9 +488,9 @@ ${formattedJson}
      * Generate a step section for the main list
      */
     generateStepSection(stepName, stepInfo) {
-        return `## \`${stepName}\`
+        return `## [\`${stepName}\`](steps/${stepName}.md)
 
-**Type**: ${stepInfo.builtin ? 'Built-in' : 'Custom'} Step  
+**Type**: ${stepInfo.builtin ? 'Built-in' : 'Custom'} Step
 **Description**: ${stepInfo.description || 'No description available'}
 
 ${this.generateParametersTable(stepInfo.vars || [])}
