@@ -15,7 +15,7 @@
     "outDir": "./lib",
     "rootDir": ".",
     "lib": ["ES2020", "DOM"],
-    "types": ["node"]
+    "types": ["node", "vite/client"]
   },
   "include": ["src/**/*", "steps/**/*"],
   "exclude": ["node_modules", "lib", "test", "examples", "**/*.spec.ts", "**/*.test.ts"]
