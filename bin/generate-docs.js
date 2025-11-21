@@ -277,10 +277,6 @@ See our [Contributing Guide](../CONTRIBUTING.md) for details on:
 
 This document provides detailed information about all available steps, including their parameters, types, and usage examples. Click on a step name to view its detailed documentation.
 
-## Table of Contents
-
-${stepEntries.map(([name]) => `- [\`${name}\`](steps/${name}.md)`).join('\n')}
-
 ---
 
 `;

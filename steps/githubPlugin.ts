@@ -115,6 +115,7 @@ githubPlugin.vars = [
 	{
 		name: "url",
 		description: "Github URL of the plugin.",
+		required: true,
 		samples: ["https://github.com/akirk/blueprint-recorder"]
 	},
 	{

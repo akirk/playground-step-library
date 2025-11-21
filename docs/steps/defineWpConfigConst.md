@@ -13,8 +13,8 @@ Define a wp-config PHP constant.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | string | ❌ No | Constant name |
-| `value` | string | ❌ No | Constant value |
+| `name` | string | ✅ Yes | Constant name |
+| `value` | string | ✅ Yes | Constant value |
 
 
 ## Examples

@@ -63,11 +63,13 @@ defineWpConfigConst.vars = [
 	{
 		name: "name",
 		description: "Constant name",
+		required: true,
 		samples: ["WP_DEBUG"]
 	},
 	{
 		name: "value",
 		description: "Constant value",
+		required: true,
 		samples: ["true"]
 	}
 ];

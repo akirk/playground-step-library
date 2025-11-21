@@ -117,6 +117,7 @@ githubImportExportWxr.vars = [
 	{
 		name: "repo",
 		description: "The WXR file resides in this GitHub repository.",
+		required: true,
 		samples: [ "carstingaxion/gatherpress-demo-data" ]
 	},
 	{
@@ -127,6 +128,7 @@ githubImportExportWxr.vars = [
 	{
 		name: "filename",
 		description: "Which filename and path to use.",
+		required: true,
 		samples: [ "GatherPress-demo-data-2024.xml" ]
 	},
 	{

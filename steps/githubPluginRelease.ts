@@ -59,16 +59,19 @@ githubPluginRelease.vars = [
 	{
 		name: "repo",
 		description: "The plugin resides in this GitHub repository.",
+		required: true,
 		samples: [ "ryanwelcher/interactivity-api-todomvc" ]
 	},
 	{
 		name: "release",
 		description: "The release tag.",
+		required: true,
 		samples: [ "v0.1.3" ]
 	},
 	{
 		name: "filename",
 		description: "Which filename to use.",
+		required: true,
 		samples: [ "to-do-mvc.zip" ]
 	}
 ];

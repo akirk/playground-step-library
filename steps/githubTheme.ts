@@ -72,6 +72,7 @@ githubTheme.vars = [
 	{
 		name: "url",
 		description: "Github URL of the theme.",
+		required: true,
 		samples: [ "https://github.com/richtabor/kanso", "ndiego/nautilus", "https://github.com/Automattic/themes/tree/trunk/aether" ]
 	},
 	{

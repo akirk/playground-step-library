@@ -13,9 +13,9 @@ Install a specific plugin release from a Github repository.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repo` | string | ❌ No | The plugin resides in this GitHub repository. |
-| `release` | string | ❌ No | The release tag. |
-| `filename` | string | ❌ No | Which filename to use. |
+| `repo` | string | ✅ Yes | The plugin resides in this GitHub repository. |
+| `release` | string | ✅ Yes | The release tag. |
+| `filename` | string | ✅ Yes | Which filename to use. |
 
 
 ## Examples

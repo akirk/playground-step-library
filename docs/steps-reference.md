@@ -2,59 +2,6 @@
 
 This document provides detailed information about all available steps, including their parameters, types, and usage examples. Click on a step name to view its detailed documentation.
 
-## Table of Contents
-
-- [`addClientRole`](steps/addClientRole.md)
-- [`addFilter`](steps/addFilter.md)
-- [`addMedia`](steps/addMedia.md)
-- [`addPage`](steps/addPage.md)
-- [`addPost`](steps/addPost.md)
-- [`addProduct`](steps/addProduct.md)
-- [`blockExamples`](steps/blockExamples.md)
-- [`blueprintExtractor`](steps/blueprintExtractor.md)
-- [`blueprintRecorder`](steps/blueprintRecorder.md)
-- [`changeAdminColorScheme`](steps/changeAdminColorScheme.md)
-- [`createUser`](steps/createUser.md)
-- [`customPostType`](steps/customPostType.md)
-- [`debug`](steps/debug.md)
-- [`defineWpConfigConst`](steps/defineWpConfigConst.md)
-- [`deleteAllPosts`](steps/deleteAllPosts.md)
-- [`disableWelcomeGuides`](steps/disableWelcomeGuides.md)
-- [`doAction`](steps/doAction.md)
-- [`dontLogin`](steps/dontLogin.md)
-- [`enableMultisite`](steps/enableMultisite.md)
-- [`enqueueCss`](steps/enqueueCss.md)
-- [`enqueueJs`](steps/enqueueJs.md)
-- [`fakeHttpResponse`](steps/fakeHttpResponse.md)
-- [`generateProducts`](steps/generateProducts.md)
-- [`githubImportExportWxr`](steps/githubImportExportWxr.md)
-- [`githubPlugin`](steps/githubPlugin.md)
-- [`githubPluginRelease`](steps/githubPluginRelease.md)
-- [`githubTheme`](steps/githubTheme.md)
-- [`importFriendFeeds`](steps/importFriendFeeds.md)
-- [`importWordPressComExport`](steps/importWordPressComExport.md)
-- [`importWxr`](steps/importWxr.md)
-- [`installAdminer`](steps/installAdminer.md)
-- [`installPhEditor`](steps/installPhEditor.md)
-- [`installPhpLiteAdmin`](steps/installPhpLiteAdmin.md)
-- [`installPlugin`](steps/installPlugin.md)
-- [`installTheme`](steps/installTheme.md)
-- [`jetpackOfflineMode`](steps/jetpackOfflineMode.md)
-- [`login`](steps/login.md)
-- [`muPlugin`](steps/muPlugin.md)
-- [`removeDashboardWidgets`](steps/removeDashboardWidgets.md)
-- [`renameDefaultCategory`](steps/renameDefaultCategory.md)
-- [`runPHP`](steps/runPHP.md)
-- [`runWpCliCommand`](steps/runWpCliCommand.md)
-- [`sampleContent`](steps/sampleContent.md)
-- [`setLandingPage`](steps/setLandingPage.md)
-- [`setLanguage`](steps/setLanguage.md)
-- [`setSiteName`](steps/setSiteName.md)
-- [`setSiteOption`](steps/setSiteOption.md)
-- [`setTT4Homepage`](steps/setTT4Homepage.md)
-- [`showAdminNotice`](steps/showAdminNotice.md)
-- [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md)
-
 ---
 
 ## [`addClientRole`](steps/addClientRole.md)
@@ -406,8 +353,8 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `name` | string | ❌ No | Constant name |
-| `value` | string | ❌ No | Constant value |
+| `name` | string | ✅ Yes | Constant name |
+| `value` | string | ✅ Yes | Constant value |
 
 
 ### Example Usage
@@ -590,7 +537,7 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `url` | url | ❌ No | URL like https://wordpress.org/ |
+| `url` | url | ✅ Yes | URL like https://wordpress.org/ |
 | `response` | textarea | ❌ No | The data to return |
 
 
@@ -599,7 +546,7 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "fakeHttpResponse",
-          "url": "",
+          "url": "https://wordpress.org/",
           "response": "hello world"
     }
 ```
@@ -644,9 +591,9 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repo` | string | ❌ No | The WXR file resides in this GitHub repository. |
+| `repo` | string | ✅ Yes | The WXR file resides in this GitHub repository. |
 | `branch` | string | ❌ No | Which branch to use. |
-| `filename` | string | ❌ No | Which filename and path to use. |
+| `filename` | string | ✅ Yes | Which filename and path to use. |
 | `targetUrl` | string | ❌ No | Rewrite the exported paths to this destination URL. |
 
 
@@ -672,7 +619,7 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `url` | string | ❌ No | Github URL of the plugin. |
+| `url` | string | ✅ Yes | Github URL of the plugin. |
 | `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
 
 
@@ -696,9 +643,9 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repo` | string | ❌ No | The plugin resides in this GitHub repository. |
-| `release` | string | ❌ No | The release tag. |
-| `filename` | string | ❌ No | Which filename to use. |
+| `repo` | string | ✅ Yes | The plugin resides in this GitHub repository. |
+| `release` | string | ✅ Yes | The release tag. |
+| `filename` | string | ✅ Yes | Which filename to use. |
 
 
 ### Example Usage
@@ -722,7 +669,7 @@ This document provides detailed information about all available steps, including
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `url` | string | ❌ No | Github URL of the theme. |
+| `url` | string | ✅ Yes | Github URL of the theme. |
 | `prs` | boolean | ❌ No | Add support for submitting Github Requests. |
 
 

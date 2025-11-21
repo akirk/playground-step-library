@@ -119,7 +119,8 @@ fakeHttpResponse.vars = [
 		name: "url",
 		description: "URL like https://wordpress.org/",
 		type: "url",
-		samples: [ "" ]
+		required: true,
+		samples: [ "https://wordpress.org/" ]
 	},
 	{
 		name: "response",

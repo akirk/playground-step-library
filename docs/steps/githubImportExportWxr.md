@@ -13,9 +13,9 @@ Provide useful additional info.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `repo` | string | ❌ No | The WXR file resides in this GitHub repository. |
+| `repo` | string | ✅ Yes | The WXR file resides in this GitHub repository. |
 | `branch` | string | ❌ No | Which branch to use. |
-| `filename` | string | ❌ No | Which filename and path to use. |
+| `filename` | string | ✅ Yes | Which filename and path to use. |
 | `targetUrl` | string | ❌ No | Rewrite the exported paths to this destination URL. |
 
 

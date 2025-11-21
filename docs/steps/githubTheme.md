@@ -13,7 +13,7 @@ Install a theme from a Github repository.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
-| `url` | string | ❌ No | Github URL of the theme. |
+| `url` | string | ✅ Yes | Github URL of the theme. |
 | `prs` | boolean | ❌ No | Add support for submitting Github Requests. |
 
 
