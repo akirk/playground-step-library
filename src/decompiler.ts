@@ -8,7 +8,7 @@ interface NativeBlueprint {
 	[key: string]: any;
 }
 
-interface DecompilerResult {
+export interface DecompilerResult {
 	steps: Array<StepLibraryStepDefinition>;
 	unmappedSteps: Array<any>;
 	confidence: 'high' | 'medium' | 'low';
@@ -283,7 +283,7 @@ export class BlueprintDecompiler {
 		}
 
 		if (code.includes('wp_insert_post') && code.includes('post_title')) {
-			return this.decompileAddPageOrPost(code);
+			return this.decompileAddPageOrPost(code, caption);
 		}
 
 		return {
@@ -334,12 +334,17 @@ export class BlueprintDecompiler {
 		};
 	}
 
-	private decompileAddPageOrPost(code: string): StepLibraryStepDefinition | null {
+	private decompileAddPageOrPost(code: string, caption: string): StepLibraryStepDefinition | null {
 		const titleMatch = code.match(/['"]post_title['"]\s*=>\s*['"]([^'"]+)['"]/);
 		const contentMatch = code.match(/['"]post_content['"]\s*=>\s*['"]([^'"]+)['"]/);
 		const typeMatch = code.match(/['"]post_type['"]\s*=>\s*['"]([^'"]+)['"]/);
 
-		const isPost = typeMatch && typeMatch[1] === 'post';
+		let isPost = typeMatch && typeMatch[1] === 'post';
+
+		if ( !isPost && caption.startsWith( 'addPost:' ) ) {
+			isPost = true;
+		}
+
 		const step = isPost ? 'addPost' : 'addPage';
 
 		return {

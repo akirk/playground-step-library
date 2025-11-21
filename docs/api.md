@@ -209,3 +209,95 @@ Compiles a blueprint with custom steps into a v2 blueprint with declarative sche
 - Throws: Error if compilation fails
 
 See [Architecture Documentation](architecture.md) for details on how steps implement both v1 and v2 compilation.
+
+### `BlueprintDecompiler`
+
+Converts native WordPress Playground blueprints back into step library blueprints with custom steps.
+
+#### Constructor
+
+```javascript
+import { BlueprintDecompiler } from 'playground-step-library';
+const decompiler = new BlueprintDecompiler();
+```
+
+#### Methods
+
+##### `decompile(nativeBlueprint)`
+Decompiles a native blueprint into a step library blueprint.
+
+- `nativeBlueprint` (Object): Native WordPress Playground blueprint
+- Returns: `DecompilerResult` object
+
+#### DecompilerResult
+
+```typescript
+interface DecompilerResult {
+    steps: Array<StepLibraryStepDefinition>;  // Decompiled custom steps
+    unmappedSteps: Array<any>;                 // Native steps that couldn't be mapped
+    confidence: 'high' | 'medium' | 'low';     // Confidence score
+    warnings: Array<string>;                   // Warning messages
+}
+```
+
+#### Usage Example
+
+```javascript
+import { BlueprintDecompiler } from 'playground-step-library';
+
+const decompiler = new BlueprintDecompiler();
+
+// Native blueprint from WordPress Playground
+const nativeBlueprint = {
+    steps: [
+        {
+            step: 'installPlugin',
+            pluginData: {
+                resource: 'wordpress.org/plugins',
+                slug: 'gutenberg'
+            }
+        },
+        {
+            step: 'setSiteOptions',
+            options: {
+                blogname: 'My Site',
+                blogdescription: 'A demo site'
+            }
+        }
+    ],
+    login: true,
+    landingPage: '/wp-admin/'
+};
+
+const result = decompiler.decompile(nativeBlueprint);
+console.log(JSON.stringify(result.steps, null, 2));
+// Output:
+// [
+//   { "step": "login", "username": "admin", "password": "password", "landingPage": false },
+//   { "step": "installPlugin", "url": "https://wordpress.org/plugins/gutenberg/", "prs": false },
+//   { "step": "setSiteName", "sitename": "My Site", "tagline": "A demo site" },
+//   { "step": "setLandingPage", "landingPage": "/wp-admin/" }
+// ]
+
+// Check confidence and warnings
+console.log('Confidence:', result.confidence);
+console.log('Unmapped steps:', result.unmappedSteps.length);
+console.log('Warnings:', result.warnings);
+```
+
+#### Supported Native Steps
+
+The decompiler can convert these native step types:
+
+| Native Step | Decompiled To |
+|-------------|---------------|
+| `installPlugin` | `installPlugin` (with URL) |
+| `installTheme` | `installTheme` (with URL) |
+| `runPHP` | `blockExamples`, `importFriendFeeds`, `addPage`/`addPost`, or generic `runPHP` |
+| `writeFile` | `muPlugin` or `addFilter` |
+| `defineWpConfigConsts` | `debug` |
+| `setSiteOptions` | `setSiteName` or `setSiteOption` |
+| `login` | `login` |
+| `wp-cli` | `runWpCliCommand` |
+
+Top-level blueprint properties like `plugins`, `login`, `siteOptions`, `constants`, and `landingPage` are also handled.

@@ -1,8 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { BlueprintDecompiler } from '../src/decompiler';
+import PlaygroundStepLibrary from '../src/index';
 
 describe('BlueprintDecompiler', () => {
 	const decompiler = new BlueprintDecompiler();
+	const compiler = new PlaygroundStepLibrary();
 
 	describe('installPlugin decompilation', () => {
 		it('should decompile wordpress.org plugin', () => {
@@ -952,6 +954,204 @@ wp_insert_post( array(
 			expect(debugStep).toBeDefined();
 			expect((debugStep as any).wpDebug).toBe(true);
 			expect((debugStep as any).wpDebugDisplay).toBe(false);
+		});
+	});
+
+	describe('roundtrip: compile then decompile', () => {
+		it('should roundtrip installPlugin', () => {
+			const original = {
+				steps: [
+					{ step: 'installPlugin', url: 'https://wordpress.org/plugins/gutenberg/' }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('installPlugin');
+			expect((decompiled.steps[0] as any).url).toBe('https://wordpress.org/plugins/gutenberg/');
+			expect(decompiled.confidence).toBe('high');
+		});
+
+		it('should roundtrip installTheme', () => {
+			const original = {
+				steps: [
+					{ step: 'installTheme', url: 'https://wordpress.org/themes/flavor/' }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('installTheme');
+			expect((decompiled.steps[0] as any).url).toBe('https://wordpress.org/themes/flavor/');
+		});
+
+		it('should roundtrip setSiteName', () => {
+			const original = {
+				steps: [
+					{ step: 'setSiteName', sitename: 'My Site', tagline: 'A great site' }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('setSiteName');
+			expect((decompiled.steps[0] as any).sitename).toBe('My Site');
+			expect((decompiled.steps[0] as any).tagline).toBe('A great site');
+		});
+
+		it('should roundtrip debug step', () => {
+			const original = {
+				steps: [
+					{ step: 'debug', wpDebug: true, wpDebugDisplay: true, scriptDebug: false, queryMonitor: false }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('debug');
+			expect((decompiled.steps[0] as any).wpDebug).toBe(true);
+			expect((decompiled.steps[0] as any).wpDebugDisplay).toBe(true);
+			expect((decompiled.steps[0] as any).scriptDebug).toBe(false);
+		});
+
+		it('should roundtrip setLandingPage', () => {
+			const original = {
+				steps: [
+					{ step: 'setLandingPage', landingPage: '/wp-admin/options.php' }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('setLandingPage');
+			expect((decompiled.steps[0] as any).landingPage).toBe('/wp-admin/options.php');
+		});
+
+		it('should roundtrip login', () => {
+			const original = {
+				steps: [
+					{ step: 'login' }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('login');
+		});
+
+		it('should roundtrip addPage', () => {
+			const original = {
+				steps: [
+					{ step: 'addPage', title: 'About Us', content: '<p>Welcome!</p>' }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('addPage');
+			expect((decompiled.steps[0] as any).title).toBe('About Us');
+			expect((decompiled.steps[0] as any).content).toBe('<p>Welcome!</p>');
+		});
+
+		it('should roundtrip addPost', () => {
+			const original = {
+				steps: [
+					{ step: 'addPost', title: 'Hello World', content: '<p>My first post</p>' }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('addPost');
+			expect((decompiled.steps[0] as any).title).toBe('Hello World');
+		});
+
+		it('should roundtrip muPlugin', () => {
+			const original = {
+				steps: [
+					{ step: 'muPlugin', name: 'my-plugin', code: '<?php\nadd_action("init", function() { });' }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('muPlugin');
+			expect((decompiled.steps[0] as any).name).toBe('my-plugin');
+			expect((decompiled.steps[0] as any).code).toContain('add_action');
+		});
+
+		it('should roundtrip addFilter', () => {
+			const original = {
+				steps: [
+					{ step: 'addFilter', filter: 'the_content', code: '__return_false' }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('addFilter');
+			expect((decompiled.steps[0] as any).filter).toBe('the_content');
+			expect((decompiled.steps[0] as any).code).toBe('__return_false');
+		});
+
+		it('should roundtrip runWpCliCommand', () => {
+			const original = {
+				steps: [
+					{ step: 'runWpCliCommand', command: 'post list --format=json' }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('runWpCliCommand');
+			expect((decompiled.steps[0] as any).command).toBe('post list --format=json');
+		});
+
+		it('should roundtrip complex blueprint with multiple steps', () => {
+			const original = {
+				steps: [
+					{ step: 'installPlugin', url: 'https://wordpress.org/plugins/woocommerce/' },
+					{ step: 'installTheme', url: 'https://wordpress.org/themes/flavor/' },
+					{ step: 'setSiteName', sitename: 'My Shop', tagline: 'Best products' },
+					{ step: 'setLandingPage', landingPage: '/wp-admin/' },
+					{ step: 'login' }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.confidence).toBe('high');
+			expect(decompiled.unmappedSteps).toHaveLength(0);
+
+			const stepTypes = decompiled.steps.map(s => s.step);
+			expect(stepTypes).toContain('installPlugin');
+			expect(stepTypes).toContain('installTheme');
+			expect(stepTypes).toContain('setSiteName');
+			expect(stepTypes).toContain('setLandingPage');
+			expect(stepTypes).toContain('login');
 		});
 	});
 });
