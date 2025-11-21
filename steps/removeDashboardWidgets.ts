@@ -1,4 +1,5 @@
-import type { StepFunction, RemoveDashboardWidgetsStep, StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, RemoveDashboardWidgetsStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
 
 export const removeDashboardWidgets: StepFunction<RemoveDashboardWidgetsStep> = (step: RemoveDashboardWidgetsStep): StepResult => {
@@ -64,15 +65,9 @@ add_action(
 	];
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
-			return {
-				additionalSteps: v1Steps
-			};
-		}
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		};
 	};
 };
 

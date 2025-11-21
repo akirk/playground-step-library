@@ -1,19 +1,9 @@
-import type { StepFunction, AddClientRoleStep, StepResult, V2SchemaFragments } from './types.js';
-
+import type { StepFunction, AddClientRoleStep } from './types.js';
+import { muPlugin } from './muPlugin.js';
 
 export const addClientRole: StepFunction<AddClientRoleStep> = (step: AddClientRoleStep): StepResult => {
-	return {
-		toV1() {
-	return [
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/mu-plugins",
-		},
-		{
-			"step": "writeFile",
-			// Adapted from https://github.com/felixarntz/felixarntz-mu-plugins/blob/main/felixarntz-mu-plugins/add-client-role.php
-			"path": "/wordpress/wp-content/mu-plugins/add-client-role.php",
-			"data": `<?php
+	// Adapted from https://github.com/felixarntz/felixarntz-mu-plugins/blob/main/felixarntz-mu-plugins/add-client-role.php
+	const code = `
 add_action(
 	'init',
 	static function () {
@@ -63,21 +53,13 @@ add_action(
 		}
 	}
 );
-`
-		}
-	];
-		},
+`;
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
-			return {
-				additionalSteps: v1Steps
-			};
-		}
-	};
+	return muPlugin({
+		step: 'muPlugin',
+		name: 'add-client-role',
+		code
+	});
 };
 
 addClientRole.description = "Adds a role for clients with additional capabilities than editors, but not quite admin.";
@@ -86,6 +68,6 @@ addClientRole.vars = [
 		name: "displayName",
 		description: "Display name for the client role",
 		required: true,
-		samples: [ "Client" ]
+		samples: ["Client"]
 	}
 ];

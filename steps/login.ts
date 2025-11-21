@@ -1,30 +1,28 @@
-import type { StepFunction, LoginStep , StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, LoginStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
+import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 
 
 export const login: StepFunction<LoginStep> = (step: LoginStep): StepResult => {
 	return {
 		toV1() {
-	const steps = [
-		{
-			"step": "login",
-			"username": step.username,
-			"password": step.password
-		}
-	];
-	if (step.landingPage) {
-		(steps as any).landingPage = '/wp-admin/';
-	}
-	return steps;
+			const result: BlueprintV1Declaration = {
+				steps: [
+					{
+						"step": "login",
+						"username": step.username,
+						"password": step.password
+					}
+				]
+			};
+			if (step.landingPage) {
+				result.landingPage = '/wp-admin/';
+			}
+			return result;
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
-			return {
-				additionalSteps: v1Steps
-			};
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
 		}
 	};
 };

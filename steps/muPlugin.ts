@@ -1,31 +1,39 @@
-import type { StepFunction, MuPluginStep, StepResult, V2SchemaFragments } from './types.js';
-
+import type { StepFunction, MuPluginStep, StepResult } from './types.js';
+import type { StepDefinition } from '@wp-playground/blueprints';
 
 export const muPlugin: StepFunction<MuPluginStep> = (step: MuPluginStep): StepResult => {
+	const code = '<?php ' + (step.code || '').replace(/<\?php/g, '');
+	const pluginName = step.name || 'mu-plugin';
+
 	return {
 		toV1() {
-	const code = '<?php ' + (step.code || '').replace( /<\?php/, '' );
-	const pluginName = step.name || 'mu-plugin';
-	return [
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/mu-plugins",
-		},
-		{
-			"step": "writeFile",
-			"path": `/wordpress/wp-content/mu-plugins/${pluginName}-${step.stepIndex || 0}.php`,
-			"data": code
-		}
-	];
+			const steps: StepDefinition[] = [
+				{
+					// mkdir is necessary in v1 to ensure the directory exists
+					step: "mkdir",
+					path: "/wordpress/wp-content/mu-plugins",
+				},
+				{
+					// stepIndex is kept to avoid collisions when multiple mu-plugin steps are used
+					step: "writeFile",
+					path: `/wordpress/wp-content/mu-plugins/${pluginName}-${step.stepIndex || 0}.php`,
+					data: code
+				}
+			];
+			return { steps };
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
+		toV2() {
 			return {
-				additionalSteps: v1Steps
+				version: 2,
+				muPlugins: [
+					{
+						file: {
+							filename: `${pluginName}.php`,
+							content: code
+						}
+					}
+				]
 			};
 		}
 	};

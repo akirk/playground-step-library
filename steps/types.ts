@@ -1,9 +1,11 @@
 // Types for WordPress Playground Step Library
 
-import type { 
-	StepDefinition, 
-	Blueprint as WPBlueprint, 
+import type {
+	StepDefinition,
+	Blueprint as WPBlueprint,
 	BlueprintDeclaration as WPBlueprintDeclaration,
+	BlueprintV1Declaration,
+	BlueprintV2Declaration,
 	InstallPluginStep as WPInstallPluginStep,
 	InstallThemeStep as WPInstallThemeStep,
 	RunPHPStep as WPRunPHPStep,
@@ -38,21 +40,40 @@ export interface StepVariable {
     deprecated?: boolean;
 }
 
-export interface V2SchemaFragments {
-    content?: any[];
-    users?: any[];
-    media?: any[];
-    plugins?: any[];
-    themes?: any[];
-    siteOptions?: Record<string, any>;
-    constants?: Record<string, any>;
-    postTypes?: Record<string, any>;
-    additionalSteps?: any[];
+export interface StepResult {
+    toV1(): BlueprintV1Declaration;
+    toV2(): BlueprintV2Declaration;
 }
 
-export interface StepResult {
-    toV1(): any[];
-    toV2(): V2SchemaFragments;
+/**
+ * Helper function to convert v1 blueprint result to v2 blueprint with additionalStepsAfterExecution.
+ * Use this in toV2() when you want to reuse the v1 implementation.
+ * Handles steps, landingPage, and login properties.
+ */
+export function v1ToV2Fallback(v1Result: BlueprintV1Declaration): BlueprintV2Declaration {
+    const result: BlueprintV2Declaration = {
+        version: 2
+    };
+
+    if (v1Result.steps && v1Result.steps.length > 0) {
+        result.additionalStepsAfterExecution = v1Result.steps;
+    }
+
+    if (v1Result.landingPage !== undefined || v1Result.login !== undefined) {
+        result.applicationOptions = {
+            'wordpress-playground': {}
+        };
+
+        if (v1Result.landingPage !== undefined) {
+            result.applicationOptions['wordpress-playground'].landingPage = v1Result.landingPage;
+        }
+
+        if (v1Result.login !== undefined) {
+            result.applicationOptions['wordpress-playground'].login = v1Result.login;
+        }
+    }
+
+    return result;
 }
 
 export interface StepFunction<T extends BlueprintStep = BlueprintStep> {

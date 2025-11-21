@@ -1,32 +1,19 @@
-import type { StepFunction, EnqueueCssStep , StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, EnqueueCssStep, StepResult } from './types.js';
+import { muPlugin } from './muPlugin.js';
+import type { StepDefinition } from '@wp-playground/blueprints';
 
 export const enqueueCss: StepFunction<EnqueueCssStep> = (step: EnqueueCssStep): StepResult => {
-	return {
-		toV1() {
-	if (!step.css || !step.css.trim()) {
-		return [];
-	}
+	const filename = step.filename || `custom-styles-${step.stepIndex || 0}`;
+	const sanitizedFilename = filename.replace(/\.css$/, '');
+	const cssFilePath = `/wordpress/wp-content/mu-plugins/${sanitizedFilename}.css`;
 
 	const frontend = step.frontend !== false;
 	const wpAdmin = step.wpAdmin !== false;
 
-	if (!frontend && !wpAdmin) {
-		return [];
-	}
-
-	const filename = step.filename || `custom-styles-${step.stepIndex || 0}`;
-	const sanitizedFilename = filename.replace(/\.css$/, '');
-	const cssFilePath = `/wordpress/wp-content/uploads/${sanitizedFilename}.css`;
-
-	let phpCode = `<?php
-/**
- * Plugin Name: Enqueue Custom CSS - ${sanitizedFilename}
- */
-`;
-
+	let phpCode = '';
 	if (frontend) {
 		phpCode += `add_action( 'wp_enqueue_scripts', function() {
-	wp_enqueue_style( '${sanitizedFilename}', content_url( 'uploads/${sanitizedFilename}.css' ), array(), '1.0' );
+	wp_enqueue_style( '${sanitizedFilename}', WPMU_PLUGIN_URL . '/${sanitizedFilename}.css', array(), '1.0' );
 } );
 
 `;
@@ -34,40 +21,55 @@ export const enqueueCss: StepFunction<EnqueueCssStep> = (step: EnqueueCssStep): 
 
 	if (wpAdmin) {
 		phpCode += `add_action( 'admin_enqueue_scripts', function() {
-	wp_enqueue_style( '${sanitizedFilename}', content_url( 'uploads/${sanitizedFilename}.css' ), array(), '1.0' );
+	wp_enqueue_style( '${sanitizedFilename}', WPMU_PLUGIN_URL . '/${sanitizedFilename}.css', array(), '1.0' );
 } );
 `;
 	}
 
-	return [
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/uploads",
-		},
-		{
-			"step": "writeFile",
-			"path": cssFilePath,
-			"data": step.css || ''
-		},
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/mu-plugins",
-		},
-		{
-			"step": "writeFile",
-			"path": `/wordpress/wp-content/mu-plugins/enqueue-${sanitizedFilename}-${step.stepIndex || 0}.php`,
-			"data": phpCode
-		}
-	];
+	const muPluginResult = muPlugin({
+		step: 'muPlugin',
+		name: `enqueue-${sanitizedFilename}`,
+		code: phpCode
+	});
+
+	return {
+		toV1() {
+			if (!step.css || !step.css.trim() || (!frontend && !wpAdmin)) {
+				return { steps: [] };
+			}
+
+			const muSteps = muPluginResult.toV1();
+
+			return {
+				steps: [
+					{
+						step: 'writeFile',
+						path: cssFilePath,
+						data: step.css
+					},
+					...(muSteps.steps || [])
+				]
+			};
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
+		toV2() {
+			if (!step.css || !step.css.trim() || (!frontend && !wpAdmin)) {
+				return { version: 2 };
 			}
+
+			const muV2 = muPluginResult.toV2();
+
 			return {
-				additionalSteps: v1Steps
+				version: 2,
+				muPlugins: [
+					...(muV2.muPlugins || []),
+					{
+						file: {
+							filename: `${sanitizedFilename}.css`,
+							content: step.css
+						}
+					}
+				]
 			};
 		}
 	};

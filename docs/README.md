@@ -10,8 +10,6 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 🚀 Quick Start
 
-### Compile to Blueprint v1 (Imperative)
-
 ```javascript
 const PlaygroundStepLibrary = require('playground-step-library');
 const compiler = new PlaygroundStepLibrary();
@@ -27,27 +25,6 @@ const blueprint = {
 };
 
 const compiled = compiler.compile(blueprint);
-// Output: { steps: [...], landingPage: '/', ... }
-```
-
-### Compile to Blueprint v2 (Declarative)
-
-```javascript
-const { PlaygroundStepLibraryV2 } = require('playground-step-library');
-const compiler = new PlaygroundStepLibraryV2();
-
-const blueprint = {
-  steps: [
-    {
-      step: 'setSiteName',
-      sitename: 'My WordPress Site',
-      tagline: 'Powered by Playground'
-    }
-  ]
-};
-
-const compiled = compiler.compile(blueprint);
-// Output: { siteOptions: { blogname: '...', blogdescription: '...' }, ... }
 ```
 
 ## 📚 Step Categories
@@ -110,22 +87,14 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`blockExamples`](steps/blockExamples.md) - Creates a post with all block examples from registered blocks
 - [`debug`](steps/debug.md) - Configure WordPress debug settings and optionally install Query Monitor plugin.
 
-## 🏗️ Architecture
+## 🔗 Cross-References
 
-The Step Library supports dual compilation modes:
-
-- **V1 Compiler** (`PlaygroundStepLibrary`) - Outputs imperative blueprints with `steps` array
-- **V2 Compiler** (`PlaygroundStepLibraryV2`) - Outputs declarative blueprints with schema properties
-
-Steps implement both modes via the `StepResult` pattern:
-- `toV1()` - Returns array of native Playground steps
-- `toV2()` - Returns declarative schema fragments (content, users, plugins, etc.)
-
-See [Architecture Documentation](architecture.md) for full details.
+Many steps can reference and use other steps. For example:
+- `addProduct` automatically calls `installPlugin` to install WooCommerce
+- `importFriendFeeds` calls `installPlugin` to install the Friends plugin
 
 ## 📖 Detailed Documentation
 
-- [Architecture](architecture.md) - How the compilers work, StepResult pattern, design patterns
 - [Complete Steps Reference](steps-reference.md) - Detailed list with all parameters
 - [Individual Step Documentation](steps/) - Comprehensive docs for each step
 - [Built-in Step Usage](builtin-step-usage.md) - See which steps compile to each built-in step

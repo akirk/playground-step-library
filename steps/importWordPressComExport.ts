@@ -1,4 +1,5 @@
-import type { StepFunction, ImportWordPressComExportStep, StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, ImportWordPressComExportStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
 
 export const importWordPressComExport: StepFunction<ImportWordPressComExportStep> = (step: ImportWordPressComExportStep): StepResult => {
@@ -39,15 +40,9 @@ foreach ( $iterator as $file ) {
 	];
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
-			return {
-				additionalSteps: v1Steps
-			};
-		}
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		};
 	};
 };
 

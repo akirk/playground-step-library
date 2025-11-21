@@ -1,17 +1,8 @@
-import type { StepFunction, DisableWelcomeGuidesStep , StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, DisableWelcomeGuidesStep } from './types.js';
+import { muPlugin } from './muPlugin.js';
 
 export const disableWelcomeGuides: StepFunction<DisableWelcomeGuidesStep> = (step: DisableWelcomeGuidesStep): StepResult => {
-	return {
-		toV1() {
-	return [
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/mu-plugins",
-		},
-		{
-			"step": "writeFile",
-			"path": "/wordpress/wp-content/mu-plugins/disable-welcome-guides.php",
-			"data": `<?php
+	const code = `
 function my_disable_welcome_guides() {
 	wp_add_inline_script( 'wp-data', "window.onload = function() {
 		window.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuide', false );
@@ -22,21 +13,13 @@ function my_disable_welcome_guides() {
 }
 
 add_action( 'enqueue_block_editor_assets', 'my_disable_welcome_guides', 20 );
-`
-		}
-	];
-		},
+`;
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
-			return {
-				additionalSteps: v1Steps
-			};
-		}
-	};
+	return muPlugin({
+		step: 'muPlugin',
+		name: 'disable-welcome-guides',
+		code
+	});
 };
 
 disableWelcomeGuides.description = "Disable the welcome guides in the site editor.";

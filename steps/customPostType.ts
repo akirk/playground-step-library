@@ -1,4 +1,5 @@
 import type { StepFunction, CustomPostTypeStep, StepResult, V2SchemaFragments } from './types.js';
+import type { StepDefinition } from '@wp-playground/blueprints';
 
 
 export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPostTypeStep): StepResult => {
@@ -9,7 +10,7 @@ export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPos
 
 	return {
 		toV1() {
-			const steps = [
+			const steps: StepDefinition[] = [
 				{
 					step: "mkdir",
 					path: "/wordpress/wp-content/mu-plugins",
@@ -23,7 +24,7 @@ export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPos
 					}
 				}
 			];
-			return steps;
+			return { steps };
 		},
 
 		toV2(): V2SchemaFragments {

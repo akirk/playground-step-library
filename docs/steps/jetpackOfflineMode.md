@@ -7,7 +7,6 @@ Start Jetpack in Offline mode.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin), [`defineWpConfigConsts`](../builtin-step-usage.md#definewpconfigconsts), [`setSiteOptions`](../builtin-step-usage.md#setsiteoptions)
 
 ## Parameters
 
@@ -28,41 +27,7 @@ Start Jetpack in Offline mode.
     }
 ```
 
-## Compiled Output
 
-```json
-{
-  "steps": [
-    {
-      "step": "installPlugin",
-      "pluginData": {
-        "resource": "wordpress.org/plugins",
-        "slug": "jetpack"
-      },
-      "options": {
-        "activate": true
-      }
-    },
-    {
-      "step": "defineWpConfigConsts",
-      "consts": {
-        "JETACK_DEBUG": "true",
-        "JETPACK_DEV_DEBUG": "true",
-        "DNS_NS": 0
-      }
-    },
-    {
-      "step": "setSiteOptions",
-      "options": {
-        "jetpack_active_modules": [
-          "blocks",
-          "subscriptions"
-        ]
-      }
-    }
-  ]
-}
-```
 
 ## Usage with Library
 

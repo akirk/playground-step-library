@@ -7,7 +7,6 @@ Set the WordPress site language.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** [`setSiteLanguage`](../builtin-step-usage.md#setsitelanguage)
 
 ## Parameters
 
@@ -26,18 +25,7 @@ Set the WordPress site language.
     }
 ```
 
-## Compiled Output
 
-```json
-{
-  "steps": [
-    {
-      "step": "setSiteLanguage",
-      "language": "de_DE"
-    }
-  ]
-}
-```
 
 ## Usage with Library
 

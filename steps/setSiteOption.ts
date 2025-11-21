@@ -1,4 +1,5 @@
-import type { StepFunction, SetSiteOptionStep, StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, SetSiteOptionStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
 
 export const setSiteOption: StepFunction<SetSiteOptionStep> = (step: SetSiteOptionStep): StepResult => {
@@ -24,15 +25,9 @@ export const setSiteOption: StepFunction<SetSiteOptionStep> = (step: SetSiteOpti
 	return [ optionStep ];
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
-			return {
-				additionalSteps: v1Steps
-			};
-		}
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		};
 	};
 };
 

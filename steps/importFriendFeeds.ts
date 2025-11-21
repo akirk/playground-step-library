@@ -1,4 +1,5 @@
-import type { StepFunction, ImportFriendFeedsStep, StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, ImportFriendFeedsStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 import { installPlugin } from './installPlugin.js';
 
 
@@ -102,15 +103,9 @@ if ( class_exists('Friends\\Import') ) {
 	return steps;
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
-			return {
-				additionalSteps: v1Steps
-			};
-		}
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		};
 	};
 };
 

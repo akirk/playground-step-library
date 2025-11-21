@@ -1,4 +1,5 @@
-import type { StepFunction, AddMediaStep, StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, AddMediaStep, StepResult } from './types.js';
+import type { StepDefinition } from '@wp-playground/blueprints';
 
 
 export const addMedia: StepFunction<AddMediaStep> = (step: AddMediaStep): StepResult => {
@@ -6,39 +7,39 @@ export const addMedia: StepFunction<AddMediaStep> = (step: AddMediaStep): StepRe
 
 	return {
 		toV1() {
-			if ( ! downloadUrl || ! downloadUrl.match( /^https?:/ ) ) {
-				return [];
+			if (!downloadUrl || !downloadUrl.match(/^https?:/)) {
+				return {};
 			}
 
-			const steps: any[] = [
-			{
-				step: "mkdir",
-				path: "/tmp/media"
-			}
+			const steps: StepDefinition[] = [
+				{
+					step: "mkdir",
+					path: "/tmp/media"
+				}
 			];
 
-			if ( downloadUrl.match( /\.zip$/ ) ) {
-				steps.push( {
+			if (downloadUrl.match(/\.zip$/)) {
+				steps.push({
 					step: "unzip",
 					zipFile: {
-		                resource: "url",
-		                url: downloadUrl,
-			            caption: "Downloading " + downloadUrl,
-		            },
-		            extractToPath: "/tmp/media"
-				} );
+						resource: "url",
+						url: downloadUrl,
+						caption: "Downloading " + downloadUrl,
+					},
+					extractToPath: "/tmp/media"
+				});
 			} else {
-				const filename = downloadUrl.split( '/' ).pop();
-				steps.push( {
+				const filename = downloadUrl.split('/').pop();
+				steps.push({
 					step: "writeFile",
 					path: "/tmp/media/" + filename,
 					data: {
 						resource: "url",
 						url: downloadUrl,
 					}
-				} );
+				});
 			}
-			steps.push( {
+			steps.push({
 				step: "runPHP",
 				progress: {
 					caption: "Importing media to library"
@@ -71,29 +72,32 @@ foreach ( $iterator as $filename ) {
 }
 
 `
-			} );
-			return steps;
+			});
+			return { steps };
 		},
 
-		toV2(): V2SchemaFragments {
-			if ( ! downloadUrl || ! downloadUrl.match( /^https?:/ ) ) {
-				return {};
+		toV2() {
+			if (!downloadUrl || !downloadUrl.match(/^https?:/)) {
+				return { version: 2 };
 			}
-
-			const fragments: V2SchemaFragments = {};
 
 			// V2 media array - much simpler than v1!
 			// For single files, just add the URL
 			// For zips, v2 doesn't support them directly yet, so fallback to v1 logic
-			if ( downloadUrl.match( /\.zip$/ ) ) {
-				// Zip files need the complex v1 logic in additionalSteps
-				fragments.additionalSteps = this.toV1();
+			if (downloadUrl.match(/\.zip$/)) {
+				// Zip files need the complex v1 logic in additionalStepsAfterExecution
+				const v1Result = this.toV1();
+				return {
+					version: 2,
+					additionalStepsAfterExecution: v1Result.steps || []
+				};
 			} else {
 				// Single file - use v2 media array
-				fragments.media = [downloadUrl];
+				return {
+					version: 2,
+					media: [downloadUrl]
+				};
 			}
-
-			return fragments;
 		}
 	};
 };
@@ -104,6 +108,6 @@ addMedia.vars = [
 		name: "downloadUrl",
 		description: "Where to download the media from (can be a zip).",
 		required: true,
-		samples: [ "https://s.w.org/style/images/about/WordPress-logotype-wmark.png" ]
+		samples: ["https://s.w.org/style/images/about/WordPress-logotype-wmark.png"]
 	}
 ];

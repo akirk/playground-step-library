@@ -1,4 +1,5 @@
-import type { StepFunction, SetTT4HomepageStep , StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, SetTT4HomepageStep , StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
 export const setTT4Homepage: StepFunction<SetTT4HomepageStep> = (step: SetTT4HomepageStep): StepResult => {
 	return {
@@ -63,15 +64,9 @@ wp_set_object_terms($post_id, $term_id, 'wp_theme');
 	];
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
-			return {
-				additionalSteps: v1Steps
-			};
-		}
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		};
 	};
 };
 

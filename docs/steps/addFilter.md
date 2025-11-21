@@ -41,11 +41,8 @@ Easily add a filtered value.
     },
     {
       "step": "writeFile",
-      "path": "/wordpress/wp-content/mu-plugins/addFilter-0.php",
-      "data": "<?php add_filter( 'init', '__return_false' );",
-      "progress": {
-        "caption": "addFilter: init"
-      }
+      "path": "/wordpress/wp-content/mu-plugins/addFilter-0-0.php",
+      "data": "<?php add_filter( 'init', '__return_false' );"
     }
   ]
 }

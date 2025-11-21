@@ -1,5 +1,6 @@
-import type { StepFunction, AddProductStep, StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, AddProductStep, StepResult } from './types.js';
 import { installPlugin } from './installPlugin.js';
+import type { StepDefinition, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
 export const addProduct: StepFunction<AddProductStep> = (step: AddProductStep, blueprint: any): StepResult => {
@@ -74,7 +75,7 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 	}
 }`;
 
-			let steps: any[] = [];
+			let steps: StepDefinition[] = [];
 			let hasWoocommercePlugin = false;
 			for (const i in blueprint.steps) {
 				if (blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'woocommerce') {
@@ -82,7 +83,10 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 				}
 			}
 			if (!hasWoocommercePlugin) {
-				steps = installPlugin({ step: 'installPlugin', url: 'woocommerce', permalink: true }).toV1().concat(steps);
+				const wooResult = installPlugin({ step: 'installPlugin', url: 'woocommerce', permalink: true }).toV1();
+				if (wooResult.steps) {
+					steps = wooResult.steps.concat(steps);
+				}
 			}
 
 			steps.push({
@@ -93,12 +97,10 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 				}
 			});
 
-			return steps;
+			return { steps };
 		},
 
-		toV2(): V2SchemaFragments {
-			const fragments: V2SchemaFragments = {};
-
+		toV2() {
 			// Check if WooCommerce is already in the blueprint
 			let hasWoocommercePlugin = false;
 			if (blueprint && blueprint.steps) {
@@ -109,9 +111,13 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 				}
 			}
 
+			const result: BlueprintV2Declaration = {
+				version: 2
+			};
+
 			// Add WooCommerce plugin if not present
 			if (!hasWoocommercePlugin) {
-				fragments.plugins = ['woocommerce'];
+				result.plugins = ['woocommerce'];
 			}
 
 			// Create product using content array with WooCommerce meta
@@ -137,7 +143,7 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 				metaInput['_sku'] = productSku;
 			}
 
-			fragments.content = [{
+			result.content = [{
 				type: 'posts',
 				source: {
 					post_title: title,
@@ -151,7 +157,7 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 				}
 			}];
 
-			return fragments;
+			return result;
 		}
 	};
 };

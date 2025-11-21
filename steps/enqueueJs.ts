@@ -1,32 +1,19 @@
-import type { StepFunction, EnqueueJsStep , StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, EnqueueJsStep, StepResult } from './types.js';
+import { muPlugin } from './muPlugin.js';
+import type { StepDefinition } from '@wp-playground/blueprints';
 
 export const enqueueJs: StepFunction<EnqueueJsStep> = (step: EnqueueJsStep): StepResult => {
-	return {
-		toV1() {
-	if (!step.js || !step.js.trim()) {
-		return [];
-	}
+	const filename = step.filename || `custom-script-${step.stepIndex || 0}`;
+	const sanitizedFilename = filename.replace(/\.js$/, '');
+	const jsFilePath = `/wordpress/wp-content/mu-plugins/${sanitizedFilename}.js`;
 
 	const frontend = step.frontend !== false;
 	const wpAdmin = step.wpAdmin !== false;
 
-	if (!frontend && !wpAdmin) {
-		return [];
-	}
-
-	const filename = step.filename || `custom-script-${step.stepIndex || 0}`;
-	const sanitizedFilename = filename.replace(/\.js$/, '');
-	const jsFilePath = `/wordpress/wp-content/uploads/${sanitizedFilename}.js`;
-
-	let phpCode = `<?php
-/**
- * Plugin Name: Enqueue Custom JS - ${sanitizedFilename}
- */
-`;
-
+	let phpCode = '';
 	if (frontend) {
 		phpCode += `add_action( 'wp_enqueue_scripts', function() {
-	wp_enqueue_script( '${sanitizedFilename}', content_url( 'uploads/${sanitizedFilename}.js' ), array(), '1.0', true );
+	wp_enqueue_script( '${sanitizedFilename}', WPMU_PLUGIN_URL . '/${sanitizedFilename}.js', array(), '1.0', true );
 } );
 
 `;
@@ -34,40 +21,55 @@ export const enqueueJs: StepFunction<EnqueueJsStep> = (step: EnqueueJsStep): Ste
 
 	if (wpAdmin) {
 		phpCode += `add_action( 'admin_enqueue_scripts', function() {
-	wp_enqueue_script( '${sanitizedFilename}', content_url( 'uploads/${sanitizedFilename}.js' ), array(), '1.0', true );
+	wp_enqueue_script( '${sanitizedFilename}', WPMU_PLUGIN_URL . '/${sanitizedFilename}.js', array(), '1.0', true );
 } );
 `;
 	}
 
-	return [
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/uploads",
-		},
-		{
-			"step": "writeFile",
-			"path": jsFilePath,
-			"data": step.js || ''
-		},
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/mu-plugins",
-		},
-		{
-			"step": "writeFile",
-			"path": `/wordpress/wp-content/mu-plugins/enqueue-${sanitizedFilename}-${step.stepIndex || 0}.php`,
-			"data": phpCode
-		}
-	];
+	const muPluginResult = muPlugin({
+		step: 'muPlugin',
+		name: `enqueue-${sanitizedFilename}`,
+		code: phpCode
+	});
+
+	return {
+		toV1() {
+			if (!step.js || !step.js.trim() || (!frontend && !wpAdmin)) {
+				return { steps: [] };
+			}
+
+			const muSteps = muPluginResult.toV1();
+
+			return {
+				steps: [
+					{
+						step: 'writeFile',
+						path: jsFilePath,
+						data: step.js
+					},
+					...(muSteps.steps || [])
+				]
+			};
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
+		toV2() {
+			if (!step.js || !step.js.trim() || (!frontend && !wpAdmin)) {
+				return { version: 2 };
 			}
+
+			const muV2 = muPluginResult.toV2();
+
 			return {
-				additionalSteps: v1Steps
+				version: 2,
+				muPlugins: [
+					...(muV2.muPlugins || []),
+					{
+						file: {
+							filename: `${sanitizedFilename}.js`,
+							content: step.js
+						}
+					}
+				]
 			};
 		}
 	};

@@ -1,4 +1,5 @@
-import type { StepFunction, SampleContentStep , StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, SampleContentStep , StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
 export const sampleContent: StepFunction<SampleContentStep> = (): StepResult => {
 	return {
@@ -43,15 +44,9 @@ export const sampleContent: StepFunction<SampleContentStep> = (): StepResult => 
     return steps;
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
-			return {
-				additionalSteps: v1Steps
-			};
-		}
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		};
 	};
 };
 

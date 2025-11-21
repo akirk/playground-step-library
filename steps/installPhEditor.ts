@@ -1,4 +1,5 @@
-import type { StepFunction, InstallPhEditorStep , StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, InstallPhEditorStep , StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
 export const installPhEditor: StepFunction<InstallPhEditorStep> = (step: InstallPhEditorStep): StepResult => {
 	return {
@@ -36,15 +37,9 @@ add_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {
 	return steps;
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
-			return {
-				additionalSteps: v1Steps
-			};
-		}
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		};
 	};
 };
 

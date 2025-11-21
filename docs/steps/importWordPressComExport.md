@@ -7,7 +7,6 @@ Import a WordPress.com export file (WXR in a ZIP)
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`unzip`](../builtin-step-usage.md#unzip), [`runPHP`](../builtin-step-usage.md#runphp), [`importWxr`](../builtin-step-usage.md#importwxr)
 
 ## Parameters
 
@@ -26,37 +25,7 @@ Import a WordPress.com export file (WXR in a ZIP)
     }
 ```
 
-## Compiled Output
 
-```json
-{
-  "steps": [
-    {
-      "step": "mkdir",
-      "path": "/tmp/"
-    },
-    {
-      "step": "unzip",
-      "zipFile": {
-        "resource": "url",
-        "url": ""
-      },
-      "extractToPath": "/tmp"
-    },
-    {
-      "step": "runPHP",
-      "code": "<?php\n$iterator = new RecursiveIteratorIterator( new RecursiveDirectoryIter..."
-    },
-    {
-      "step": "importWxr",
-      "file": {
-        "resource": "vfs",
-        "path": "/tmp/export.xml"
-      }
-    }
-  ]
-}
-```
 
 ## Usage with Library
 

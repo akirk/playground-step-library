@@ -1,4 +1,5 @@
-import type { StepFunction, GenerateProductsStep , StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, GenerateProductsStep , StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 import { installPlugin } from './installPlugin.js';
 
 export const generateProducts: StepFunction<GenerateProductsStep> = (step: GenerateProductsStep, blueprint: any): StepResult => {
@@ -235,15 +236,9 @@ error_log( "Generated " . count( $term_ids ) . " product categories" );
 	return steps;
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
-			return {
-				additionalSteps: v1Steps
-			};
-		}
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		};
 	};
 };
 

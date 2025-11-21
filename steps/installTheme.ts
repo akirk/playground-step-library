@@ -1,5 +1,6 @@
 import { githubTheme } from './githubTheme.js';
-import type { StepFunction, InstallThemeStep , StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, InstallThemeStep , StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
 
 export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeStep): StepResult => {
@@ -47,15 +48,9 @@ export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeS
 	return steps;
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
-			return {
-				additionalSteps: v1Steps
-			};
-		}
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		};
 	};
 };
 

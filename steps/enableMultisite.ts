@@ -1,25 +1,21 @@
-import type { StepFunction, EnableMultisiteStep , StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, EnableMultisiteStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
 export const enableMultisite: StepFunction<EnableMultisiteStep> = (step: EnableMultisiteStep): StepResult => {
 	return {
 		toV1() {
-	const steps = [
-		{
-			"step": "enableMultisite"
-		}
-	];
-	(steps as any).landingPage = '/wp-admin/network/sites.php';
-	return steps;
+			return {
+				steps: [
+					{
+						step: "enableMultisite"
+					}
+				],
+				landingPage: '/wp-admin/network/sites.php'
+			};
 		},
 
-		toV2(): V2SchemaFragments {
-			const v1Steps = this.toV1();
-			if (v1Steps.length === 0) {
-				return {};
-			}
-			return {
-				additionalSteps: v1Steps
-			};
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
 		}
 	};
 };

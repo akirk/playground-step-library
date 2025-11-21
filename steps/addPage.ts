@@ -1,5 +1,5 @@
-import type { StepFunction, AddPageStep, StepResult, V2SchemaFragments } from './types.js';
-
+import type { StepFunction, AddPageStep, StepResult } from './types.js';
+import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 export const addPage: StepFunction<AddPageStep> = (step: AddPageStep): StepResult => {
 	const title = step.title || step.postTitle || '';
@@ -24,40 +24,50 @@ $page_id = wp_insert_post( $page_args );`;
 				code += "update_option( 'show_on_front', 'page' );";
 			}
 
-			return [
-				{
-					step: "runPHP",
-					code,
-					progress: {
-						caption: `addPage: ${title}`
+			return {
+				steps: [
+					{
+						step: "runPHP",
+						code,
+						progress: {
+							caption: `addPage: ${title}`
+						}
 					}
-				}
-			];
+				]
+			};
 		},
 
-		toV2(): V2SchemaFragments {
-			const fragments: V2SchemaFragments = {};
-
-			fragments.content = [{
-				type: 'posts',
-				source: {
-					post_title: title,
-					post_content: content,
-					post_type: 'page',
-					post_status: 'publish'
-				}
-			}];
+		toV2() {
+			const result: BlueprintV2Declaration = {
+				version: 2,
+				content: [{
+					type: 'posts',
+					source: {
+						post_title: title,
+						post_content: content,
+						post_type: 'page',
+						post_status: 'publish'
+					}
+				}]
+			};
 
 			if (step.homepage) {
-				fragments.siteOptions = {
+				result.siteOptions = {
 					show_on_front: 'page'
 				};
 
-				fragments.additionalSteps = [{
+				// Find the page we just created by title (since we don't have an ID in v2 declarative format)
+				result.additionalStepsAfterExecution = [{
 					step: 'runPHP',
 					code: `<?php
 require_once '/wordpress/wp-load.php';
-$pages = get_posts( array( 'post_type' => 'page', 'posts_per_page' => 1, 'orderby' => 'ID', 'order' => 'ASC' ) );
+$pages = get_posts( array(
+	'post_type' => 'page',
+	'title' => '${title.replace(/'/g, "\\'")}',
+	'posts_per_page' => 1,
+	'orderby' => 'ID',
+	'order' => 'DESC'
+) );
 if ( ! empty( $pages ) ) {
 	update_option( 'page_on_front', $pages[0]->ID );
 	update_option( 'show_on_front', 'page' );
@@ -65,7 +75,7 @@ if ( ! empty( $pages ) ) {
 				}];
 			}
 
-			return fragments;
+			return result;
 		}
 	};
 };

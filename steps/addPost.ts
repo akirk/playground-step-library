@@ -1,4 +1,5 @@
-import type { StepFunction, AddPostStep, StepResult, V2SchemaFragments } from './types.js';
+import type { StepFunction, AddPostStep, StepResult } from './types.js';
+import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 export const addPost: StepFunction<AddPostStep> = (step: AddPostStep): StepResult => {
 	const title = step.title || step.postTitle || '';
@@ -43,15 +44,17 @@ $page_id = wp_insert_post( $page_args );`;
 				code += "update_option( 'show_on_front', 'page' );";
 			}
 
-			const result = [
-				{
-					step: "runPHP",
-					code,
-					progress: {
-						caption: `addPost: ${title}`
+			const result: BlueprintV1Declaration = {
+				steps: [
+					{
+						step: "runPHP",
+						code,
+						progress: {
+							caption: `addPost: ${title}`
+						}
 					}
-				}
-			] as any;
+				]
+			};
 
 			if (step.landingPage !== false && postId > 0) {
 				result.landingPage = `/wp-admin/post.php?post=${postId}&action=edit`;
@@ -60,42 +63,48 @@ $page_id = wp_insert_post( $page_args );`;
 			return result;
 		},
 
-		toV2(): V2SchemaFragments {
-			const fragments: V2SchemaFragments = {};
-
-			const postData: any = {
-				post_title: title,
-				post_content: content,
-				post_type: postType,
-				post_status: postStatus
+		toV2() {
+			const result: BlueprintV2Declaration = {
+				version: 2,
+				content: [{
+					type: 'posts',
+					source: {
+						post_title: title,
+						post_content: content,
+						post_type: postType,
+						post_status: postStatus
+					}
+				}]
 			};
 
 			// Add post_date if provided
 			if (dateValue) {
-				postData.post_date = dateValue;
+				result.content![0].source.post_date = dateValue;
 			}
 
 			// Add import_id if provided (not standard v2, but useful for imports)
 			if (postId > 0) {
-				postData.import_id = postId;
+				result.content![0].source.import_id = postId;
 			}
-
-			fragments.content = [{
-				type: 'posts',
-				source: postData
-			}];
 
 			// Handle homepage setting
 			if (step.homepage) {
-				fragments.siteOptions = {
+				result.siteOptions = {
 					show_on_front: 'page'
 				};
 
-				fragments.additionalSteps = [{
+				// Find the page we just created by title (since we don't have an ID in v2 declarative format)
+				result.additionalStepsAfterExecution = [{
 					step: 'runPHP',
 					code: `<?php
 require_once '/wordpress/wp-load.php';
-$pages = get_posts( array( 'post_type' => 'page', 'posts_per_page' => 1, 'orderby' => 'ID', 'order' => 'ASC' ) );
+$pages = get_posts( array(
+	'post_type' => '${postType}',
+	'title' => '${title.replace(/'/g, "\\'")}',
+	'posts_per_page' => 1,
+	'orderby' => 'ID',
+	'order' => 'DESC'
+) );
 if ( ! empty( $pages ) ) {
 	update_option( 'page_on_front', $pages[0]->ID );
 	update_option( 'show_on_front', 'page' );
@@ -103,7 +112,7 @@ if ( ! empty( $pages ) ) {
 				}];
 			}
 
-			return fragments;
+			return result;
 		}
 	};
 };

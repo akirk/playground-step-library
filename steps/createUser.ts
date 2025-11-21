@@ -1,5 +1,5 @@
-import type { StepFunction, CreateUserStep, StepResult, V2SchemaFragments } from './types.js';
-
+import type { StepFunction, CreateUserStep, StepResult } from './types.js';
+import type { BlueprintV1Declaration, BlueprintV2Declaration, StepDefinition } from '@wp-playground/blueprints';
 
 export const createUser: StepFunction<CreateUserStep> = (step: CreateUserStep): StepResult => {
 	const username = step.username;
@@ -11,7 +11,7 @@ export const createUser: StepFunction<CreateUserStep> = (step: CreateUserStep): 
 	return {
 		toV1() {
 			if (!username || !password || !role) {
-				return [];
+				return {};
 			}
 
 			let code = "<?php require_once '/wordpress/wp-load.php';";
@@ -27,76 +27,76 @@ export const createUser: StepFunction<CreateUserStep> = (step: CreateUserStep): 
 
 			code += "); wp_insert_user( $data ); ?>";
 
-			const steps: any[] = [
-				{
-					step: "runPHP",
-					code,
-					progress: {
-						caption: `createUser: ${username}`
+			const result: BlueprintV1Declaration = {
+				steps: [
+					{
+						step: "runPHP",
+						code,
+						progress: {
+							caption: `createUser: ${username}`
+						}
 					}
-				}
-			];
+				]
+			};
 
 			if (step.login) {
-				steps.push({
+				result.steps.push({
 					step: "login",
 					username: username,
 					password: password
 				});
-				(steps as any).landingPage = '/wp-admin/';
+				result.landingPage = '/wp-admin/';
 			}
 
-			return steps;
+			return result;
 		},
 
-		toV2(): V2SchemaFragments {
+		toV2() {
 			if (!username || !role) {
-				return {};
+				return { version: 2 };
 			}
 
-			const fragments: V2SchemaFragments = {};
-
-			// V2 users array (note: no password in v2 schema)
-			const userData: any = {
-				username: username,
-				email: email || `${username}@example.com`,
-				role: role
+			const result: BlueprintV2Declaration = {
+				version: 2,
+				users: [{
+					username: username,
+					email: email || `${username}@example.com`,
+					role: role,
+					meta: display_name ? { display_name } : {}
+				}]
 			};
 
-			if (display_name) {
-				userData.meta = { display_name };
-			}
+			// Password and login must be handled in additionalStepsAfterExecution
+			// (v2 users don't support passwords directly)
+			const additionalSteps: StepDefinition[] = [];
 
-			fragments.users = [userData];
-
-			// Password and login must be handled in additionalSteps
-			if (password || step.login) {
-				fragments.additionalSteps = [];
-
-				// Set password via PHP (v2 users don't support passwords directly)
-				if (password) {
-					fragments.additionalSteps.push({
-						step: 'runPHP',
-						code: `<?php
+			// Set password via PHP
+			if (password) {
+				additionalSteps.push({
+					step: 'runPHP',
+					code: `<?php
 require_once '/wordpress/wp-load.php';
 $user = get_user_by( 'login', '${username}' );
 if ( $user ) {
 	wp_set_password( '${password}', $user->ID );
 }`
-					});
-				}
-
-				// Login if requested
-				if (step.login) {
-					fragments.additionalSteps.push({
-						step: 'login',
-						username: username,
-						password: password
-					});
-				}
+				});
 			}
 
-			return fragments;
+			// Login if requested
+			if (step.login) {
+				additionalSteps.push({
+					step: 'login',
+					username: username,
+					password: password
+				});
+			}
+
+			if (additionalSteps.length > 0) {
+				result.additionalStepsAfterExecution = additionalSteps;
+			}
+
+			return result;
 		}
 	};
 };
