@@ -7,7 +7,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import PlaygroundStepLibrary, { PlaygroundStepLibraryV2 } from '../lib/src/index.js';
+import PlaygroundStepLibrary from '../lib/src/index.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -17,7 +17,6 @@ const __dirname = dirname(__filename);
 class StepDocumentationGenerator {
     constructor() {
         this.compiler = new PlaygroundStepLibrary();
-        this.compilerV2 = new PlaygroundStepLibraryV2();
         this.steps = this.compiler.getAvailableSteps();
         this.filesUpdated = 0;
         this.filesSkipped = 0;
@@ -381,7 +380,7 @@ ${deprecationNotices}`;
             // Compile v2
             let compiledV2 = null;
             try {
-                compiledV2 = this.compilerV2.compile({ steps: [example] });
+                compiledV2 = this.compiler.compileV2({ steps: [example] });
             } catch (e) {
                 // V2 compilation may fail for some steps
             }

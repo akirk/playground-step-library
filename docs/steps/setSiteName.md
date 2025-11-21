@@ -52,8 +52,8 @@ Set the site name and tagline.
 {
   "version": 2,
   "siteOptions": {
-    "blogname": "${sitename}",
-    "blogdescription": "${tagline}"
+    "blogname": "Step Library Demo",
+    "blogdescription": "Trying out WordPress Playground."
   }
 }
 ```

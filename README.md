@@ -81,7 +81,6 @@ The library provides two compilers:
 - **V2 Compiler** (`PlaygroundStepLibraryV2`) - Outputs declarative blueprints with schema properties
 
 See the **[Programmatic API Documentation](docs/api.md)** for full details on CLI usage, methods, and examples.
-
 ## Custom Steps
 
 This library provides **50** total steps (8 built-in enhanced steps + 42 custom steps):
