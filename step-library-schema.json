@@ -2,2367 +2,220 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://akirk.github.io/playground-step-library/step-library-schema.json",
   "title": "Step Library Blueprint",
-  "description": "A blueprint format for WordPress Playground Step Library with custom steps",
   "type": "object",
   "properties": {
     "$schema": {
-      "type": "string",
-      "description": "JSON Schema reference"
+      "type": "string"
     },
     "meta": {
       "type": "object",
-      "description": "Blueprint metadata",
       "properties": {
         "title": {
-          "type": "string",
-          "description": "Title of the blueprint"
+          "type": "string"
         }
-      },
-      "additionalProperties": true
+      }
     },
     "title": {
-      "type": "string",
-      "description": "Title of the blueprint (alternative to meta.title)"
+      "type": "string"
     },
     "landingPage": {
-      "type": "string",
-      "description": "The page to navigate to after setup"
+      "type": "string"
     },
     "preferredVersions": {
       "type": "object",
-      "description": "Preferred WordPress and PHP versions",
       "properties": {
         "wp": {
-          "type": "string",
-          "description": "WordPress version"
+          "type": "string"
         },
         "php": {
-          "type": "string",
-          "description": "PHP version"
+          "type": "string"
         }
       },
       "additionalProperties": false
     },
     "steps": {
       "type": "array",
-      "description": "Array of steps to execute",
       "items": {
         "oneOf": [
           {
-            "type": "object",
-            "description": "Define a wp-config PHP constant.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "defineWpConfigConst",
-                "description": "Define a wp-config PHP constant."
-              },
-              "name": {
-                "description": "Constant name",
-                "type": "string"
-              },
-              "value": {
-                "description": "Constant value",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "name": {
-                    "description": "Constant name",
-                    "type": "string"
-                  },
-                  "value": {
-                    "description": "Constant value",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/defineWpConfigConst"
           },
           {
-            "type": "object",
-            "description": "Import a WXR from a URL.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "importWxr",
-                "description": "Import a WXR from a URL."
-              },
-              "url": {
-                "description": "URL of a WXR file",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "url": {
-                    "description": "URL of a WXR file",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/importWxr"
           },
           {
-            "type": "object",
-            "description": "Install a plugin via WordPress.org or Github (branches, releases, PRs).",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "installPlugin",
-                "description": "Install a plugin via WordPress.org or Github (branches, releases, PRs)."
-              },
-              "url": {
-                "description": "URL of the plugin or WordPress.org slug.",
-                "type": "string"
-              },
-              "prs": {
-                "description": "Add support for submitting GitHub Pull Requests.",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "url": {
-                    "description": "URL of the plugin or WordPress.org slug.",
-                    "type": "string"
-                  },
-                  "prs": {
-                    "description": "Add support for submitting GitHub Pull Requests.",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/installPlugin"
           },
           {
-            "type": "object",
-            "description": "Install a theme via WordPress.org or Github.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "installTheme",
-                "description": "Install a theme via WordPress.org or Github."
-              },
-              "url": {
-                "description": "URL of the theme or WordPress.org slug",
-                "type": "string"
-              },
-              "prs": {
-                "description": "Add support for submitting Github Requests.",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "url": {
-                    "description": "URL of the theme or WordPress.org slug",
-                    "type": "string"
-                  },
-                  "prs": {
-                    "description": "Add support for submitting Github Requests.",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/installTheme"
           },
           {
-            "type": "object",
-            "description": "Login to the site.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "login",
-                "description": "Login to the site."
-              },
-              "username": {
-                "description": "Username",
-                "type": "string"
-              },
-              "password": {
-                "description": "Password",
-                "type": "string"
-              },
-              "landingPage": {
-                "description": "Change landing page to wp-admin",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "username": {
-                    "description": "Username",
-                    "type": "string"
-                  },
-                  "password": {
-                    "description": "Password",
-                    "type": "string"
-                  },
-                  "landingPage": {
-                    "description": "Change landing page to wp-admin",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/login"
           },
           {
-            "type": "object",
-            "description": "Run code in the context of WordPress.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "runPHP",
-                "description": "Run code in the context of WordPress."
-              },
-              "code": {
-                "description": "The code to run",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "code": {
-                    "description": "The code to run",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/runPHP"
           },
           {
-            "type": "object",
-            "description": "Set a site option.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "setSiteOption",
-                "description": "Set a site option."
-              },
-              "name": {
-                "description": "Option name",
-                "type": "string"
-              },
-              "value": {
-                "description": "Option value",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "name": {
-                    "description": "Option name",
-                    "type": "string"
-                  },
-                  "value": {
-                    "description": "Option value",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/setSiteOption"
           },
           {
-            "type": "object",
-            "description": "Adds a role for clients with additional capabilities than editors, but not quite admin.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "addClientRole",
-                "description": "Adds a role for clients with additional capabilities than editors, but not quite admin."
-              },
-              "displayName": {
-                "description": "Display name for the client role",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "displayName": {
-                    "description": "Display name for the client role",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/addClientRole"
           },
           {
-            "type": "object",
-            "description": "Easily add a filtered value.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "addFilter",
-                "description": "Easily add a filtered value."
-              },
-              "filter": {
-                "description": "Name of the filter",
-                "type": "string"
-              },
-              "code": {
-                "description": "Code for the filter",
-                "type": "string"
-              },
-              "priority": {
-                "description": "Priority of the filter",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "filter": {
-                    "description": "Name of the filter",
-                    "type": "string"
-                  },
-                  "code": {
-                    "description": "Code for the filter",
-                    "type": "string"
-                  },
-                  "priority": {
-                    "description": "Priority of the filter",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/addFilter"
           },
           {
-            "type": "object",
-            "description": "Add files to the media library.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "addMedia",
-                "description": "Add files to the media library."
-              },
-              "downloadUrl": {
-                "description": "Where to download the media from (can be a zip).",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "downloadUrl": {
-                    "description": "Where to download the media from (can be a zip).",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/addMedia"
           },
           {
-            "type": "object",
-            "description": "Add a page with title and content.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "addPage",
-                "description": "Add a page with title and content."
-              },
-              "title": {
-                "description": "The title of the page",
-                "type": "string"
-              },
-              "content": {
-                "description": "The HTML content of the page",
-                "type": "string"
-              },
-              "homepage": {
-                "description": "Set it as the Homepage",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "title": {
-                    "description": "The title of the page",
-                    "type": "string"
-                  },
-                  "content": {
-                    "description": "The HTML content of the page",
-                    "type": "string"
-                  },
-                  "homepage": {
-                    "description": "Set it as the Homepage",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/addPage"
           },
           {
-            "type": "object",
-            "description": "Add a post with title, content, type, status, and date.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "addPost",
-                "description": "Add a post with title, content, type, status, and date."
-              },
-              "title": {
-                "description": "The title of the post",
-                "type": "string"
-              },
-              "content": {
-                "description": "The HTML content of the post",
-                "type": "string"
-              },
-              "date": {
-                "description": "The date of the post (optional)",
-                "type": "string"
-              },
-              "type": {
-                "description": "The post type",
-                "type": "string"
-              },
-              "status": {
-                "description": "The post status",
-                "type": "string"
-              },
-              "postId": {
-                "description": "Post ID to use (optional)",
-                "type": "string"
-              },
-              "landingPage": {
-                "description": "Set landing page to the post editor (requires postId)",
-                "type": "boolean"
-              },
-              "registerPostType": {
-                "description": "Register custom post type if needed",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "title": {
-                    "description": "The title of the post",
-                    "type": "string"
-                  },
-                  "content": {
-                    "description": "The HTML content of the post",
-                    "type": "string"
-                  },
-                  "date": {
-                    "description": "The date of the post (optional)",
-                    "type": "string"
-                  },
-                  "type": {
-                    "description": "The post type",
-                    "type": "string"
-                  },
-                  "status": {
-                    "description": "The post status",
-                    "type": "string"
-                  },
-                  "postId": {
-                    "description": "Post ID to use (optional)",
-                    "type": "string"
-                  },
-                  "landingPage": {
-                    "description": "Set landing page to the post editor (requires postId)",
-                    "type": "boolean"
-                  },
-                  "registerPostType": {
-                    "description": "Register custom post type if needed",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/addPost"
           },
           {
-            "type": "object",
-            "description": "Add a WooCommerce product (will install WooCommerce if not present)",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "addProduct",
-                "description": "Add a WooCommerce product (will install WooCommerce if not present)"
-              },
-              "title": {
-                "description": "The title of the product",
-                "type": "string"
-              },
-              "description": {
-                "description": "The description of the product",
-                "type": "string"
-              },
-              "price": {
-                "description": "Regular price (without currency symbol)",
-                "type": "string"
-              },
-              "salePrice": {
-                "description": "Sale price (optional, must be less than regular price)",
-                "type": "string"
-              },
-              "sku": {
-                "description": "Product SKU/code (optional)",
-                "type": "string"
-              },
-              "status": {
-                "description": "Product status",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "title": {
-                    "description": "The title of the product",
-                    "type": "string"
-                  },
-                  "description": {
-                    "description": "The description of the product",
-                    "type": "string"
-                  },
-                  "price": {
-                    "description": "Regular price (without currency symbol)",
-                    "type": "string"
-                  },
-                  "salePrice": {
-                    "description": "Sale price (optional, must be less than regular price)",
-                    "type": "string"
-                  },
-                  "sku": {
-                    "description": "Product SKU/code (optional)",
-                    "type": "string"
-                  },
-                  "status": {
-                    "description": "Product status",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/addProduct"
           },
           {
-            "type": "object",
-            "description": "Generate a new blueprint after modifying the WordPress.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "blueprintExtractor",
-                "description": "Generate a new blueprint after modifying the WordPress."
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {},
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/blueprintExtractor"
           },
           {
-            "type": "object",
-            "description": "Record steps made and compile a new blueprint.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "blueprintRecorder",
-                "description": "Record steps made and compile a new blueprint."
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {},
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/blueprintRecorder"
           },
           {
-            "type": "object",
-            "description": "Useful to combine with a login step.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "changeAdminColorScheme",
-                "description": "Useful to combine with a login step."
-              },
-              "colorScheme": {
-                "description": "Color scheme",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "colorScheme": {
-                    "description": "Color scheme",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/changeAdminColorScheme"
           },
           {
-            "type": "object",
-            "description": "Create a new user.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "createUser",
-                "description": "Create a new user."
-              },
-              "username": {
-                "description": "Username",
-                "type": "string"
-              },
-              "password": {
-                "description": "Password",
-                "type": "string"
-              },
-              "role": {
-                "description": "Role",
-                "type": "string"
-              },
-              "display_name": {
-                "description": "Display Name",
-                "type": "string"
-              },
-              "email": {
-                "description": "E-Mail",
-                "type": "string"
-              },
-              "login": {
-                "description": "Immediately log the user in",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "username": {
-                    "description": "Username",
-                    "type": "string"
-                  },
-                  "password": {
-                    "description": "Password",
-                    "type": "string"
-                  },
-                  "role": {
-                    "description": "Role",
-                    "type": "string"
-                  },
-                  "display_name": {
-                    "description": "Display Name",
-                    "type": "string"
-                  },
-                  "email": {
-                    "description": "E-Mail",
-                    "type": "string"
-                  },
-                  "login": {
-                    "description": "Immediately log the user in",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/createUser"
           },
           {
-            "type": "object",
-            "description": "Register a custom post type.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "customPostType",
-                "description": "Register a custom post type."
-              },
-              "slug": {
-                "description": "Post type key",
-                "type": "string"
-              },
-              "name": {
-                "description": "The user visible label",
-                "type": "string"
-              },
-              "supports": {
-                "description": "Features this post type supports",
-                "type": "string"
-              },
-              "public": {
-                "description": "Whether the post type is public",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "slug": {
-                    "description": "Post type key",
-                    "type": "string"
-                  },
-                  "name": {
-                    "description": "The user visible label",
-                    "type": "string"
-                  },
-                  "supports": {
-                    "description": "Features this post type supports",
-                    "type": "string"
-                  },
-                  "public": {
-                    "description": "Whether the post type is public",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/customPostType"
           },
           {
-            "type": "object",
-            "description": "Delete all posts, pages, attachments, revisions and menu items.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "deleteAllPosts",
-                "description": "Delete all posts, pages, attachments, revisions and menu items."
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {},
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/deleteAllPosts"
           },
           {
-            "type": "object",
-            "description": "Disable the welcome guides in the site editor.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "disableWelcomeGuides",
-                "description": "Disable the welcome guides in the site editor."
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {},
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/disableWelcomeGuides"
           },
           {
-            "type": "object",
-            "description": "Prevent automatic login (Playground logs in as admin by default).",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "dontLogin",
-                "description": "Prevent automatic login (Playground logs in as admin by default)."
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {},
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/dontLogin"
           },
           {
-            "type": "object",
-            "description": "Execute a custom action.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "doAction",
-                "description": "Execute a custom action."
-              },
-              "action": {
-                "description": "Execute a custom action.",
-                "type": "string"
-              },
-              "parameter1": {
-                "description": "First parameter for the action.",
-                "type": "string"
-              },
-              "parameter2": {
-                "description": "Second parameter for the action.",
-                "type": "string"
-              },
-              "parameter3": {
-                "description": "Third parameter for the action.",
-                "type": "string"
-              },
-              "parameter4": {
-                "description": "Fourth parameter for the action.",
-                "type": "string"
-              },
-              "parameter5": {
-                "description": "Fifth parameter for the action.",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "action": {
-                    "description": "Execute a custom action.",
-                    "type": "string"
-                  },
-                  "parameter1": {
-                    "description": "First parameter for the action.",
-                    "type": "string"
-                  },
-                  "parameter2": {
-                    "description": "Second parameter for the action.",
-                    "type": "string"
-                  },
-                  "parameter3": {
-                    "description": "Third parameter for the action.",
-                    "type": "string"
-                  },
-                  "parameter4": {
-                    "description": "Fourth parameter for the action.",
-                    "type": "string"
-                  },
-                  "parameter5": {
-                    "description": "Fifth parameter for the action.",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/doAction"
           },
           {
-            "type": "object",
-            "description": "Enqueue custom CSS on frontend and/or admin.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "enqueueCss",
-                "description": "Enqueue custom CSS on frontend and/or admin."
-              },
-              "filename": {
-                "description": "Filename for the CSS file (without .css extension)",
-                "type": "string"
-              },
-              "css": {
-                "description": "CSS code to enqueue",
-                "type": "string"
-              },
-              "frontend": {
-                "description": "Enqueue on frontend",
-                "type": "boolean"
-              },
-              "wpAdmin": {
-                "description": "Enqueue in wp-admin",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "filename": {
-                    "description": "Filename for the CSS file (without .css extension)",
-                    "type": "string"
-                  },
-                  "css": {
-                    "description": "CSS code to enqueue",
-                    "type": "string"
-                  },
-                  "frontend": {
-                    "description": "Enqueue on frontend",
-                    "type": "boolean"
-                  },
-                  "wpAdmin": {
-                    "description": "Enqueue in wp-admin",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/enqueueCss"
           },
           {
-            "type": "object",
-            "description": "Enqueue custom JavaScript on frontend and/or admin.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "enqueueJs",
-                "description": "Enqueue custom JavaScript on frontend and/or admin."
-              },
-              "filename": {
-                "description": "Filename for the JavaScript file (without .js extension)",
-                "type": "string"
-              },
-              "js": {
-                "description": "JavaScript code to enqueue",
-                "type": "string"
-              },
-              "frontend": {
-                "description": "Enqueue on frontend",
-                "type": "boolean"
-              },
-              "wpAdmin": {
-                "description": "Enqueue in wp-admin",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "filename": {
-                    "description": "Filename for the JavaScript file (without .js extension)",
-                    "type": "string"
-                  },
-                  "js": {
-                    "description": "JavaScript code to enqueue",
-                    "type": "string"
-                  },
-                  "frontend": {
-                    "description": "Enqueue on frontend",
-                    "type": "boolean"
-                  },
-                  "wpAdmin": {
-                    "description": "Enqueue in wp-admin",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/enqueueJs"
           },
           {
-            "type": "object",
-            "description": "Fake a wp_remote_request() response.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "fakeHttpResponse",
-                "description": "Fake a wp_remote_request() response."
-              },
-              "url": {
-                "description": "URL like https://wordpress.org/",
-                "type": "string"
-              },
-              "response": {
-                "description": "The data to return",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "url": {
-                    "description": "URL like https://wordpress.org/",
-                    "type": "string"
-                  },
-                  "response": {
-                    "description": "The data to return",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/fakeHttpResponse"
           },
           {
-            "type": "object",
-            "description": "Provide useful additional info.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "githubImportExportWxr",
-                "description": "Provide useful additional info."
-              },
-              "repo": {
-                "description": "The WXR file resides in this GitHub repository.",
-                "type": "string"
-              },
-              "branch": {
-                "description": "Which branch to use.",
-                "type": "string"
-              },
-              "filename": {
-                "description": "Which filename and path to use.",
-                "type": "string"
-              },
-              "targetUrl": {
-                "description": "Rewrite the exported paths to this destination URL.",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "repo": {
-                    "description": "The WXR file resides in this GitHub repository.",
-                    "type": "string"
-                  },
-                  "branch": {
-                    "description": "Which branch to use.",
-                    "type": "string"
-                  },
-                  "filename": {
-                    "description": "Which filename and path to use.",
-                    "type": "string"
-                  },
-                  "targetUrl": {
-                    "description": "Rewrite the exported paths to this destination URL.",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/githubImportExportWxr"
           },
           {
-            "type": "object",
-            "description": "Install a plugin from a Github repository.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "githubPlugin",
-                "description": "Install a plugin from a Github repository."
-              },
-              "url": {
-                "description": "Github URL of the plugin.",
-                "type": "string"
-              },
-              "prs": {
-                "description": "Add support for submitting GitHub Pull Requests.",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "url": {
-                    "description": "Github URL of the plugin.",
-                    "type": "string"
-                  },
-                  "prs": {
-                    "description": "Add support for submitting GitHub Pull Requests.",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/githubPlugin"
           },
           {
-            "type": "object",
-            "description": "Install a specific plugin release from a Github repository.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "githubPluginRelease",
-                "description": "Install a specific plugin release from a Github repository."
-              },
-              "repo": {
-                "description": "The plugin resides in this GitHub repository.",
-                "type": "string"
-              },
-              "release": {
-                "description": "The release tag.",
-                "type": "string"
-              },
-              "filename": {
-                "description": "Which filename to use.",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "repo": {
-                    "description": "The plugin resides in this GitHub repository.",
-                    "type": "string"
-                  },
-                  "release": {
-                    "description": "The release tag.",
-                    "type": "string"
-                  },
-                  "filename": {
-                    "description": "Which filename to use.",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/githubPluginRelease"
           },
           {
-            "type": "object",
-            "description": "Install a theme from a Github repository.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "githubTheme",
-                "description": "Install a theme from a Github repository."
-              },
-              "url": {
-                "description": "Github URL of the theme.",
-                "type": "string"
-              },
-              "prs": {
-                "description": "Add support for submitting Github Requests.",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "url": {
-                    "description": "Github URL of the theme.",
-                    "type": "string"
-                  },
-                  "prs": {
-                    "description": "Add support for submitting Github Requests.",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/githubTheme"
           },
           {
-            "type": "object",
-            "description": "Add subscriptions to the Friends plugin.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "importFriendFeeds",
-                "description": "Add subscriptions to the Friends plugin."
-              },
-              "opml": {
-                "description": "An OPML file, or a list of RSS feed URLs, one per line.",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "opml": {
-                    "description": "An OPML file, or a list of RSS feed URLs, one per line.",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/importFriendFeeds"
           },
           {
-            "type": "object",
-            "description": "Import a WordPress.com export file (WXR in a ZIP)",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "importWordPressComExport",
-                "description": "Import a WordPress.com export file (WXR in a ZIP)"
-              },
-              "url": {
-                "description": "URL of a WordPress.com export ZIP file",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "url": {
-                    "description": "URL of a WordPress.com export ZIP file",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/importWordPressComExport"
           },
           {
-            "type": "object",
-            "description": "Install Adminer with auto login link.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "installAdminer",
-                "description": "Install Adminer with auto login link."
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {},
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/installAdminer"
           },
           {
-            "type": "object",
-            "description": "Install phEditor. Password: admin",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "installPhEditor",
-                "description": "Install phEditor. Password: admin"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {},
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/installPhEditor"
           },
           {
-            "type": "object",
-            "description": "Provide phpLiteAdmin. Password: admin",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "installPhpLiteAdmin",
-                "description": "Provide phpLiteAdmin. Password: admin"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {},
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/installPhpLiteAdmin"
           },
           {
-            "type": "object",
-            "description": "Start Jetpack in Offline mode.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "jetpackOfflineMode",
-                "description": "Start Jetpack in Offline mode."
-              },
-              "blocks": {
-                "description": "Activate the Jetpack Blocks module.",
-                "type": "boolean"
-              },
-              "subscriptions": {
-                "description": "Activate the Jetpack Subscriptions module.",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "blocks": {
-                    "description": "Activate the Jetpack Blocks module.",
-                    "type": "boolean"
-                  },
-                  "subscriptions": {
-                    "description": "Activate the Jetpack Subscriptions module.",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/jetpackOfflineMode"
           },
           {
-            "type": "object",
-            "description": "Add code for a plugin.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "muPlugin",
-                "description": "Add code for a plugin."
-              },
-              "name": {
-                "description": "Name for your mu-plugin file",
-                "type": "string"
-              },
-              "code": {
-                "description": "Code for your mu-plugin",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "name": {
-                    "description": "Name for your mu-plugin file",
-                    "type": "string"
-                  },
-                  "code": {
-                    "description": "Code for your mu-plugin",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/muPlugin"
           },
           {
-            "type": "object",
-            "description": "Remove widgets from the wp-admin dashboard.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "removeDashboardWidgets",
-                "description": "Remove widgets from the wp-admin dashboard."
-              },
-              "welcome": {
-                "description": "Remove Welcome Panel",
-                "type": "boolean"
-              },
-              "glance": {
-                "description": "Remove At a Glance",
-                "type": "boolean"
-              },
-              "events": {
-                "description": "Remove Upcoming Events",
-                "type": "boolean"
-              },
-              "quickpress": {
-                "description": "Remove Quick Draft",
-                "type": "boolean"
-              },
-              "activity": {
-                "description": "Remove Activity",
-                "type": "boolean"
-              },
-              "sitehealth": {
-                "description": "Remove Site Health",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "welcome": {
-                    "description": "Remove Welcome Panel",
-                    "type": "boolean"
-                  },
-                  "glance": {
-                    "description": "Remove At a Glance",
-                    "type": "boolean"
-                  },
-                  "events": {
-                    "description": "Remove Upcoming Events",
-                    "type": "boolean"
-                  },
-                  "quickpress": {
-                    "description": "Remove Quick Draft",
-                    "type": "boolean"
-                  },
-                  "activity": {
-                    "description": "Remove Activity",
-                    "type": "boolean"
-                  },
-                  "sitehealth": {
-                    "description": "Remove Site Health",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/removeDashboardWidgets"
           },
           {
-            "type": "object",
-            "description": "Change the default \"Uncategorized\".",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "renameDefaultCategory",
-                "description": "Change the default \"Uncategorized\"."
-              },
-              "categoryName": {
-                "description": "Change the default category name",
-                "type": "string"
-              },
-              "categorySlug": {
-                "description": "Change the default category slug",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "categoryName": {
-                    "description": "Change the default category name",
-                    "type": "string"
-                  },
-                  "categorySlug": {
-                    "description": "Change the default category slug",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/renameDefaultCategory"
           },
           {
-            "type": "object",
-            "description": "Run a wp-cli command.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "runWpCliCommand",
-                "description": "Run a wp-cli command."
-              },
-              "command": {
-                "description": "The wp-cli command to run",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "command": {
-                    "description": "The wp-cli command to run",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/runWpCliCommand"
           },
           {
-            "type": "object",
-            "description": "Inserts sample pages to the site.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "sampleContent",
-                "description": "Inserts sample pages to the site."
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {},
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/sampleContent"
           },
           {
-            "type": "object",
-            "description": "Set the landing page.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "setLandingPage",
-                "description": "Set the landing page."
-              },
-              "landingPage": {
-                "description": "The relative URL for the landing page",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "landingPage": {
-                    "description": "The relative URL for the landing page",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/setLandingPage"
           },
           {
-            "type": "object",
-            "description": "Set the WordPress site language.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "setLanguage",
-                "description": "Set the WordPress site language."
-              },
-              "language": {
-                "description": "A valid WordPress language slug",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "language": {
-                    "description": "A valid WordPress language slug",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/setLanguage"
           },
           {
-            "type": "object",
-            "description": "Set the site name and tagline.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "setSiteName",
-                "description": "Set the site name and tagline."
-              },
-              "sitename": {
-                "description": "Name of the site",
-                "type": "string"
-              },
-              "tagline": {
-                "description": "What the site is about",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "sitename": {
-                    "description": "Name of the site",
-                    "type": "string"
-                  },
-                  "tagline": {
-                    "description": "What the site is about",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/setSiteName"
           },
           {
-            "type": "object",
-            "description": "Set the homepage for the twentytwentyfour theme.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "setTT4Homepage",
-                "description": "Set the homepage for the twentytwentyfour theme."
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {},
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/setTT4Homepage"
           },
           {
-            "type": "object",
-            "description": "Show an admin notice in the dashboard.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "showAdminNotice",
-                "description": "Show an admin notice in the dashboard."
-              },
-              "text": {
-                "description": "The notice to be displayed",
-                "type": "string"
-              },
-              "type": {
-                "description": "The type of notice",
-                "type": "string"
-              },
-              "dismissible": {
-                "description": "Allow to dismiss",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "text": {
-                    "description": "The notice to be displayed",
-                    "type": "string"
-                  },
-                  "type": {
-                    "description": "The type of notice",
-                    "type": "string"
-                  },
-                  "dismissible": {
-                    "description": "Allow to dismiss",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/showAdminNotice"
           },
           {
-            "type": "object",
-            "description": "When running WooCommerce, don't show the wizard.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "skipWooCommerceWizard",
-                "description": "When running WooCommerce, don't show the wizard."
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {},
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/skipWooCommerceWizard"
           },
           {
-            "type": "object",
-            "description": "Enable WordPress Multisite functionality.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "enableMultisite",
-                "description": "Enable WordPress Multisite functionality."
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {},
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/enableMultisite"
           },
           {
-            "type": "object",
-            "description": "Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "generateProducts",
-                "description": "Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)"
-              },
-              "count": {
-                "description": "Number of products to generate",
-                "type": "number"
-              },
-              "orders": {
-                "description": "Number of orders to generate (optional)",
-                "type": "number"
-              },
-              "customers": {
-                "description": "Number of customers to generate (optional)",
-                "type": "number"
-              },
-              "coupons": {
-                "description": "Number of coupons to generate (optional)",
-                "type": "number"
-              },
-              "categories": {
-                "description": "Number of product categories to generate (optional)",
-                "type": "number"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "count": {
-                    "description": "Number of products to generate",
-                    "type": "number"
-                  },
-                  "orders": {
-                    "description": "Number of orders to generate (optional)",
-                    "type": "number"
-                  },
-                  "customers": {
-                    "description": "Number of customers to generate (optional)",
-                    "type": "number"
-                  },
-                  "coupons": {
-                    "description": "Number of coupons to generate (optional)",
-                    "type": "number"
-                  },
-                  "categories": {
-                    "description": "Number of product categories to generate (optional)",
-                    "type": "number"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/generateProducts"
           },
           {
-            "type": "object",
-            "description": "Creates a post with all block examples from registered blocks",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "blockExamples",
-                "description": "Creates a post with all block examples from registered blocks"
-              },
-              "blockNamespace": {
-                "description": "Limit to a specific plugin slug (leave empty for all plugins)",
-                "type": "string"
-              },
-              "postTitle": {
-                "description": "Title of the post to create",
-                "type": "string"
-              },
-              "limit": {
-                "description": "Maximum number of blocks to include (leave empty for no limit)",
-                "type": "string"
-              },
-              "postId": {
-                "description": "Post ID to use (defaults to 1000)",
-                "type": "string"
-              },
-              "excludeCore": {
-                "description": "Exclude core WordPress blocks",
-                "type": "boolean"
-              },
-              "landingPage": {
-                "description": "Set landing page to the post editor",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "blockNamespace": {
-                    "description": "Limit to a specific plugin slug (leave empty for all plugins)",
-                    "type": "string"
-                  },
-                  "postTitle": {
-                    "description": "Title of the post to create",
-                    "type": "string"
-                  },
-                  "limit": {
-                    "description": "Maximum number of blocks to include (leave empty for no limit)",
-                    "type": "string"
-                  },
-                  "postId": {
-                    "description": "Post ID to use (defaults to 1000)",
-                    "type": "string"
-                  },
-                  "excludeCore": {
-                    "description": "Exclude core WordPress blocks",
-                    "type": "boolean"
-                  },
-                  "landingPage": {
-                    "description": "Set landing page to the post editor",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/blockExamples"
           },
           {
-            "type": "object",
-            "description": "Configure WordPress debug settings and optionally install Query Monitor plugin.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "debug",
-                "description": "Configure WordPress debug settings and optionally install Query Monitor plugin."
-              },
-              "wpDebug": {
-                "description": "Enable WordPress debug mode",
-                "type": "boolean"
-              },
-              "wpDebugDisplay": {
-                "description": "Display errors in HTML output. Only applies when the above is enabled.",
-                "type": "boolean"
-              },
-              "scriptDebug": {
-                "description": "Use non-minified JavaScript and CSS files.",
-                "type": "boolean"
-              },
-              "queryMonitor": {
-                "description": "Install Query Monitor plugin.",
-                "type": "boolean"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "wpDebug": {
-                    "description": "Enable WordPress debug mode",
-                    "type": "boolean"
-                  },
-                  "wpDebugDisplay": {
-                    "description": "Display errors in HTML output. Only applies when the above is enabled.",
-                    "type": "boolean"
-                  },
-                  "scriptDebug": {
-                    "description": "Use non-minified JavaScript and CSS files.",
-                    "type": "boolean"
-                  },
-                  "queryMonitor": {
-                    "description": "Install Query Monitor plugin.",
-                    "type": "boolean"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/debug"
           },
           {
-            "type": "object",
-            "description": "Activate an already installed plugin.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "activatePlugin",
-                "description": "Activate an already installed plugin."
-              },
-              "pluginPath": {
-                "description": "Path to the plugin file relative to wp-content/plugins/",
-                "type": "string"
-              },
-              "pluginName": {
-                "description": "Human-readable plugin name for progress display",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "pluginPath": {
-                    "description": "Path to the plugin file relative to wp-content/plugins/",
-                    "type": "string"
-                  },
-                  "pluginName": {
-                    "description": "Human-readable plugin name for progress display",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/activatePlugin"
           },
           {
-            "type": "object",
-            "description": "Activate an already installed theme.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "activateTheme",
-                "description": "Activate an already installed theme."
-              },
-              "themeFolderName": {
-                "description": "The theme folder name in wp-content/themes/",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "themeFolderName": {
-                    "description": "The theme folder name in wp-content/themes/",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/activateTheme"
           },
           {
-            "type": "object",
-            "description": "Copy a file or directory.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "cp",
-                "description": "Copy a file or directory."
-              },
-              "fromPath": {
-                "description": "Source path",
-                "type": "string"
-              },
-              "toPath": {
-                "description": "Destination path",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "fromPath": {
-                    "description": "Source path",
-                    "type": "string"
-                  },
-                  "toPath": {
-                    "description": "Destination path",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/cp"
           },
           {
-            "type": "object",
-            "description": "Move a file or directory.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "mv",
-                "description": "Move a file or directory."
-              },
-              "fromPath": {
-                "description": "Source path",
-                "type": "string"
-              },
-              "toPath": {
-                "description": "Destination path",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "fromPath": {
-                    "description": "Source path",
-                    "type": "string"
-                  },
-                  "toPath": {
-                    "description": "Destination path",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/mv"
           },
           {
-            "type": "object",
-            "description": "Remove a file.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "rm",
-                "description": "Remove a file."
-              },
-              "path": {
-                "description": "Path to the file to remove",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "path": {
-                    "description": "Path to the file to remove",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/rm"
           },
           {
-            "type": "object",
-            "description": "Remove a directory.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "rmdir",
-                "description": "Remove a directory."
-              },
-              "path": {
-                "description": "Path to the directory to remove",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "path": {
-                    "description": "Path to the directory to remove",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/rmdir"
           },
           {
-            "type": "object",
-            "description": "Create a directory.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "mkdir",
-                "description": "Create a directory."
-              },
-              "path": {
-                "description": "Path to the directory to create",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "path": {
-                    "description": "Path to the directory to create",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/mkdir"
           },
           {
-            "type": "object",
-            "description": "Extract a zip file.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "unzip",
-                "description": "Extract a zip file."
-              },
-              "zipFile": {
-                "description": "The zip file resource to extract",
-                "type": "string"
-              },
-              "zipPath": {
-                "description": "Path to an existing zip file in the filesystem",
-                "type": "string"
-              },
-              "extractToPath": {
-                "description": "Path where the zip contents should be extracted",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "zipFile": {
-                    "description": "The zip file resource to extract",
-                    "type": "string"
-                  },
-                  "zipPath": {
-                    "description": "Path to an existing zip file in the filesystem",
-                    "type": "string"
-                  },
-                  "extractToPath": {
-                    "description": "Path where the zip contents should be extracted",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/unzip"
           },
           {
-            "type": "object",
-            "description": "Execute SQL queries.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "runSQL",
-                "description": "Execute SQL queries."
-              },
-              "sql": {
-                "description": "SQL query or file reference to execute",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "sql": {
-                    "description": "SQL query or file reference to execute",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/runSQL"
           },
           {
-            "type": "object",
-            "description": "Write content to a file.",
-            "properties": {
-              "step": {
-                "type": "string",
-                "const": "writeFile",
-                "description": "Write content to a file."
-              },
-              "path": {
-                "description": "Path to the file to write",
-                "type": "string"
-              },
-              "data": {
-                "description": "Content to write to the file",
-                "type": "string"
-              },
-              "vars": {
-                "type": "object",
-                "description": "Step parameters (nested format)",
-                "properties": {
-                  "path": {
-                    "description": "Path to the file to write",
-                    "type": "string"
-                  },
-                  "data": {
-                    "description": "Content to write to the file",
-                    "type": "string"
-                  }
-                },
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "step"
-            ],
-            "additionalProperties": true
+            "$ref": "#/definitions/writeFile"
           }
         ]
       }
@@ -2371,256 +224,195 @@
   "required": [
     "steps"
   ],
-  "additionalProperties": true,
   "definitions": {
     "defineWpConfigConst": {
       "type": "object",
-      "description": "Define a wp-config PHP constant.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "defineWpConfigConst",
-          "description": "Define a wp-config PHP constant."
-        },
-        "name": {
-          "description": "Constant name",
-          "type": "string"
-        },
-        "value": {
-          "description": "Constant value",
-          "type": "string"
+          "const": "defineWpConfigConst"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "name": {
-              "description": "Constant name",
-              "type": "string"
+              "type": "string",
+              "description": "Constant name"
             },
             "value": {
-              "description": "Constant value",
-              "type": "string"
+              "type": "string",
+              "description": "Constant value"
             }
           },
+          "required": [
+            "name",
+            "value"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Define a wp-config PHP constant."
     },
     "importWxr": {
       "type": "object",
-      "description": "Import a WXR from a URL.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "importWxr",
-          "description": "Import a WXR from a URL."
-        },
-        "url": {
-          "description": "URL of a WXR file",
-          "type": "string"
+          "const": "importWxr"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "url": {
-              "description": "URL of a WXR file",
-              "type": "string"
+              "type": "string",
+              "description": "URL of a WXR file"
             }
           },
+          "required": [
+            "url"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Import a WXR from a URL."
     },
     "installPlugin": {
       "type": "object",
-      "description": "Install a plugin via WordPress.org or Github (branches, releases, PRs).",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "installPlugin",
-          "description": "Install a plugin via WordPress.org or Github (branches, releases, PRs)."
-        },
-        "url": {
-          "description": "URL of the plugin or WordPress.org slug.",
-          "type": "string"
-        },
-        "prs": {
-          "description": "Add support for submitting GitHub Pull Requests.",
-          "type": "boolean"
+          "const": "installPlugin"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "url": {
-              "description": "URL of the plugin or WordPress.org slug.",
-              "type": "string"
+              "type": "string",
+              "description": "URL of the plugin or WordPress.org slug."
             },
             "prs": {
-              "description": "Add support for submitting GitHub Pull Requests.",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Add support for submitting GitHub Pull Requests."
             }
           },
+          "required": [
+            "url"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Install a plugin via WordPress.org or Github (branches, releases, PRs)."
     },
     "installTheme": {
       "type": "object",
-      "description": "Install a theme via WordPress.org or Github.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "installTheme",
-          "description": "Install a theme via WordPress.org or Github."
-        },
-        "url": {
-          "description": "URL of the theme or WordPress.org slug",
-          "type": "string"
-        },
-        "prs": {
-          "description": "Add support for submitting Github Requests.",
-          "type": "boolean"
+          "const": "installTheme"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "url": {
-              "description": "URL of the theme or WordPress.org slug",
-              "type": "string"
+              "type": "string",
+              "description": "URL of the theme or WordPress.org slug"
             },
             "prs": {
-              "description": "Add support for submitting Github Requests.",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Add support for submitting Github Requests."
             }
           },
+          "required": [
+            "url"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Install a theme via WordPress.org or Github."
     },
     "login": {
       "type": "object",
-      "description": "Login to the site.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "login",
-          "description": "Login to the site."
-        },
-        "username": {
-          "description": "Username",
-          "type": "string"
-        },
-        "password": {
-          "description": "Password",
-          "type": "string"
-        },
-        "landingPage": {
-          "description": "Change landing page to wp-admin",
-          "type": "boolean"
+          "const": "login"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "username": {
-              "description": "Username",
-              "type": "string"
+              "type": "string",
+              "description": "Username"
             },
             "password": {
-              "description": "Password",
-              "type": "string"
+              "type": "string",
+              "description": "Password"
             },
             "landingPage": {
-              "description": "Change landing page to wp-admin",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Change landing page to wp-admin"
             }
           },
+          "required": [
+            "username",
+            "password"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Login to the site."
     },
     "runPHP": {
       "type": "object",
-      "description": "Run code in the context of WordPress.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "runPHP",
-          "description": "Run code in the context of WordPress."
-        },
-        "code": {
-          "description": "The code to run",
-          "type": "string"
+          "const": "runPHP"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "code": {
-              "description": "The code to run",
-              "type": "string"
+              "type": "string",
+              "description": "The code to run"
             }
           },
+          "required": [
+            "code"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Run code in the context of WordPress."
     },
     "setSiteOption": {
       "type": "object",
-      "description": "Set a site option.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "setSiteOption",
-          "description": "Set a site option."
-        },
-        "name": {
-          "description": "Option name",
-          "type": "string"
-        },
-        "value": {
-          "description": "Option value",
-          "type": "string"
+          "const": "setSiteOption"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "name": {
-              "description": "Option name",
-              "type": "string"
+              "type": "string",
+              "description": "Option name"
             },
             "value": {
-              "description": "Option value",
-              "type": "string"
+              "type": "string",
+              "description": "Option value"
             }
           },
           "additionalProperties": true
@@ -2629,328 +421,235 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Set a site option."
     },
     "addClientRole": {
       "type": "object",
-      "description": "Adds a role for clients with additional capabilities than editors, but not quite admin.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "addClientRole",
-          "description": "Adds a role for clients with additional capabilities than editors, but not quite admin."
-        },
-        "displayName": {
-          "description": "Display name for the client role",
-          "type": "string"
+          "const": "addClientRole"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "displayName": {
-              "description": "Display name for the client role",
-              "type": "string"
+              "type": "string",
+              "description": "Display name for the client role"
             }
           },
+          "required": [
+            "displayName"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Adds a role for clients with additional capabilities than editors, but not quite admin."
     },
     "addFilter": {
       "type": "object",
-      "description": "Easily add a filtered value.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "addFilter",
-          "description": "Easily add a filtered value."
-        },
-        "filter": {
-          "description": "Name of the filter",
-          "type": "string"
-        },
-        "code": {
-          "description": "Code for the filter",
-          "type": "string"
-        },
-        "priority": {
-          "description": "Priority of the filter",
-          "type": "string"
+          "const": "addFilter"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "filter": {
-              "description": "Name of the filter",
-              "type": "string"
+              "type": "string",
+              "description": "Name of the filter"
             },
             "code": {
-              "description": "Code for the filter",
-              "type": "string"
+              "type": "string",
+              "description": "Code for the filter"
             },
             "priority": {
-              "description": "Priority of the filter",
-              "type": "string"
+              "type": "string",
+              "description": "Priority of the filter"
             }
           },
+          "required": [
+            "filter",
+            "code"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Easily add a filtered value."
     },
     "addMedia": {
       "type": "object",
-      "description": "Add files to the media library.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "addMedia",
-          "description": "Add files to the media library."
-        },
-        "downloadUrl": {
-          "description": "Where to download the media from (can be a zip).",
-          "type": "string"
+          "const": "addMedia"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "downloadUrl": {
-              "description": "Where to download the media from (can be a zip).",
-              "type": "string"
+              "type": "string",
+              "description": "Where to download the media from (can be a zip)."
             }
           },
+          "required": [
+            "downloadUrl"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Add files to the media library."
     },
     "addPage": {
       "type": "object",
-      "description": "Add a page with title and content.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "addPage",
-          "description": "Add a page with title and content."
-        },
-        "title": {
-          "description": "The title of the page",
-          "type": "string"
-        },
-        "content": {
-          "description": "The HTML content of the page",
-          "type": "string"
-        },
-        "homepage": {
-          "description": "Set it as the Homepage",
-          "type": "boolean"
+          "const": "addPage"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "title": {
-              "description": "The title of the page",
-              "type": "string"
+              "type": "string",
+              "description": "The title of the page"
             },
             "content": {
-              "description": "The HTML content of the page",
-              "type": "string"
+              "type": "string",
+              "description": "The HTML content of the page"
             },
             "homepage": {
-              "description": "Set it as the Homepage",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Set it as the Homepage"
             }
           },
+          "required": [
+            "title",
+            "content"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Add a page with title and content."
     },
     "addPost": {
       "type": "object",
-      "description": "Add a post with title, content, type, status, and date.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "addPost",
-          "description": "Add a post with title, content, type, status, and date."
-        },
-        "title": {
-          "description": "The title of the post",
-          "type": "string"
-        },
-        "content": {
-          "description": "The HTML content of the post",
-          "type": "string"
-        },
-        "date": {
-          "description": "The date of the post (optional)",
-          "type": "string"
-        },
-        "type": {
-          "description": "The post type",
-          "type": "string"
-        },
-        "status": {
-          "description": "The post status",
-          "type": "string"
-        },
-        "postId": {
-          "description": "Post ID to use (optional)",
-          "type": "string"
-        },
-        "landingPage": {
-          "description": "Set landing page to the post editor (requires postId)",
-          "type": "boolean"
-        },
-        "registerPostType": {
-          "description": "Register custom post type if needed",
-          "type": "string"
+          "const": "addPost"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "title": {
-              "description": "The title of the post",
-              "type": "string"
+              "type": "string",
+              "description": "The title of the post"
             },
             "content": {
-              "description": "The HTML content of the post",
-              "type": "string"
+              "type": "string",
+              "description": "The HTML content of the post"
             },
             "date": {
-              "description": "The date of the post (optional)",
-              "type": "string"
+              "type": "string",
+              "description": "The date of the post (optional)"
             },
             "type": {
-              "description": "The post type",
-              "type": "string"
+              "type": "string",
+              "description": "The post type"
             },
             "status": {
-              "description": "The post status",
-              "type": "string"
+              "type": "string",
+              "description": "The post status"
             },
             "postId": {
-              "description": "Post ID to use (optional)",
-              "type": "string"
+              "type": "string",
+              "description": "Post ID to use (optional)"
             },
             "landingPage": {
-              "description": "Set landing page to the post editor (requires postId)",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Set landing page to the post editor (requires postId)"
             },
             "registerPostType": {
-              "description": "Register custom post type if needed",
-              "type": "string"
+              "type": "string",
+              "description": "Register custom post type if needed"
             }
           },
+          "required": [
+            "title",
+            "content",
+            "type"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Add a post with title, content, type, status, and date."
     },
     "addProduct": {
       "type": "object",
-      "description": "Add a WooCommerce product (will install WooCommerce if not present)",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "addProduct",
-          "description": "Add a WooCommerce product (will install WooCommerce if not present)"
-        },
-        "title": {
-          "description": "The title of the product",
-          "type": "string"
-        },
-        "description": {
-          "description": "The description of the product",
-          "type": "string"
-        },
-        "price": {
-          "description": "Regular price (without currency symbol)",
-          "type": "string"
-        },
-        "salePrice": {
-          "description": "Sale price (optional, must be less than regular price)",
-          "type": "string"
-        },
-        "sku": {
-          "description": "Product SKU/code (optional)",
-          "type": "string"
-        },
-        "status": {
-          "description": "Product status",
-          "type": "string"
+          "const": "addProduct"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "title": {
-              "description": "The title of the product",
-              "type": "string"
+              "type": "string",
+              "description": "The title of the product"
             },
             "description": {
-              "description": "The description of the product",
-              "type": "string"
+              "type": "string",
+              "description": "The description of the product"
             },
             "price": {
-              "description": "Regular price (without currency symbol)",
-              "type": "string"
+              "type": "string",
+              "description": "Regular price (without currency symbol)"
             },
             "salePrice": {
-              "description": "Sale price (optional, must be less than regular price)",
-              "type": "string"
+              "type": "string",
+              "description": "Sale price (optional, must be less than regular price)"
             },
             "sku": {
-              "description": "Product SKU/code (optional)",
-              "type": "string"
+              "type": "string",
+              "description": "Product SKU/code (optional)"
             },
             "status": {
-              "description": "Product status",
-              "type": "string"
+              "type": "string",
+              "description": "Product status"
             }
           },
+          "required": [
+            "title",
+            "description"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Add a WooCommerce product (will install WooCommerce if not present)"
     },
     "blueprintExtractor": {
       "type": "object",
-      "description": "Generate a new blueprint after modifying the WordPress.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "blueprintExtractor",
-          "description": "Generate a new blueprint after modifying the WordPress."
+          "const": "blueprintExtractor"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {},
           "additionalProperties": true
         }
@@ -2958,20 +657,16 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Generate a new blueprint after modifying the WordPress."
     },
     "blueprintRecorder": {
       "type": "object",
-      "description": "Record steps made and compile a new blueprint.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "blueprintRecorder",
-          "description": "Record steps made and compile a new blueprint."
+          "const": "blueprintRecorder"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {},
           "additionalProperties": true
         }
@@ -2979,174 +674,126 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Record steps made and compile a new blueprint."
     },
     "changeAdminColorScheme": {
       "type": "object",
-      "description": "Useful to combine with a login step.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "changeAdminColorScheme",
-          "description": "Useful to combine with a login step."
-        },
-        "colorScheme": {
-          "description": "Color scheme",
-          "type": "string"
+          "const": "changeAdminColorScheme"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "colorScheme": {
-              "description": "Color scheme",
-              "type": "string"
+              "type": "string",
+              "description": "Color scheme"
             }
           },
+          "required": [
+            "colorScheme"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Useful to combine with a login step."
     },
     "createUser": {
       "type": "object",
-      "description": "Create a new user.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "createUser",
-          "description": "Create a new user."
-        },
-        "username": {
-          "description": "Username",
-          "type": "string"
-        },
-        "password": {
-          "description": "Password",
-          "type": "string"
-        },
-        "role": {
-          "description": "Role",
-          "type": "string"
-        },
-        "display_name": {
-          "description": "Display Name",
-          "type": "string"
-        },
-        "email": {
-          "description": "E-Mail",
-          "type": "string"
-        },
-        "login": {
-          "description": "Immediately log the user in",
-          "type": "boolean"
+          "const": "createUser"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "username": {
-              "description": "Username",
-              "type": "string"
+              "type": "string",
+              "description": "Username"
             },
             "password": {
-              "description": "Password",
-              "type": "string"
+              "type": "string",
+              "description": "Password"
             },
             "role": {
-              "description": "Role",
-              "type": "string"
+              "type": "string",
+              "description": "Role"
             },
             "display_name": {
-              "description": "Display Name",
-              "type": "string"
+              "type": "string",
+              "description": "Display Name"
             },
             "email": {
-              "description": "E-Mail",
-              "type": "string"
+              "type": "string",
+              "description": "E-Mail"
             },
             "login": {
-              "description": "Immediately log the user in",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Immediately log the user in"
             }
           },
+          "required": [
+            "username",
+            "password",
+            "role"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Create a new user."
     },
     "customPostType": {
       "type": "object",
-      "description": "Register a custom post type.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "customPostType",
-          "description": "Register a custom post type."
-        },
-        "slug": {
-          "description": "Post type key",
-          "type": "string"
-        },
-        "name": {
-          "description": "The user visible label",
-          "type": "string"
-        },
-        "supports": {
-          "description": "Features this post type supports",
-          "type": "string"
-        },
-        "public": {
-          "description": "Whether the post type is public",
-          "type": "boolean"
+          "const": "customPostType"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "slug": {
-              "description": "Post type key",
-              "type": "string"
+              "type": "string",
+              "description": "Post type key"
             },
             "name": {
-              "description": "The user visible label",
-              "type": "string"
+              "type": "string",
+              "description": "The user visible label"
             },
             "supports": {
-              "description": "Features this post type supports",
-              "type": "string"
+              "type": "string",
+              "description": "Features this post type supports"
             },
             "public": {
-              "description": "Whether the post type is public",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Whether the post type is public"
             }
           },
+          "required": [
+            "slug",
+            "name"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Register a custom post type."
     },
     "deleteAllPosts": {
       "type": "object",
-      "description": "Delete all posts, pages, attachments, revisions and menu items.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "deleteAllPosts",
-          "description": "Delete all posts, pages, attachments, revisions and menu items."
+          "const": "deleteAllPosts"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {},
           "additionalProperties": true
         }
@@ -3154,20 +801,16 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Delete all posts, pages, attachments, revisions and menu items."
     },
     "disableWelcomeGuides": {
       "type": "object",
-      "description": "Disable the welcome guides in the site editor.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "disableWelcomeGuides",
-          "description": "Disable the welcome guides in the site editor."
+          "const": "disableWelcomeGuides"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {},
           "additionalProperties": true
         }
@@ -3175,20 +818,16 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Disable the welcome guides in the site editor."
     },
     "dontLogin": {
       "type": "object",
-      "description": "Prevent automatic login (Playground logs in as admin by default).",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "dontLogin",
-          "description": "Prevent automatic login (Playground logs in as admin by default)."
+          "const": "dontLogin"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {},
           "additionalProperties": true
         }
@@ -3196,472 +835,345 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Prevent automatic login (Playground logs in as admin by default)."
     },
     "doAction": {
       "type": "object",
-      "description": "Execute a custom action.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "doAction",
-          "description": "Execute a custom action."
-        },
-        "action": {
-          "description": "Execute a custom action.",
-          "type": "string"
-        },
-        "parameter1": {
-          "description": "First parameter for the action.",
-          "type": "string"
-        },
-        "parameter2": {
-          "description": "Second parameter for the action.",
-          "type": "string"
-        },
-        "parameter3": {
-          "description": "Third parameter for the action.",
-          "type": "string"
-        },
-        "parameter4": {
-          "description": "Fourth parameter for the action.",
-          "type": "string"
-        },
-        "parameter5": {
-          "description": "Fifth parameter for the action.",
-          "type": "string"
+          "const": "doAction"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "action": {
-              "description": "Execute a custom action.",
-              "type": "string"
+              "type": "string",
+              "description": "Execute a custom action."
             },
             "parameter1": {
-              "description": "First parameter for the action.",
-              "type": "string"
+              "type": "string",
+              "description": "First parameter for the action."
             },
             "parameter2": {
-              "description": "Second parameter for the action.",
-              "type": "string"
+              "type": "string",
+              "description": "Second parameter for the action."
             },
             "parameter3": {
-              "description": "Third parameter for the action.",
-              "type": "string"
+              "type": "string",
+              "description": "Third parameter for the action."
             },
             "parameter4": {
-              "description": "Fourth parameter for the action.",
-              "type": "string"
+              "type": "string",
+              "description": "Fourth parameter for the action."
             },
             "parameter5": {
-              "description": "Fifth parameter for the action.",
-              "type": "string"
+              "type": "string",
+              "description": "Fifth parameter for the action."
             }
           },
+          "required": [
+            "action"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Execute a custom action."
     },
     "enqueueCss": {
       "type": "object",
-      "description": "Enqueue custom CSS on frontend and/or admin.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "enqueueCss",
-          "description": "Enqueue custom CSS on frontend and/or admin."
-        },
-        "filename": {
-          "description": "Filename for the CSS file (without .css extension)",
-          "type": "string"
-        },
-        "css": {
-          "description": "CSS code to enqueue",
-          "type": "string"
-        },
-        "frontend": {
-          "description": "Enqueue on frontend",
-          "type": "boolean"
-        },
-        "wpAdmin": {
-          "description": "Enqueue in wp-admin",
-          "type": "boolean"
+          "const": "enqueueCss"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "filename": {
-              "description": "Filename for the CSS file (without .css extension)",
-              "type": "string"
+              "type": "string",
+              "description": "Filename for the CSS file (without .css extension)"
             },
             "css": {
-              "description": "CSS code to enqueue",
-              "type": "string"
+              "type": "string",
+              "description": "CSS code to enqueue"
             },
             "frontend": {
-              "description": "Enqueue on frontend",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Enqueue on frontend"
             },
             "wpAdmin": {
-              "description": "Enqueue in wp-admin",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Enqueue in wp-admin"
             }
           },
+          "required": [
+            "css"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Enqueue custom CSS on frontend and/or admin."
     },
     "enqueueJs": {
       "type": "object",
-      "description": "Enqueue custom JavaScript on frontend and/or admin.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "enqueueJs",
-          "description": "Enqueue custom JavaScript on frontend and/or admin."
-        },
-        "filename": {
-          "description": "Filename for the JavaScript file (without .js extension)",
-          "type": "string"
-        },
-        "js": {
-          "description": "JavaScript code to enqueue",
-          "type": "string"
-        },
-        "frontend": {
-          "description": "Enqueue on frontend",
-          "type": "boolean"
-        },
-        "wpAdmin": {
-          "description": "Enqueue in wp-admin",
-          "type": "boolean"
+          "const": "enqueueJs"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "filename": {
-              "description": "Filename for the JavaScript file (without .js extension)",
-              "type": "string"
+              "type": "string",
+              "description": "Filename for the JavaScript file (without .js extension)"
             },
             "js": {
-              "description": "JavaScript code to enqueue",
-              "type": "string"
+              "type": "string",
+              "description": "JavaScript code to enqueue"
             },
             "frontend": {
-              "description": "Enqueue on frontend",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Enqueue on frontend"
             },
             "wpAdmin": {
-              "description": "Enqueue in wp-admin",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Enqueue in wp-admin"
             }
           },
+          "required": [
+            "js"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Enqueue custom JavaScript on frontend and/or admin."
     },
     "fakeHttpResponse": {
       "type": "object",
-      "description": "Fake a wp_remote_request() response.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "fakeHttpResponse",
-          "description": "Fake a wp_remote_request() response."
-        },
-        "url": {
-          "description": "URL like https://wordpress.org/",
-          "type": "string"
-        },
-        "response": {
-          "description": "The data to return",
-          "type": "string"
+          "const": "fakeHttpResponse"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "url": {
-              "description": "URL like https://wordpress.org/",
-              "type": "string"
+              "type": "string",
+              "description": "URL like https://wordpress.org/"
             },
             "response": {
-              "description": "The data to return",
-              "type": "string"
+              "type": "string",
+              "description": "The data to return"
             }
           },
+          "required": [
+            "url"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Fake a wp_remote_request() response."
     },
     "githubImportExportWxr": {
       "type": "object",
-      "description": "Provide useful additional info.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "githubImportExportWxr",
-          "description": "Provide useful additional info."
-        },
-        "repo": {
-          "description": "The WXR file resides in this GitHub repository.",
-          "type": "string"
-        },
-        "branch": {
-          "description": "Which branch to use.",
-          "type": "string"
-        },
-        "filename": {
-          "description": "Which filename and path to use.",
-          "type": "string"
-        },
-        "targetUrl": {
-          "description": "Rewrite the exported paths to this destination URL.",
-          "type": "string"
+          "const": "githubImportExportWxr"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "repo": {
-              "description": "The WXR file resides in this GitHub repository.",
-              "type": "string"
+              "type": "string",
+              "description": "The WXR file resides in this GitHub repository."
             },
             "branch": {
-              "description": "Which branch to use.",
-              "type": "string"
+              "type": "string",
+              "description": "Which branch to use."
             },
             "filename": {
-              "description": "Which filename and path to use.",
-              "type": "string"
+              "type": "string",
+              "description": "Which filename and path to use."
             },
             "targetUrl": {
-              "description": "Rewrite the exported paths to this destination URL.",
-              "type": "string"
+              "type": "string",
+              "description": "Rewrite the exported paths to this destination URL."
             }
           },
+          "required": [
+            "repo",
+            "filename"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Provide useful additional info."
     },
     "githubPlugin": {
       "type": "object",
-      "description": "Install a plugin from a Github repository.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "githubPlugin",
-          "description": "Install a plugin from a Github repository."
-        },
-        "url": {
-          "description": "Github URL of the plugin.",
-          "type": "string"
-        },
-        "prs": {
-          "description": "Add support for submitting GitHub Pull Requests.",
-          "type": "boolean"
+          "const": "githubPlugin"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "url": {
-              "description": "Github URL of the plugin.",
-              "type": "string"
+              "type": "string",
+              "description": "Github URL of the plugin."
             },
             "prs": {
-              "description": "Add support for submitting GitHub Pull Requests.",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Add support for submitting GitHub Pull Requests."
             }
           },
+          "required": [
+            "url"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Install a plugin from a Github repository."
     },
     "githubPluginRelease": {
       "type": "object",
-      "description": "Install a specific plugin release from a Github repository.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "githubPluginRelease",
-          "description": "Install a specific plugin release from a Github repository."
-        },
-        "repo": {
-          "description": "The plugin resides in this GitHub repository.",
-          "type": "string"
-        },
-        "release": {
-          "description": "The release tag.",
-          "type": "string"
-        },
-        "filename": {
-          "description": "Which filename to use.",
-          "type": "string"
+          "const": "githubPluginRelease"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "repo": {
-              "description": "The plugin resides in this GitHub repository.",
-              "type": "string"
+              "type": "string",
+              "description": "The plugin resides in this GitHub repository."
             },
             "release": {
-              "description": "The release tag.",
-              "type": "string"
+              "type": "string",
+              "description": "The release tag."
             },
             "filename": {
-              "description": "Which filename to use.",
-              "type": "string"
+              "type": "string",
+              "description": "Which filename to use."
             }
           },
+          "required": [
+            "repo",
+            "release",
+            "filename"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Install a specific plugin release from a Github repository."
     },
     "githubTheme": {
       "type": "object",
-      "description": "Install a theme from a Github repository.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "githubTheme",
-          "description": "Install a theme from a Github repository."
-        },
-        "url": {
-          "description": "Github URL of the theme.",
-          "type": "string"
-        },
-        "prs": {
-          "description": "Add support for submitting Github Requests.",
-          "type": "boolean"
+          "const": "githubTheme"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "url": {
-              "description": "Github URL of the theme.",
-              "type": "string"
+              "type": "string",
+              "description": "Github URL of the theme."
             },
             "prs": {
-              "description": "Add support for submitting Github Requests.",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Add support for submitting Github Requests."
             }
           },
+          "required": [
+            "url"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Install a theme from a Github repository."
     },
     "importFriendFeeds": {
       "type": "object",
-      "description": "Add subscriptions to the Friends plugin.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "importFriendFeeds",
-          "description": "Add subscriptions to the Friends plugin."
-        },
-        "opml": {
-          "description": "An OPML file, or a list of RSS feed URLs, one per line.",
-          "type": "string"
+          "const": "importFriendFeeds"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "opml": {
-              "description": "An OPML file, or a list of RSS feed URLs, one per line.",
-              "type": "string"
+              "type": "string",
+              "description": "An OPML file, or a list of RSS feed URLs, one per line."
             }
           },
+          "required": [
+            "opml"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Add subscriptions to the Friends plugin."
     },
     "importWordPressComExport": {
       "type": "object",
-      "description": "Import a WordPress.com export file (WXR in a ZIP)",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "importWordPressComExport",
-          "description": "Import a WordPress.com export file (WXR in a ZIP)"
-        },
-        "url": {
-          "description": "URL of a WordPress.com export ZIP file",
-          "type": "string"
+          "const": "importWordPressComExport"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "url": {
-              "description": "URL of a WordPress.com export ZIP file",
-              "type": "string"
+              "type": "string",
+              "description": "URL of a WordPress.com export ZIP file"
             }
           },
+          "required": [
+            "url"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Import a WordPress.com export file (WXR in a ZIP)"
     },
     "installAdminer": {
       "type": "object",
-      "description": "Install Adminer with auto login link.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "installAdminer",
-          "description": "Install Adminer with auto login link."
+          "const": "installAdminer"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {},
           "additionalProperties": true
         }
@@ -3669,20 +1181,16 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Install Adminer with auto login link."
     },
     "installPhEditor": {
       "type": "object",
-      "description": "Install phEditor. Password: admin",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "installPhEditor",
-          "description": "Install phEditor. Password: admin"
+          "const": "installPhEditor"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {},
           "additionalProperties": true
         }
@@ -3690,20 +1198,16 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Install phEditor. Password: admin"
     },
     "installPhpLiteAdmin": {
       "type": "object",
-      "description": "Provide phpLiteAdmin. Password: admin",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "installPhpLiteAdmin",
-          "description": "Provide phpLiteAdmin. Password: admin"
+          "const": "installPhpLiteAdmin"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {},
           "additionalProperties": true
         }
@@ -3711,36 +1215,24 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Provide phpLiteAdmin. Password: admin"
     },
     "jetpackOfflineMode": {
       "type": "object",
-      "description": "Start Jetpack in Offline mode.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "jetpackOfflineMode",
-          "description": "Start Jetpack in Offline mode."
-        },
-        "blocks": {
-          "description": "Activate the Jetpack Blocks module.",
-          "type": "boolean"
-        },
-        "subscriptions": {
-          "description": "Activate the Jetpack Subscriptions module.",
-          "type": "boolean"
+          "const": "jetpackOfflineMode"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "blocks": {
-              "description": "Activate the Jetpack Blocks module.",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Activate the Jetpack Blocks module."
             },
             "subscriptions": {
-              "description": "Activate the Jetpack Subscriptions module.",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Activate the Jetpack Subscriptions module."
             }
           },
           "additionalProperties": true
@@ -3749,106 +1241,69 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Start Jetpack in Offline mode."
     },
     "muPlugin": {
       "type": "object",
-      "description": "Add code for a plugin.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "muPlugin",
-          "description": "Add code for a plugin."
-        },
-        "name": {
-          "description": "Name for your mu-plugin file",
-          "type": "string"
-        },
-        "code": {
-          "description": "Code for your mu-plugin",
-          "type": "string"
+          "const": "muPlugin"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "name": {
-              "description": "Name for your mu-plugin file",
-              "type": "string"
+              "type": "string",
+              "description": "Name for your mu-plugin file"
             },
             "code": {
-              "description": "Code for your mu-plugin",
-              "type": "string"
+              "type": "string",
+              "description": "Code for your mu-plugin"
             }
           },
+          "required": [
+            "code"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Add code for a plugin."
     },
     "removeDashboardWidgets": {
       "type": "object",
-      "description": "Remove widgets from the wp-admin dashboard.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "removeDashboardWidgets",
-          "description": "Remove widgets from the wp-admin dashboard."
-        },
-        "welcome": {
-          "description": "Remove Welcome Panel",
-          "type": "boolean"
-        },
-        "glance": {
-          "description": "Remove At a Glance",
-          "type": "boolean"
-        },
-        "events": {
-          "description": "Remove Upcoming Events",
-          "type": "boolean"
-        },
-        "quickpress": {
-          "description": "Remove Quick Draft",
-          "type": "boolean"
-        },
-        "activity": {
-          "description": "Remove Activity",
-          "type": "boolean"
-        },
-        "sitehealth": {
-          "description": "Remove Site Health",
-          "type": "boolean"
+          "const": "removeDashboardWidgets"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "welcome": {
-              "description": "Remove Welcome Panel",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Remove Welcome Panel"
             },
             "glance": {
-              "description": "Remove At a Glance",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Remove At a Glance"
             },
             "events": {
-              "description": "Remove Upcoming Events",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Remove Upcoming Events"
             },
             "quickpress": {
-              "description": "Remove Quick Draft",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Remove Quick Draft"
             },
             "activity": {
-              "description": "Remove Activity",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Remove Activity"
             },
             "sitehealth": {
-              "description": "Remove Site Health",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Remove Site Health"
             }
           },
           "additionalProperties": true
@@ -3857,88 +1312,71 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Remove widgets from the wp-admin dashboard."
     },
     "renameDefaultCategory": {
       "type": "object",
-      "description": "Change the default \"Uncategorized\".",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "renameDefaultCategory",
-          "description": "Change the default \"Uncategorized\"."
-        },
-        "categoryName": {
-          "description": "Change the default category name",
-          "type": "string"
-        },
-        "categorySlug": {
-          "description": "Change the default category slug",
-          "type": "string"
+          "const": "renameDefaultCategory"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "categoryName": {
-              "description": "Change the default category name",
-              "type": "string"
+              "type": "string",
+              "description": "Change the default category name"
             },
             "categorySlug": {
-              "description": "Change the default category slug",
-              "type": "string"
+              "type": "string",
+              "description": "Change the default category slug"
             }
           },
+          "required": [
+            "categoryName",
+            "categorySlug"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Change the default \"Uncategorized\"."
     },
     "runWpCliCommand": {
       "type": "object",
-      "description": "Run a wp-cli command.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "runWpCliCommand",
-          "description": "Run a wp-cli command."
-        },
-        "command": {
-          "description": "The wp-cli command to run",
-          "type": "string"
+          "const": "runWpCliCommand"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "command": {
-              "description": "The wp-cli command to run",
-              "type": "string"
+              "type": "string",
+              "description": "The wp-cli command to run"
             }
           },
+          "required": [
+            "command"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Run a wp-cli command."
     },
     "sampleContent": {
       "type": "object",
-      "description": "Inserts sample pages to the site.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "sampleContent",
-          "description": "Inserts sample pages to the site."
+          "const": "sampleContent"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {},
           "additionalProperties": true
         }
@@ -3946,118 +1384,96 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Inserts sample pages to the site."
     },
     "setLandingPage": {
       "type": "object",
-      "description": "Set the landing page.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "setLandingPage",
-          "description": "Set the landing page."
-        },
-        "landingPage": {
-          "description": "The relative URL for the landing page",
-          "type": "string"
+          "const": "setLandingPage"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "landingPage": {
-              "description": "The relative URL for the landing page",
-              "type": "string"
+              "type": "string",
+              "description": "The relative URL for the landing page"
             }
           },
+          "required": [
+            "landingPage"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Set the landing page."
     },
     "setLanguage": {
       "type": "object",
-      "description": "Set the WordPress site language.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "setLanguage",
-          "description": "Set the WordPress site language."
-        },
-        "language": {
-          "description": "A valid WordPress language slug",
-          "type": "string"
+          "const": "setLanguage"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "language": {
-              "description": "A valid WordPress language slug",
-              "type": "string"
+              "type": "string",
+              "description": "A valid WordPress language slug"
             }
           },
+          "required": [
+            "language"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Set the WordPress site language."
     },
     "setSiteName": {
       "type": "object",
-      "description": "Set the site name and tagline.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "setSiteName",
-          "description": "Set the site name and tagline."
-        },
-        "sitename": {
-          "description": "Name of the site",
-          "type": "string"
-        },
-        "tagline": {
-          "description": "What the site is about",
-          "type": "string"
+          "const": "setSiteName"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "sitename": {
-              "description": "Name of the site",
-              "type": "string"
+              "type": "string",
+              "description": "Name of the site"
             },
             "tagline": {
-              "description": "What the site is about",
-              "type": "string"
+              "type": "string",
+              "description": "What the site is about"
             }
           },
+          "required": [
+            "sitename",
+            "tagline"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Set the site name and tagline."
     },
     "setTT4Homepage": {
       "type": "object",
-      "description": "Set the homepage for the twentytwentyfour theme.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "setTT4Homepage",
-          "description": "Set the homepage for the twentytwentyfour theme."
+          "const": "setTT4Homepage"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {},
           "additionalProperties": true
         }
@@ -4065,66 +1481,49 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Set the homepage for the twentytwentyfour theme."
     },
     "showAdminNotice": {
       "type": "object",
-      "description": "Show an admin notice in the dashboard.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "showAdminNotice",
-          "description": "Show an admin notice in the dashboard."
-        },
-        "text": {
-          "description": "The notice to be displayed",
-          "type": "string"
-        },
-        "type": {
-          "description": "The type of notice",
-          "type": "string"
-        },
-        "dismissible": {
-          "description": "Allow to dismiss",
-          "type": "boolean"
+          "const": "showAdminNotice"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "text": {
-              "description": "The notice to be displayed",
-              "type": "string"
+              "type": "string",
+              "description": "The notice to be displayed"
             },
             "type": {
-              "description": "The type of notice",
-              "type": "string"
+              "type": "string",
+              "description": "The type of notice"
             },
             "dismissible": {
-              "description": "Allow to dismiss",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Allow to dismiss"
             }
           },
+          "required": [
+            "text"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Show an admin notice in the dashboard."
     },
     "skipWooCommerceWizard": {
       "type": "object",
-      "description": "When running WooCommerce, don't show the wizard.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "skipWooCommerceWizard",
-          "description": "When running WooCommerce, don't show the wizard."
+          "const": "skipWooCommerceWizard"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {},
           "additionalProperties": true
         }
@@ -4132,20 +1531,16 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "When running WooCommerce, don't show the wizard."
     },
     "enableMultisite": {
       "type": "object",
-      "description": "Enable WordPress Multisite functionality.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "enableMultisite",
-          "description": "Enable WordPress Multisite functionality."
+          "const": "enableMultisite"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {},
           "additionalProperties": true
         }
@@ -4153,60 +1548,36 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Enable WordPress Multisite functionality."
     },
     "generateProducts": {
       "type": "object",
-      "description": "Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "generateProducts",
-          "description": "Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)"
-        },
-        "count": {
-          "description": "Number of products to generate",
-          "type": "number"
-        },
-        "orders": {
-          "description": "Number of orders to generate (optional)",
-          "type": "number"
-        },
-        "customers": {
-          "description": "Number of customers to generate (optional)",
-          "type": "number"
-        },
-        "coupons": {
-          "description": "Number of coupons to generate (optional)",
-          "type": "number"
-        },
-        "categories": {
-          "description": "Number of product categories to generate (optional)",
-          "type": "number"
+          "const": "generateProducts"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "count": {
-              "description": "Number of products to generate",
-              "type": "number"
+              "type": "number",
+              "description": "Number of products to generate"
             },
             "orders": {
-              "description": "Number of orders to generate (optional)",
-              "type": "number"
+              "type": "number",
+              "description": "Number of orders to generate (optional)"
             },
             "customers": {
-              "description": "Number of customers to generate (optional)",
-              "type": "number"
+              "type": "number",
+              "description": "Number of customers to generate (optional)"
             },
             "coupons": {
-              "description": "Number of coupons to generate (optional)",
-              "type": "number"
+              "type": "number",
+              "description": "Number of coupons to generate (optional)"
             },
             "categories": {
-              "description": "Number of product categories to generate (optional)",
-              "type": "number"
+              "type": "number",
+              "description": "Number of product categories to generate (optional)"
             }
           },
           "additionalProperties": true
@@ -4215,68 +1586,40 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)"
     },
     "blockExamples": {
       "type": "object",
-      "description": "Creates a post with all block examples from registered blocks",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "blockExamples",
-          "description": "Creates a post with all block examples from registered blocks"
-        },
-        "blockNamespace": {
-          "description": "Limit to a specific plugin slug (leave empty for all plugins)",
-          "type": "string"
-        },
-        "postTitle": {
-          "description": "Title of the post to create",
-          "type": "string"
-        },
-        "limit": {
-          "description": "Maximum number of blocks to include (leave empty for no limit)",
-          "type": "string"
-        },
-        "postId": {
-          "description": "Post ID to use (defaults to 1000)",
-          "type": "string"
-        },
-        "excludeCore": {
-          "description": "Exclude core WordPress blocks",
-          "type": "boolean"
-        },
-        "landingPage": {
-          "description": "Set landing page to the post editor",
-          "type": "boolean"
+          "const": "blockExamples"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "blockNamespace": {
-              "description": "Limit to a specific plugin slug (leave empty for all plugins)",
-              "type": "string"
+              "type": "string",
+              "description": "Limit to a specific plugin slug (leave empty for all plugins)"
             },
             "postTitle": {
-              "description": "Title of the post to create",
-              "type": "string"
+              "type": "string",
+              "description": "Title of the post to create"
             },
             "limit": {
-              "description": "Maximum number of blocks to include (leave empty for no limit)",
-              "type": "string"
+              "type": "string",
+              "description": "Maximum number of blocks to include (leave empty for no limit)"
             },
             "postId": {
-              "description": "Post ID to use (defaults to 1000)",
-              "type": "string"
+              "type": "string",
+              "description": "Post ID to use (defaults to 1000)"
             },
             "excludeCore": {
-              "description": "Exclude core WordPress blocks",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Exclude core WordPress blocks"
             },
             "landingPage": {
-              "description": "Set landing page to the post editor",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Set landing page to the post editor"
             }
           },
           "additionalProperties": true
@@ -4285,52 +1628,32 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Creates a post with all block examples from registered blocks"
     },
     "debug": {
       "type": "object",
-      "description": "Configure WordPress debug settings and optionally install Query Monitor plugin.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "debug",
-          "description": "Configure WordPress debug settings and optionally install Query Monitor plugin."
-        },
-        "wpDebug": {
-          "description": "Enable WordPress debug mode",
-          "type": "boolean"
-        },
-        "wpDebugDisplay": {
-          "description": "Display errors in HTML output. Only applies when the above is enabled.",
-          "type": "boolean"
-        },
-        "scriptDebug": {
-          "description": "Use non-minified JavaScript and CSS files.",
-          "type": "boolean"
-        },
-        "queryMonitor": {
-          "description": "Install Query Monitor plugin.",
-          "type": "boolean"
+          "const": "debug"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "wpDebug": {
-              "description": "Enable WordPress debug mode",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Enable WordPress debug mode"
             },
             "wpDebugDisplay": {
-              "description": "Display errors in HTML output. Only applies when the above is enabled.",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Display errors in HTML output. Only applies when the above is enabled."
             },
             "scriptDebug": {
-              "description": "Use non-minified JavaScript and CSS files.",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Use non-minified JavaScript and CSS files."
             },
             "queryMonitor": {
-              "description": "Install Query Monitor plugin.",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Install Query Monitor plugin."
             }
           },
           "additionalProperties": true
@@ -4339,355 +1662,284 @@
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Configure WordPress debug settings and optionally install Query Monitor plugin."
     },
     "activatePlugin": {
       "type": "object",
-      "description": "Activate an already installed plugin.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "activatePlugin",
-          "description": "Activate an already installed plugin."
-        },
-        "pluginPath": {
-          "description": "Path to the plugin file relative to wp-content/plugins/",
-          "type": "string"
-        },
-        "pluginName": {
-          "description": "Human-readable plugin name for progress display",
-          "type": "string"
+          "const": "activatePlugin"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "pluginPath": {
-              "description": "Path to the plugin file relative to wp-content/plugins/",
-              "type": "string"
+              "type": "string",
+              "description": "Path to the plugin file relative to wp-content/plugins/"
             },
             "pluginName": {
-              "description": "Human-readable plugin name for progress display",
-              "type": "string"
+              "type": "string",
+              "description": "Human-readable plugin name for progress display"
             }
           },
+          "required": [
+            "pluginPath"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Activate an already installed plugin."
     },
     "activateTheme": {
       "type": "object",
-      "description": "Activate an already installed theme.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "activateTheme",
-          "description": "Activate an already installed theme."
-        },
-        "themeFolderName": {
-          "description": "The theme folder name in wp-content/themes/",
-          "type": "string"
+          "const": "activateTheme"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "themeFolderName": {
-              "description": "The theme folder name in wp-content/themes/",
-              "type": "string"
+              "type": "string",
+              "description": "The theme folder name in wp-content/themes/"
             }
           },
+          "required": [
+            "themeFolderName"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Activate an already installed theme."
     },
     "cp": {
       "type": "object",
-      "description": "Copy a file or directory.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "cp",
-          "description": "Copy a file or directory."
-        },
-        "fromPath": {
-          "description": "Source path",
-          "type": "string"
-        },
-        "toPath": {
-          "description": "Destination path",
-          "type": "string"
+          "const": "cp"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "fromPath": {
-              "description": "Source path",
-              "type": "string"
+              "type": "string",
+              "description": "Source path"
             },
             "toPath": {
-              "description": "Destination path",
-              "type": "string"
+              "type": "string",
+              "description": "Destination path"
             }
           },
+          "required": [
+            "fromPath",
+            "toPath"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Copy a file or directory."
     },
     "mv": {
       "type": "object",
-      "description": "Move a file or directory.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "mv",
-          "description": "Move a file or directory."
-        },
-        "fromPath": {
-          "description": "Source path",
-          "type": "string"
-        },
-        "toPath": {
-          "description": "Destination path",
-          "type": "string"
+          "const": "mv"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "fromPath": {
-              "description": "Source path",
-              "type": "string"
+              "type": "string",
+              "description": "Source path"
             },
             "toPath": {
-              "description": "Destination path",
-              "type": "string"
+              "type": "string",
+              "description": "Destination path"
             }
           },
+          "required": [
+            "fromPath",
+            "toPath"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Move a file or directory."
     },
     "rm": {
       "type": "object",
-      "description": "Remove a file.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "rm",
-          "description": "Remove a file."
-        },
-        "path": {
-          "description": "Path to the file to remove",
-          "type": "string"
+          "const": "rm"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "path": {
-              "description": "Path to the file to remove",
-              "type": "string"
+              "type": "string",
+              "description": "Path to the file to remove"
             }
           },
+          "required": [
+            "path"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Remove a file."
     },
     "rmdir": {
       "type": "object",
-      "description": "Remove a directory.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "rmdir",
-          "description": "Remove a directory."
-        },
-        "path": {
-          "description": "Path to the directory to remove",
-          "type": "string"
+          "const": "rmdir"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "path": {
-              "description": "Path to the directory to remove",
-              "type": "string"
+              "type": "string",
+              "description": "Path to the directory to remove"
             }
           },
+          "required": [
+            "path"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Remove a directory."
     },
     "mkdir": {
       "type": "object",
-      "description": "Create a directory.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "mkdir",
-          "description": "Create a directory."
-        },
-        "path": {
-          "description": "Path to the directory to create",
-          "type": "string"
+          "const": "mkdir"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "path": {
-              "description": "Path to the directory to create",
-              "type": "string"
+              "type": "string",
+              "description": "Path to the directory to create"
             }
           },
+          "required": [
+            "path"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Create a directory."
     },
     "unzip": {
       "type": "object",
-      "description": "Extract a zip file.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "unzip",
-          "description": "Extract a zip file."
-        },
-        "zipFile": {
-          "description": "The zip file resource to extract",
-          "type": "string"
-        },
-        "zipPath": {
-          "description": "Path to an existing zip file in the filesystem",
-          "type": "string"
-        },
-        "extractToPath": {
-          "description": "Path where the zip contents should be extracted",
-          "type": "string"
+          "const": "unzip"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "zipFile": {
-              "description": "The zip file resource to extract",
-              "type": "string"
+              "type": "string",
+              "description": "The zip file resource to extract"
             },
             "zipPath": {
-              "description": "Path to an existing zip file in the filesystem",
-              "type": "string"
+              "type": "string",
+              "description": "Path to an existing zip file in the filesystem"
             },
             "extractToPath": {
-              "description": "Path where the zip contents should be extracted",
-              "type": "string"
+              "type": "string",
+              "description": "Path where the zip contents should be extracted"
             }
           },
+          "required": [
+            "extractToPath"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Extract a zip file."
     },
     "runSQL": {
       "type": "object",
-      "description": "Execute SQL queries.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "runSQL",
-          "description": "Execute SQL queries."
-        },
-        "sql": {
-          "description": "SQL query or file reference to execute",
-          "type": "string"
+          "const": "runSQL"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "sql": {
-              "description": "SQL query or file reference to execute",
-              "type": "string"
+              "type": "string",
+              "description": "SQL query or file reference to execute"
             }
           },
+          "required": [
+            "sql"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Execute SQL queries."
     },
     "writeFile": {
       "type": "object",
-      "description": "Write content to a file.",
       "properties": {
         "step": {
-          "type": "string",
-          "const": "writeFile",
-          "description": "Write content to a file."
-        },
-        "path": {
-          "description": "Path to the file to write",
-          "type": "string"
-        },
-        "data": {
-          "description": "Content to write to the file",
-          "type": "string"
+          "const": "writeFile"
         },
         "vars": {
           "type": "object",
-          "description": "Step parameters (nested format)",
           "properties": {
             "path": {
-              "description": "Path to the file to write",
-              "type": "string"
+              "type": "string",
+              "description": "Path to the file to write"
             },
             "data": {
-              "description": "Content to write to the file",
-              "type": "string"
+              "type": "string",
+              "description": "Content to write to the file"
             }
           },
+          "required": [
+            "path",
+            "data"
+          ],
           "additionalProperties": true
         }
       },
       "required": [
         "step"
       ],
-      "additionalProperties": true
+      "description": "Write content to a file."
     }
   }
 }

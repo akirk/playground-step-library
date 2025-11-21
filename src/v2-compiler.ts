@@ -155,6 +155,14 @@ class PlaygroundStepLibraryV2 {
                     additionalStepsAfterExecution: [step as StepDefinition]
                 } as BlueprintV2Declaration;
             }
+        } else if ( step.step === 'importWxr' ) {
+            if ( !( 'url' in step ) ) {
+                // Builtin importWxr with file resource - pass through as-is
+                return {
+                    version: 2,
+                    additionalStepsAfterExecution: [step as StepDefinition]
+                } as BlueprintV2Declaration;
+            }
         }
 
         const stepFn = this.customSteps[step.step];

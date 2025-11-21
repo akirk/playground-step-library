@@ -7,8 +7,8 @@
 		{
 			"step": "addPage",
 			"vars": {
-				"postTitle": "",
-				"postContent": "<!-- wp:to-do-mvc/to-do-mvc /-->",
+				"title": "",
+				"content": "<!-- wp:to-do-mvc/to-do-mvc /-->",
 				"homepage": true
 			}
 		},

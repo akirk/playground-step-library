@@ -256,10 +256,21 @@ export class PasteHandlerController {
 			const blueprintSteps = blueprintData.steps || [];
 
 			for (const step of blueprintSteps) {
-				if (step.step && step.step in stepsRegistry) {
-					customSteps.push(step);
+				if ( step.step && step.step in stepsRegistry ) {
+					// Use discriminated union logic for steps with both custom and native variants
+					// Custom variants use 'url', native uses resource data properties
+					if ( step.step === 'installPlugin' && !( 'url' in step ) ) {
+						nativeSteps.push( step );
+					} else if ( step.step === 'installTheme' && !( 'url' in step ) ) {
+						nativeSteps.push( step );
+					} else if ( step.step === 'importWxr' && !( 'url' in step ) ) {
+						// Custom importWxr uses 'url', native uses 'file' resource
+						nativeSteps.push( step );
+					} else {
+						customSteps.push( step );
+					}
 				} else {
-					nativeSteps.push(step);
+					nativeSteps.push( step );
 				}
 			}
 
