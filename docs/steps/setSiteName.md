@@ -30,6 +30,8 @@ Set the site name and tagline.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -41,6 +43,18 @@ Set the site name and tagline.
       }
     }
   ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "siteOptions": {
+    "blogname": "${sitename}",
+    "blogdescription": "${tagline}"
+  }
 }
 ```
 

@@ -24,9 +24,35 @@ Generate a new blueprint after modifying the WordPress.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "git:directory",
+        "url": "https://github.com/akirk/blueprint-extractor",
+        "ref": "HEAD"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing plugin from GitHub: akirk/blueprint-extractor"
+      }
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "additionalStepsAfterExecution": [
     {
       "step": "installPlugin",
       "pluginData": {

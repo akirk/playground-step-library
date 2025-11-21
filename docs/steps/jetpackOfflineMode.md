@@ -30,6 +30,8 @@ Start Jetpack in Offline mode.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -51,6 +53,25 @@ Start Jetpack in Offline mode.
       }
     }
   ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "siteOptions": {
+    "jetpack_active_modules": [
+      "blocks",
+      "subscriptions"
+    ]
+  },
+  "constants": {
+    "JETACK_DEBUG": "true",
+    "JETPACK_DEV_DEBUG": "true",
+    "DNS_NS": 0
+  }
 }
 ```
 

@@ -30,6 +30,8 @@ Fake a wp_remote_request() response.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -43,6 +45,14 @@ Fake a wp_remote_request() response.
       "data": "<?php\nadd_filter(\n'pre_http_request',\nfunction ( $preempt, $request, $url )..."
     }
   ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2
 }
 ```
 

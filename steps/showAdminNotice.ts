@@ -1,9 +1,7 @@
-import type { StepFunction, ShowAdminNoticeStep , StepResult } from './types.js';
-import { v1ToV2Fallback } from './types.js';
+import type { StepFunction, ShowAdminNoticeStep, StepResult } from './types.js';
+import { muPlugin } from './muPlugin.js';
 
 export const showAdminNotice: StepFunction<ShowAdminNoticeStep> = (step: ShowAdminNoticeStep): StepResult => {
-	return {
-		toV1() {
 	const dismissible = step?.dismissible ? ' is-dismissible' : '';
 	const text = (step?.text || '').replace(/'/g, "\\'");
 
@@ -13,7 +11,7 @@ export const showAdminNotice: StepFunction<ShowAdminNoticeStep> = (step: ShowAdm
 			return;
 		}
 ` : '';
-	let php = `<?php
+	let code = `
 add_action(
 	'admin_notices',
 	function() {
@@ -23,7 +21,7 @@ add_action(
 );`;
 
 	if (step?.dismissible) {
-		php += `
+		code += `
 add_action('wp_ajax_dismiss_custom-admin-notice-${step?.stepIndex}', function() {
 	check_ajax_referer('custom-admin-notice-${step?.stepIndex}', 'nonce');
 
@@ -57,31 +55,14 @@ add_action('admin_footer', function() {
 	</script>
 	<?php
 } );
-
 `;
 	}
-	const steps = [
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/mu-plugins",
-		},
-		{
-			"step": "writeFile",
-			"path": `/wordpress/wp-content/mu-plugins/show-admin-notice-${step.stepIndex}.php`,
-			"data": php,
-			"progress": {
-				"caption": `Setting up admin notice: ${step.text.substring(0, 50)}${step.text.length > 50 ? '...' : ''}`
-			}
-		}
-	];
-	(steps as any).landingPage = '/wp-admin/';
-	return { steps };
-		},
 
-		toV2() {
-			return v1ToV2Fallback(this.toV1());
-		}
-	};
+	return muPlugin({
+		step: 'muPlugin',
+		name: `show-admin-notice-${step.stepIndex || 0}`,
+		code
+	});
 };
 
 showAdminNotice.description = "Show an admin notice in the dashboard.";

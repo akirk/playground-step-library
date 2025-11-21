@@ -45,9 +45,27 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
+    {
+      "step": "defineWpConfigConsts",
+      "consts": {
+        "WP_DEBUG": false
+      }
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "additionalStepsAfterExecution": [
     {
       "step": "defineWpConfigConsts",
       "consts": {

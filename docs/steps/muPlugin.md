@@ -30,6 +30,8 @@ Add code for a plugin.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -41,6 +43,22 @@ Add code for a plugin.
       "step": "writeFile",
       "path": "/wordpress/wp-content/mu-plugins/my-plugin-0.php",
       "data": "<?php"
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "muPlugins": [
+    {
+      "file": {
+        "filename": "my-plugin.php",
+        "content": "<?php "
+      }
     }
   ]
 }

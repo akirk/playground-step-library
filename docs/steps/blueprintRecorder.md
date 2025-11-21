@@ -24,9 +24,35 @@ Record steps made and compile a new blueprint.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "git:directory",
+        "url": "https://github.com/akirk/blueprint-recorder",
+        "ref": "HEAD"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing plugin from GitHub: akirk/blueprint-recorder"
+      }
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "additionalStepsAfterExecution": [
     {
       "step": "installPlugin",
       "pluginData": {

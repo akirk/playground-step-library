@@ -51,6 +51,8 @@ Create a new user.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -67,6 +69,38 @@ Create a new user.
       "password": "password"
     }
   ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "users": [
+    {
+      "username": "user",
+      "email": "user@example.com",
+      "role": "administrator",
+      "meta": {
+        "display_name": "User"
+      }
+    }
+  ],
+  "additionalStepsAfterExecution": [
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n$user = get_user_by( 'login', 'user' );\nif ( $user ) {\n\twp_set_password( 'password', $user->ID );\n}"
+    }
+  ],
+  "applicationOptions": {
+    "wordpress-playground": {
+      "login": {
+        "username": "user",
+        "password": "password"
+      }
+    }
+  }
 }
 ```
 

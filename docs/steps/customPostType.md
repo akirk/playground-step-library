@@ -45,6 +45,8 @@ Register a custom post type.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -56,6 +58,28 @@ Register a custom post type.
       "step": "writeFile",
       "path": "/wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
       "data": "<?php add_action( 'init', function() { register_post_type('book', array('pu...",
+      "progress": {
+        "caption": "customPostType: Books"
+      }
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "additionalStepsAfterExecution": [
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
+      "data": "<?php add_action( 'init', function() { register_post_type('book', array('public' => true, 'label' => 'Books', 'supports' => \"['title', 'editor']\")); } ); ?>",
       "progress": {
         "caption": "customPostType: Books"
       }

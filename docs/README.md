@@ -95,6 +95,7 @@ Many steps can reference and use other steps. For example:
 
 ## 📖 Detailed Documentation
 
+- [Programmatic API](api.md) - Using the library in your code
 - [Complete Steps Reference](steps-reference.md) - Detailed list with all parameters
 - [Individual Step Documentation](steps/) - Comprehensive docs for each step
 - [Built-in Step Usage](builtin-step-usage.md) - See which steps compile to each built-in step

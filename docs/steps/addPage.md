@@ -32,6 +32,8 @@ Add a page with title and content.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -43,6 +45,37 @@ Add a page with title and content.
       }
     }
   ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "content": [
+    {
+      "type": "posts",
+      "source": {
+        "post_title": "Hello World",
+        "post_content": "<p>Hello World</p>",
+        "post_type": "page",
+        "post_status": "publish"
+      }
+    }
+  ],
+  "additionalStepsAfterExecution": [
+    {
+      "step": "runPHP",
+      "code": {
+        "filename": "set-homepage.php",
+        "content": "<?php\nrequire_once '/wordpress/wp-load.php';\n$pages = get_posts( array(\n\t'post_type' => 'page',\n\t'title' => 'Hello World',\n\t'posts_per_page' => 1,\n\t'orderby' => 'ID',\n\t'order' => 'DESC'\n) );\nif ( ! empty( $pages ) ) {\n\tupdate_option( 'page_on_front', $pages[0]->ID );\n\tupdate_option( 'show_on_front', 'page' );\n}"
+      }
+    }
+  ],
+  "siteOptions": {
+    "show_on_front": "page"
+  }
 }
 ```
 

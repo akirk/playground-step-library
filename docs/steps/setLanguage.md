@@ -28,9 +28,25 @@ Set the WordPress site language.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
+    {
+      "step": "setSiteLanguage",
+      "language": "de_DE"
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "additionalStepsAfterExecution": [
     {
       "step": "setSiteLanguage",
       "language": "de_DE"

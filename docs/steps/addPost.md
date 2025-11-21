@@ -57,6 +57,8 @@ Add a post with title, content, type, status, and date.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -65,6 +67,26 @@ Add a post with title, content, type, status, and date.
       "code": "<?php require_once '/wordpress/wp-load.php';\n$page_args = array(\n'post_type...",
       "progress": {
         "caption": "addPost: Hello World"
+      }
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "content": [
+    {
+      "type": "posts",
+      "source": {
+        "post_title": "Hello World",
+        "post_content": "<p>Hello World</p>",
+        "post_type": "post",
+        "post_status": "publish",
+        "post_date": "now"
       }
     }
   ]

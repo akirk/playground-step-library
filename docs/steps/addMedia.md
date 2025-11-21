@@ -28,6 +28,8 @@ Add files to the media library.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -50,6 +52,17 @@ Add files to the media library.
       },
       "code": "<?php\n// DEDUP_STRATEGY: keep_last\nrequire_once '/wordpress/wp-load.php';\nr..."
     }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "media": [
+    "https://s.w.org/style/images/about/WordPress-logotype-wmark.png"
   ]
 }
 ```

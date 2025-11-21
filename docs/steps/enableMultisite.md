@@ -24,6 +24,8 @@ Enable WordPress Multisite functionality.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -31,6 +33,24 @@ Enable WordPress Multisite functionality.
       "step": "enableMultisite"
     }
   ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "additionalStepsAfterExecution": [
+    {
+      "step": "enableMultisite"
+    }
+  ],
+  "applicationOptions": {
+    "wordpress-playground": {
+      "landingPage": "/wp-admin/network/sites.php"
+    }
+  }
 }
 ```
 

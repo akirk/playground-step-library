@@ -30,6 +30,8 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -43,6 +45,17 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
         "activate": true
       }
     }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "plugins": [
+    "hello-dolly"
   ]
 }
 ```

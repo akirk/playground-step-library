@@ -24,6 +24,8 @@ When running WooCommerce, don't show the wizard.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -52,6 +54,45 @@ When running WooCommerce, don't show the wizard.
       "step": "writeFile",
       "path": "/wordpress/wp-content/mu-plugins/no-more-wizards.php",
       "data": "<?php require '/wordpress/wp-load.php'; add_filter( 'woocommerce_prevent_au..."
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "additionalStepsAfterExecution": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "woocommerce"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": {
+        "filename": "code.php",
+        "content": "<?php require '/wordpress/wp-load.php'; update_option( 'woocommerce_onboarding_profile', [ 'completed' => true ] );"
+      },
+      "progress": {
+        "caption": "Skipping WooCommerce setup wizard"
+      }
+    },
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins/"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/no-more-wizards.php",
+      "data": "<?php require '/wordpress/wp-load.php'; add_filter( 'woocommerce_prevent_automatic_wizard_redirect', '__return_true' );"
     }
   ]
 }

@@ -30,6 +30,8 @@ Define a wp-config PHP constant.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -40,6 +42,17 @@ Define a wp-config PHP constant.
       }
     }
   ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "constants": {
+    "WP_DEBUG": true
+  }
 }
 ```
 

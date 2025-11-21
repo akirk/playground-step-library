@@ -7,7 +7,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import PlaygroundStepLibrary from '../lib/src/index.js';
+import PlaygroundStepLibrary, { PlaygroundStepLibraryV2 } from '../lib/src/index.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -17,6 +17,7 @@ const __dirname = dirname(__filename);
 class StepDocumentationGenerator {
     constructor() {
         this.compiler = new PlaygroundStepLibrary();
+        this.compilerV2 = new PlaygroundStepLibraryV2();
         this.steps = this.compiler.getAvailableSteps();
         this.filesUpdated = 0;
         this.filesSkipped = 0;
@@ -374,25 +375,50 @@ ${deprecationNotices}`;
                 });
             }
 
-            const compiled = this.compiler.compile({ steps: [example] });
+            // Compile v1
+            const compiledV1 = this.compiler.compile({ steps: [example] });
 
-            if (!compiled.steps || compiled.steps.length === 0) {
+            // Compile v2
+            let compiledV2 = null;
+            try {
+                compiledV2 = this.compilerV2.compile({ steps: [example] });
+            } catch (e) {
+                // V2 compilation may fail for some steps
+            }
+
+            if (!compiledV1.steps || compiledV1.steps.length === 0) {
                 return { compilesToSteps: '', compiledOutput: '' };
             }
 
-            const builtinSteps = [...new Set(compiled.steps.map(s => s.step))];
+            const builtinSteps = [...new Set(compiledV1.steps.map(s => s.step))];
             const compilesToSteps = builtinSteps.length > 0
                 ? `\n**Compiles to:** ${builtinSteps.map(s => `[\`${s}\`](../builtin-step-usage.md#${s.toLowerCase()})`).join(', ')}`
                 : '';
 
-            const truncatedSteps = compiled.steps.map(step => this.truncateStepValues(step));
-            const formattedJson = JSON.stringify({ steps: truncatedSteps }, null, 2);
+            const truncatedStepsV1 = compiledV1.steps.map(step => this.truncateStepValues(step));
+            const formattedJsonV1 = JSON.stringify({ steps: truncatedStepsV1 }, null, 2);
 
-            const compiledOutput = `## Compiled Output
+            let compiledOutput = `## Compiled Output
+
+### V1 (Imperative)
 
 \`\`\`json
-${formattedJson}
+${formattedJsonV1}
 \`\`\``;
+
+            // Add V2 output if available
+            if (compiledV2) {
+                const truncatedV2 = this.truncateStepValues(compiledV2, 75);
+                const formattedJsonV2 = JSON.stringify(truncatedV2, null, 2);
+
+                compiledOutput += `
+
+### V2 (Declarative)
+
+\`\`\`json
+${formattedJsonV2}
+\`\`\``;
+            }
 
             return { compilesToSteps, compiledOutput, builtinSteps };
         } catch (error) {

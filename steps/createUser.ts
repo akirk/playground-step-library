@@ -66,13 +66,9 @@ export const createUser: StepFunction<CreateUserStep> = (step: CreateUserStep): 
 				}]
 			};
 
-			// Password and login must be handled in additionalStepsAfterExecution
-			// (v2 users don't support passwords directly)
-			const additionalSteps: StepDefinition[] = [];
-
-			// Set password via PHP
+			// Set password via PHP (v2 users don't support passwords directly)
 			if (password) {
-				additionalSteps.push({
+				(result as any).additionalStepsAfterExecution = [{
 					step: 'runPHP',
 					code: `<?php
 require_once '/wordpress/wp-load.php';
@@ -80,20 +76,20 @@ $user = get_user_by( 'login', '${username}' );
 if ( $user ) {
 	wp_set_password( '${password}', $user->ID );
 }`
-				});
+				}];
 			}
 
-			// Login if requested
+			// Login if requested - use applicationOptions for v2
 			if (step.login) {
-				additionalSteps.push({
-					step: 'login',
-					username: username,
-					password: password
-				});
-			}
-
-			if (additionalSteps.length > 0) {
-				(result as any).additionalStepsAfterExecution = additionalSteps;
+				const isDefault = username === 'admin' && password === 'password';
+				result.applicationOptions = {
+					'wordpress-playground': {
+						login: isDefault ? true : {
+							username: username,
+							password: password
+						}
+					}
+				};
 			}
 
 			return result;

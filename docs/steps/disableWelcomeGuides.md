@@ -24,6 +24,8 @@ Disable the welcome guides in the site editor.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -35,6 +37,22 @@ Disable the welcome guides in the site editor.
       "step": "writeFile",
       "path": "/wordpress/wp-content/mu-plugins/disable-welcome-guides-0.php",
       "data": "<?php \nfunction my_disable_welcome_guides() {\nwp_add_inline_script( 'wp-dat..."
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "muPlugins": [
+    {
+      "file": {
+        "filename": "disable-welcome-guides.php",
+        "content": "<?php \nfunction my_disable_welcome_guides() {\n\twp_add_inline_script( 'wp-data', \"window.onload = function() {\n\t\twindow.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuide', false );\n\t\twindow.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuideStyles', false );\n\t\twindow.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuidePage', false );\n\t\twindow.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuideTemplate', false );\n}\" );\n}\n\nadd_action( 'enqueue_block_editor_assets', 'my_disable_welcome_guides', 20 );\n"
+      }
     }
   ]
 }

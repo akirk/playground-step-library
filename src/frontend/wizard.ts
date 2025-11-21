@@ -2,7 +2,6 @@
  * Wizard Module
  *
  * Handles wizard-mode UI for building WordPress Playground blueprints interactively.
- * Uses the Shared State Module Pattern as documented in REFACTORING_PLAN.md.
  */
 
 import { StepDefinition, WizardState } from './types';

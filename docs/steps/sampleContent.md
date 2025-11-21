@@ -24,6 +24,8 @@ Inserts sample pages to the site.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -58,6 +60,66 @@ Inserts sample pages to the site.
     {
       "step": "runPHP",
       "code": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_tit...",
+      "progress": {
+        "caption": "Creating sample content (5/5)"
+      }
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "additionalStepsAfterExecution": [
+    {
+      "step": "runPHP",
+      "code": {
+        "filename": "code.php",
+        "content": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Hello Sample Content', 'post_status' => 'publish')); ?>"
+      },
+      "progress": {
+        "caption": "Creating sample content (1/5)"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": {
+        "filename": "code.php",
+        "content": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Second Sample Content', 'post_status' => 'publish')); ?>"
+      },
+      "progress": {
+        "caption": "Creating sample content (2/5)"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": {
+        "filename": "code.php",
+        "content": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Third Sample Content', 'post_status' => 'publish')); ?>"
+      },
+      "progress": {
+        "caption": "Creating sample content (3/5)"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": {
+        "filename": "code.php",
+        "content": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Fourth Sample Content', 'post_status' => 'publish')); ?>"
+      },
+      "progress": {
+        "caption": "Creating sample content (4/5)"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": {
+        "filename": "code.php",
+        "content": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Fifth Sample Content', 'post_status' => 'publish')); ?>"
+      },
       "progress": {
         "caption": "Creating sample content (5/5)"
       }

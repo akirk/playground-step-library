@@ -30,6 +30,8 @@ Install a theme from a Github repository.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -45,6 +47,39 @@ Install a theme from a Github repository.
       },
       "progress": {
         "caption": "Installing theme from GitHub: richtabor/kanso"
+      }
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "additionalStepsAfterExecution": [
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "git:directory",
+        "url": "https://github.com/richtabor/kanso",
+        "ref": "HEAD"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing theme from GitHub: richtabor/kanso"
+      },
+      "queryParams": {
+        "gh-ensure-auth": "yes",
+        "ghexport-repo-url": "https://github.com/richtabor/kanso",
+        "ghexport-content-type": "theme",
+        "ghexport-theme": "kanso",
+        "ghexport-playground-root": "/wordpress/wp-content/themes/kanso",
+        "ghexport-pr-action": "create",
+        "ghexport-allow-include-zip": "no"
       }
     }
   ]

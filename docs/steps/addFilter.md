@@ -32,6 +32,8 @@ Easily add a filtered value.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -43,6 +45,22 @@ Easily add a filtered value.
       "step": "writeFile",
       "path": "/wordpress/wp-content/mu-plugins/addFilter-0-0.php",
       "data": "<?php add_filter( 'init', '__return_false' );"
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "muPlugins": [
+    {
+      "file": {
+        "filename": "addFilter-0.php",
+        "content": "<?php add_filter( 'init', '__return_false' );"
+      }
     }
   ]
 }

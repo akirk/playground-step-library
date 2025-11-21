@@ -32,6 +32,8 @@ Login to the site.
 
 ## Compiled Output
 
+### V1 (Imperative)
+
 ```json
 {
   "steps": [
@@ -41,6 +43,20 @@ Login to the site.
       "password": "password"
     }
   ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2,
+  "applicationOptions": {
+    "wordpress-playground": {
+      "login": true,
+      "landingPage": "/wp-admin/"
+    }
+  }
 }
 ```
 
