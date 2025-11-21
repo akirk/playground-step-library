@@ -1,44 +1,6 @@
 /**
  * Main application entry point
  *
- * REFACTORING STATUS:
- * ✅ COMPLETED EXTRACTIONS:
- * - types.ts - TypeScript interfaces
- * - utils.ts - Utility functions
- * - app-state.ts - Shared application state
- * - content-detection.ts - URL and content type detection
- * - dom-utils.ts - DOM manipulation utilities
- * - ace-editor.ts - Ace Editor management
- * - my-blueprints.ts - Blueprint history/saved blueprints
- * - playground-integration.ts - Playground URL parsing
- * - blueprint-compiler.ts - State compression/decompression
- * - drag-drop.ts - Drag and drop utilities
- * - custom-steps.ts - My Steps management
- * - state-migration.ts - Backward compatibility migrations
- * - query-params.ts - URL query parameter parsing
- * - step-renderer.ts - Step DOM element creation with DI
- * - step-inserter.ts - Step insertion functions with DI
- * - wizard.ts - Complete wizard module with state management (874 lines)
- *
- * 🔄 REMAINING OPPORTUNITIES (tightly coupled with DOM/UI):
- * - Blueprint transformation (transformJson function ~130 lines)
- *   Reason: Direct DOM element access throughout
- * - Event handlers (paste, click, drag events)
- *   Reason: Event delegation pattern requires access to multiple DOM trees
- * - Step capture/restore functions
- *   Reason: Coupled with DOM element traversal and UI state
- * - History UI rendering
- *   Reason: Heavy DOM manipulation and event binding
- * - Label generation
- *   Reason: DOM traversal and element inspection
- *
- * REFACTORING STRATEGY:
- * The remaining ~4,200 lines are primarily event handlers and DOM-coupled UI logic.
- * Further extraction would require:
- * 1. Dependency injection for DOM elements
- * 2. Event bus/pub-sub pattern for decoupling
- * 3. View/ViewModel separation
- * This would be a larger architectural change beyond simple module extraction.
  */
 // @ts-nocheck
 import PlaygroundStepLibrary from '../index';
@@ -137,6 +99,7 @@ import {
 	resetWizardState,
 	type WizardDependencies
 } from './wizard';
+import { examples } from './examples';
 
 declare global {
 	interface Window {
@@ -507,11 +470,11 @@ addEventListener('DOMContentLoaded', function () {
 		blueprintEventBus.emit('blueprint:updated');
 	});
 	document.addEventListener('change', (event) => {
-		if ( event.target.id === 'mode' || event.target.id === 'preview-mode' || event.target.id === 'exclude-meta' || event.target.id === 'wp-version' || event.target.id === 'php-version' ) {
+		if (event.target.id === 'mode' || event.target.id === 'preview-mode' || event.target.id === 'exclude-meta' || event.target.id === 'wp-version' || event.target.id === 'php-version') {
 			blueprintEventBus.emit('blueprint:updated');
 			return;
 		}
-		if ( event.target.name === 'blueprint-version' ) {
+		if (event.target.name === 'blueprint-version') {
 			transformJson();
 			return;
 		}
@@ -680,7 +643,7 @@ addEventListener('DOMContentLoaded', function () {
 
 	// Handle title input changes
 	document.addEventListener('input', function (e) {
-		if ( e.target.id === 'title' ) {
+		if (e.target.id === 'title') {
 			blueprintEventBus.emit('blueprint:updated');
 		}
 	});
@@ -823,100 +786,6 @@ addEventListener('DOMContentLoaded', function () {
 	} else {
 		blueprintEventBus.emit('blueprint:updated');
 	}
-	const examples = {
-		'Interactivity API Todo list MVC': [
-			{
-				'step': 'addPage',
-				'vars': {
-					'postTitle': '',
-					'postContent': '<!-- wp:to-do-mvc/to-do-mvc /-->',
-					'homepage': true
-				}
-			},
-			{
-				'step': 'githubPluginRelease',
-				'vars': {
-					'repo': 'ryanwelcher/interactivity-api-todomvc',
-					'release': 'v0.1.3',
-					'filename': 'to-do-mvc.zip'
-				}
-			},
-			{
-				'step': 'login',
-				'vars': {
-					'username': 'admin',
-					'password': 'password',
-					'landingPage': false
-				}
-			}
-		],
-		'ActivityPub plugin preview': [
-			{
-				'step': 'installPlugin',
-				'vars': {
-					'url': 'activitypub',
-					'permalink': true
-				}
-			},
-			{
-				'step': 'showAdminNotice',
-				'vars': {
-					'text': 'Welcome to this demo of the ActivityPub plugin',
-					'type': 'info',
-					'dismissible': false
-				}
-			},
-			{
-				'step': 'setSiteName',
-				'vars': {
-					'sitename': 'ActivityPub Demo',
-					'tagline': 'Trying out WordPress Playground.'
-				}
-			},
-			{
-				'step': 'createUser',
-				'vars': {
-					'username': 'demo',
-					'password': 'password',
-					'role': 'administrator',
-					'display_name': 'Demo User',
-					'email': '',
-					'login': true
-				}
-			},
-			{
-				'step': 'setLandingPage',
-				'vars': {
-					'landingPage': '/wp-admin/admin.php?page=activitypub'
-				}
-			}
-		],
-		'Load Feeds into the Friends plugin': [
-			{
-				'step': 'setLandingPage',
-				'vars': {
-					'landingPage': '/friends/'
-				}
-			},
-			{
-				'step': 'importFriendFeeds',
-				'vars': {
-					'opml': 'https://alex.kirk.at Alex Kirk\nhttps://adamadam.blog Adam Zieliński'
-				}
-			}
-		],
-		"Show the available PHP extensions + PHPinfo": [
-			{
-				"step": "addFilter",
-				"vars": {
-					"filter": "init",
-					"code": "$e = get_loaded_extensions(); sort( $e ); echo '<div style=\"float:left; margin-left: 1em\">AvailableExtensions:<ul><li>', implode('</li><li>', $e ), '</li></ul></div>'; phpinfo()",
-					"priority": "10"
-				}
-			}
-		]
-	};
-
 	Object.keys(examples).forEach(function (example) {
 		const option = document.createElement('option');
 		option.value = example;

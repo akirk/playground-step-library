@@ -1,0 +1,25 @@
+{
+	"meta": {
+		"title": "Load Feeds into the Friends plugin"
+	},
+	"steps": [
+		{
+			"step": "setLandingPage",
+			"vars": {
+				"landingPage": "/friends/"
+			}
+		},
+		{
+			"step": "installPlugin",
+			"vars": {
+				"url": "friends"
+			}
+		},
+		{
+			"step": "importFriendFeeds",
+			"vars": {
+				"opml": "https://alex.kirk.at Alex Kirk\nhttps://adamadam.blog Adam Zieliński"
+			}
+		}
+	]
+}

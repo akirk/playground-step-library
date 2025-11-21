@@ -1,0 +1,15 @@
+{
+	"meta": {
+		"title": "Show the available PHP extensions + PHPinfo"
+	},
+	"steps": [
+		{
+			"step": "addFilter",
+			"vars": {
+				"filter": "init",
+				"code": "$e = get_loaded_extensions(); sort( $e ); echo '<div style=\"float:left; margin-left: 1em\">AvailableExtensions:<ul><li>', implode('</li><li>', $e ), '</li></ul></div>'; phpinfo()",
+				"priority": "10"
+			}
+		}
+	]
+}

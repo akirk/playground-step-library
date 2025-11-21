@@ -1,0 +1,46 @@
+{
+	"meta": {
+		"title": "ActivityPub plugin preview"
+	},
+	"steps": [
+		{
+			"step": "installPlugin",
+			"vars": {
+				"url": "activitypub",
+				"permalink": true
+			}
+		},
+		{
+			"step": "showAdminNotice",
+			"vars": {
+				"text": "Welcome to this demo of the ActivityPub plugin",
+				"type": "info",
+				"dismissible": false
+			}
+		},
+		{
+			"step": "setSiteName",
+			"vars": {
+				"sitename": "ActivityPub Demo",
+				"tagline": "Trying out WordPress Playground."
+			}
+		},
+		{
+			"step": "createUser",
+			"vars": {
+				"username": "demo",
+				"password": "password",
+				"role": "administrator",
+				"display_name": "Demo User",
+				"email": "",
+				"login": true
+			}
+		},
+		{
+			"step": "setLandingPage",
+			"vars": {
+				"landingPage": "/wp-admin/admin.php?page=activitypub"
+			}
+		}
+	]
+}
