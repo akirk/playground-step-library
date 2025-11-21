@@ -60,6 +60,6 @@ login.vars = [
 		name: "landingPage",
 		description: "Change landing page to wp-admin",
 		type: "boolean",
-		samples: ["true", "false"]
+		samples: ["false", "true"]
 	}
 ];

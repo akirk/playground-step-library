@@ -17,7 +17,10 @@ $page_args = array(
 	'post_title'   => '${postTitle}',
 	'post_content' => '${postContent}',
 );
-$page_id = wp_insert_post( $page_args );`;
+$page_id = wp_insert_post( $page_args, true );
+if ( is_wp_error( $page_id ) ) {
+	error_log( 'addPage error: ' . $page_id->get_error_message() );
+}`;
 
 			if (step.homepage) {
 				code += "update_option( 'page_on_front', $page_id );";

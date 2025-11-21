@@ -967,7 +967,7 @@ This document provides detailed information about all available steps, including
           "step": "login",
           "username": "admin",
           "password": "password",
-          "landingPage": "true"
+          "landingPage": "false"
     }
 ```
 

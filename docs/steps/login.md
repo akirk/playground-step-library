@@ -26,7 +26,7 @@ Login to the site.
           "step": "login",
           "username": "admin",
           "password": "password",
-          "landingPage": "true"
+          "landingPage": "false"
     }
 ```
 
@@ -72,7 +72,7 @@ const blueprint = {
           "step": "login",
           "username": "admin",
           "password": "password",
-          "landingPage": "true"
+          "landingPage": "false"
     }
   ]
 };

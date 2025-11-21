@@ -85,8 +85,7 @@ Add a post with title, content, type, status, and date.
         "post_title": "Hello World",
         "post_content": "<p>Hello World</p>",
         "post_type": "post",
-        "post_status": "publish",
-        "post_date": "now"
+        "post_status": "publish"
       }
     }
   ]

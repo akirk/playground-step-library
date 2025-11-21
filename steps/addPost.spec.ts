@@ -67,7 +67,7 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(result.steps[0].code).toContain("'post_date'    => strtotime('2024-12-25 10:00:00')");
+        expect(result.steps[0].code).toContain("'post_date'    => date( 'Y-m-d H:i:s', strtotime( '2024-12-25 10:00:00' ) )");
     });
 
     it('should not include post date when not provided', () => {
@@ -138,7 +138,7 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(result.steps[0].code).toContain("'post_date'    => strtotime('2024-01-01 12:00:00 O\\'Clock')");
+        expect(result.steps[0].code).toContain("'post_date'    => date( 'Y-m-d H:i:s', strtotime( '2024-01-01 12:00:00 O\\'Clock' ) )");
     });
 
     it('should handle custom post types', () => {
@@ -175,7 +175,7 @@ describe('addPost', () => {
         expect(result.steps[0].code).toContain("'post_content' => '<p>New Content</p>'");
         expect(result.steps[0].code).toContain("'post_type'    => 'post'");
         expect(result.steps[0].code).toContain("'post_status'  => 'draft'");
-        expect(result.steps[0].code).toContain("strtotime('2024-01-01')");
+        expect(result.steps[0].code).toContain("strtotime( '2024-01-01' )");
     });
     });
 
@@ -243,6 +243,49 @@ describe('addPost', () => {
             expect(result.content[0].source.post_title).toBe('Old Title');
             expect(result.content[0].source.post_content).toBe('<p>Old Content</p>');
             expect(result.content[0].source.post_type).toBe('post');
+        });
+
+        it('should set landing page when landingPage is not false and postId is provided', () => {
+            const step: AddPostStep = {
+                step: 'addPost',
+                title: 'Test Post',
+                content: '<p>Test content</p>',
+                type: 'post',
+                postId: 1000
+            };
+
+            const result = addPost(step).toV2();
+
+            expect(result.applicationOptions).toBeDefined();
+            expect(result.applicationOptions['wordpress-playground'].landingPage).toBe('/wp-admin/post.php?post=1000&action=edit');
+        });
+
+        it('should not set landing page when landingPage is false', () => {
+            const step: AddPostStep = {
+                step: 'addPost',
+                title: 'Test Post',
+                content: '<p>Test content</p>',
+                type: 'post',
+                postId: 1000,
+                landingPage: false
+            };
+
+            const result = addPost(step).toV2();
+
+            expect(result.applicationOptions).toBeUndefined();
+        });
+
+        it('should not set landing page when postId is not provided', () => {
+            const step: AddPostStep = {
+                step: 'addPost',
+                title: 'Test Post',
+                content: '<p>Test content</p>',
+                type: 'post'
+            };
+
+            const result = addPost(step).toV2();
+
+            expect(result.applicationOptions).toBeUndefined();
         });
     });
 

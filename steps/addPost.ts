@@ -28,16 +28,19 @@ $page_args = array(
 	'import_id'    => ${postId},`;
 			}
 
-			// Add post_date only if provided
-			if (dateValue) {
+			// Add post_date only if provided (skip 'now' since it's the default)
+			if (dateValue && dateValue !== 'now') {
 				const postDate = dateValue.replace(/'/g, "\\'");
 				code += `
-	'post_date'    => strtotime('${postDate}'),`;
+	'post_date'    => date( 'Y-m-d H:i:s', strtotime( '${postDate}' ) ),`;
 			}
 
 			code += `
 );
-$page_id = wp_insert_post( $page_args );`;
+$page_id = wp_insert_post( $page_args, true );
+if ( is_wp_error( $page_id ) ) {
+	error_log( 'addPost error: ' . $page_id->get_error_message() );
+}`;
 
 			if (step.homepage) {
 				code += "update_option( 'page_on_front', $page_id );";
@@ -71,8 +74,8 @@ $page_id = wp_insert_post( $page_args );`;
 				post_status: postStatus
 			};
 
-			// Add post_date if provided
-			if (dateValue) {
+			// Add post_date if provided (skip 'now' since it's the default)
+			if (dateValue && dateValue !== 'now') {
 				postData.post_date = dateValue;
 			}
 
@@ -115,6 +118,15 @@ if ( ! empty( $pages ) ) {
 }`
 					}
 				}];
+			}
+
+			// Handle landing page setting
+			if ( step.landingPage !== false && postId > 0 ) {
+				result.applicationOptions = {
+					'wordpress-playground': {
+						landingPage: `/wp-admin/post.php?post=${postId}&action=edit`
+					}
+				};
 			}
 
 			return result;
