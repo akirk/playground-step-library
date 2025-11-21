@@ -7,13 +7,13 @@ describe('runPHP', () => {
             step: 'runPHP',
             code: '<?php echo "Hello World"; ?>'
         };
-        
-        const result = runPHP(step);
-        
-        expect(Array.isArray(result)).toBe(true);
-        expect(result).toHaveLength(1);
-        expect(result[0].step).toBe('runPHP');
-        expect(result[0].code).toBe('<?php echo "Hello World"; ?>');
+
+        const result = runPHP(step).toV1();
+
+        expect(Array.isArray(result.steps)).toBe(true);
+        expect(result.steps).toHaveLength(1);
+        expect(result.steps[0].step).toBe('runPHP');
+        expect(result.steps[0].code).toBe('<?php echo "Hello World"; ?>');
     });
 
     it('should handle empty code', () => {
@@ -22,9 +22,9 @@ describe('runPHP', () => {
             code: ''
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
-        expect(result[0].code).toBe('');
+        expect(result.steps[0].code).toBe('');
     });
 
     it('should handle multiline PHP code', () => {
@@ -40,9 +40,9 @@ foreach ($users as $user) {
             code: code
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
-        expect(result[0].code).toBe(code);
+        expect(result.steps[0].code).toBe(code);
     });
 
     it('should handle PHP code without opening/closing tags', () => {
@@ -51,9 +51,9 @@ foreach ($users as $user) {
             code: 'wp_insert_post(array("post_title" => "Test Post"));'
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
-        expect(result[0].code).toBe('wp_insert_post(array("post_title" => "Test Post"));');
+        expect(result.steps[0].code).toBe('wp_insert_post(array("post_title" => "Test Post"));');
     });
 
     it('should handle PHP code with special characters', () => {
@@ -62,9 +62,9 @@ foreach ($users as $user) {
             code: '<?php echo "Hello \"World\" & \'PHP\'"; ?>'
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
-        expect(result[0].code).toBe('<?php echo "Hello \"World\" & \'PHP\'"; ?>');
+        expect(result.steps[0].code).toBe('<?php echo "Hello \"World\" & \'PHP\'"; ?>');
     });
 
     it('should handle PHP code with WordPress functions', () => {
@@ -73,9 +73,9 @@ foreach ($users as $user) {
             code: '<?php update_option("blog_name", "My WordPress Site"); ?>'
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
-        expect(result[0].code).toBe('<?php update_option("blog_name", "My WordPress Site"); ?>');
+        expect(result.steps[0].code).toBe('<?php update_option("blog_name", "My WordPress Site"); ?>');
     });
 
     it('should handle PHP code with HTML', () => {
@@ -84,9 +84,9 @@ foreach ($users as $user) {
             code: '<?php echo "<h1>Welcome to WordPress</h1>"; ?>'
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
-        expect(result[0].code).toBe('<?php echo "<h1>Welcome to WordPress</h1>"; ?>');
+        expect(result.steps[0].code).toBe('<?php echo "<h1>Welcome to WordPress</h1>"; ?>');
     });
 
     it('should handle undefined code gracefully', () => {
@@ -95,9 +95,9 @@ foreach ($users as $user) {
             code: undefined as any
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
-        expect(result[0].code).toBeUndefined();
+        expect(result.steps[0].code).toBeUndefined();
     });
 
     it('should handle null code', () => {
@@ -106,9 +106,9 @@ foreach ($users as $user) {
             code: null as any
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
-        expect(result[0].code).toBeNull();
+        expect(result.steps[0].code).toBeNull();
     });
 
     it('should have correct metadata', () => {
@@ -131,12 +131,12 @@ foreach ($users as $user) {
             code: '<?php wp_insert_post(array("post_title" => "Test")); ?>'
         };
         
-        const result = runPHP(step);
+        const result = runPHP(step).toV1();
         
         // Validate the structure matches WordPress Playground step format
-        expect(result[0]).toHaveProperty('step');
-        expect(result[0]).toHaveProperty('code');
-        expect(typeof result[0].step).toBe('string');
-        expect(result[0].step).toBe('runPHP');
+        expect(result.steps[0]).toHaveProperty('step');
+        expect(result.steps[0]).toHaveProperty('code');
+        expect(typeof result.steps[0].step).toBe('string');
+        expect(result.steps[0].step).toBe('runPHP');
     });
 });

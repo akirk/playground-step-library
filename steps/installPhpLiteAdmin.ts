@@ -1,15 +1,8 @@
-import type { StepFunction, InstallPhpLiteAdminStep } from './types.js';
+import type { StepFunction, InstallPhpLiteAdminStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
+import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 
-export const installPhpLiteAdmin: StepFunction<InstallPhpLiteAdminStep> = (step: InstallPhpLiteAdminStep) => {
-	const steps: any = [
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/mu-plugins",
-		},
-		{
-			"step": "writeFile",
-			"path": "/wordpress/wp-content/mu-plugins/phpliteadmin.php",
-			"data": `<?php
+const adminBarCode = `<?php
 add_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {
         $wp_menu->add_node(
                 array(
@@ -18,12 +11,9 @@ add_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {
                         'href'   => '/phpliteadmin.php',
                 )
         );
-}, 100 );`
-		},
-		{
-			"step": "writeFile",
-			"path": "/wordpress/phpliteadmin.config.php",
-			"data": `<?php
+}, 100 );`;
+
+const configCode = `<?php
 
 $databases = array(
 	array(
@@ -32,18 +22,44 @@ $databases = array(
 	),
 );
 $directory = false;
-`
+`;
+
+export const installPhpLiteAdmin: StepFunction<InstallPhpLiteAdminStep> = (step: InstallPhpLiteAdminStep): StepResult => {
+	return {
+		toV1() {
+			const result: BlueprintV1Declaration = {
+				steps: [
+					{
+						step: "mkdir",
+						path: "/wordpress/wp-content/mu-plugins",
+					},
+					{
+						step: "writeFile",
+						path: "/wordpress/wp-content/mu-plugins/phpliteadmin.php",
+						data: adminBarCode
+					},
+					{
+						step: "writeFile",
+						path: "/wordpress/phpliteadmin.config.php",
+						data: configCode
+					},
+					{
+						step: "writeFile",
+						path: "/wordpress/phpliteadmin.php",
+						data: {
+							resource: "url",
+							url: "https://gist.githubusercontent.com/akirk/c88d7e5f4a0e93c07b437b43fc62ac0c/raw/879692a465c5393cfceaa03dcdf16fef4edea108/phpliteadmin.php"
+						}
+					}
+				]
+			};
+			return result;
 		},
-		{
-			"step": "writeFile",
-			"path": "/wordpress/phpliteadmin.php",
-			"data": {
-				"resource": "url",
-				"url": "https://gist.githubusercontent.com/akirk/c88d7e5f4a0e93c07b437b43fc62ac0c/raw/879692a465c5393cfceaa03dcdf16fef4edea108/phpliteadmin.php"
-			}
+
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
 		}
-	];
-	return steps;
+	};
 };
 
 installPhpLiteAdmin.description = "Provide phpLiteAdmin. Password: admin";

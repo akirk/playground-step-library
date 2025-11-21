@@ -8,13 +8,13 @@ describe('blockExamples', () => {
 			step: 'blockExamples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
-		expect(result).toHaveLength(1);
-		expect(result[0].step).toBe('runPHP');
-		expect(result[0].code).toContain('wp_insert_post');
-		expect(result[0].code).toContain('Block Examples');
-		expect(result[0].code).toContain('draft');
+		expect(result.steps).toHaveLength(1);
+		expect(result.steps[0].step).toBe('runPHP');
+		expect(result.steps[0].code).toContain('wp_insert_post');
+		expect(result.steps[0].code).toContain('Block Examples');
+		expect(result.steps[0].code).toContain('draft');
 	});
 
 	it('should use custom post title', () => {
@@ -23,9 +23,9 @@ describe('blockExamples', () => {
 			postTitle: 'My Custom Block Examples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
-		expect(result[0].code).toContain('My Custom Block Examples');
+		expect(result.steps[0].code).toContain('My Custom Block Examples');
 	});
 
 	it('should filter by block namespace', () => {
@@ -34,10 +34,10 @@ describe('blockExamples', () => {
 			blockNamespace: 'gutenberg'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
-		expect(result[0].code).toContain('gutenberg');
-		expect(result[0].code).toContain("$block_namespace = 'gutenberg'");
+		expect(result.steps[0].code).toContain('gutenberg');
+		expect(result.steps[0].code).toContain("$block_namespace = 'gutenberg'");
 	});
 
 	it('should always use draft status', () => {
@@ -45,9 +45,9 @@ describe('blockExamples', () => {
 			step: 'blockExamples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
-		expect(result[0].code).toContain("'post_status'  => 'draft'");
+		expect(result.steps[0].code).toContain("'post_status'  => 'draft'");
 	});
 
 	it('should escape single quotes in post title', () => {
@@ -56,9 +56,9 @@ describe('blockExamples', () => {
 			postTitle: "Block's Examples"
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
-		expect(result[0].code).toContain("Block\\'s Examples");
+		expect(result.steps[0].code).toContain("Block\\'s Examples");
 	});
 
 	it('should use WP_Block_Type_Registry', () => {
@@ -66,10 +66,10 @@ describe('blockExamples', () => {
 			step: 'blockExamples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
-		expect(result[0].code).toContain('WP_Block_Type_Registry');
-		expect(result[0].code).toContain('get_all_registered');
+		expect(result.steps[0].code).toContain('WP_Block_Type_Registry');
+		expect(result.steps[0].code).toContain('get_all_registered');
 	});
 
 	it('should use serialize_block', () => {
@@ -77,9 +77,9 @@ describe('blockExamples', () => {
 			step: 'blockExamples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
-		expect(result[0].code).toContain('serialize_block');
+		expect(result.steps[0].code).toContain('serialize_block');
 	});
 
 	it('should set landing page by default', () => {
@@ -87,7 +87,7 @@ describe('blockExamples', () => {
 			step: 'blockExamples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result.landingPage).toBe('/wp-admin/post.php?post=1000&action=edit');
 	});
@@ -98,7 +98,7 @@ describe('blockExamples', () => {
 			landingPage: false
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
 		expect(result.landingPage).toBeUndefined();
 	});
@@ -109,9 +109,9 @@ describe('blockExamples', () => {
 			postId: 5000
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
-		expect(result[0].code).toContain('$post_id = 5000');
+		expect(result.steps[0].code).toContain('$post_id = 5000');
 		expect(result.landingPage).toBe('/wp-admin/post.php?post=5000&action=edit');
 	});
 
@@ -120,9 +120,9 @@ describe('blockExamples', () => {
 			step: 'blockExamples'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
-		expect(result[0].code).toContain('$exclude_core = false');
+		expect(result.steps[0].code).toContain('$exclude_core = false');
 	});
 
 	it('should exclude core blocks when excludeCore is true', () => {
@@ -131,10 +131,10 @@ describe('blockExamples', () => {
 			excludeCore: true
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
-		expect(result[0].code).toContain('$exclude_core = true');
-		expect(result[0].code).toContain("if ( $exclude_core && 0 === stripos( $block_name, 'core/' ) ) {");
+		expect(result.steps[0].code).toContain('$exclude_core = true');
+		expect(result.steps[0].code).toContain("if ( $exclude_core && 0 === stripos( $block_name, 'core/' ) ) {");
 	});
 
 	it('should exclude core blocks when excludeCore is string "true"', () => {
@@ -143,9 +143,9 @@ describe('blockExamples', () => {
 			excludeCore: 'true'
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
-		expect(result[0].code).toContain('$exclude_core = true');
+		expect(result.steps[0].code).toContain('$exclude_core = true');
 	});
 
 	it('should include limit parameter', () => {
@@ -154,8 +154,8 @@ describe('blockExamples', () => {
 			limit: 10
 		};
 
-		const result = blockExamples(step);
+		const result = blockExamples(step).toV1();
 
-		expect(result[0].code).toContain('$limit = 10');
+		expect(result.steps[0].code).toContain('$limit = 10');
 	});
 });

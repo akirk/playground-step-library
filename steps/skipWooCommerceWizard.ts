@@ -1,7 +1,10 @@
 import { installPlugin } from './installPlugin.js';
-import type { StepFunction, SkipWooCommerceWizardStep } from './types.js';
+import type { StepFunction, SkipWooCommerceWizardStep , StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
-export const skipWooCommerceWizard: StepFunction<SkipWooCommerceWizardStep> = (step: SkipWooCommerceWizardStep, blueprint?: any) => {
+export const skipWooCommerceWizard: StepFunction<SkipWooCommerceWizardStep> = (step: SkipWooCommerceWizardStep, blueprint?: any): StepResult => {
+	return {
+		toV1() {
 	let steps = [
 		{
 			"step": "runPHP",
@@ -30,11 +33,17 @@ export const skipWooCommerceWizard: StepFunction<SkipWooCommerceWizardStep> = (s
 		}
 	}
 	if ( ! hasWoocommercePlugin ) {
-		const installWooCommerceSteps = installPlugin({ step: 'installPlugin', url: 'woocommerce' });
-		steps = installWooCommerceSteps.concat( steps );
+		const installWooCommerceSteps = installPlugin({ step: 'installPlugin', url: 'woocommerce' }).toV1();
+		steps = [...installWooCommerceSteps.steps, ...steps];
 	}
 	(steps as any).landingPage = '/wp-admin/admin.php?page=wc-admin';
-	return steps;
+	return { steps };
+		},
+
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		}
+	};
 };
 
 skipWooCommerceWizard.description = "When running WooCommerce, don't show the wizard.";

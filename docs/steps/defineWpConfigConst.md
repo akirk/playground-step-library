@@ -36,7 +36,7 @@ Define a wp-config PHP constant.
     {
       "step": "defineWpConfigConsts",
       "consts": {
-        "WP_DEBUG": "true"
+        "WP_DEBUG": true
       }
     }
   ]

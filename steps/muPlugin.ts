@@ -1,20 +1,42 @@
-import type { StepFunction, MuPluginStep} from './types.js';
+import type { StepFunction, MuPluginStep, StepResult } from './types.js';
+import type { StepDefinition } from '@wp-playground/blueprints';
 
-
-export const muPlugin: StepFunction<MuPluginStep> = (step: MuPluginStep) => {
-	const code = '<?php ' + (step.code || '').replace( /<\?php/, '' );
+export const muPlugin: StepFunction<MuPluginStep> = (step: MuPluginStep): StepResult => {
+	const code = '<?php ' + (step.code || '').replace(/<\?php/g, '');
 	const pluginName = step.name || 'mu-plugin';
-	return [
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/mu-plugins",
+
+	return {
+		toV1() {
+			const steps: StepDefinition[] = [
+				{
+					// mkdir is necessary in v1 to ensure the directory exists
+					step: "mkdir",
+					path: "/wordpress/wp-content/mu-plugins",
+				},
+				{
+					// stepIndex is kept to avoid collisions when multiple mu-plugin steps are used
+					step: "writeFile",
+					path: `/wordpress/wp-content/mu-plugins/${pluginName}-${step.stepIndex || 0}.php`,
+					data: code
+				}
+			];
+			return { steps };
 		},
-		{
-			"step": "writeFile",
-			"path": `/wordpress/wp-content/mu-plugins/${pluginName}-${step.stepIndex || 0}.php`,
-			"data": code
+
+		toV2() {
+			return {
+				version: 2,
+				muPlugins: [
+					{
+						file: {
+							filename: `${pluginName}.php`,
+							content: code
+						}
+					}
+				]
+			};
 		}
-	];
+	};
 };
 
 muPlugin.description = "Add code for a plugin.";

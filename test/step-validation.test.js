@@ -38,14 +38,27 @@ describe('Step Output Validation', () => {
 
   /**
    * Validates that a step output conforms to WordPress Playground Step schema
+   * Handles both old format (array) and new format (StepResult with toV1/toV2)
    */
   function validateStepOutput(stepOutput, stepName) {
-    expect(stepOutput, `${stepName} should return an array`).toBeInstanceOf(Array);
-    
+    // Handle new StepResult format
+    if (stepOutput && typeof stepOutput === 'object' && !Array.isArray(stepOutput) && typeof stepOutput.toV1 === 'function') {
+      // New format - verify it has toV2 method
+      expect(stepOutput.toV2, `${stepName} should have toV2() method`).toBeTypeOf('function');
+      // Convert to v1 for validation
+      stepOutput = stepOutput.toV1();
+      // Extract steps array from BlueprintV1Declaration
+      if (stepOutput && typeof stepOutput === 'object' && 'steps' in stepOutput) {
+        stepOutput = stepOutput.steps;
+      }
+    }
+
+    expect(stepOutput, `${stepName} should return an array or StepResult`).toBeInstanceOf(Array);
+
     stepOutput.forEach((step, index) => {
       expect(step, `${stepName}[${index}] should be an object`).toBeTypeOf('object');
       expect(step, `${stepName}[${index}] should not be null`).not.toBeNull();
-      
+
       // Every step must have a 'step' property
       expect(step, `${stepName}[${index}] must have 'step' property`).toHaveProperty('step');
       expect(step.step, `${stepName}[${index}].step must be a string`).toBeTypeOf('string');

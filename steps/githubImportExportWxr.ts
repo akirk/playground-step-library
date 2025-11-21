@@ -1,8 +1,11 @@
-import type { StepFunction, GithubImportExportWxrStep} from './types.js';
+import type { StepFunction, GithubImportExportWxrStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 import { deleteAllPosts } from './deleteAllPosts.js';
 
 
-export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (step: GithubImportExportWxrStep) => {
+export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (step: GithubImportExportWxrStep): StepResult => {
+	return {
+		toV1() {
 	// modelled after https://github.com/carstingaxion/crud-the-docs-playground
 	// props @carstingaxion
 	const repoTest = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/.exec( step.repo );
@@ -24,7 +27,8 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 	if ( step.targetUrl ) {
 		siteOptions["wordpress_export_to_server__export_home"] = step.targetUrl;
 	}
-	steps = steps.concat(deleteAllPosts({ step: 'deleteAllPosts' }));
+	const deleteResult = deleteAllPosts({ step: 'deleteAllPosts' }).toV1();
+	steps = steps.concat(deleteResult.steps);
 
 	const branchSuffix = branch ? '-' + branch : '';
 
@@ -99,7 +103,13 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 		'ghexport-allow-include-zip': 'no',
 	};
 
-	return steps;
+	return { steps };
+		},
+
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		}
+	};
 };
 
 githubImportExportWxr.description = "Provide useful additional info.";

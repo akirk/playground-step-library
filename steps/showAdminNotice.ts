@@ -1,6 +1,9 @@
-import type { StepFunction, ShowAdminNoticeStep } from './types.js';
+import type { StepFunction, ShowAdminNoticeStep , StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
-export const showAdminNotice: StepFunction<ShowAdminNoticeStep> = (step: ShowAdminNoticeStep) => {
+export const showAdminNotice: StepFunction<ShowAdminNoticeStep> = (step: ShowAdminNoticeStep): StepResult => {
+	return {
+		toV1() {
 	const dismissible = step?.dismissible ? ' is-dismissible' : '';
 	const text = (step?.text || '').replace(/'/g, "\\'");
 
@@ -72,7 +75,13 @@ add_action('admin_footer', function() {
 		}
 	];
 	(steps as any).landingPage = '/wp-admin/';
-	return steps;
+	return { steps };
+		},
+
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		}
+	};
 };
 
 showAdminNotice.description = "Show an admin notice in the dashboard.";

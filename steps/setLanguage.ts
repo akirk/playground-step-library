@@ -1,7 +1,10 @@
-import type { StepFunction, SetLanguageStep} from './types.js';
+import type { StepFunction, SetLanguageStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
 
-export const setLanguage: StepFunction<SetLanguageStep> = (step: SetLanguageStep) => {
+export const setLanguage: StepFunction<SetLanguageStep> = (step: SetLanguageStep): StepResult => {
+	return {
+		toV1() {
 	const lang = step.language;
 	if (!lang) {
 		return [];
@@ -23,7 +26,13 @@ export const setLanguage: StepFunction<SetLanguageStep> = (step: SetLanguageStep
 			language: wp_locale,
 		}
 	];
-	return steps;
+	return { steps };
+		},
+
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		}
+	};
 };
 
 setLanguage.description = "Set the WordPress site language.";

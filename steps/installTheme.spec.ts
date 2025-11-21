@@ -8,14 +8,14 @@ describe('installTheme', () => {
             url: 'pendant'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
-        expect(Array.isArray(result)).toBe(true);
-        expect(result).toHaveLength(1);
-        expect(result[0].step).toBe('installTheme');
-        expect(result[0].themeData.resource).toBe('wordpress.org/themes');
-        expect(result[0].themeData.slug).toBe('pendant');
-        expect(result[0].options.activate).toBe(true);
+        expect(Array.isArray(result.steps)).toBe(true);
+        expect(result.steps).toHaveLength(1);
+        expect(result.steps[0].step).toBe('installTheme');
+        expect(result.steps[0].themeData.resource).toBe('wordpress.org/themes');
+        expect(result.steps[0].themeData.slug).toBe('pendant');
+        expect(result.steps[0].options.activate).toBe(true);
     });
 
     it('should install theme from WordPress.org URL', () => {
@@ -24,10 +24,10 @@ describe('installTheme', () => {
             url: 'https://wordpress.org/themes/twentytwentyfour'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
-        expect(result[0].themeData.slug).toBe('twentytwentyfour');
-        expect(result[0].themeData.resource).toBe('wordpress.org/themes');
+        expect(result.steps[0].themeData.slug).toBe('twentytwentyfour');
+        expect(result.steps[0].themeData.resource).toBe('wordpress.org/themes');
     });
 
     it('should handle GitHub repository URLs', () => {
@@ -36,10 +36,10 @@ describe('installTheme', () => {
             url: 'https://github.com/richtabor/kanso'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         // Since this calls githubTheme, we just verify it's handled
-        expect(Array.isArray(result)).toBe(true);
+        expect(Array.isArray(result.steps)).toBe(true);
     });
 
     it('should handle GitHub URLs without https prefix', () => {
@@ -48,9 +48,9 @@ describe('installTheme', () => {
             url: 'ndiego/nautilus'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
-        expect(Array.isArray(result)).toBe(true);
+        expect(Array.isArray(result.steps)).toBe(true);
     });
 
     it('should handle GitHub branch URLs', () => {
@@ -59,9 +59,9 @@ describe('installTheme', () => {
             url: 'https://github.com/Automattic/themes/tree/trunk/aether'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
-        expect(Array.isArray(result)).toBe(true);
+        expect(Array.isArray(result.steps)).toBe(true);
     });
 
     it('should install theme from external HTTP URL', () => {
@@ -70,12 +70,12 @@ describe('installTheme', () => {
             url: 'https://external-site.com/theme.zip'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         // Note: Same regex issue as installPlugin - extracts 'https:' as slug
         // but since theme.match(/^https?:/) is true, it gets treated as external URL
-        expect(result[0].themeData.resource).toBe('url');
-        expect(result[0].themeData.url).toBe('https://external-site.com/theme.zip');
+        expect(result.steps[0].themeData.resource).toBe('url');
+        expect(result.steps[0].themeData.url).toBe('https://external-site.com/theme.zip');
     });
 
     it('should handle HTTP URLs with cors-proxy', () => {
@@ -84,11 +84,11 @@ describe('installTheme', () => {
             url: 'http://external-site.com/theme.zip'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         // Note: Same regex bug - extracts 'http:' as slug
-        expect(result[0].themeData.resource).toBe('url');
-        expect(result[0].themeData.url).toBe('http://external-site.com/theme.zip');
+        expect(result.steps[0].themeData.resource).toBe('url');
+        expect(result.steps[0].themeData.url).toBe('http://external-site.com/theme.zip');
     });
 
     it('should return empty array when url is empty', () => {
@@ -97,7 +97,7 @@ describe('installTheme', () => {
             url: ''
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         expect(result).toEqual([]);
     });
@@ -108,9 +108,9 @@ describe('installTheme', () => {
             url: 'https://wordpress.org/themes/link-folio/'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
-        expect(result[0].themeData.slug).toBe('link-folio');
+        expect(result.steps[0].themeData.slug).toBe('link-folio');
     });
 
     it('should handle themes without protocol prefix correctly', () => {
@@ -119,10 +119,10 @@ describe('installTheme', () => {
             url: 'simple-theme-name'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
-        expect(result[0].themeData.slug).toBe('simple-theme-name');
-        expect(result[0].themeData.resource).toBe('wordpress.org/themes');
+        expect(result.steps[0].themeData.slug).toBe('simple-theme-name');
+        expect(result.steps[0].themeData.resource).toBe('wordpress.org/themes');
     });
 
     it('should have correct metadata', () => {
@@ -150,16 +150,16 @@ describe('installTheme', () => {
             url: 'twentytwentyfour'
         };
 
-        const result = installTheme(step);
+        const result = installTheme(step).toV1();
 
         // Validate the structure matches WordPress Playground step format
-        expect(result[0]).toHaveProperty('step');
-        expect(result[0]).toHaveProperty('themeData');
-        expect(result[0]).toHaveProperty('options');
-        expect(typeof result[0].step).toBe('string');
-        expect(typeof result[0].themeData).toBe('object');
-        expect(typeof result[0].options).toBe('object');
-        expect(result[0].themeData).not.toBeNull();
-        expect(result[0].options).not.toBeNull();
+        expect(result.steps[0]).toHaveProperty('step');
+        expect(result.steps[0]).toHaveProperty('themeData');
+        expect(result.steps[0]).toHaveProperty('options');
+        expect(typeof result.steps[0].step).toBe('string');
+        expect(typeof result.steps[0].themeData).toBe('object');
+        expect(typeof result.steps[0].options).toBe('object');
+        expect(result.steps[0].themeData).not.toBeNull();
+        expect(result.steps[0].options).not.toBeNull();
     });
 });

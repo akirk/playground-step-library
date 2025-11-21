@@ -1,33 +1,59 @@
-import type { StepFunction, DefineWpConfigConstStep} from './types.js';
+import type { StepFunction, DefineWpConfigConstStep, StepResult } from './types.js';
+import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
-export const defineWpConfigConst: StepFunction<DefineWpConfigConstStep> = (step: DefineWpConfigConstStep) => {
-	if ( ! step.name ) {
-		return [];
+export const defineWpConfigConst: StepFunction<DefineWpConfigConstStep> = (step: DefineWpConfigConstStep): StepResult => {
+	// Parse once - handle both array and single values
+	const names = Array.isArray(step.name) ? step.name : [step.name];
+	const values = Array.isArray(step.value) ? step.value : [step.value];
+
+	// Build consts object
+	const consts: Record<string, any> = {};
+	names.forEach((name, index) => {
+		if (!name) return;
+
+		const value = values[index];
+		// Convert string booleans to actual booleans
+		if (value === 'true') {
+			consts[name] = true;
+		} else if (value === 'false') {
+			consts[name] = false;
+		} else {
+			consts[name] = value;
+		}
+	});
+
+	// If no valid consts, return empty blueprint
+	if (Object.keys(consts).length === 0) {
+		return {
+			toV1() {
+				return { steps: [] };
+			},
+			toV2() {
+				return { version: 2 };
+			}
+		};
 	}
-	const constStep = {
-		"step": "defineWpConfigConsts",
-		"consts": {} as Record<string, any>
+
+	return {
+		toV1() {
+			const result: BlueprintV1Declaration = {
+				steps: [{
+					step: "defineWpConfigConsts",
+					consts
+				}]
+			};
+			return result;
+		},
+
+		toV2() {
+			const result: BlueprintV2Declaration = {
+				version: 2,
+				constants: consts
+			};
+			return result;
+		}
 	};
-	if ( Array.isArray( step.name ) ) {
-		step.name.forEach( ( name, index ) => {
-			if ( ! name ) {
-				return;
-			}
-			const values = Array.isArray(step.value) ? step.value : [step.value];
-			const value = values[index];
-			if ( value === 'true' ) {
-				constStep.consts[name] = true;
-			} else if ( value === 'false' ) {
-				constStep.consts[name] = false;
-			} else {
-				constStep.consts[name] = value;
-			}
-		} );
-	} else {
-		constStep.consts[step.name] = step.value;
-	}
-	return [ constStep ];
 };
 
 defineWpConfigConst.description = "Define a wp-config PHP constant.";
@@ -37,11 +63,11 @@ defineWpConfigConst.vars = [
 	{
 		name: "name",
 		description: "Constant name",
-		samples: [ "WP_DEBUG" ]
+		samples: ["WP_DEBUG"]
 	},
 	{
 		name: "value",
 		description: "Constant value",
-		samples: [ "true" ]
+		samples: ["true"]
 	}
 ];

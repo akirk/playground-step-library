@@ -1,30 +1,56 @@
-import type { StepFunction, GithubPluginReleaseStep} from './types.js';
+import type { StepFunction, GithubPluginReleaseStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
+import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
-export const githubPluginRelease: StepFunction<GithubPluginReleaseStep> = (step: GithubPluginReleaseStep) => {
-	const repoTest = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/.exec( step.repo );
-	if ( ! repoTest ) {
-		return [];
-	}
-	const repo = repoTest[1] + "/" + repoTest[2];
-	const tag = step.release;
-	const filename = step.filename;
+export const githubPluginRelease: StepFunction<GithubPluginReleaseStep> = (step: GithubPluginReleaseStep): StepResult => {
+	const repoPattern = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/;
 
-	return [
-		{
-			"step": "installPlugin",
-			"pluginData": {
-				"resource": "url",
-				"url": `https://github.com/${repo}/releases/download/${tag}/${filename}`
-			},
-			"options": {
-				"activate": true
-			},
-			"progress": {
-				"caption": `Installing ${filename} from ${repo} (${tag})`
+	return {
+		toV1() {
+			const repoTest = repoPattern.exec( step.repo );
+			if ( ! repoTest ) {
+				return { steps: [] };
 			}
+			const repo = repoTest[1] + "/" + repoTest[2];
+			const tag = step.release;
+			const filename = step.filename;
+
+			return {
+				steps: [
+					{
+						"step": "installPlugin",
+						"pluginData": {
+							"resource": "url",
+							"url": `https://github.com/${repo}/releases/download/${tag}/${filename}`
+						},
+						"options": {
+							"activate": true
+						},
+						"progress": {
+							"caption": `Installing ${filename} from ${repo} (${tag})`
+						}
+					}
+				]
+			};
+		},
+
+		toV2(): BlueprintV2Declaration {
+			const repoTest = repoPattern.exec( step.repo );
+			if ( ! repoTest ) {
+				return { version: 2 };
+			}
+			const repo = repoTest[1] + "/" + repoTest[2];
+			const tag = step.release;
+			const filename = step.filename;
+			const url = `https://github.com/${repo}/releases/download/${tag}/${filename}`;
+
+			return {
+				version: 2,
+				plugins: [url]
+			};
 		}
-	];
+	};
 };
 
 githubPluginRelease.description = "Install a specific plugin release from a Github repository.";

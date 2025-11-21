@@ -33,8 +33,8 @@ Disable the welcome guides in the site editor.
     },
     {
       "step": "writeFile",
-      "path": "/wordpress/wp-content/mu-plugins/disable-welcome-guides.php",
-      "data": "<?php\nfunction my_disable_welcome_guides() {\nwp_add_inline_script( 'wp-data..."
+      "path": "/wordpress/wp-content/mu-plugins/disable-welcome-guides-0.php",
+      "data": "<?php \nfunction my_disable_welcome_guides() {\nwp_add_inline_script( 'wp-dat..."
     }
   ]
 }

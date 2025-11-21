@@ -1,15 +1,18 @@
 import { githubTheme } from './githubTheme.js';
-import type { StepFunction, InstallThemeStep } from './types.js';
+import type { StepFunction, InstallThemeStep , StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
 
-export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeStep) => {
+export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeStep): StepResult => {
+	return {
+		toV1() {
 	let urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec(step.url);
 	if (urlTest) {
 		return githubTheme({
 			step: 'githubTheme',
 			url: step.url,
 			prs: step.prs
-		});
+		}).toV1();
 	}
 
 	let theme = step.url;
@@ -42,7 +45,13 @@ export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeS
 		} as any;
 	}
 
-	return steps;
+	return { steps };
+		},
+
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		}
+	};
 };
 
 installTheme.description = "Install a theme via WordPress.org or Github.";

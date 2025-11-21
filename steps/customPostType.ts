@@ -1,22 +1,37 @@
-import type { StepFunction, CustomPostTypeStep} from './types.js';
+import type { StepFunction, CustomPostTypeStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
+import type { StepDefinition, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
-export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPostTypeStep) => {
-	var steps = [
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/mu-plugins",
+export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPostTypeStep): StepResult => {
+	const slug = step.slug;
+	const name = step.name;
+	const supports = step.supports;
+	const isPublic = step.public !== false;
+
+	return {
+		toV1() {
+			const steps: StepDefinition[] = [
+				{
+					step: "mkdir",
+					path: "/wordpress/wp-content/mu-plugins",
+				},
+				{
+					step: "writeFile",
+					path: "/wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
+					data: `<?php add_action( 'init', function() { register_post_type('${slug}', array('public' => ${isPublic ? 'true' : 'false'}, 'label' => '${name}', 'supports' => ${supports ? JSON.stringify(supports) : "array( 'title', 'editor' )"})); } ); ?>`,
+					progress: {
+						caption: `customPostType: ${name}`
+					}
+				}
+			];
+			return { steps };
 		},
-		{
-			"step": "writeFile",
-			"path": "/wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
-			"data": `<?php add_action( 'init', function() { register_post_type('${step.slug}', array('public' => ${step.public !== false ? 'true' : 'false'}, 'label' => '${step.name}', 'supports' => ${step.supports ? JSON.stringify(step.supports) : "array( 'title', 'editor' )"})); } ); ?>`,
-			"progress": {
-				"caption": `customPostType: ${step.name}`
-			}
+
+		toV2(): BlueprintV2Declaration {
+			return v1ToV2Fallback(this.toV1());
 		}
-	];
-	return steps;
+	};
 };
 
 customPostType.description = "Register a custom post type.";

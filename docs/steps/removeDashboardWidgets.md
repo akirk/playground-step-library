@@ -60,8 +60,8 @@ Remove widgets from the wp-admin dashboard.
     },
     {
       "step": "writeFile",
-      "path": "/wordpress/wp-content/mu-plugins/remove-dashboard-widgets.php",
-      "data": "<?php\nadd_action(\n'do_meta_boxes',\nstatic function ( $screen_id ) {\nglobal ..."
+      "path": "/wordpress/wp-content/mu-plugins/remove-dashboard-widgets-0.php",
+      "data": "<?php \nadd_action(\n'do_meta_boxes',\nstatic function ( $screen_id ) {\nglobal..."
     }
   ]
 }

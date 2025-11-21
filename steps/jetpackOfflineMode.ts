@@ -1,45 +1,52 @@
-import { installPlugin } from './installPlugin.js';
-import type { StepFunction, JetpackOfflineModeStep} from './types.js';
+import type { StepFunction, JetpackOfflineModeStep, StepResult } from './types.js';
+import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
-export const jetpackOfflineMode: StepFunction<JetpackOfflineModeStep> = (step: JetpackOfflineModeStep, blueprint?: any) => {
-	let jetpack_active_modules = [];
-	if ( step.blocks ) {
-		jetpack_active_modules.push( 'blocks' );
+export const jetpackOfflineMode: StepFunction<JetpackOfflineModeStep> = (step: JetpackOfflineModeStep): StepResult => {
+	const jetpackModules: string[] = [];
+	if (step.blocks) {
+		jetpackModules.push('blocks');
 	}
-	if ( step.subscriptions ) {
-		jetpack_active_modules.push( 'subscriptions' );
+	if (step.subscriptions) {
+		jetpackModules.push('subscriptions');
 	}
 
-	let steps = [
-		{
-			"step": "defineWpConfigConsts",
-			"consts": {
-				"JETACK_DEBUG": "true",
-				"JETPACK_DEV_DEBUG": "true",
-				"DNS_NS": 0
-			}
+	const constants = {
+		"JETACK_DEBUG": "true",
+		"JETPACK_DEV_DEBUG": "true",
+		"DNS_NS": 0
+	};
+
+	return {
+		toV1() {
+			const result: BlueprintV1Declaration = {
+				steps: [
+					{
+						"step": "defineWpConfigConsts",
+						"consts": constants
+					},
+					{
+						"step": "setSiteOptions",
+						"options": {
+							jetpack_active_modules: jetpackModules
+						}
+					}
+				]
+			};
+			return result;
 		},
-		{
-			"step": "setSiteOptions",
-			"options": {
-				jetpack_active_modules
-			}
+
+		toV2() {
+			const result: BlueprintV2Declaration = {
+				version: 2,
+				constants: constants,
+				siteOptions: {
+					jetpack_active_modules: jetpackModules
+				}
+			};
+			return result;
 		}
-	];
-	let hasJetpackPlugin = false;
-	if (blueprint) {
-		for ( const i in blueprint.steps ) {
-			if ( blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.url === 'jetpack' ) {
-				hasJetpackPlugin = true;
-			}
-		}
-	}
-	if ( ! hasJetpackPlugin ) {
-		const installJetpackSteps = installPlugin({ step: 'installPlugin', url: 'jetpack'});
-		steps = installJetpackSteps.concat( steps );
-	}
-	return steps;
+	};
 };
 
 jetpackOfflineMode.description = "Start Jetpack in Offline mode.";
@@ -48,12 +55,12 @@ jetpackOfflineMode.vars = [
 		name: "blocks",
 		description: "Activate the Jetpack Blocks module.",
 		type: "boolean",
-		samples: [ "true", "false" ]
+		samples: ["true", "false"]
 	},
 	{
 		name: "subscriptions",
 		description: "Activate the Jetpack Subscriptions module.",
 		type: "boolean",
-		samples: [ "true", "false" ]
+		samples: ["true", "false"]
 	}
 ];

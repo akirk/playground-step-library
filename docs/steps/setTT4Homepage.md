@@ -7,7 +7,6 @@ Set the homepage for the twentytwentyfour theme.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 
@@ -22,21 +21,7 @@ Set the homepage for the twentytwentyfour theme.
     }
 ```
 
-## Compiled Output
 
-```json
-{
-  "steps": [
-    {
-      "step": "runPHP",
-      "progress": {
-        "caption": "Setting up Twenty Twenty-Four homepage"
-      },
-      "code": "<?php require_once '/wordpress/wp-load.php';\n$term = get_term_by('slug', 't..."
-    }
-  ]
-}
-```
 
 ## Usage with Library
 

@@ -7,7 +7,7 @@ Add subscriptions to the Friends plugin.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin), [`runPHP`](../builtin-step-usage.md#runphp)
+**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 
@@ -31,16 +31,6 @@ Add subscriptions to the Friends plugin.
 ```json
 {
   "steps": [
-    {
-      "step": "installPlugin",
-      "pluginData": {
-        "resource": "wordpress.org/plugins",
-        "slug": "friends"
-      },
-      "options": {
-        "activate": true
-      }
-    },
     {
       "step": "runPHP",
       "code": "<?php require_once '/wordpress/wp-load.php';if(class_exists('Friends\\Import...",

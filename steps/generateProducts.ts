@@ -1,7 +1,10 @@
-import type { StepFunction, GenerateProductsStep } from './types.js';
+import type { StepFunction, GenerateProductsStep , StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 import { installPlugin } from './installPlugin.js';
 
-export const generateProducts: StepFunction<GenerateProductsStep> = (step: GenerateProductsStep, blueprint: any) => {
+export const generateProducts: StepFunction<GenerateProductsStep> = (step: GenerateProductsStep, blueprint: any): StepResult => {
+	return {
+		toV1() {
 	const productCount = step.count || 10;
 	const orderCount = step.orders || 0;
 	const customerCount = step.customers || 0;
@@ -198,7 +201,8 @@ error_log( "Generated " . count( $term_ids ) . " product categories" );
 
 	// Install WooCommerce if not present
 	if (!hasWoocommercePlugin) {
-		steps = steps.concat(installPlugin({ step: 'installPlugin', url: 'woocommerce', permalink: true }));
+		const wooResult = installPlugin({ step: 'installPlugin', url: 'woocommerce', permalink: true }).toV1();
+		steps = steps.concat(wooResult.steps);
 	}
 
 	// Install WC Smooth Generator plugin if not present
@@ -230,7 +234,13 @@ error_log( "Generated " . count( $term_ids ) . " product categories" );
 		}
 	});
 
-	return steps;
+	return { steps };
+		},
+
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		}
+	};
 };
 
 generateProducts.description = "Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)";

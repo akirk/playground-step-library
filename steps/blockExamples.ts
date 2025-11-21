@@ -1,13 +1,17 @@
-import type { StepFunction, BlockExamplesStep } from './types.js';
+import type { StepFunction, BlockExamplesStep, StepResult } from './types.js';
+import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
+import { v1ToV2Fallback } from './types.js';
 
-export const blockExamples: StepFunction<BlockExamplesStep> = (step: BlockExamplesStep, blueprint?: any) => {
-	const blockNamespace = (step.blockNamespace || '').replace(/'/g, "\\'");
-	const postTitle = (step.postTitle || 'Block Examples').replace(/'/g, "\\'");
-	const limit = (step.limit !== undefined && step.limit !== null && String(step.limit) !== '') ? Number(step.limit) : 0;
-	const postId = (step.postId !== undefined && step.postId !== null && String(step.postId) !== '') ? Number(step.postId) : 1000;
-	const excludeCore = step.excludeCore === true || step.excludeCore === 'true';
+export const blockExamples: StepFunction<BlockExamplesStep> = (step: BlockExamplesStep, blueprint?: any): StepResult => {
+	return {
+		toV1() {
+			const blockNamespace = (step.blockNamespace || '').replace(/'/g, "\\'");
+			const postTitle = (step.postTitle || 'Block Examples').replace(/'/g, "\\'");
+			const limit = (step.limit !== undefined && step.limit !== null && String(step.limit) !== '') ? Number(step.limit) : 0;
+			const postId = (step.postId !== undefined && step.postId !== null && String(step.postId) !== '') ? Number(step.postId) : 1000;
+			const excludeCore = step.excludeCore === true || step.excludeCore === 'true';
 
-	const code = `
+			const code = `
 <?php
 require_once '/wordpress/wp-load.php';
 
@@ -105,25 +109,33 @@ wp_insert_post( array(
 ) );
 `;
 
-	const caption = blockNamespace
-		? `blockExamples: Adding blocks from ${blockNamespace} to ${postTitle}`
-		: `blockExamples: Adding blocks to ${postTitle}`;
+			const caption = blockNamespace
+				? `blockExamples: Adding blocks from ${blockNamespace} to ${postTitle}`
+				: `blockExamples: Adding blocks to ${postTitle}`;
 
-	const result = [
-		{
-			"step": "runPHP",
-			code,
-			"progress": {
-				"caption": caption
+			const result: BlueprintV1Declaration = {
+				steps: [
+					{
+						"step": "runPHP",
+						code,
+						"progress": {
+							"caption": caption
+						}
+					}
+				]
+			};
+
+			if (step.landingPage !== false) {
+				result.landingPage = `/wp-admin/post.php?post=${postId}&action=edit`;
 			}
+
+			return result;
+		},
+
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
 		}
-	] as any;
-
-	if (step.landingPage !== false) {
-		result.landingPage = `/wp-admin/post.php?post=${postId}&action=edit`;
-	}
-
-	return result;
+	};
 };
 
 blockExamples.description = "Creates a post with all block examples from registered blocks";

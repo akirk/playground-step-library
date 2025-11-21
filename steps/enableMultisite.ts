@@ -1,13 +1,23 @@
-import type { StepFunction, EnableMultisiteStep } from './types.js';
+import type { StepFunction, EnableMultisiteStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
-export const enableMultisite: StepFunction<EnableMultisiteStep> = (step: EnableMultisiteStep) => {
-	const steps = [
-		{
-			"step": "enableMultisite"
+export const enableMultisite: StepFunction<EnableMultisiteStep> = (step: EnableMultisiteStep): StepResult => {
+	return {
+		toV1() {
+			return {
+				steps: [
+					{
+						step: "enableMultisite"
+					}
+				],
+				landingPage: '/wp-admin/network/sites.php'
+			};
+		},
+
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
 		}
-	];
-	(steps as any).landingPage = '/wp-admin/network/sites.php';
-	return steps;
+	};
 };
 
 enableMultisite.description = "Enable WordPress Multisite functionality.";

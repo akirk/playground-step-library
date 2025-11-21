@@ -37,8 +37,8 @@ Adds a role for clients with additional capabilities than editors, but not quite
     },
     {
       "step": "writeFile",
-      "path": "/wordpress/wp-content/mu-plugins/add-client-role.php",
-      "data": "<?php\nadd_action(\n'init',\nstatic function () {\n// The client role inherits ..."
+      "path": "/wordpress/wp-content/mu-plugins/add-client-role-0.php",
+      "data": "<?php \nadd_action(\n'init',\nstatic function () {\n// The client role inherits..."
     }
   ]
 }

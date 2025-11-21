@@ -1,13 +1,24 @@
-import type { StepFunction, RunPHPStep} from './types.js';
+import type { StepFunction, RunPHPStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
 
-export const runPHP: StepFunction<RunPHPStep> = (step: RunPHPStep) => {
-	return [
-		{
-			"step": "runPHP",
-			code: step.code
+export const runPHP: StepFunction<RunPHPStep> = (step: RunPHPStep): StepResult => {
+	return {
+		toV1() {
+			return {
+				steps: [
+					{
+						"step": "runPHP",
+						code: step.code
+					}
+				]
+			};
+		},
+
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
 		}
-	];
+	};
 };
 
 runPHP.description = "Run code in the context of WordPress.";

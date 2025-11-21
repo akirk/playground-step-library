@@ -36,7 +36,11 @@ This document explains how the WordPress Playground Step Library works internall
 
 ## Overview
 
-The Step Library is a **compiler** that transforms blueprints containing custom, high-level steps into blueprints containing only native WordPress Playground steps.
+The Step Library is a **dual-mode compiler** that transforms blueprints containing custom, high-level steps into either:
+- **Blueprint v1**: Imperative format with native WordPress Playground steps
+- **Blueprint v2**: Declarative format with schema-based configuration
+
+Users can choose which output format they prefer via the web UI or programmatically.
 
 ## Compilation Process
 
@@ -51,41 +55,78 @@ The Step Library is a **compiler** that transforms blueprints containing custom,
            ▼
 ┌─────────────────────┐
 │   Step Compiler     │
-│  (Transformation)   │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│  Native Blueprint   │
-│  (Playground steps) │
-└─────────────────────┘
+│   V1 or V2 Mode     │
+└──────┬──────┬───────┘
+       │      │
+   V1  │      │  V2
+       │      │
+       ▼      ▼
+┌──────────┐ ┌──────────────────┐
+│Blueprint │ │   Blueprint v2   │
+│   v1     │ │  (Declarative)   │
+│(Steps[]) │ │ content, users,  │
+│          │ │ plugins, themes  │
+└──────────┘ └──────────────────┘
 ```
 
 ### Compilation Steps
 
+#### V1 Compiler (src/index.ts)
 1. **Parse Input** - Validates blueprint structure and step definitions
-2. **Transform Steps** - Each custom step is transformed into one or more native steps
-3. **Variable Substitution** - Variables are replaced throughout the transformed steps
-4. **Deduplication** - Identical steps are merged (configurable via strategies)
-5. **Output Generation** - Final blueprint with only native steps
+2. **Transform Steps** - Each custom step returns `BlueprintV1` or `BlueprintV2`
+3. **Convert to V1** - `BlueprintV2` fragments are converted to v1 steps via converters
+4. **Variable Substitution** - Variables are replaced throughout the transformed steps
+5. **Deduplication** - Identical steps are merged (configurable via strategies)
+6. **Output Generation** - Final blueprint with steps array
+
+#### V2 Compiler (src/v2-compiler.ts)
+1. **Parse Input** - Validates blueprint structure
+2. **Transform Steps** - Each custom step returns `BlueprintV1` or `BlueprintV2`
+3. **Merge Fragments** - Collects and merges declarative fragments:
+   - `content` - Posts, pages, media items
+   - `users` - User accounts
+   - `plugins` - Plugin slugs (from wordpress.org) or installation steps
+   - `themes` - Theme slugs or installation steps
+   - `constants` - wp-config.php constants
+   - `siteOptions` - WordPress options
+   - `postTypes` - Custom post type definitions
+4. **Handle Imperative Steps** - V1 steps and `additionalSteps` go to `additionalStepsAfterExecution`
+5. **Extract Query Parameters** - Special Playground params extracted
+6. **Output Generation** - Final v2 blueprint with declarative schema
 
 ### Example Transformation
 
 **Input (Custom Step):**
 ```json
 {
-  "step": "addPost",
+  "step": "addPage",
   "title": "Welcome",
-  "content": "<p>Hello World!</p>",
-  "type": "page"
+  "content": "<p>Hello World!</p>"
 }
 ```
 
-**Output (Native Steps):**
+**V1 Output (Imperative):**
 ```json
 {
   "step": "runPHP",
-  "code": "<?php require_once '/wordpress/wp-load.php'; ..."
+  "code": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(...);"
+}
+```
+
+**V2 Output (Declarative):**
+```json
+{
+  "content": [
+    {
+      "type": "posts",
+      "source": {
+        "post_title": "Welcome",
+        "post_content": "<p>Hello World!</p>",
+        "post_type": "page",
+        "post_status": "publish"
+      }
+    }
+  ]
 }
 ```
 
@@ -123,27 +164,77 @@ Custom steps provide entirely new functionality:
 - You need to maintain compatibility with native step syntax
 - You want to add smart defaults or detection logic
 
-## Step Design Patterns
+## StepResult Pattern (Current Implementation)
 
-### 1. Single Step Transformation
+### Overview
 
-One custom step becomes one native step:
+Steps now return a `StepResult` object with two methods:
+- `toV1()`: Returns an array of v1 blueprint steps (imperative)
+- `toV2()`: Returns `V2SchemaFragments` (declarative schema)
+
+This allows each step to define how it should be compiled in both v1 (imperative) and v2 (declarative) modes.
+
+### StepResult Interface
 
 ```typescript
-export const setSiteName: StepFunction<SetSiteNameStep> = (step) => {
-  return [{
-    step: "setSiteOptions",
-    options: {
-      blogname: step.sitename,
-      blogdescription: step.tagline
+interface StepResult {
+  toV1(): any[];               // Returns array of native Playground steps
+  toV2(): V2SchemaFragments;   // Returns declarative schema fragments
+}
+
+interface V2SchemaFragments {
+  content?: any[];              // Posts, pages, custom post types
+  users?: any[];                // User accounts
+  media?: any[];                // Media library files
+  plugins?: any[];              // Plugin slugs or installation configs
+  themes?: any[];               // Theme slugs or installation configs
+  constants?: Record<string, any>;     // wp-config.php constants
+  siteOptions?: Record<string, any>;   // WordPress options
+  postTypes?: Record<string, any>;     // Custom post type definitions
+  additionalSteps?: any[];      // Fallback for imperative operations
+}
+```
+
+### Step Implementation Example
+
+```typescript
+export const addPage: StepFunction<AddPageStep> = (step): StepResult => {
+  return {
+    toV1() {
+      // V1: Generate PHP code to insert the page
+      return [{
+        step: "runPHP",
+        code: `<?php wp_insert_post(...); ?>`
+      }];
+    },
+
+    toV2(): V2SchemaFragments {
+      // V2: Return declarative content
+      return {
+        content: [{
+          type: 'posts',
+          source: {
+            post_title: step.title,
+            post_content: step.content,
+            post_type: 'page',
+            post_status: 'publish'
+          }
+        }],
+        // Use additionalSteps for operations that can't be declarative
+        additionalSteps: step.homepage ? [
+          { step: 'runPHP', code: '<?php /* set page_on_front */ ?>' }
+        ] : undefined
+      };
     }
-  }];
+  };
 };
 ```
 
-### 2. Multi-Step Composition
+## Step Design Patterns
 
-Custom steps return multiple native steps:
+### 1. V1-Only Pattern (Legacy)
+
+Older steps that only return v1 arrays. The compiler handles these automatically:
 
 ```typescript
 export const muPlugin: StepFunction<MuPluginStep> = (step) => {
@@ -154,30 +245,72 @@ export const muPlugin: StepFunction<MuPluginStep> = (step) => {
 };
 ```
 
-### 3. Conditional Transformation
+The compiler's `isStepResult()` check determines if a step returns the old array format or the new StepResult format.
 
-Steps with logic based on parameters:
+### 2. V1 + V2 Pattern (Current)
+
+Steps implementing both compilation modes:
 
 ```typescript
-export const installPlugin: StepFunction<InstallPluginStep> = (step) => {
-  // GitHub PR detection
-  if (step.url.match(/github.com\/.*\/pull\//)) {
-    return githubPlugin({ ... });
-  }
-  
-  // WordPress.org default
-  return [{ step: "installPlugin", ... }];
+export const setSiteName: StepFunction<SetSiteNameStep> = (step): StepResult => {
+  return {
+    toV1() {
+      return [{
+        step: "setSiteOptions",
+        options: {
+          blogname: step.sitename,
+          blogdescription: step.tagline
+        }
+      }];
+    },
+
+    toV2(): V2SchemaFragments {
+      return {
+        siteOptions: {
+          blogname: step.sitename,
+          blogdescription: step.tagline
+        }
+      };
+    }
+  };
 };
 ```
 
-### 4. Step Delegation
+### 3. Content Creation Pattern
 
-Built-in steps delegate to specialized steps:
+Steps that create posts, pages, or media:
 
 ```typescript
-// installPlugin → githubPlugin (for GitHub URLs)
-// installPlugin → githubPluginRelease (for releases)
-// installPlugin → standard install (for WP.org)
+toV2(): V2SchemaFragments {
+  return {
+    content: [{
+      type: 'posts',
+      source: {
+        post_title: step.title,
+        post_content: step.content,
+        post_type: 'page',
+        post_status: 'publish'
+      }
+    }]
+  };
+}
+```
+
+### 4. Hybrid Pattern (Declarative + Imperative)
+
+V2 fragments with fallback to imperative steps:
+
+```typescript
+toV2(): V2SchemaFragments {
+  return {
+    siteOptions: { show_on_front: 'page' },
+    // Use additionalSteps when declarative approach isn't enough
+    additionalSteps: [{
+      step: 'runPHP',
+      code: '<?php /* complex logic */ ?>'
+    }]
+  };
+}
 ```
 
 ## Deduplication Strategies
@@ -203,15 +336,18 @@ Useful for configuration files or mu-plugins.
 ```
 playground-step-library/
 ├── steps/                 # Step definitions
-│   ├── types.ts          # TypeScript interfaces
-│   ├── addPost.ts        # Individual step files
+│   ├── types.ts          # TypeScript interfaces (StepResult, V2SchemaFragments)
+│   ├── addPage.ts        # Individual step files (with toV1/toV2 methods)
+│   ├── addPost.ts
 │   └── ...
 ├── src/
-│   ├── index.ts          # Main compiler
-│   ├── steps-registry.ts # Auto-generated registry
-│   ├── v2-transpiler.ts  # Blueprint v2 support
+│   ├── index.ts          # V1 compiler (PlaygroundStepLibrary)
+│   ├── v2-compiler.ts    # V2 compiler (PlaygroundStepLibraryV2)
+│   ├── steps-registry.ts # Step registry (imports all steps)
+│   ├── converters/       # V1 ↔ V2 conversion utilities
 │   └── frontend/         # Frontend TypeScript modules
-│       └── main.ts       # UI entry point
+│       ├── main.ts       # UI entry point
+│       └── blueprint-compilation-controller.ts # V1/V2 mode switcher
 ├── lib/                  # Compiled JavaScript output
 │   └── src/
 │       └── frontend/     # Compiled frontend modules
@@ -232,10 +368,35 @@ node bin/new-step.js myStepName
 ```
 
 **2. Implement transformation in `steps/myStepName.ts`:**
+
+**Option A: StepResult Pattern (Recommended for new steps)**
+```typescript
+export const myStepName: StepFunction<MyStepNameStep> = (step): StepResult => {
+  return {
+    toV1() {
+      // Return array of native Playground steps for v1
+      return [
+        { step: "runPHP", code: "<?php /* ... */ ?>" }
+      ];
+    },
+
+    toV2(): V2SchemaFragments {
+      // Return declarative schema fragments for v2
+      return {
+        siteOptions: { myOption: step.value },
+        additionalSteps: [] // Optional imperative fallback
+      };
+    }
+  };
+};
+```
+
+**Option B: Legacy Pattern (For simple steps)**
 ```typescript
 export const myStepName: StepFunction<MyStepNameStep> = (step) => {
   return [
     // Array of native Playground steps
+    { step: "runPHP", code: "<?php /* ... */ ?>" }
   ];
 };
 ```
@@ -254,11 +415,78 @@ myStepName.vars = [
 ];
 ```
 
-**4. Build and test:**
+**4. Register in `src/steps-registry.ts`:**
+```typescript
+import { myStepName } from '../steps/myStepName.js';
+
+export const stepsRegistry = {
+  // ... other steps
+  myStepName,
+};
+```
+
+**5. Build and test:**
 ```bash
 npm run build
 npm test
 ```
+
+## Dual Compiler Architecture
+
+### V1 Compiler (src/index.ts)
+
+The original compiler that outputs imperative Blueprint v1 format:
+
+**Class:** `PlaygroundStepLibrary`
+
+**Process:**
+1. Executes each custom step via `executeCustomStep()`
+2. Checks if result is `StepResult` (has `toV1()` method) or legacy array
+3. Calls `.toV1()` if StepResult, otherwise uses array directly
+4. Flattens all step arrays into a single steps array
+5. Applies deduplication strategies
+6. Returns final v1 blueprint with `steps` array
+
+**Usage:**
+```typescript
+const compiler = new PlaygroundStepLibrary();
+const v1Blueprint = compiler.compile(blueprint);
+// Output: { steps: [...], landingPage: '/', ... }
+```
+
+### V2 Compiler (src/v2-compiler.ts)
+
+New compiler that outputs declarative Blueprint v2 format:
+
+**Class:** `PlaygroundStepLibraryV2`
+
+**Process:**
+1. Executes each custom step
+2. Checks if result is `StepResult` (has `toV2()` method)
+3. Calls `.toV2()` to get `V2SchemaFragments`
+4. Merges all fragments into unified v2 schema:
+   - Arrays (`content`, `users`, `media`) are concatenated
+   - Objects (`siteOptions`, `constants`) are merged
+   - Plugin/theme steps are handled specially (extracts slugs if from wordpress.org)
+5. Collects `additionalSteps` into `additionalStepsAfterExecution`
+6. Returns final v2 blueprint with declarative schema
+
+**Usage:**
+```typescript
+const compiler = new PlaygroundStepLibraryV2();
+const v2Blueprint = compiler.compile(blueprint);
+// Output: { content: [...], users: [...], plugins: [...], ... }
+```
+
+### Frontend Integration
+
+The web UI allows users to select which compiler to use:
+
+**File:** `src/frontend/blueprint-compilation-controller.ts`
+
+- Radio buttons to choose v1 or v2 output
+- V2 mode adds `experimental-blueprints-v2-runner=yes` query parameter
+- Both modes use the same input blueprint format
 
 ## Best Practices
 
@@ -268,7 +496,7 @@ npm test
 2. **Provide good defaults** - Make optional params truly optional
 3. **Document with samples** - Include realistic examples
 4. **Test edge cases** - Empty strings, special characters, URLs
-5. **Reuse existing steps** - Compose rather than duplicate
+5. **Implement both toV1() and toV2()** - Support both compiler modes
 6. **Add progress captions** - Show what's happening
 
 ### Code Quality

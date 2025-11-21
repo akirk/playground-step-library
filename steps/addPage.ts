@@ -1,10 +1,15 @@
-import type { StepFunction, AddPageStep } from './types.js';
+import type { StepFunction, AddPageStep, StepResult } from './types.js';
+import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
 
+export const addPage: StepFunction<AddPageStep> = (step: AddPageStep): StepResult => {
+	const title = step.title || step.postTitle || '';
+	const content = step.content || step.postContent || '';
 
-export const addPage: StepFunction<AddPageStep> = (step: AddPageStep) => {
-	const postTitle = (step.title || step.postTitle || '').replace(/'/g, "\\'");
-	const postContent = (step.content || step.postContent || '').replace(/'/g, "\\'");
-	let code = `
+	return {
+		toV1() {
+			const postTitle = title.replace(/'/g, "\\'");
+			const postContent = content.replace(/'/g, "\\'");
+			let code = `
 <?php require_once '/wordpress/wp-load.php';
 $page_args = array(
 	'post_type'    => 'page',
@@ -14,20 +19,68 @@ $page_args = array(
 );
 $page_id = wp_insert_post( $page_args );`;
 
-	if (step.homepage) {
-		code += "update_option( 'page_on_front', $page_id );";
-		code += "update_option( 'show_on_front', 'page' );";
-	}
-
-	return [
-		{
-			"step": "runPHP",
-			code,
-			"progress": {
-				"caption": `addPage: ${postTitle}`
+			if (step.homepage) {
+				code += "update_option( 'page_on_front', $page_id );";
+				code += "update_option( 'show_on_front', 'page' );";
 			}
+
+			return {
+				steps: [
+					{
+						step: "runPHP",
+						code,
+						progress: {
+							caption: `addPage: ${title}`
+						}
+					}
+				]
+			};
+		},
+
+		toV2() {
+			const result: BlueprintV2Declaration = {
+				version: 2,
+				content: [{
+					type: 'posts',
+					source: {
+						post_title: title,
+						post_content: content,
+						post_type: 'page',
+						post_status: 'publish'
+					}
+				}]
+			};
+
+			if (step.homepage) {
+				result.siteOptions = {
+					show_on_front: 'page'
+				};
+
+				// Find the page we just created by title (since we don't have an ID in v2 declarative format)
+				result.additionalStepsAfterExecution = [{
+					step: 'runPHP',
+					code: {
+						filename: 'set-homepage.php',
+						content: `<?php
+require_once '/wordpress/wp-load.php';
+$pages = get_posts( array(
+	'post_type' => 'page',
+	'title' => '${title.replace(/'/g, "\\'")}',
+	'posts_per_page' => 1,
+	'orderby' => 'ID',
+	'order' => 'DESC'
+) );
+if ( ! empty( $pages ) ) {
+	update_option( 'page_on_front', $pages[0]->ID );
+	update_option( 'show_on_front', 'page' );
+}`
+					}
+				}];
+			}
+
+			return result;
 		}
-	];
+	};
 };
 
 addPage.description = "Add a page with title and content.";

@@ -1,6 +1,9 @@
-import type { StepFunction, SetTT4HomepageStep } from './types.js';
+import type { StepFunction, SetTT4HomepageStep , StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
-export const setTT4Homepage: StepFunction<SetTT4HomepageStep> = (step: SetTT4HomepageStep) => {
+export const setTT4Homepage: StepFunction<SetTT4HomepageStep> = (step: SetTT4HomepageStep): StepResult => {
+	return {
+		toV1() {
 	return [
 		{
 			"step": "runPHP",
@@ -59,6 +62,12 @@ wp_set_object_terms($post_id, $term_id, 'wp_theme');
 `
 		}
 	];
+		},
+
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		}
+	};
 };
 
 setTT4Homepage.description = "Set the homepage for the twentytwentyfour theme.";

@@ -1,16 +1,13 @@
-import type { StepFunction, SetSiteNameStep} from './types.js';
+import type { StepFunction, SetSiteNameStep, StepResult } from './types.js';
+import { setSiteOption } from './setSiteOption.js';
 
 
-export const setSiteName: StepFunction<SetSiteNameStep> = (step: SetSiteNameStep) => {
-	return [
-		{
-			"step": "setSiteOptions",
-			"options": {
-				"blogname": "${sitename}",
-				"blogdescription": "${tagline}",
-			}
-		}
-	];
+export const setSiteName: StepFunction<SetSiteNameStep> = (step: SetSiteNameStep): StepResult => {
+	return setSiteOption({
+		step: 'setSiteOption',
+		name: ['blogname', 'blogdescription'],
+		value: ['${sitename}', '${tagline}']
+	});
 };
 
 setSiteName.description = "Set the site name and tagline.";

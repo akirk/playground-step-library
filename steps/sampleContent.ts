@@ -1,6 +1,9 @@
-import type { StepFunction, SampleContentStep } from './types.js';
+import type { StepFunction, SampleContentStep , StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
-export const sampleContent: StepFunction<SampleContentStep> = () => {
+export const sampleContent: StepFunction<SampleContentStep> = (): StepResult => {
+	return {
+		toV1() {
     const steps = [
         {
             "step": "runPHP",
@@ -38,7 +41,13 @@ export const sampleContent: StepFunction<SampleContentStep> = () => {
             }
         }
     ];
-    return steps;
+    return { steps };
+		},
+
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		}
+	};
 };
 
 sampleContent.count = 5;

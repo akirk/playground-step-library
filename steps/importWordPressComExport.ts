@@ -1,7 +1,10 @@
-import type { StepFunction, ImportWordPressComExportStep} from './types.js';
+import type { StepFunction, ImportWordPressComExportStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 
 
-export const importWordPressComExport: StepFunction<ImportWordPressComExportStep> = (step: ImportWordPressComExportStep) => {
+export const importWordPressComExport: StepFunction<ImportWordPressComExportStep> = (step: ImportWordPressComExportStep): StepResult => {
+	return {
+		toV1() {
 	return [
 		{
 			"step": "mkdir",
@@ -35,6 +38,12 @@ foreach ( $iterator as $file ) {
 			}
 		}
 	];
+		},
+
+		toV2() {
+			return v1ToV2Fallback(this.toV1());
+		}
+	};
 };
 
 importWordPressComExport.description = "Import a WordPress.com export file (WXR in a ZIP)";
