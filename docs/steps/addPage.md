@@ -26,7 +26,7 @@ Add a page with title and content.
           "step": "addPage",
           "title": "Hello World",
           "content": "<p>Hello World</p>",
-          "homepage": "true"
+          "homepage": "false"
     }
 ```
 
@@ -91,7 +91,7 @@ const blueprint = {
           "step": "addPage",
           "title": "Hello World",
           "content": "<p>Hello World</p>",
-          "homepage": "true"
+          "homepage": "false"
     }
   ]
 };

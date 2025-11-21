@@ -139,7 +139,7 @@ This document provides detailed information about all available steps, including
           "step": "addPage",
           "title": "Hello World",
           "content": "<p>Hello World</p>",
-          "homepage": "true"
+          "homepage": "false"
     }
 ```
 
@@ -174,7 +174,7 @@ This document provides detailed information about all available steps, including
           "type": "post",
           "status": "publish",
           "postId": "",
-          "landingPage": "true",
+          "landingPage": "false",
           "registerPostType": "example-value"
     }
 ```

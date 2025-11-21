@@ -122,6 +122,6 @@ addPage.vars = [
 		name: "homepage",
 		description: "Set it as the Homepage",
 		type: "boolean",
-		samples: ["true", "false"]
+		samples: ["false", "true"]
 	}
 ];

@@ -121,7 +121,7 @@ if ( ! empty( $pages ) ) {
 			}
 
 			// Handle landing page setting
-			if ( step.landingPage !== false && postId > 0 ) {
+			if (step.landingPage !== false && postId > 0) {
 				result.applicationOptions = {
 					'wordpress-playground': {
 						landingPage: `/wp-admin/post.php?post=${postId}&action=edit`
@@ -181,7 +181,7 @@ addPost.vars = [
 		description: "Set landing page to the post editor (requires postId)",
 		type: "boolean",
 		required: false,
-		samples: ["true", "false"]
+		samples: ["false", "true"]
 	},
 	{
 		name: "postTitle",

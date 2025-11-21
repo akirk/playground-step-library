@@ -35,7 +35,7 @@ Add a post with title, content, type, status, and date.
           "type": "post",
           "status": "publish",
           "postId": "",
-          "landingPage": "true",
+          "landingPage": "false",
           "registerPostType": "example-value"
     }
 ```
@@ -50,7 +50,7 @@ Add a post with title, content, type, status, and date.
   "type": "page",
   "status": "draft",
   "postId": "1000",
-  "landingPage": "false",
+  "landingPage": "true",
   "registerPostType": "example-value"
 }
 ```
@@ -108,7 +108,7 @@ const blueprint = {
           "type": "post",
           "status": "publish",
           "postId": "",
-          "landingPage": "true",
+          "landingPage": "false",
           "registerPostType": "example-value"
     }
   ]

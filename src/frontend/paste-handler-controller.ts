@@ -292,6 +292,14 @@ export class PasteHandlerController {
 
 			const stepConfig = {
 				steps: allSteps.map((step: any) => {
+					// If step already has vars property, use it directly (step-library format)
+					if ( 'vars' in step && typeof step.vars === 'object' && Object.keys( step ).length === 2 ) {
+						return {
+							step: step.step,
+							vars: step.vars
+						};
+					}
+					// Otherwise, wrap non-step properties into vars (native Playground format)
 					const vars: Record<string, any> = {};
 					for (const key in step) {
 						if (key !== 'step') {
