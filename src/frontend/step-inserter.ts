@@ -17,6 +17,24 @@ export interface StepInserterDependencies {
 }
 
 /**
+ * Extract plugin name from PHP code header
+ */
+function extractPluginName(phpCode: string): string | null {
+	const pluginNameMatch = phpCode.match(/\*\s*Plugin\s+Name:\s*(.+)/i);
+	if (pluginNameMatch) {
+		return pluginNameMatch[1].trim();
+	}
+	return null;
+}
+
+/**
+ * Convert plugin name to slug
+ */
+function nameToSlug(name: string): string {
+	return name.replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+}
+
+/**
  * Remove the drag hint element if it exists
  */
 function removeDragHint(container: HTMLElement): void {
@@ -156,8 +174,9 @@ export function addStepFromPhp(
 
 	if (useMuPlugin) {
 		const nameInput = stepElement.querySelector('input[name="name"]');
-		if (nameInput instanceof HTMLInputElement && !nameInput.value) {
-			nameInput.value = 'pasted-plugin';
+		if (nameInput instanceof HTMLInputElement) {
+			const pluginName = extractPluginName(phpCode);
+			nameInput.value = pluginName ? nameToSlug(pluginName) : 'pasted-plugin';
 		}
 	}
 
