@@ -5,84 +5,106 @@ import { v1ToV2Fallback } from './types.js';
 export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginStep): StepResult => {
 	return {
 		toV1() {
+			// Parse PR URLs
+			const prPattern = /^https:\/\/github.com\/(?<org>[^\/]+)\/(?<repo>[^\/]+)\/pull\/(?<prNumber>\d+)/;
+			const prTest = prPattern.exec(step.url);
+
+			// Parse regular GitHub URLs (branches, etc.)
 			const regexPattern = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branchAndDir>.+))?$/;
-			const urlTest = regexPattern.exec( step.url );
-			if ( !urlTest ) {
-				return [];
+			const urlTest = regexPattern.exec(step.url);
+			if (!urlTest && !prTest) {
+				return { steps: [] };
 			}
-			const repo = urlTest.groups!.org + "/" + urlTest.groups!.repo;
 
-			let branch = urlTest.groups!.branchAndDir;
+			// Use prTest for repo info if urlTest didn't match (PR URLs)
+			const repoInfo = urlTest || prTest;
+			const repo = repoInfo!.groups!.org + "/" + repoInfo!.groups!.repo;
+			const repoUrl = `https://github.com/${repo}`;
+
+			let ref = "HEAD";
+			let refType: string | undefined = undefined;
 			let directory = '';
+			let caption = `Installing plugin from GitHub: ${repo}`;
 
-			if ( branch ) {
-				branch = branch.replace( /\/+$/, '' );
+			if (prTest) {
+				// PR URL
+				const { prNumber } = prTest.groups!;
+				ref = `refs/pull/${prNumber}/head`;
+				refType = 'refname';
+				caption = `Installing plugin from ${repo} PR #${prNumber}`;
+			} else if (urlTest && urlTest.groups!.branchAndDir) {
+				// Branch/directory URL
+				let branch = urlTest.groups!.branchAndDir;
+				branch = branch.replace(/\/+$/, '');
 
-				const doubleSlashIndex = branch.indexOf( '//' );
-				if ( doubleSlashIndex !== -1 ) {
-					directory = branch.substring( doubleSlashIndex + 2 );
-					branch = branch.substring( 0, doubleSlashIndex );
+				const doubleSlashIndex = branch.indexOf('//');
+				if (doubleSlashIndex !== -1) {
+					directory = branch.substring(doubleSlashIndex + 2);
+					branch = branch.substring(0, doubleSlashIndex);
 				} else {
-					const firstSlashIndex = branch.indexOf( '/' );
-					if ( firstSlashIndex !== -1 ) {
-						const potentialDir = branch.substring( firstSlashIndex + 1 );
-						if ( potentialDir.includes( '/' ) ) {
+					const firstSlashIndex = branch.indexOf('/');
+					if (firstSlashIndex !== -1) {
+						const potentialDir = branch.substring(firstSlashIndex + 1);
+						if (potentialDir.includes('/')) {
 							directory = potentialDir;
-							branch = branch.substring( 0, firstSlashIndex );
+							branch = branch.substring(0, firstSlashIndex);
 						}
 					}
 				}
 
-				if ( ! /^[a-zA-Z0-9_.\/-]+$/.test( branch ) ) {
-					return [];
+				if (! /^[a-zA-Z0-9_.\/-]+$/.test(branch)) {
+					return { steps: [] };
 				}
+
+				ref = branch;
+				refType = "branch";
 			}
 
-			const repoUrl = `https://github.com/${repo}`;
-
-			const outStep = {
-				"step": "installPlugin",
-				"pluginData": {
-					"resource": "git:directory",
-					"url": repoUrl,
-					"ref": branch || "HEAD"
-				} as any,
-				options: {
-					activate: true,
-				}
-			} as any;
-
-			if ( branch ) {
-				outStep.pluginData.refType = "branch";
-			}
-
-			if ( directory ) {
-				outStep.pluginData.path = directory;
-			}
-
-			if ( step.prs ) {
-				outStep.queryParams = outStep.queryParams || {};
-				outStep.queryParams['gh-ensure-auth'] = 'yes';
-				Object.assign(outStep.queryParams, {
-					'ghexport-repo-url': 'https://github.com/' + repo,
-					'ghexport-content-type': 'plugin',
-					'ghexport-plugin': urlTest.groups?.repo,
-					'ghexport-playground-root': '/wordpress/wp-content/plugins/' + urlTest.groups?.repo,
-					'ghexport-pr-action': 'create',
-					'ghexport-allow-include-zip': 'no',
-				});
-			}
-
-			outStep.progress = {
-				caption: `Installing plugin from GitHub: ${repo}`
+			const pluginData: Record<string, any> = {
+				"resource": "git:directory",
+				"url": repoUrl,
+				"ref": ref
 			};
 
-			return [ outStep ];
+			if (refType) {
+				pluginData.refType = refType;
+			}
+
+			if (directory) {
+				pluginData.path = directory;
+			}
+
+			const result: BlueprintV1Declaration = {
+				steps: [{
+					"step": "installPlugin",
+					"pluginData": pluginData,
+					"options": {
+						"activate": true
+					},
+					"progress": {
+						"caption": caption
+					}
+				}]
+			};
+
+			if (step.prs) {
+				(result.steps[0] as any).queryParams = {
+					'gh-ensure-auth': 'yes',
+					'ghexport-repo-url': repoUrl,
+					'ghexport-content-type': 'plugin',
+					'ghexport-plugin': repoInfo!.groups!.repo,
+					'ghexport-playground-root': `/wordpress/wp-content/plugins/${repoInfo!.groups!.repo}`,
+					'ghexport-pr-action': 'create',
+					'ghexport-allow-include-zip': 'no',
+				};
+			}
+
+			return result;
 		},
 
 		toV2() {
 			return v1ToV2Fallback(this.toV1());
-		};
+		}
 	};
 };
 
@@ -92,12 +114,12 @@ githubPlugin.vars = [
 	{
 		name: "url",
 		description: "Github URL of the plugin.",
-		samples: [ "https://github.com/akirk/blueprint-recorder" ]
+		samples: ["https://github.com/akirk/blueprint-recorder"]
 	},
 	{
 		name: "prs",
 		description: "Add support for submitting GitHub Pull Requests.",
 		type: "boolean",
-		samples: [ "false", "true" ]
+		samples: ["false", "true"]
 	}
 ];

@@ -10,10 +10,10 @@ describe('setLanguage', () => {
         
         const result = setLanguage(step).toV1();
         
-        expect(Array.isArray(result)).toBe(true);
-        expect(result).toHaveLength(1);
-        expect(result[0].step).toBe('setSiteLanguage');
-        expect(result[0].language).toBe('de_DE');
+        expect(Array.isArray(result.steps)).toBe(true);
+        expect(result.steps).toHaveLength(1);
+        expect(result.steps[0].step).toBe('setSiteLanguage');
+        expect(result.steps[0].language).toBe('de_DE');
     });
 
     it('should map French correctly', () => {
@@ -24,7 +24,7 @@ describe('setLanguage', () => {
         
         const result = setLanguage(step).toV1();
         
-        expect(result[0].language).toBe('fr_FR');
+        expect(result.steps[0].language).toBe('fr_FR');
     });
 
     it('should map Spanish correctly', () => {
@@ -35,7 +35,7 @@ describe('setLanguage', () => {
         
         const result = setLanguage(step).toV1();
         
-        expect(result[0].language).toBe('es_ES');
+        expect(result.steps[0].language).toBe('es_ES');
     });
 
     it('should map Italian correctly', () => {
@@ -46,7 +46,7 @@ describe('setLanguage', () => {
         
         const result = setLanguage(step).toV1();
         
-        expect(result[0].language).toBe('it_IT');
+        expect(result.steps[0].language).toBe('it_IT');
     });
 
     it('should map Japanese correctly', () => {
@@ -57,7 +57,7 @@ describe('setLanguage', () => {
         
         const result = setLanguage(step).toV1();
         
-        expect(result[0].language).toBe('ja');
+        expect(result.steps[0].language).toBe('ja');
     });
 
     it('should map Polish correctly', () => {
@@ -68,7 +68,7 @@ describe('setLanguage', () => {
         
         const result = setLanguage(step).toV1();
         
-        expect(result[0].language).toBe('pl_PL');
+        expect(result.steps[0].language).toBe('pl_PL');
     });
 
     it('should map Arabic correctly', () => {
@@ -79,7 +79,7 @@ describe('setLanguage', () => {
         
         const result = setLanguage(step).toV1();
         
-        expect(result[0].language).toBe('ar');
+        expect(result.steps[0].language).toBe('ar');
     });
 
     it('should use original language when not in mapping', () => {
@@ -90,7 +90,7 @@ describe('setLanguage', () => {
         
         const result = setLanguage(step).toV1();
         
-        expect(result[0].language).toBe('en_US');
+        expect(result.steps[0].language).toBe('en_US');
     });
 
     it('should handle full locale codes directly', () => {
@@ -101,7 +101,7 @@ describe('setLanguage', () => {
         
         const result = setLanguage(step).toV1();
         
-        expect(result[0].language).toBe('pt_BR');
+        expect(result.steps[0].language).toBe('pt_BR');
     });
 
     it('should return empty array when language is missing', () => {
@@ -156,7 +156,7 @@ describe('setLanguage', () => {
         
         const result = setLanguage(step).toV1();
         
-        expect(result[0].language).toBe('zh_CN');
+        expect(result.steps[0].language).toBe('zh_CN');
     });
 
     it('should have correct metadata', () => {
@@ -181,10 +181,10 @@ describe('setLanguage', () => {
         const result = setLanguage(step).toV1();
         
         // Validate the structure matches WordPress Playground step format
-        expect(result[0]).toHaveProperty('step');
-        expect(result[0]).toHaveProperty('language');
-        expect(typeof result[0].step).toBe('string');
-        expect(typeof result[0].language).toBe('string');
-        expect(result[0].step).toBe('setSiteLanguage');
+        expect(result.steps[0]).toHaveProperty('step');
+        expect(result.steps[0]).toHaveProperty('language');
+        expect(typeof result.steps[0].step).toBe('string');
+        expect(typeof result.steps[0].language).toBe('string');
+        expect(result.steps[0].step).toBe('setSiteLanguage');
     });
 });

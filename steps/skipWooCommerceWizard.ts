@@ -34,15 +34,15 @@ export const skipWooCommerceWizard: StepFunction<SkipWooCommerceWizardStep> = (s
 	}
 	if ( ! hasWoocommercePlugin ) {
 		const installWooCommerceSteps = installPlugin({ step: 'installPlugin', url: 'woocommerce' }).toV1();
-		steps = installWooCommerceSteps.concat( steps );
+		steps = [...installWooCommerceSteps.steps, ...steps];
 	}
 	(steps as any).landingPage = '/wp-admin/admin.php?page=wc-admin';
-	return steps;
+	return { steps };
 		},
 
 		toV2() {
 			return v1ToV2Fallback(this.toV1());
-		};
+		}
 	};
 };
 

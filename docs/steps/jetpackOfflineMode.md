@@ -7,6 +7,7 @@ Start Jetpack in Offline mode.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** [`defineWpConfigConsts`](../builtin-step-usage.md#definewpconfigconsts), [`setSiteOptions`](../builtin-step-usage.md#setsiteoptions)
 
 ## Parameters
 
@@ -27,7 +28,31 @@ Start Jetpack in Offline mode.
     }
 ```
 
+## Compiled Output
 
+```json
+{
+  "steps": [
+    {
+      "step": "defineWpConfigConsts",
+      "consts": {
+        "JETACK_DEBUG": "true",
+        "JETPACK_DEV_DEBUG": "true",
+        "DNS_NS": 0
+      }
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "jetpack_active_modules": [
+          "blocks",
+          "subscriptions"
+        ]
+      }
+    }
+  ]
+}
+```
 
 ## Usage with Library
 

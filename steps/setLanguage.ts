@@ -26,12 +26,12 @@ export const setLanguage: StepFunction<SetLanguageStep> = (step: SetLanguageStep
 			language: wp_locale,
 		}
 	];
-	return steps;
+	return { steps };
 		},
 
 		toV2() {
 			return v1ToV2Fallback(this.toV1());
-		};
+		}
 	};
 };
 

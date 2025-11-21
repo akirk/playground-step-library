@@ -7,6 +7,7 @@ Creates a post with all block examples from registered blocks
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 
@@ -48,7 +49,21 @@ Creates a post with all block examples from registered blocks
 }
 ```
 
+## Compiled Output
 
+```json
+{
+  "steps": [
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n$block_namespace = '';\n$limit ...",
+      "progress": {
+        "caption": "blockExamples: Adding blocks to Block Examples"
+      }
+    }
+  ]
+}
+```
 
 ## Usage with Library
 

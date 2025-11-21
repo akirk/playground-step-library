@@ -3,6 +3,7 @@ import { addProduct } from './addProduct.js';
 import type { AddProductStep } from './types.js';
 
 describe('addProduct', () => {
+    describe('toV1()', () => {
     it('should create a basic product with new variable names', () => {
         const step: AddProductStep = {
             step: 'addProduct',
@@ -13,10 +14,10 @@ describe('addProduct', () => {
 
         const result = addProduct(step, { steps: [] }).toV1();
 
-        expect(Array.isArray(result)).toBe(true);
-        expect(result.length).toBeGreaterThanOrEqual(1);
-        
-        const phpStep = result.find(r => r.step === 'runPHP');
+        expect(Array.isArray(result.steps)).toBe(true);
+        expect(result.steps.length).toBeGreaterThanOrEqual(1);
+
+        const phpStep = result.steps?.find(r => r.step === 'runPHP');
         expect(phpStep).toBeDefined();
         expect(phpStep?.code).toContain("'post_title'   => 'Test Product'");
         expect(phpStep?.code).toContain("'post_content' => '<p>Great product</p>'");
@@ -35,7 +36,7 @@ describe('addProduct', () => {
 
         const result = addProduct(step, { steps: [] }).toV1();
 
-        const phpStep = result.find(r => r.step === 'runPHP');
+        const phpStep = result.steps?.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain("'post_title'   => 'Test Product'");
         expect(phpStep?.code).toContain("'post_content' => '<p>Great product</p>'");
         expect(phpStep?.code).toContain("'_regular_price', '29.99'");
@@ -56,7 +57,7 @@ describe('addProduct', () => {
 
         const result = addProduct(step, { steps: [] }).toV1();
 
-        const phpStep = result.find(r => r.step === 'runPHP');
+        const phpStep = result.steps?.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain("'post_title'   => 'New Title'");
         expect(phpStep?.code).toContain("'post_content' => '<p>New Description</p>'");
         expect(phpStep?.code).toContain("'_regular_price', '19.99'");
@@ -75,7 +76,7 @@ describe('addProduct', () => {
 
         const result = addProduct(step, { steps: [] }).toV1();
 
-        const phpStep = result.find(r => r.step === 'runPHP');
+        const phpStep = result.steps?.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain('$regular_price = floatval(\'100.00\')');
         expect(phpStep?.code).toContain('$sale_price = floatval(\'80.00\')');
         expect(phpStep?.code).toContain('if ( $sale_price > 0 && $sale_price < $regular_price )');
@@ -94,7 +95,7 @@ describe('addProduct', () => {
 
         const result = addProduct(step, { steps: [] }).toV1();
 
-        const phpStep = result.find(r => r.step === 'runPHP');
+        const phpStep = result.steps?.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain("'_regular_price', '50.00'");
         expect(phpStep?.code).toContain("'_price', '50.00'");
         // Should contain the PHP validation logic
@@ -115,7 +116,7 @@ describe('addProduct', () => {
 
         const result = addProduct(step, { steps: [] }).toV1();
 
-        const phpStep = result.find(r => r.step === 'runPHP');
+        const phpStep = result.steps?.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain("'post_status'  => 'draft'");
         expect(phpStep?.code).toContain("'_sku', 'PROD-123'");
     });
@@ -132,7 +133,7 @@ describe('addProduct', () => {
         const result = addProduct(step, blueprint).toV1();
 
         // Should include installPlugin step for WooCommerce
-        const installStep = result.find(r => r.step === 'installPlugin');
+        const installStep = result.steps?.find(r => r.step === 'installPlugin');
         expect(installStep).toBeDefined();
     });
 
@@ -144,7 +145,7 @@ describe('addProduct', () => {
             price: '10.00'
         };
 
-        const blueprint = { 
+        const blueprint = {
             steps: [
                 { step: 'installPlugin', vars: { url: 'woocommerce' } }
             ]
@@ -152,8 +153,9 @@ describe('addProduct', () => {
         const result = addProduct(step, blueprint).toV1();
 
         // Should not include additional installPlugin step
-        const installSteps = result.filter(r => r.step === 'installPlugin');
+        const installSteps = result.steps?.filter(r => r.step === 'installPlugin');
         expect(installSteps).toHaveLength(0);
+    });
     });
 
     it('should have correct metadata', () => {

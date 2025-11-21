@@ -1,16 +1,25 @@
 import type { StepFunction, DontLoginStep, StepResult } from './types.js';
-import { v1ToV2Fallback } from './types.js';
+import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 export const dontLogin: StepFunction<DontLoginStep> = (step: DontLoginStep): StepResult => {
 	return {
 		toV1() {
-			return {
+			const result: BlueprintV1Declaration = {
 				login: false
 			};
+			return result;
 		},
 
 		toV2() {
-			return v1ToV2Fallback(this.toV1());
+			const result: BlueprintV2Declaration = {
+				version: 2,
+				applicationOptions: {
+					'wordpress-playground': {
+						login: false
+					}
+				}
+			};
+			return result;
 		}
 	};
 };

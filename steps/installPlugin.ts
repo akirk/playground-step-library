@@ -4,142 +4,78 @@ import type { StepFunction, InstallPluginStep, StepResult, V2SchemaFragments } f
 
 
 export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPluginStep): StepResult => {
+	// Parse GitHub release URL
+	const releasePattern = /\/releases\/download\/(?<version>[^\/]+)\/(?<asset>[^\/]+)$/;
+	const releaseMatch = step.url.match(releasePattern);
+
+	// Check if it's a GitHub URL
+	const isGitHubUrl = step.url.match(/^(?:https:\/\/)?github\.com\//i) ||
+	                    (!step.url.includes('://') && step.url.match(/^[^\/]+\/[^\/]+/));
+	const urlPattern = /^(?:https:\/\/github\.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)/;
+	const urlTest = isGitHubUrl ? urlPattern.exec(step.url) : null;
+
+	// Extract WordPress.org slug
+	let plugin = step.url;
+	const slugPattern = /^https:\/\/wordpress.org\/plugins\/(?<slug>[^\/]+)/;
+	const slugTest = slugPattern.exec(step.url);
+	if (slugTest) {
+		plugin = slugTest.groups!.slug;
+	}
+
+	// Delegate to GitHub handlers
+	if (urlTest && releaseMatch) {
+		return githubPluginRelease({
+			step: 'githubPluginRelease',
+			repo: urlTest.groups!.org + '/' + urlTest.groups!.repo,
+			release: releaseMatch.groups!.version,
+			filename: releaseMatch.groups!.asset
+		});
+	}
+
+	if (urlTest) {
+		return githubPlugin({
+			step: 'githubPlugin',
+			url: step.url,
+			prs: step.prs
+		});
+	}
+
+	// WordPress.org plugins and direct URLs
 	return {
 		toV1() {
-			const prPattern = /^https:\/\/github.com\/(?<org>[^\/]+)\/(?<repo>[^\/]+)\/pull\/(?<prNumber>\d+)/;
-			const prTest = prPattern.exec(step.url);
-			if (prTest) {
-				const { org, repo, prNumber } = prTest.groups!;
-				const repoUrl = `https://github.com/${org}/${repo}`;
-				const caption = `Installing plugin from ${org}/${repo} PR #${prNumber}`;
-				const outStep = {
-					"step": "installPlugin",
-					"pluginData": {
-						"resource": "git:directory",
-						"url": repoUrl,
-						"ref": `refs/pull/${prNumber}/head`,
-						"refType": "refname"
-					},
-					"options": {
-						"activate": true
-					},
-					"progress": {
-						"caption": caption
-					}
-				} as any;
-
-				if (step.prs) {
-					outStep.queryParams = outStep.queryParams || {};
-					outStep.queryParams['gh-ensure-auth'] = 'yes';
-					Object.assign(outStep.queryParams, {
-						'ghexport-repo-url': repoUrl,
-						'ghexport-content-type': 'plugin',
-						'ghexport-plugin': repo,
-						'ghexport-playground-root': `/wordpress/wp-content/plugins/${repo}`,
-						'ghexport-pr-action': 'create',
-						'ghexport-allow-include-zip': 'no',
-					});
+			const pluginStep: any = {
+				"step": "installPlugin",
+				"pluginData": {
+					"resource": "wordpress.org/plugins",
+					"slug": plugin
+				},
+				"options": {
+					"activate": true
 				}
+			};
 
-				return [outStep];
-			}
-
-			const urlPattern = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/;
-			let urlTest = urlPattern.exec(step.url);
-			if (urlTest) {
-				const releasePattern = /\/releases\/download\/(?<version>[^\/]+)\/(?<asset>[^\/]+)$/;
-				const releaseMatch = step.url.match(releasePattern);
-				if (releaseMatch) {
-					return githubPluginRelease({
-						step: 'githubPluginRelease',
-						repo: urlTest.groups!.org + '/' + urlTest.groups!.repo,
-						release: releaseMatch.groups!.version,
-						filename: releaseMatch.groups!.asset
-					}).toV1();
-				}
-
-				return githubPlugin({
-					step: 'githubPlugin',
-					url: step.url,
-					prs: step.prs
-				}).toV1();
-			}
-
-			let plugin = step.url;
-			const slugPattern = /^https:\/\/wordpress.org\/plugins\/(?<slug>[^\/]+)/;
-			urlTest = slugPattern.exec(step.url);
-			if (urlTest) {
-				plugin = urlTest.groups!.slug;
-			}
-			const steps = [
-				{
-					"step": "installPlugin",
-					"pluginData": {
-						"resource": "wordpress.org/plugins",
-						"slug": plugin
-					},
-					"options": {
-						"activate": true
-					}
-				}
-			];
 			if (plugin.match(/^https?:/)) {
-				steps[0].pluginData = {
+				pluginStep.pluginData = {
 					resource: "url",
 					url: plugin
-				} as any;
+				};
 				try {
 					const urlObj = new URL(plugin);
 					const filename = urlObj.pathname.split('/').pop() || 'plugin';
-					(steps[0] as any).progress = {
+					pluginStep.progress = {
 						caption: `Installing plugin: ${filename} from ${urlObj.hostname}`
 					};
 				} catch (e) {
-					(steps[0] as any).progress = {
+					pluginStep.progress = {
 						caption: `Installing plugin from ${plugin}`
 					};
 				}
 			}
-			return steps;
+
+			return { steps: [pluginStep] };
 		},
 
 		toV2(): V2SchemaFragments {
-			const urlPattern = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/;
-			let urlTest = urlPattern.exec(step.url);
-			if (urlTest) {
-				const releasePattern = /\/releases\/download\/(?<version>[^\/]+)\/(?<asset>[^\/]+)$/;
-				const releaseMatch = step.url.match(releasePattern);
-				if (releaseMatch) {
-					const result = githubPluginRelease({
-						step: 'githubPluginRelease',
-						repo: urlTest.groups!.org + '/' + urlTest.groups!.repo,
-						release: releaseMatch.groups!.version,
-						filename: releaseMatch.groups!.asset
-					});
-					return result.toV2();
-				}
-
-				const result = githubPlugin({
-					step: 'githubPlugin',
-					url: step.url,
-					prs: step.prs
-				});
-				return result.toV2();
-			}
-
-			let plugin = step.url;
-			const slugPattern = /^https:\/\/wordpress.org\/plugins\/(?<slug>[^\/]+)/;
-			urlTest = slugPattern.exec(step.url);
-			if (urlTest) {
-				plugin = urlTest.groups!.slug;
-			}
-
-			if (plugin.match(/^https?:/)) {
-				return {
-					plugins: [plugin]
-				};
-			}
-
 			return {
 				plugins: [plugin]
 			};

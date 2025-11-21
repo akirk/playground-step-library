@@ -1,35 +1,56 @@
 import type { StepFunction, DoActionStep, StepResult } from './types.js';
-import { v1ToV2Fallback } from './types.js';
+import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
 export const doAction: StepFunction<DoActionStep> = (step: DoActionStep): StepResult => {
+	if (!step?.action) {
+		return {
+			toV1() {
+				return { steps: [] };
+			},
+			toV2() {
+				return { version: 2 };
+			}
+		};
+	}
+
+	const params = [''];
+	for (let i = 1; i <= 5; i++) {
+		const paramKey = `parameter${i}` as keyof DoActionStep;
+		if (step[paramKey]) {
+			params.push("'" + step[paramKey] + "'");
+		}
+	}
+
+	const code = "<?php do_action( '" + step.action + "'" + params.join(',') + " ); ?>";
+
 	return {
 		toV1() {
-			if (!step?.action) {
-				return {};
-			}
-			const params = [''];
-			for (let i = 1; i <= 5; i++) {
-				const paramKey = `parameter${i}` as keyof DoActionStep;
-				if (step[paramKey]) {
-					params.push("'" + step[paramKey] + "'");
-				}
-			}
-			return {
+			const result: BlueprintV1Declaration = {
 				steps: [
 					{
-						"step": "runPHP",
-						"code": "<?php do_action( '" + step.action + "'" + params.join(',') + " ); ?>",
-						"progress": {
-							"caption": `doAction: ${step.action}`
+						step: "runPHP",
+						code,
+						progress: {
+							caption: `doAction: ${step.action}`
 						}
 					}
 				]
 			};
+			return result;
 		},
 
 		toV2() {
-			return v1ToV2Fallback(this.toV1());
+			const result: BlueprintV2Declaration = {
+				version: 2,
+				steps: [
+					{
+						step: "runPHP",
+						code
+					}
+				]
+			};
+			return result;
 		}
 	};
 };

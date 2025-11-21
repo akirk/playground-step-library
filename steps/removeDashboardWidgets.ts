@@ -1,20 +1,10 @@
 import type { StepFunction, RemoveDashboardWidgetsStep, StepResult } from './types.js';
-import { v1ToV2Fallback } from './types.js';
+import { muPlugin } from './muPlugin.js';
 
 
 export const removeDashboardWidgets: StepFunction<RemoveDashboardWidgetsStep> = (step: RemoveDashboardWidgetsStep): StepResult => {
-	return {
-		toV1() {
-	return [
-		{
-			"step": "mkdir",
-			"path": "/wordpress/wp-content/mu-plugins",
-		},
-		{
-			"step": "writeFile",
-			// Adapted from https://github.com/felixarntz/felixarntz-mu-plugins/blob/main/felixarntz-mu-plugins/remove-dashboard-widgets.php
-			"path": "/wordpress/wp-content/mu-plugins/remove-dashboard-widgets.php",
-			"data": `<?php
+	// Adapted from https://github.com/felixarntz/felixarntz-mu-plugins/blob/main/felixarntz-mu-plugins/remove-dashboard-widgets.php
+	const code = `<?php
 add_action(
 	'do_meta_boxes',
 	static function ( $screen_id ) {
@@ -59,16 +49,12 @@ add_action(
 			}
 		}
 	}
-);
-`
-		}
-	];
-		},
+);`;
 
-		toV2() {
-			return v1ToV2Fallback(this.toV1());
-		};
-	};
+	return muPlugin({
+		name: 'remove-dashboard-widgets',
+		code
+	});
 };
 
 removeDashboardWidgets.description = "Remove widgets from the wp-admin dashboard.";

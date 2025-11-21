@@ -7,7 +7,7 @@ Add a WooCommerce product (will install WooCommerce if not present)
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
+**Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin), [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 
@@ -54,6 +54,16 @@ Add a WooCommerce product (will install WooCommerce if not present)
 ```json
 {
   "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "woocommerce"
+      },
+      "options": {
+        "activate": true
+      }
+    },
     {
       "step": "runPHP",
       "code": "<?php require_once '/wordpress/wp-load.php';\n// Create the product post\n$pr...",

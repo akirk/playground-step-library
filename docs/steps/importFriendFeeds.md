@@ -7,6 +7,7 @@ Add subscriptions to the Friends plugin.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 
@@ -25,7 +26,21 @@ Add subscriptions to the Friends plugin.
     }
 ```
 
+## Compiled Output
 
+```json
+{
+  "steps": [
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php';if(class_exists('Friends\\Import...",
+      "progress": {
+        "caption": "Importing feeds to Friends plugin"
+      }
+    }
+  ]
+}
+```
 
 ## Usage with Library
 

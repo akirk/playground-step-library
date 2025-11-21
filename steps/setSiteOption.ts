@@ -1,33 +1,49 @@
 import type { StepFunction, SetSiteOptionStep, StepResult } from './types.js';
-import { v1ToV2Fallback } from './types.js';
+import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
 export const setSiteOption: StepFunction<SetSiteOptionStep> = (step: SetSiteOptionStep): StepResult => {
+	// Parse once - handle both array and single values
+	const names = Array.isArray( step.name ) ? step.name : [step.name];
+	const values = Array.isArray( step.value ) ? step.value : [step.value];
+
+	// Build options object
+	const options: Record<string, any> = {};
+	names.forEach( ( name, index ) => {
+		if ( !name ) return;
+		options[name] = values[index];
+	} );
+
+	// If no valid options, return empty blueprint
+	if ( Object.keys( options ).length === 0 ) {
+		return {
+			toV1() {
+				return { steps: [] };
+			},
+			toV2() {
+				return { version: 2 };
+			}
+		};
+	}
+
 	return {
 		toV1() {
-	if ( ! step.name ) {
-		return [];
-	}
-	const optionStep = {
-		"step": "setSiteOptions",
-		"options": {} as Record<string, any>
-	};
-	if ( Array.isArray( step.name ) ) {
-		step.name.forEach( ( name, index ) => {
-			if ( ! name ) {
-				return;
-			}
-			optionStep.options[name] = Array.isArray(step.value) ? step.value[index] : step.value;
-		} );
-	} else {
-		optionStep.options[step.name] = step.value;
-	}
-	return [ optionStep ];
+			const result: BlueprintV1Declaration = {
+				steps: [{
+					step: "setSiteOptions",
+					options
+				}]
+			};
+			return result;
 		},
 
 		toV2() {
-			return v1ToV2Fallback(this.toV1());
-		};
+			const result: BlueprintV2Declaration = {
+				version: 2,
+				siteOptions: options
+			};
+			return result;
+		}
 	};
 };
 

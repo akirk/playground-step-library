@@ -41,12 +41,12 @@ export const sampleContent: StepFunction<SampleContentStep> = (): StepResult => 
             }
         }
     ];
-    return steps;
+    return { steps };
 		},
 
 		toV2() {
 			return v1ToV2Fallback(this.toV1());
-		};
+		}
 	};
 };
 

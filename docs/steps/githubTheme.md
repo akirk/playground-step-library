@@ -7,6 +7,7 @@ Install a theme from a Github repository.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** [`installTheme`](../builtin-step-usage.md#installtheme)
 
 ## Parameters
 
@@ -27,7 +28,28 @@ Install a theme from a Github repository.
     }
 ```
 
+## Compiled Output
 
+```json
+{
+  "steps": [
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "git:directory",
+        "url": "https://github.com/richtabor/kanso",
+        "ref": "HEAD"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing theme from GitHub: richtabor/kanso"
+      }
+    }
+  ]
+}
+```
 
 ## Usage with Library
 

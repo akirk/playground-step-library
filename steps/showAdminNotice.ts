@@ -75,12 +75,12 @@ add_action('admin_footer', function() {
 		}
 	];
 	(steps as any).landingPage = '/wp-admin/';
-	return steps;
+	return { steps };
 		},
 
 		toV2() {
 			return v1ToV2Fallback(this.toV1());
-		};
+		}
 	};
 };
 

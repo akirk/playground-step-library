@@ -1,4 +1,5 @@
 import type { StepFunction, GithubThemeStep, StepResult } from './types.js';
+import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 import { v1ToV2Fallback } from './types.js';
 
 
@@ -17,28 +18,35 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 	const repoUrl = `https://github.com/${repo}`;
 	const directory = ( urlTest.groups!.directory || "" ).replace( /\/+$/, '' ).replace( /^\/+/, '' );
 
-	const outStep = {
-		"step": "installTheme",
-		"themeData": {
-			"resource": "git:directory",
-			"url": repoUrl,
-			"ref": branch || "HEAD"
-		} as any,
-		options: {
-			activate: true,
-		}
-	} as any;
+	const themeData: Record<string, any> = {
+		"resource": "git:directory",
+		"url": repoUrl,
+		"ref": branch || "HEAD"
+	};
 
 	if ( branch ) {
-		outStep.themeData.refType = "branch";
+		themeData.refType = "branch";
 	}
 
 	if ( directory ) {
-		outStep.themeData.path = directory;
+		themeData.path = directory;
 	}
 
+	const result: BlueprintV1Declaration = {
+		steps: [{
+			"step": "installTheme",
+			"themeData": themeData,
+			"options": {
+				"activate": true
+			},
+			"progress": {
+				"caption": `Installing theme from GitHub: ${repo}${branch ? ' (' + branch + ')' : ''}`
+			}
+		}]
+	};
+
 	if ( step.prs ) {
-		outStep.queryParams = {
+		(result.steps[0] as any).queryParams = {
 			'gh-ensure-auth': 'yes',
 			'ghexport-repo-url': 'https://github.com/' + repo,
 			'ghexport-content-type': 'theme',
@@ -49,16 +57,12 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 		};
 	}
 
-	outStep.progress = {
-		caption: `Installing theme from GitHub: ${repo}${branch ? ' (' + branch + ')' : ''}`
-	};
-
-	return [ outStep ];
+	return result;
 		},
 
 		toV2() {
 			return v1ToV2Fallback(this.toV1());
-		};
+		}
 	};
 };
 

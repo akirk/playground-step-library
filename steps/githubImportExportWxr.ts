@@ -27,7 +27,8 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 	if ( step.targetUrl ) {
 		siteOptions["wordpress_export_to_server__export_home"] = step.targetUrl;
 	}
-	steps = steps.concat(deleteAllPosts({ step: 'deleteAllPosts' }));
+	const deleteResult = deleteAllPosts({ step: 'deleteAllPosts' }).toV1();
+	steps = steps.concat(deleteResult.steps);
 
 	const branchSuffix = branch ? '-' + branch : '';
 
@@ -102,12 +103,12 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 		'ghexport-allow-include-zip': 'no',
 	};
 
-	return steps;
+	return { steps };
 		},
 
 		toV2() {
 			return v1ToV2Fallback(this.toV1());
-		};
+		}
 	};
 };
 

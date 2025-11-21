@@ -66,7 +66,7 @@ wp_set_object_terms($post_id, $term_id, 'wp_theme');
 
 		toV2() {
 			return v1ToV2Fallback(this.toV1());
-		};
+		}
 	};
 };
 

@@ -6,27 +6,29 @@ export const githubPluginRelease: StepFunction<GithubPluginReleaseStep> = (step:
 		toV1() {
 			const repoTest = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/.exec( step.repo );
 			if ( ! repoTest ) {
-				return [];
+				return { steps: [] };
 			}
 			const repo = repoTest[1] + "/" + repoTest[2];
 			const tag = step.release;
 			const filename = step.filename;
 
-			return [
-				{
-					"step": "installPlugin",
-					"pluginData": {
-						"resource": "url",
-						"url": `https://github.com/${repo}/releases/download/${tag}/${filename}`
-					},
-					"options": {
-						"activate": true
-					},
-					"progress": {
-						"caption": `Installing ${filename} from ${repo} (${tag})`
+			return {
+				steps: [
+					{
+						"step": "installPlugin",
+						"pluginData": {
+							"resource": "url",
+							"url": `https://github.com/${repo}/releases/download/${tag}/${filename}`
+						},
+						"options": {
+							"activate": true
+						},
+						"progress": {
+							"caption": `Installing ${filename} from ${repo} (${tag})`
+						}
 					}
-				}
-			];
+				]
+			};
 		},
 
 		toV2(): V2SchemaFragments {

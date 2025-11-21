@@ -11,12 +11,12 @@ describe('setSiteName', () => {
         
         const result = setSiteName(step).toV1();
         
-        expect(Array.isArray(result)).toBe(true);
-        expect(result).toHaveLength(1);
-        expect(result[0].step).toBe('setSiteOptions');
-        expect(result[0].options).toBeDefined();
-        expect(result[0].options.blogname).toBe('${sitename}');
-        expect(result[0].options.blogdescription).toBe('${tagline}');
+        expect(Array.isArray(result.steps)).toBe(true);
+        expect(result.steps).toHaveLength(1);
+        expect(result.steps[0].step).toBe('setSiteOptions');
+        expect(result.steps[0].options).toBeDefined();
+        expect(result.steps[0].options.blogname).toBe('${sitename}');
+        expect(result.steps[0].options.blogdescription).toBe('${tagline}');
     });
 
     it('should return setSiteOptions step with template variables', () => {
@@ -29,8 +29,8 @@ describe('setSiteName', () => {
         const result = setSiteName(step).toV1();
         
         // The step should use template variables that will be substituted later
-        expect(result[0].options.blogname).toBe('${sitename}');
-        expect(result[0].options.blogdescription).toBe('${tagline}');
+        expect(result.steps[0].options.blogname).toBe('${sitename}');
+        expect(result.steps[0].options.blogdescription).toBe('${tagline}');
     });
 
     it('should work with empty values', () => {
@@ -42,9 +42,9 @@ describe('setSiteName', () => {
         
         const result = setSiteName(step).toV1();
         
-        expect(result[0].step).toBe('setSiteOptions');
-        expect(result[0].options.blogname).toBe('${sitename}');
-        expect(result[0].options.blogdescription).toBe('${tagline}');
+        expect(result.steps[0].step).toBe('setSiteOptions');
+        expect(result.steps[0].options.blogname).toBe('${sitename}');
+        expect(result.steps[0].options.blogdescription).toBe('${tagline}');
     });
 
     it('should work with special characters in variables', () => {
@@ -57,8 +57,8 @@ describe('setSiteName', () => {
         const result = setSiteName(step).toV1();
         
         // Template variables should remain unchanged
-        expect(result[0].options.blogname).toBe('${sitename}');
-        expect(result[0].options.blogdescription).toBe('${tagline}');
+        expect(result.steps[0].options.blogname).toBe('${sitename}');
+        expect(result.steps[0].options.blogdescription).toBe('${tagline}');
     });
 
     it('should have correct metadata', () => {
@@ -89,10 +89,10 @@ describe('setSiteName', () => {
         const result = setSiteName(step).toV1();
         
         // Validate the structure matches WordPress Playground step format
-        expect(result[0]).toHaveProperty('step');
-        expect(result[0]).toHaveProperty('options');
-        expect(typeof result[0].step).toBe('string');
-        expect(typeof result[0].options).toBe('object');
-        expect(result[0].options).not.toBeNull();
+        expect(result.steps[0]).toHaveProperty('step');
+        expect(result.steps[0]).toHaveProperty('options');
+        expect(typeof result.steps[0].step).toBe('string');
+        expect(typeof result.steps[0].options).toBe('object');
+        expect(result.steps[0].options).not.toBeNull();
     });
 });

@@ -63,7 +63,7 @@ class PlaygroundStepLibrary {
      * Execute a custom step and handle both old format (returns array)
      * and new format (returns object with toV1/toV2 methods)
      */
-    private executeCustomStep(stepName: string, step: BlueprintStep, inputData: any): StepDefinition[] {
+    private executeCustomStep(stepName: string, step: BlueprintStep, inputData: any): BlueprintV1Declaration {
         const result = this.customSteps[stepName](step, inputData);
 
         // Check if this is a StepResult (new format)
@@ -71,8 +71,8 @@ class PlaygroundStepLibrary {
             return result.toV1();
         }
 
-        // Old format - return array directly
-        return result;
+        // Old format - return array directly, wrap it in a BlueprintV1Declaration
+        return { steps: result };
     }
 
     /**
@@ -155,7 +155,7 @@ class PlaygroundStepLibrary {
             }
             
             const step = stepItem as BlueprintStep;
-            let outSteps: StepDefinition[] = [];
+            let customStepResult: BlueprintV1Declaration | null = null;
             
             // Support legacy format: if step has vars, flatten them to top level
             if (step.vars) {
@@ -182,55 +182,58 @@ class PlaygroundStepLibrary {
             if (step.step === 'installPlugin') {
                 if ('url' in step) {
                     // Custom installPlugin step - transform it
-                    outSteps = this.executeCustomStep(step.step, step, inputData);
+                    customStepResult = this.executeCustomStep(step.step, step, inputData);
                 } else {
                     // Builtin installPlugin step - pass through
-                    outSteps.push(step as StepDefinition);
+                    customStepResult = { steps: [step as StepDefinition] };
                 }
             } else if (step.step === 'installTheme') {
                 if ('url' in step) {
                     // Custom installTheme step - transform it
-                    outSteps = this.executeCustomStep(step.step, step, inputData);
+                    customStepResult = this.executeCustomStep(step.step, step, inputData);
                 } else {
                     // Builtin installTheme step - pass through
-                    outSteps.push(step as StepDefinition);
+                    customStepResult = { steps: [step as StepDefinition] };
                 }
             } else if (step.step === 'defineWpConfigConst') {
                 if ('name' in step && 'value' in step) {
                     // Custom defineWpConfigConst step - transform it
-                    outSteps = this.executeCustomStep(step.step, step, inputData);
+                    customStepResult = this.executeCustomStep(step.step, step, inputData);
                 } else {
                     // Builtin defineWpConfigConsts step - pass through
-                    outSteps.push(step as StepDefinition);
+                    customStepResult = { steps: [step as StepDefinition] };
                 }
             } else if (step.step === 'setSiteOptions') {
                 if ('name' in step && 'value' in step) {
                     // Custom setSiteOptions step - transform it
-                    outSteps = this.executeCustomStep(step.step, step, inputData);
+                    customStepResult = this.executeCustomStep(step.step, step, inputData);
                 } else {
                     // Builtin setSiteOptions step - pass through
-                    outSteps.push(step as StepDefinition);
+                    customStepResult = { steps: [step as StepDefinition] };
                 }
             } else if (this.customSteps[step.step]) {
                 // For other custom steps (no builtin equivalent), always transform
-                outSteps = this.executeCustomStep(step.step, step, inputData);
+                customStepResult = this.executeCustomStep(step.step, step, inputData);
             } else {
                 // Pure builtin step - pass through
-                outSteps.push(step as StepDefinition);
+                customStepResult = { steps: [step as StepDefinition] };
             }
 
-            // Handle transformed step results
-            if (Array.isArray(outSteps)) {
-                // Check for blueprint-level properties even on empty arrays
-                if ((outSteps as any).landingPage) {
-                    outputData.landingPage = (outSteps as any).landingPage;
+            // Handle blueprint-level properties from custom step result
+            if (customStepResult) {
+                // Merge blueprint-level properties
+                if (customStepResult.landingPage) {
+                    outputData.landingPage = customStepResult.landingPage;
                 }
-                if ((outSteps as any).features) {
-                    outputData.features = (outSteps as any).features;
+                if (customStepResult.features) {
+                    outputData.features = customStepResult.features;
                 }
-                if ((outSteps as any).login !== undefined) {
-                    outputData.login = (outSteps as any).login;
+                if (customStepResult.login !== undefined) {
+                    outputData.login = customStepResult.login;
                 }
+
+                // Extract steps array
+                let outSteps = customStepResult.steps || [];
 
                 // Only process steps if there are any
 		if (outSteps.length > 0) {

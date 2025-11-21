@@ -201,7 +201,8 @@ error_log( "Generated " . count( $term_ids ) . " product categories" );
 
 	// Install WooCommerce if not present
 	if (!hasWoocommercePlugin) {
-		steps = steps.concat(installPlugin({ step: 'installPlugin', url: 'woocommerce', permalink: true }));
+		const wooResult = installPlugin({ step: 'installPlugin', url: 'woocommerce', permalink: true }).toV1();
+		steps = steps.concat(wooResult.steps);
 	}
 
 	// Install WC Smooth Generator plugin if not present
@@ -233,12 +234,12 @@ error_log( "Generated " . count( $term_ids ) . " product categories" );
 		}
 	});
 
-	return steps;
+	return { steps };
 		},
 
 		toV2() {
 			return v1ToV2Fallback(this.toV1());
-		};
+		}
 	};
 };
 

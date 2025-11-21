@@ -7,6 +7,7 @@ Generate a new blueprint after modifying the WordPress.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin)
 
 ## Parameters
 
@@ -21,7 +22,28 @@ Generate a new blueprint after modifying the WordPress.
     }
 ```
 
+## Compiled Output
 
+```json
+{
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "git:directory",
+        "url": "https://github.com/akirk/blueprint-extractor",
+        "ref": "HEAD"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing plugin from GitHub: akirk/blueprint-extractor"
+      }
+    }
+  ]
+}
+```
 
 ## Usage with Library
 

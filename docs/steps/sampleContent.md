@@ -7,6 +7,7 @@ Inserts sample pages to the site.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Parameters
 
@@ -21,7 +22,49 @@ Inserts sample pages to the site.
     }
 ```
 
+## Compiled Output
 
+```json
+{
+  "steps": [
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_tit...",
+      "progress": {
+        "caption": "Creating sample content (1/5)"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_tit...",
+      "progress": {
+        "caption": "Creating sample content (2/5)"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_tit...",
+      "progress": {
+        "caption": "Creating sample content (3/5)"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_tit...",
+      "progress": {
+        "caption": "Creating sample content (4/5)"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_tit...",
+      "progress": {
+        "caption": "Creating sample content (5/5)"
+      }
+    }
+  ]
+}
+```
 
 ## Usage with Library
 

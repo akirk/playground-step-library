@@ -42,7 +42,7 @@ foreach ( $iterator as $file ) {
 
 		toV2() {
 			return v1ToV2Fallback(this.toV1());
-		};
+		}
 	};
 };
 

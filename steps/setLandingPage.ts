@@ -1,18 +1,28 @@
 import type { StepFunction, SetLandingPageStep, StepResult } from './types.js';
-import { v1ToV2Fallback } from './types.js';
+import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
 export const setLandingPage: StepFunction<SetLandingPageStep> = (step: SetLandingPageStep): StepResult => {
 	return {
 		toV1() {
-	const steps: any = [];
-	steps.landingPage = step.landingPage;
-	return steps;
+			const result: BlueprintV1Declaration = {
+				landingPage: step.landingPage,
+				steps: []
+			};
+			return result;
 		},
 
 		toV2() {
-			return v1ToV2Fallback(this.toV1());
-		};
+			const result: BlueprintV2Declaration = {
+				version: 2,
+				applicationOptions: {
+					'wordpress-playground': {
+						landingPage: step.landingPage
+					}
+				}
+			};
+			return result;
+		}
 	};
 };
 

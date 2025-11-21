@@ -45,12 +45,12 @@ export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeS
 		} as any;
 	}
 
-	return steps;
+	return { steps };
 		},
 
 		toV2() {
 			return v1ToV2Fallback(this.toV1());
-		};
+		}
 	};
 };
 

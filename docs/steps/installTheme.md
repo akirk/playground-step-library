@@ -7,6 +7,7 @@ Install a theme via WordPress.org or Github.
 ## Type
 🔧 **Built-in Step**
 
+**Compiles to:** [`installTheme`](../builtin-step-usage.md#installtheme)
 
 ## Parameters
 
@@ -27,7 +28,27 @@ Install a theme via WordPress.org or Github.
     }
 ```
 
+## Compiled Output
 
+```json
+{
+  "steps": [
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "wordpress.org/themes",
+        "slug": "pendant"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing theme: pendant"
+      }
+    }
+  ]
+}
+```
 
 ## Usage with Library
 

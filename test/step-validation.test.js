@@ -47,6 +47,10 @@ describe('Step Output Validation', () => {
       expect(stepOutput.toV2, `${stepName} should have toV2() method`).toBeTypeOf('function');
       // Convert to v1 for validation
       stepOutput = stepOutput.toV1();
+      // Extract steps array from BlueprintV1Declaration
+      if (stepOutput && typeof stepOutput === 'object' && 'steps' in stepOutput) {
+        stepOutput = stepOutput.steps;
+      }
     }
 
     expect(stepOutput, `${stepName} should return an array or StepResult`).toBeInstanceOf(Array);

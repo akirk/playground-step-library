@@ -12,17 +12,17 @@ describe('addPage', () => {
 
     const result = addPage(step).toV1();
 
-    expect(result).toHaveLength(1);
-    expect(result[0]).toEqual({
+    expect(result.steps).toHaveLength(1);
+    expect(result.steps[0]).toEqual({
       step: 'runPHP',
       code: expect.stringContaining("'post_title'   => 'Test Page'"),
       progress: {
         caption: 'addPage: Test Page'
       }
     });
-    expect(result[0].code).toContain("'post_content' => '<p>Test content</p>'");
-    expect(result[0].code).toContain("'post_type'    => 'page'");
-    expect(result[0].code).not.toContain('update_option');
+    expect(result.steps[0].code).toContain("'post_content' => '<p>Test content</p>'");
+    expect(result.steps[0].code).toContain("'post_type'    => 'page'");
+    expect(result.steps[0].code).not.toContain('update_option');
   });
 
   it('should create a basic page with deprecated variable names (backward compatibility)', () => {
@@ -34,17 +34,17 @@ describe('addPage', () => {
 
     const result = addPage(step).toV1();
 
-    expect(result).toHaveLength(1);
-    expect(result[0]).toEqual({
+    expect(result.steps).toHaveLength(1);
+    expect(result.steps[0]).toEqual({
       step: 'runPHP',
       code: expect.stringContaining("'post_title'   => 'Test Page'"),
       progress: {
         caption: 'addPage: Test Page'
       }
     });
-    expect(result[0].code).toContain("'post_content' => '<p>Test content</p>'");
-    expect(result[0].code).toContain("'post_type'    => 'page'");
-    expect(result[0].code).not.toContain('update_option');
+    expect(result.steps[0].code).toContain("'post_content' => '<p>Test content</p>'");
+    expect(result.steps[0].code).toContain("'post_type'    => 'page'");
+    expect(result.steps[0].code).not.toContain('update_option');
   });
 
   it('should set as homepage when homepage flag is true', () => {
@@ -57,9 +57,9 @@ describe('addPage', () => {
 
     const result = addPage(step).toV1();
 
-    expect(result).toHaveLength(1);
-    expect(result[0].code).toContain("update_option( 'page_on_front', $page_id )");
-    expect(result[0].code).toContain("update_option( 'show_on_front', 'page' )");
+    expect(result.steps).toHaveLength(1);
+    expect(result.steps[0].code).toContain("update_option( 'page_on_front', $page_id )");
+    expect(result.steps[0].code).toContain("update_option( 'show_on_front', 'page' )");
   });
 
   it('should escape single quotes in title and content', () => {
@@ -71,8 +71,8 @@ describe('addPage', () => {
 
     const result = addPage(step).toV1();
 
-    expect(result[0].code).toContain("'post_title'   => 'John\\'s Page'");
-    expect(result[0].code).toContain("'post_content' => '<p>Here\\'s some content</p>'");
+    expect(result.steps[0].code).toContain("'post_title'   => 'John\\'s Page'");
+    expect(result.steps[0].code).toContain("'post_content' => '<p>Here\\'s some content</p>'");
   });
 
   it('should prefer new variable names over deprecated ones', () => {
@@ -86,8 +86,8 @@ describe('addPage', () => {
 
     const result = addPage(step).toV1();
 
-    expect(result[0].code).toContain("'post_title'   => 'New Title'");
-    expect(result[0].code).toContain("'post_content' => '<p>New Content</p>'");
+    expect(result.steps[0].code).toContain("'post_title'   => 'New Title'");
+    expect(result.steps[0].code).toContain("'post_content' => '<p>New Content</p>'");
   });
 
   it('should have proper metadata', () => {

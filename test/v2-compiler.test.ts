@@ -132,7 +132,7 @@ describe('PlaygroundStepLibraryV2', () => {
             expect(result.meta.title).toBe('My Blueprint');
         });
 
-        it('should handle landingPage', () => {
+        it('should handle landingPage from input blueprint', () => {
             const compiler = new PlaygroundStepLibraryV2();
             const blueprint = {
                 landingPage: '/about',
@@ -147,7 +147,7 @@ describe('PlaygroundStepLibraryV2', () => {
 
             const result = compiler.compile(blueprint);
 
-            expect(result.landingPage).toBe('/about');
+            expect(result.applicationOptions?.['wordpress-playground']?.landingPage).toBe('/about');
         });
 
         it('should omit default landingPage', () => {
@@ -165,7 +165,40 @@ describe('PlaygroundStepLibraryV2', () => {
 
             const result = compiler.compile(blueprint);
 
-            expect(result.landingPage).toBeUndefined();
+            expect(result.applicationOptions?.['wordpress-playground']?.landingPage).toBeUndefined();
+        });
+
+        it('should handle setLandingPage step', () => {
+            const compiler = new PlaygroundStepLibraryV2();
+            const blueprint = {
+                steps: [
+                    {
+                        step: 'setLandingPage',
+                        landingPage: '/wp-admin/themes.php'
+                    }
+                ]
+            };
+
+            const result = compiler.compile(blueprint);
+
+            expect(result.applicationOptions).toBeDefined();
+            expect(result.applicationOptions['wordpress-playground'].landingPage).toBe('/wp-admin/themes.php');
+        });
+
+        it('should handle dontLogin step', () => {
+            const compiler = new PlaygroundStepLibraryV2();
+            const blueprint = {
+                steps: [
+                    {
+                        step: 'dontLogin'
+                    }
+                ]
+            };
+
+            const result = compiler.compile(blueprint);
+
+            expect(result.applicationOptions).toBeDefined();
+            expect(result.applicationOptions['wordpress-playground'].login).toBe(false);
         });
 
         it('should convert preferredVersions to wordpressVersion and phpVersion', () => {

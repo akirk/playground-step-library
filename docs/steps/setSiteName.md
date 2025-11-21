@@ -7,6 +7,7 @@ Set the site name and tagline.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** [`setSiteOptions`](../builtin-step-usage.md#setsiteoptions)
 
 ## Parameters
 
@@ -27,7 +28,21 @@ Set the site name and tagline.
     }
 ```
 
+## Compiled Output
 
+```json
+{
+  "steps": [
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "Step Library Demo",
+        "blogdescription": "Trying out WordPress Playground."
+      }
+    }
+  ]
+}
+```
 
 ## Usage with Library
 

@@ -13,13 +13,13 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(Array.isArray(result)).toBe(true);
-        expect(result).toHaveLength(1);
-        expect(result[0].step).toBe('runPHP');
-        expect(result[0].code).toContain("'post_title'   => 'Test Post'");
-        expect(result[0].code).toContain("'post_content' => '<p>Test content</p>'");
-        expect(result[0].code).toContain("'post_type'    => 'post'");
-        expect(result[0].code).toContain("'post_status'  => 'publish'");
+        expect(Array.isArray(result.steps)).toBe(true);
+        expect(result.steps).toHaveLength(1);
+        expect(result.steps[0].step).toBe('runPHP');
+        expect(result.steps[0].code).toContain("'post_title'   => 'Test Post'");
+        expect(result.steps[0].code).toContain("'post_content' => '<p>Test content</p>'");
+        expect(result.steps[0].code).toContain("'post_type'    => 'post'");
+        expect(result.steps[0].code).toContain("'post_status'  => 'publish'");
     });
 
     it('should create a basic post with deprecated variable names (backward compatibility)', () => {
@@ -32,13 +32,13 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(Array.isArray(result)).toBe(true);
-        expect(result).toHaveLength(1);
-        expect(result[0].step).toBe('runPHP');
-        expect(result[0].code).toContain("'post_title'   => 'Test Post'");
-        expect(result[0].code).toContain("'post_content' => '<p>Test content</p>'");
-        expect(result[0].code).toContain("'post_type'    => 'post'");
-        expect(result[0].code).toContain("'post_status'  => 'publish'");
+        expect(Array.isArray(result.steps)).toBe(true);
+        expect(result.steps).toHaveLength(1);
+        expect(result.steps[0].step).toBe('runPHP');
+        expect(result.steps[0].code).toContain("'post_title'   => 'Test Post'");
+        expect(result.steps[0].code).toContain("'post_content' => '<p>Test content</p>'");
+        expect(result.steps[0].code).toContain("'post_type'    => 'post'");
+        expect(result.steps[0].code).toContain("'post_status'  => 'publish'");
     });
 
     it('should handle custom post status', () => {
@@ -52,7 +52,7 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(result[0].code).toContain("'post_status'  => 'draft'");
+        expect(result.steps[0].code).toContain("'post_status'  => 'draft'");
     });
 
     it('should include post date when provided', () => {
@@ -66,7 +66,7 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(result[0].code).toContain("'post_date'    => strtotime('2024-12-25 10:00:00')");
+        expect(result.steps[0].code).toContain("'post_date'    => strtotime('2024-12-25 10:00:00')");
     });
 
     it('should not include post date when not provided', () => {
@@ -79,7 +79,7 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(result[0].code).not.toContain('post_date');
+        expect(result.steps[0].code).not.toContain('post_date');
     });
 
     it('should set homepage when homepage flag is true', () => {
@@ -93,8 +93,8 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(result[0].code).toContain("update_option( 'page_on_front', $page_id )");
-        expect(result[0].code).toContain("update_option( 'show_on_front', 'page' )");
+        expect(result.steps[0].code).toContain("update_option( 'page_on_front', $page_id )");
+        expect(result.steps[0].code).toContain("update_option( 'show_on_front', 'page' )");
     });
 
     it('should not set homepage when homepage flag is false', () => {
@@ -108,8 +108,8 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(result[0].code).not.toContain("update_option( 'page_on_front'");
-        expect(result[0].code).not.toContain("update_option( 'show_on_front'");
+        expect(result.steps[0].code).not.toContain("update_option( 'page_on_front'");
+        expect(result.steps[0].code).not.toContain("update_option( 'show_on_front'");
     });
 
     it('should escape single quotes in title and content', () => {
@@ -122,8 +122,8 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(result[0].code).toContain("'post_title'   => 'Title with \\'single quotes\\''");
-        expect(result[0].code).toContain("'post_content' => '<p>Content with \\'quotes\\' here</p>'");
+        expect(result.steps[0].code).toContain("'post_title'   => 'Title with \\'single quotes\\''");
+        expect(result.steps[0].code).toContain("'post_content' => '<p>Content with \\'quotes\\' here</p>'");
     });
 
     it('should escape single quotes in post date', () => {
@@ -137,7 +137,7 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(result[0].code).toContain("'post_date'    => strtotime('2024-01-01 12:00:00 O\\'Clock')");
+        expect(result.steps[0].code).toContain("'post_date'    => strtotime('2024-01-01 12:00:00 O\\'Clock')");
     });
 
     it('should handle custom post types', () => {
@@ -150,7 +150,7 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(result[0].code).toContain("'post_type'    => 'custom_type'");
+        expect(result.steps[0].code).toContain("'post_type'    => 'custom_type'");
     });
 
     it('should prefer new variable names over deprecated ones', () => {
@@ -170,11 +170,11 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(result[0].code).toContain("'post_title'   => 'New Title'");
-        expect(result[0].code).toContain("'post_content' => '<p>New Content</p>'");
-        expect(result[0].code).toContain("'post_type'    => 'post'");
-        expect(result[0].code).toContain("'post_status'  => 'draft'");
-        expect(result[0].code).toContain("strtotime('2024-01-01')");
+        expect(result.steps[0].code).toContain("'post_title'   => 'New Title'");
+        expect(result.steps[0].code).toContain("'post_content' => '<p>New Content</p>'");
+        expect(result.steps[0].code).toContain("'post_type'    => 'post'");
+        expect(result.steps[0].code).toContain("'post_status'  => 'draft'");
+        expect(result.steps[0].code).toContain("strtotime('2024-01-01')");
     });
 
     it('should have correct metadata', () => {

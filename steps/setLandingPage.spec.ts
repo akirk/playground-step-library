@@ -3,50 +3,71 @@ import type { SetLandingPageStep } from './types.js';
 import PlaygroundStepLibrary from '../src/index.js';
 
 describe('setLandingPage', () => {
-    it('should return empty array with landingPage property', () => {
-        const step: SetLandingPageStep = {
-            step: 'setLandingPage',
-            landingPage: '/wp-admin/post-new.php'
-        };
+    describe('toV1()', () => {
+        it('should return empty steps with landingPage property', () => {
+            const step: SetLandingPageStep = {
+                step: 'setLandingPage',
+                landingPage: '/wp-admin/post-new.php'
+            };
 
-        const result = setLandingPage(step).toV1();
+            const result = setLandingPage(step).toV1();
 
-        expect(Array.isArray(result)).toBe(true);
-        expect(result).toHaveLength(0);
-        expect((result as any).landingPage).toBe('/wp-admin/post-new.php');
-    });
+            expect(Array.isArray(result.steps)).toBe(true);
+            expect(result.steps).toHaveLength(0);
+            expect(result.landingPage).toBe('/wp-admin/post-new.php');
+        });
 
-    it('should work with root path', () => {
-        const step: SetLandingPageStep = {
-            step: 'setLandingPage',
-            landingPage: '/'
-        };
+        it('should work with root path', () => {
+            const step: SetLandingPageStep = {
+                step: 'setLandingPage',
+                landingPage: '/'
+            };
 
-        const result = setLandingPage(step).toV1();
+            const result = setLandingPage(step).toV1();
 
-        expect((result as any).landingPage).toBe('/');
-    });
+            expect(result.landingPage).toBe('/');
+        });
 
-    it('should work with admin paths', () => {
-        const step: SetLandingPageStep = {
-            step: 'setLandingPage',
-            landingPage: '/wp-admin/'
-        };
+        it('should work with admin paths', () => {
+            const step: SetLandingPageStep = {
+                step: 'setLandingPage',
+                landingPage: '/wp-admin/'
+            };
 
-        const result = setLandingPage(step).toV1();
+            const result = setLandingPage(step).toV1();
 
-        expect((result as any).landingPage).toBe('/wp-admin/');
-    });
+            expect(result.landingPage).toBe('/wp-admin/');
+        });
 
-    it('should work with complex admin paths', () => {
-        const step: SetLandingPageStep = {
-            step: 'setLandingPage',
-            landingPage: '/wp-admin/post-new.php?post_type=page'
-        };
+        it('should work with complex admin paths', () => {
+            const step: SetLandingPageStep = {
+                step: 'setLandingPage',
+                landingPage: '/wp-admin/post-new.php?post_type=page'
+            };
 
-        const result = setLandingPage(step).toV1();
+            const result = setLandingPage(step).toV1();
 
-        expect((result as any).landingPage).toBe('/wp-admin/post-new.php?post_type=page');
+            expect(result.landingPage).toBe('/wp-admin/post-new.php?post_type=page');
+        });
+
+        it('should preserve input value exactly', () => {
+            const testPaths = [
+                '/custom-page/',
+                '/wp-admin/edit.php',
+                '/wp-admin/themes.php',
+                '/wp-admin/plugins.php?activate=true'
+            ];
+
+            testPaths.forEach(path => {
+                const step: SetLandingPageStep = {
+                    step: 'setLandingPage',
+                    landingPage: path
+                };
+
+                const result = setLandingPage(step).toV1();
+                expect(result.landingPage).toBe(path);
+            });
+        });
     });
 
     it('should have correct metadata', () => {
@@ -64,25 +85,6 @@ describe('setLandingPage', () => {
             '/wp-admin/post-new.php',
             '/wp-admin/post-new.php?post_type=page'
         ]);
-    });
-
-    it('should preserve input value exactly', () => {
-        const testPaths = [
-            '/custom-page/',
-            '/wp-admin/edit.php',
-            '/wp-admin/themes.php',
-            '/wp-admin/plugins.php?activate=true'
-        ];
-
-        testPaths.forEach(path => {
-            const step: SetLandingPageStep = {
-                step: 'setLandingPage',
-                landingPage: path
-            };
-
-            const result = setLandingPage(step).toV1();
-            expect((result as any).landingPage).toBe(path);
-        });
     });
 
     describe('Integration tests', () => {

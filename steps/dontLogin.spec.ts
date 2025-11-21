@@ -2,10 +2,12 @@ import { describe, it, expect } from 'vitest';
 import { dontLogin } from './dontLogin.js';
 
 describe('dontLogin', () => {
-	it('should set login to false', () => {
-		const result = dontLogin({ step: 'dontLogin' }).toV1() as any;
-		expect(result.login).toBe(false);
-		expect(result.length).toBe(0);
+	describe('toV1()', () => {
+		it('should set login to false', () => {
+			const result = dontLogin({ step: 'dontLogin' }).toV1();
+			expect(result.login).toBe(false);
+			expect(result.steps).toBeUndefined();
+		});
 	});
 
 	it('should have correct description', () => {
