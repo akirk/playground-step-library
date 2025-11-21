@@ -99,7 +99,7 @@ describe('installTheme', () => {
 
         const result = installTheme(step).toV1();
 
-        expect(result).toEqual([]);
+        expect(result).toEqual({ steps: [] });
     });
 
     it('should extract slug from WordPress.org URLs with trailing slash', () => {
@@ -161,5 +161,43 @@ describe('installTheme', () => {
         expect(typeof result.steps[0].options).toBe('object');
         expect(result.steps[0].themeData).not.toBeNull();
         expect(result.steps[0].options).not.toBeNull();
+    });
+
+    it('should output V2 themes array for WordPress.org theme', () => {
+        const step: InstallThemeStep = {
+            step: 'installTheme',
+            url: 'https://wordpress.org/themes/flavor/'
+        };
+
+        const result = installTheme(step).toV2();
+
+        expect(result.version).toBe(2);
+        expect(result.themes).toBeDefined();
+        expect(result.themes).toHaveLength(1);
+        expect(result.themes![0]).toBe('flavor');
+    });
+
+    it('should output V2 themes array for theme slug', () => {
+        const step: InstallThemeStep = {
+            step: 'installTheme',
+            url: 'flavor'
+        };
+
+        const result = installTheme(step).toV2();
+
+        expect(result.version).toBe(2);
+        expect(result.themes).toEqual(['flavor']);
+    });
+
+    it('should output empty V2 for empty url', () => {
+        const step: InstallThemeStep = {
+            step: 'installTheme',
+            url: ''
+        };
+
+        const result = installTheme(step).toV2();
+
+        expect(result.version).toBe(2);
+        expect(result.themes).toBeUndefined();
     });
 });

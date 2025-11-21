@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { BlueprintDecompiler } from '../src/decompiler';
-import PlaygroundStepLibrary from '../src/index';
+import PlaygroundStepLibrary, { PlaygroundStepLibraryV2 } from '../src/index';
 
 describe('BlueprintDecompiler', () => {
 	const decompiler = new BlueprintDecompiler();
 	const compiler = new PlaygroundStepLibrary();
+	const compilerV2 = new PlaygroundStepLibraryV2();
 
 	describe('installPlugin decompilation', () => {
 		it('should decompile wordpress.org plugin', () => {
@@ -1151,6 +1152,555 @@ wp_insert_post( array(
 			expect(stepTypes).toContain('installTheme');
 			expect(stepTypes).toContain('setSiteName');
 			expect(stepTypes).toContain('setLandingPage');
+			expect(stepTypes).toContain('login');
+		});
+	});
+
+	describe('V2 blueprint decompilation', () => {
+		it('should detect V2 blueprints by version', () => {
+			const v2Blueprint = {
+				version: 2,
+				plugins: ['gutenberg']
+			};
+
+			const result = decompiler.decompile(v2Blueprint);
+
+			expect(result.steps).toHaveLength(1);
+			expect(result.steps[0].step).toBe('installPlugin');
+		});
+
+		it('should decompile V2 plugins array with strings', () => {
+			const v2Blueprint = {
+				version: 2,
+				plugins: ['gutenberg', 'woocommerce']
+			};
+
+			const result = decompiler.decompile(v2Blueprint);
+
+			expect(result.steps).toHaveLength(2);
+			expect(result.steps[0]).toEqual({
+				step: 'installPlugin',
+				url: 'https://wordpress.org/plugins/gutenberg/',
+				prs: false
+			});
+			expect(result.steps[1]).toEqual({
+				step: 'installPlugin',
+				url: 'https://wordpress.org/plugins/woocommerce/',
+				prs: false
+			});
+		});
+
+		it('should decompile V2 plugins array with objects', () => {
+			const v2Blueprint = {
+				version: 2,
+				plugins: [
+					{ resource: 'wordpress.org/plugins', slug: 'jetpack' },
+					{ resource: 'url', url: 'https://example.com/plugin.zip' }
+				]
+			};
+
+			const result = decompiler.decompile(v2Blueprint);
+
+			expect(result.steps).toHaveLength(2);
+			expect(result.steps[0]).toEqual({
+				step: 'installPlugin',
+				url: 'https://wordpress.org/plugins/jetpack/',
+				prs: false
+			});
+			expect(result.steps[1]).toEqual({
+				step: 'installPlugin',
+				url: 'https://example.com/plugin.zip',
+				prs: false,
+				permalink: false
+			});
+		});
+
+		it('should decompile V2 themes array', () => {
+			const v2Blueprint = {
+				version: 2,
+				themes: ['flavor', { resource: 'wordpress.org/themes', slug: 'flavor' }]
+			};
+
+			const result = decompiler.decompile(v2Blueprint);
+
+			expect(result.steps).toHaveLength(2);
+			expect(result.steps[0]).toEqual({
+				step: 'installTheme',
+				url: 'https://wordpress.org/themes/flavor/',
+				prs: false
+			});
+		});
+
+		it('should decompile V2 siteOptions', () => {
+			const v2Blueprint = {
+				version: 2,
+				siteOptions: {
+					blogname: 'My Site',
+					blogdescription: 'A tagline',
+					permalink_structure: '/%postname%/'
+				}
+			};
+
+			const result = decompiler.decompile(v2Blueprint);
+
+			expect(result.steps).toHaveLength(2);
+			expect(result.steps[0]).toEqual({
+				step: 'setSiteName',
+				sitename: 'My Site',
+				tagline: 'A tagline'
+			});
+			expect(result.steps[1]).toEqual({
+				step: 'setSiteOption',
+				name: 'permalink_structure',
+				value: '/%postname%/'
+			});
+		});
+
+		it('should decompile V2 content array', () => {
+			const v2Blueprint = {
+				version: 2,
+				content: [
+					{
+						type: 'posts',
+						source: {
+							post_title: 'About Us',
+							post_content: '<p>Hello</p>',
+							post_type: 'page',
+							post_status: 'publish'
+						}
+					},
+					{
+						type: 'posts',
+						source: {
+							post_title: 'Hello World',
+							post_content: '<p>Content</p>',
+							post_type: 'post',
+							post_status: 'publish'
+						}
+					}
+				]
+			};
+
+			const result = decompiler.decompile(v2Blueprint);
+
+			expect(result.steps).toHaveLength(2);
+			expect(result.steps[0]).toMatchObject({
+				step: 'addPage',
+				title: 'About Us',
+				content: '<p>Hello</p>'
+			});
+			expect(result.steps[1]).toMatchObject({
+				step: 'addPost',
+				title: 'Hello World',
+				content: '<p>Content</p>'
+			});
+		});
+
+		it('should decompile V2 users array', () => {
+			const v2Blueprint = {
+				version: 2,
+				users: [
+					{ username: 'editor', email: 'editor@example.com', role: 'editor' },
+					{ username: 'author', role: 'author' }
+				]
+			};
+
+			const result = decompiler.decompile(v2Blueprint);
+
+			expect(result.steps).toHaveLength(2);
+			expect(result.steps[0]).toMatchObject({
+				step: 'createUser',
+				username: 'editor',
+				email: 'editor@example.com',
+				role: 'editor'
+			});
+			expect(result.steps[1]).toMatchObject({
+				step: 'createUser',
+				username: 'author',
+				role: 'author'
+			});
+		});
+
+		it('should decompile V2 constants', () => {
+			const v2Blueprint = {
+				version: 2,
+				constants: {
+					WP_DEBUG: true,
+					WP_DEBUG_DISPLAY: true,
+					SCRIPT_DEBUG: false
+				}
+			};
+
+			const result = decompiler.decompile(v2Blueprint);
+
+			expect(result.steps).toHaveLength(1);
+			expect(result.steps[0]).toMatchObject({
+				step: 'debug',
+				wpDebug: true,
+				wpDebugDisplay: true,
+				scriptDebug: false
+			});
+		});
+
+		it('should decompile V2 applicationOptions with login', () => {
+			const v2Blueprint = {
+				version: 2,
+				applicationOptions: {
+					'wordpress-playground': {
+						login: {}
+					}
+				}
+			};
+
+			const result = decompiler.decompile(v2Blueprint);
+
+			expect(result.steps).toHaveLength(1);
+			expect(result.steps[0]).toMatchObject({
+				step: 'login',
+				username: 'admin',
+				password: 'password'
+			});
+		});
+
+		it('should decompile V2 applicationOptions with landingPage', () => {
+			const v2Blueprint = {
+				version: 2,
+				applicationOptions: {
+					'wordpress-playground': {
+						landingPage: '/wp-admin/'
+					}
+				}
+			};
+
+			const result = decompiler.decompile(v2Blueprint);
+
+			expect(result.steps).toHaveLength(1);
+			expect(result.steps[0]).toEqual({
+				step: 'setLandingPage',
+				landingPage: '/wp-admin/'
+			});
+		});
+
+		it('should decompile V2 additionalStepsAfterExecution', () => {
+			const v2Blueprint = {
+				version: 2,
+				additionalStepsAfterExecution: [
+					{
+						step: 'wp-cli',
+						command: 'plugin list'
+					}
+				]
+			};
+
+			const result = decompiler.decompile(v2Blueprint);
+
+			expect(result.steps).toHaveLength(1);
+			expect(result.steps[0]).toEqual({
+				step: 'runWpCliCommand',
+				command: 'plugin list'
+			});
+		});
+
+		it('should decompile complex V2 blueprint', () => {
+			const v2Blueprint = {
+				version: 2,
+				plugins: ['gutenberg'],
+				themes: ['flavor'],
+				siteOptions: {
+					blogname: 'My Site',
+					blogdescription: 'A tagline'
+				},
+				users: [{ username: 'editor', role: 'editor' }],
+				applicationOptions: {
+					'wordpress-playground': {
+						login: {},
+						landingPage: '/wp-admin/'
+					}
+				}
+			};
+
+			const result = decompiler.decompile(v2Blueprint);
+
+			expect(result.confidence).toBe('high');
+			expect(result.unmappedSteps).toHaveLength(0);
+
+			const stepTypes = result.steps.map(s => s.step);
+			expect(stepTypes).toContain('installPlugin');
+			expect(stepTypes).toContain('installTheme');
+			expect(stepTypes).toContain('setSiteName');
+			expect(stepTypes).toContain('createUser');
+			expect(stepTypes).toContain('login');
+			expect(stepTypes).toContain('setLandingPage');
+		});
+	});
+
+	describe('transpile V1 to V2', () => {
+		it('should transpile V1 installPlugin to V2', () => {
+			const v1Native = {
+				steps: [
+					{
+						step: 'installPlugin',
+						pluginData: { resource: 'wordpress.org/plugins', slug: 'gutenberg' },
+						options: { activate: true }
+					}
+				]
+			};
+
+			const stepLibrary = decompiler.decompile(v1Native);
+			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+
+			expect(v2Native.version).toBe(2);
+			expect(v2Native.plugins).toContain('gutenberg');
+		});
+
+		it('should transpile V1 setSiteOptions to V2 siteOptions with actual values', () => {
+			const v1Native = {
+				steps: [
+					{
+						step: 'setSiteOptions',
+						options: { blogname: 'My Site', blogdescription: 'A tagline' }
+					}
+				]
+			};
+
+			const stepLibrary = decompiler.decompile(v1Native);
+			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+
+			expect(v2Native.version).toBe(2);
+			expect(v2Native.siteOptions).toBeDefined();
+			// Verify actual values are used, not placeholders like ${sitename}
+			expect(v2Native.siteOptions!.blogname).toBe('My Site');
+			expect(v2Native.siteOptions!.blogdescription).toBe('A tagline');
+		});
+
+		it('should transpile V1 installTheme to V2 themes array', () => {
+			const v1Native = {
+				steps: [
+					{
+						step: 'installTheme',
+						themeData: { resource: 'wordpress.org/themes', slug: 'flavor' },
+						options: { activate: true }
+					}
+				]
+			};
+
+			const stepLibrary = decompiler.decompile(v1Native);
+			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+
+			expect(v2Native.version).toBe(2);
+			// Verify theme goes to themes array, not additionalStepsAfterExecution
+			expect(v2Native.themes).toBeDefined();
+			expect(v2Native.themes).toContain('flavor');
+			expect(v2Native.additionalStepsAfterExecution).toBeUndefined();
+		});
+
+		it('should transpile V1 login to V2 applicationOptions', () => {
+			const v1Native = {
+				steps: [{ step: 'login' }]
+			};
+
+			const stepLibrary = decompiler.decompile(v1Native);
+			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+
+			expect(v2Native.version).toBe(2);
+			expect(v2Native.applicationOptions?.['wordpress-playground']?.login).toBeDefined();
+		});
+
+		it('should transpile V1 landingPage to V2 applicationOptions', () => {
+			const v1Native = {
+				landingPage: '/wp-admin/',
+				steps: []
+			};
+
+			const stepLibrary = decompiler.decompile(v1Native);
+			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+
+			expect(v2Native.version).toBe(2);
+			expect(v2Native.applicationOptions?.['wordpress-playground']?.landingPage).toBe('/wp-admin/');
+		});
+
+		it('should transpile V1 runPHP with wp_insert_post to V2 content', () => {
+			const v1Native = {
+				steps: [
+					{
+						step: 'runPHP',
+						code: `<?php require_once '/wordpress/wp-load.php';
+$page_args = array(
+'post_type'    => 'page',
+'post_status'  => 'publish',
+'post_title'   => 'About Us',
+'post_content' => '<p>Welcome!</p>',
+);
+$page_id = wp_insert_post( $page_args );`,
+						progress: { caption: 'addPage: About Us' }
+					}
+				]
+			};
+
+			const stepLibrary = decompiler.decompile(v1Native);
+			expect(stepLibrary.steps[0].step).toBe('addPage');
+
+			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+
+			expect(v2Native.version).toBe(2);
+			expect(v2Native.content).toHaveLength(1);
+			expect(v2Native.content![0].source.post_title).toBe('About Us');
+		});
+
+		it('should transpile complex V1 blueprint to V2', () => {
+			const v1Native = {
+				landingPage: '/wp-admin/',
+				steps: [
+					{
+						step: 'installPlugin',
+						pluginData: { resource: 'wordpress.org/plugins', slug: 'woocommerce' },
+						options: { activate: true }
+					},
+					{
+						step: 'setSiteOptions',
+						options: { blogname: 'My Store', blogdescription: 'Best products' }
+					},
+					{ step: 'login' }
+				]
+			};
+
+			const stepLibrary = decompiler.decompile(v1Native);
+			expect(stepLibrary.confidence).toBe('high');
+
+			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+
+			expect(v2Native.version).toBe(2);
+			expect(v2Native.plugins).toContain('woocommerce');
+			expect(v2Native.siteOptions).toBeDefined();
+			expect(v2Native.applicationOptions?.['wordpress-playground']?.login).toBeDefined();
+			expect(v2Native.applicationOptions?.['wordpress-playground']?.landingPage).toBe('/wp-admin/');
+		});
+
+		it('should preserve data through V1 → step library → V2 transpilation', () => {
+			const v1Native = {
+				steps: [
+					{
+						step: 'installPlugin',
+						pluginData: { resource: 'wordpress.org/plugins', slug: 'jetpack' },
+						options: { activate: true }
+					},
+					{
+						step: 'installPlugin',
+						pluginData: { resource: 'wordpress.org/plugins', slug: 'akismet' },
+						options: { activate: true }
+					}
+				]
+			};
+
+			const stepLibrary = decompiler.decompile(v1Native);
+			const v2Native = compilerV2.compile({ steps: stepLibrary.steps });
+
+			expect(v2Native.plugins).toContain('jetpack');
+			expect(v2Native.plugins).toContain('akismet');
+			expect(v2Native.plugins).toHaveLength(2);
+		});
+	});
+
+	describe('V2 roundtrip: compile then decompile', () => {
+		it('should roundtrip V2 installPlugin', () => {
+			const original = {
+				steps: [
+					{ step: 'installPlugin', url: 'https://wordpress.org/plugins/gutenberg/' }
+				]
+			};
+
+			const compiled = compilerV2.compile(original);
+			expect(compiled.version).toBe(2);
+
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('installPlugin');
+			expect((decompiled.steps[0] as any).url).toBe('https://wordpress.org/plugins/gutenberg/');
+		});
+
+		it('should roundtrip V2 installTheme', () => {
+			const original = {
+				steps: [
+					{ step: 'installTheme', url: 'https://wordpress.org/themes/flavor/' }
+				]
+			};
+
+			const compiled = compilerV2.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('installTheme');
+			expect((decompiled.steps[0] as any).url).toBe('https://wordpress.org/themes/flavor/');
+		});
+
+		it('should roundtrip V2 addPage', () => {
+			const original = {
+				steps: [
+					{ step: 'addPage', title: 'About Us', content: '<p>Welcome!</p>' }
+				]
+			};
+
+			const compiled = compilerV2.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('addPage');
+			expect((decompiled.steps[0] as any).title).toBe('About Us');
+			expect((decompiled.steps[0] as any).content).toBe('<p>Welcome!</p>');
+		});
+
+		it('should roundtrip V2 createUser', () => {
+			const original = {
+				steps: [
+					{ step: 'createUser', username: 'editor', role: 'editor' }
+				]
+			};
+
+			const compiled = compilerV2.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('createUser');
+			expect((decompiled.steps[0] as any).username).toBe('editor');
+			expect((decompiled.steps[0] as any).role).toBe('editor');
+		});
+
+		it('should roundtrip V2 login', () => {
+			const original = {
+				steps: [
+					{ step: 'login' }
+				]
+			};
+
+			const compiled = compilerV2.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('login');
+		});
+
+		it('should roundtrip V2 complex blueprint', () => {
+			const original = {
+				steps: [
+					{ step: 'installPlugin', url: 'https://wordpress.org/plugins/woocommerce/' },
+					{ step: 'installTheme', url: 'https://wordpress.org/themes/flavor/' },
+					{ step: 'addPage', title: 'About', content: '<p>Hello</p>' },
+					{ step: 'createUser', username: 'shop_manager', role: 'shop_manager' },
+					{ step: 'login' }
+				]
+			};
+
+			const compiled = compilerV2.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.confidence).toBe('high');
+
+			const stepTypes = decompiled.steps.map(s => s.step);
+			expect(stepTypes).toContain('installPlugin');
+			expect(stepTypes).toContain('installTheme');
+			expect(stepTypes).toContain('addPage');
+			expect(stepTypes).toContain('createUser');
 			expect(stepTypes).toContain('login');
 		});
 	});

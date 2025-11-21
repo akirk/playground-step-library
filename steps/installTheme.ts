@@ -1,55 +1,68 @@
 import { githubTheme } from './githubTheme.js';
 import type { StepFunction, InstallThemeStep , StepResult } from './types.js';
-import { v1ToV2Fallback } from './types.js';
+import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
 export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeStep): StepResult => {
-	return {
-		toV1() {
-	let urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec(step.url);
-	if (urlTest) {
+	// Check if it's a GitHub URL
+	const githubPattern = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/;
+	const isGitHubUrl = githubPattern.test(step.url) && step.url.match(githubPattern);
+
+	if (isGitHubUrl) {
 		return githubTheme({
 			step: 'githubTheme',
 			url: step.url,
 			prs: step.prs
-		}).toV1();
+		});
 	}
 
+	// Extract WordPress.org slug
 	let theme = step.url;
-	urlTest = /^https:\/\/wordpress.org\/themes\/(?<slug>[^\/]+)/.exec(step.url);
-	if (urlTest) {
-		theme = urlTest.groups!.slug;
-	}
-	if (!theme) {
-		return [];
-	}
-	const steps = [
-		{
-			"step": "installTheme",
-			"themeData": {
-				"resource": "wordpress.org/themes",
-				"slug": theme
-			},
-			"options": {
-				"activate": true
-			},
-			"progress": {
-				"caption": `Installing theme: ${theme}`
-			}
-		}
-	];
-	if (theme.match(/^https?:/)) {
-		steps[0].themeData = {
-			resource: "url",
-			url: theme
-		} as any;
+	const slugPattern = /^https:\/\/wordpress.org\/themes\/(?<slug>[^\/]+)/;
+	const slugMatch = step.url.match(slugPattern);
+	if (slugMatch && slugMatch.groups) {
+		theme = slugMatch.groups.slug;
 	}
 
-	return { steps };
+	if (!theme) {
+		return {
+			toV1() { return { steps: [] }; },
+			toV2() { return { version: 2 }; }
+		};
+	}
+
+	// WordPress.org themes and direct URLs
+	return {
+		toV1() {
+			const themeStep: any = {
+				"step": "installTheme",
+				"themeData": {
+					"resource": "wordpress.org/themes",
+					"slug": theme
+				},
+				"options": {
+					"activate": true
+				},
+				"progress": {
+					"caption": `Installing theme: ${theme}`
+				}
+			};
+
+			if (theme.match(/^https?:/)) {
+				themeStep.themeData = {
+					resource: "url",
+					url: theme
+				};
+			}
+
+			return { steps: [themeStep] };
 		},
 
-		toV2() {
-			return v1ToV2Fallback(this.toV1());
+		toV2(): BlueprintV2Declaration {
+			return {
+				version: 2,
+				themes: [theme]
+			};
 		}
 	};
 };

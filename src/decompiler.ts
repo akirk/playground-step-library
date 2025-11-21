@@ -8,6 +8,27 @@ interface NativeBlueprint {
 	[key: string]: any;
 }
 
+interface NativeV2Blueprint {
+	version: 2;
+	plugins?: Array<string | { resource: string; slug?: string; url?: string }>;
+	themes?: Array<string | { resource: string; slug?: string; url?: string }>;
+	siteOptions?: Record<string, any>;
+	content?: Array<{ type: string; source: any }>;
+	users?: Array<{ username: string; email?: string; role?: string; meta?: any }>;
+	constants?: Record<string, any>;
+	applicationOptions?: {
+		'wordpress-playground'?: {
+			login?: any;
+			landingPage?: string;
+		};
+	};
+	additionalStepsAfterExecution?: Array<any>;
+	muPlugins?: Array<{ name: string; code: string }>;
+	blueprintMeta?: { name?: string };
+	wordpressVersion?: string;
+	phpVersion?: string;
+}
+
 export interface DecompilerResult {
 	steps: Array<StepLibraryStepDefinition>;
 	unmappedSteps: Array<any>;
@@ -19,7 +40,244 @@ export class BlueprintDecompiler {
 	private warnings: Array<string> = [];
 	private unmappedSteps: Array<any> = [];
 
-	decompile(nativeBlueprint: NativeBlueprint): DecompilerResult {
+	decompile(nativeBlueprint: NativeBlueprint | NativeV2Blueprint): DecompilerResult {
+		if ( this.isV2Blueprint( nativeBlueprint ) ) {
+			return this.decompileV2( nativeBlueprint );
+		}
+		return this.decompileV1( nativeBlueprint );
+	}
+
+	private isV2Blueprint( blueprint: any ): blueprint is NativeV2Blueprint {
+		return blueprint && blueprint.version === 2;
+	}
+
+	private decompileV2( v2Blueprint: NativeV2Blueprint ): DecompilerResult {
+		this.warnings = [];
+		this.unmappedSteps = [];
+
+		const steps: Array<StepLibraryStepDefinition> = [];
+
+		// Handle plugins array
+		if ( v2Blueprint.plugins && Array.isArray( v2Blueprint.plugins ) ) {
+			for ( const plugin of v2Blueprint.plugins ) {
+				if ( typeof plugin === 'string' ) {
+					steps.push( {
+						step: 'installPlugin',
+						url: `https://wordpress.org/plugins/${plugin}/`,
+						prs: false
+					} );
+				} else if ( plugin && typeof plugin === 'object' ) {
+					const pluginStep = this.decompileV2Plugin( plugin );
+					if ( pluginStep ) {
+						steps.push( pluginStep );
+					}
+				}
+			}
+		}
+
+		// Handle themes array
+		if ( v2Blueprint.themes && Array.isArray( v2Blueprint.themes ) ) {
+			for ( const theme of v2Blueprint.themes ) {
+				if ( typeof theme === 'string' ) {
+					steps.push( {
+						step: 'installTheme',
+						url: `https://wordpress.org/themes/${theme}/`,
+						prs: false
+					} );
+				} else if ( theme && typeof theme === 'object' ) {
+					const themeStep = this.decompileV2Theme( theme );
+					if ( themeStep ) {
+						steps.push( themeStep );
+					}
+				}
+			}
+		}
+
+		// Handle siteOptions
+		if ( v2Blueprint.siteOptions && typeof v2Blueprint.siteOptions === 'object' ) {
+			const opts = v2Blueprint.siteOptions;
+			const blogname = opts.blogname;
+			const blogdescription = opts.blogdescription;
+
+			if ( blogname !== undefined || blogdescription !== undefined ) {
+				steps.push( {
+					step: 'setSiteName',
+					sitename: blogname || '',
+					tagline: blogdescription || ''
+				} );
+			}
+
+			for ( const [name, value] of Object.entries( opts ) ) {
+				if ( name === 'blogname' || name === 'blogdescription' ) {
+					continue;
+				}
+				steps.push( {
+					step: 'setSiteOption',
+					name: name,
+					value: value as string
+				} );
+			}
+		}
+
+		// Handle content array
+		if ( v2Blueprint.content && Array.isArray( v2Blueprint.content ) ) {
+			for ( const item of v2Blueprint.content ) {
+				if ( item.type === 'posts' && item.source ) {
+					const postType = item.source.post_type || 'post';
+					const step = postType === 'page' ? 'addPage' : 'addPost';
+					steps.push( {
+						step,
+						title: item.source.post_title || '',
+						content: item.source.post_content || ''
+					} );
+				}
+			}
+		}
+
+		// Handle users array
+		if ( v2Blueprint.users && Array.isArray( v2Blueprint.users ) ) {
+			for ( const user of v2Blueprint.users ) {
+				steps.push( {
+					step: 'createUser',
+					username: user.username,
+					email: user.email || `${user.username}@example.com`,
+					role: user.role || 'subscriber'
+				} );
+			}
+		}
+
+		// Handle constants
+		if ( v2Blueprint.constants && typeof v2Blueprint.constants === 'object' ) {
+			const consts = v2Blueprint.constants;
+			const wpDebug = consts.WP_DEBUG === true;
+			const wpDebugDisplay = consts.WP_DEBUG_DISPLAY === true;
+			const scriptDebug = consts.SCRIPT_DEBUG === true;
+
+			if ( wpDebug || wpDebugDisplay || scriptDebug ) {
+				steps.push( {
+					step: 'debug',
+					wpDebug,
+					wpDebugDisplay,
+					scriptDebug,
+					queryMonitor: false
+				} );
+			}
+		}
+
+		// Handle applicationOptions (login, landingPage)
+		if ( v2Blueprint.applicationOptions?.['wordpress-playground'] ) {
+			const appOpts = v2Blueprint.applicationOptions['wordpress-playground'];
+
+			if ( appOpts.login !== undefined ) {
+				if ( appOpts.login === true || ( typeof appOpts.login === 'object' && Object.keys( appOpts.login ).length === 0 ) ) {
+					steps.push( {
+						step: 'login',
+						username: 'admin',
+						password: 'password',
+						landingPage: false
+					} );
+				} else if ( typeof appOpts.login === 'object' ) {
+					steps.push( {
+						step: 'login',
+						username: appOpts.login.username || 'admin',
+						password: appOpts.login.password || 'password',
+						landingPage: false
+					} );
+				}
+			}
+
+			if ( appOpts.landingPage ) {
+				steps.push( {
+					step: 'setLandingPage',
+					landingPage: appOpts.landingPage
+				} );
+			}
+		}
+
+		// Handle muPlugins
+		if ( v2Blueprint.muPlugins && Array.isArray( v2Blueprint.muPlugins ) ) {
+			for ( const muPlugin of v2Blueprint.muPlugins ) {
+				steps.push( {
+					step: 'muPlugin',
+					name: muPlugin.name || 'mu-plugin',
+					code: muPlugin.code || ''
+				} );
+			}
+		}
+
+		// Handle additionalStepsAfterExecution (V1-style steps)
+		if ( v2Blueprint.additionalStepsAfterExecution && Array.isArray( v2Blueprint.additionalStepsAfterExecution ) ) {
+			for ( let i = 0; i < v2Blueprint.additionalStepsAfterExecution.length; i++ ) {
+				const nativeStep = v2Blueprint.additionalStepsAfterExecution[i];
+				const decompiled = this.decompileStep( nativeStep, v2Blueprint.additionalStepsAfterExecution, i );
+
+				if ( decompiled ) {
+					if ( Array.isArray( decompiled ) ) {
+						steps.push( ...decompiled );
+					} else {
+						steps.push( decompiled );
+					}
+				} else {
+					this.unmappedSteps.push( nativeStep );
+				}
+			}
+		}
+
+		const confidence = this.calculateConfidence( steps.length, this.unmappedSteps.length );
+
+		return {
+			steps,
+			unmappedSteps: this.unmappedSteps,
+			confidence,
+			warnings: this.warnings
+		};
+	}
+
+	private decompileV2Plugin( plugin: any ): StepLibraryStepDefinition | null {
+		if ( plugin.resource === 'wordpress.org/plugins' && plugin.slug ) {
+			return {
+				step: 'installPlugin',
+				url: `https://wordpress.org/plugins/${plugin.slug}/`,
+				prs: false
+			};
+		}
+
+		if ( plugin.resource === 'url' && plugin.url ) {
+			return {
+				step: 'installPlugin',
+				url: plugin.url,
+				prs: false,
+				permalink: false
+			};
+		}
+
+		this.warnings.push( `Unknown V2 plugin resource type: ${plugin.resource}` );
+		return null;
+	}
+
+	private decompileV2Theme( theme: any ): StepLibraryStepDefinition | null {
+		if ( theme.resource === 'wordpress.org/themes' && theme.slug ) {
+			return {
+				step: 'installTheme',
+				url: `https://wordpress.org/themes/${theme.slug}/`,
+				prs: false
+			};
+		}
+
+		if ( theme.resource === 'url' && theme.url ) {
+			return {
+				step: 'installTheme',
+				url: theme.url,
+				prs: false,
+				permalink: false
+			};
+		}
+
+		this.warnings.push( `Unknown V2 theme resource type: ${theme.resource}` );
+		return null;
+	}
+
+	private decompileV1( nativeBlueprint: NativeBlueprint ): DecompilerResult {
 		this.warnings = [];
 		this.unmappedSteps = [];
 

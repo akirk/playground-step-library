@@ -212,7 +212,7 @@ See [Architecture Documentation](architecture.md) for details on how steps imple
 
 ### `BlueprintDecompiler`
 
-Converts native WordPress Playground blueprints back into step library blueprints with custom steps.
+Converts native WordPress Playground blueprints (both V1 and V2 formats) back into step library blueprints with custom steps.
 
 #### Constructor
 
@@ -285,9 +285,9 @@ console.log('Unmapped steps:', result.unmappedSteps.length);
 console.log('Warnings:', result.warnings);
 ```
 
-#### Supported Native Steps
+#### Supported Native Steps (V1)
 
-The decompiler can convert these native step types:
+The decompiler can convert these native V1 step types:
 
 | Native Step | Decompiled To |
 |-------------|---------------|
@@ -300,4 +300,58 @@ The decompiler can convert these native step types:
 | `login` | `login` |
 | `wp-cli` | `runWpCliCommand` |
 
-Top-level blueprint properties like `plugins`, `login`, `siteOptions`, `constants`, and `landingPage` are also handled.
+Top-level V1 blueprint properties like `plugins`, `login`, `siteOptions`, `constants`, and `landingPage` are also handled.
+
+#### Supported V2 Properties
+
+The decompiler automatically detects V2 blueprints (those with `version: 2`) and handles these properties:
+
+| V2 Property | Decompiled To |
+|-------------|---------------|
+| `plugins` | `installPlugin` steps |
+| `themes` | `installTheme` steps |
+| `siteOptions` | `setSiteName` and `setSiteOption` steps |
+| `content` | `addPage` or `addPost` steps |
+| `users` | `createUser` steps |
+| `constants` | `debug` step |
+| `applicationOptions.wordpress-playground.login` | `login` step |
+| `applicationOptions.wordpress-playground.landingPage` | `setLandingPage` step |
+| `muPlugins` | `muPlugin` steps |
+| `additionalStepsAfterExecution` | Decompiled using V1 logic |
+
+#### V2 Example
+
+```javascript
+const v2Blueprint = {
+    version: 2,
+    plugins: ['gutenberg', 'woocommerce'],
+    themes: ['flavor'],
+    siteOptions: {
+        blogname: 'My Store',
+        blogdescription: 'The best products'
+    },
+    content: [
+        {
+            type: 'posts',
+            source: {
+                post_title: 'Welcome',
+                post_content: '<p>Hello!</p>',
+                post_type: 'page',
+                post_status: 'publish'
+            }
+        }
+    ],
+    users: [
+        { username: 'shop_manager', role: 'shop_manager' }
+    ],
+    applicationOptions: {
+        'wordpress-playground': {
+            login: {},
+            landingPage: '/wp-admin/'
+        }
+    }
+};
+
+const result = decompiler.decompile(v2Blueprint);
+// Result contains installPlugin, installTheme, setSiteName, addPage, createUser, login, setLandingPage steps
+```

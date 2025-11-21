@@ -6,7 +6,7 @@ export const setSiteName: StepFunction<SetSiteNameStep> = (step: SetSiteNameStep
 	return setSiteOption({
 		step: 'setSiteOption',
 		name: ['blogname', 'blogdescription'],
-		value: ['${sitename}', '${tagline}']
+		value: [step.sitename, step.tagline]
 	});
 };
 
