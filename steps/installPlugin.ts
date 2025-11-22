@@ -12,7 +12,7 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 	// Check if it's a GitHub URL
 	const isGitHubUrl = step.url.match(/^(?:https:\/\/)?github\.com\//i) ||
 	                    (!step.url.includes('://') && step.url.match(/^[^\/]+\/[^\/]+/));
-	const urlPattern = /^(?:https:\/\/github\.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)/;
+	const urlPattern = /^(?:https:\/\/)?(?:github\.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)/;
 	const urlTest = isGitHubUrl ? urlPattern.exec(step.url) : null;
 
 	// Extract WordPress.org slug
@@ -99,7 +99,7 @@ installPlugin.vars = [
 		description: "Add support for submitting GitHub Pull Requests.",
 		show: function (step: any) {
 		const url = step.querySelector('input[name=url]')?.value;
-		return url && url.match(/^https:\/\/github.com\//);
+		return url && url.match(/^(?:https:\/\/)?github\.com\//i);
 		},
 		type: "boolean",
 		samples: ["false", "true"]

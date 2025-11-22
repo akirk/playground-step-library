@@ -2,84 +2,24 @@
  * Main application entry point
  *
  */
-// @ts-nocheck
+// @ts-nocheck - TODO: Fix type errors and remove this
 import PlaygroundStepLibrary from '../index';
 import { StepDefinition, ShowCallbacks } from './types';
-import {
-	minimalEncode,
-	shortenUrl,
-	expandUrl,
-	isDefaultValue,
-	encodeStringAsBase64,
-	decodeBase64ToString,
-	generateLabel
-} from './utils';
-import {
-	loadAceEditor,
-	getAceTheme,
-	updateAllAceEditorThemes,
-	initBlueprintAceEditor,
-	initHistoryBlueprintAceEditor,
-	cleanupHistoryBlueprintAceEditor,
-	initCodeEditorAce,
-	initViewSourceAceEditor,
-	cleanupAceEditor,
-	blueprintAceEditor,
-	setBlueprintAceValue,
-	viewSourceAceEditor
-} from './ace-editor';
-import { fixMouseCursor, makeParentStepDraggable, makeParentStepUnDraggable } from './dom-utils';
-import {
-	detectUrlType,
-	detectWpAdminUrl,
-	detectHtml,
-	detectPhp,
-	isPlaygroundDomain,
-	detectPlaygroundUrl,
-	detectPlaygroundQueryApiUrl
-} from './content-detection';
-import { showCallbacks, isManualEditMode, setBlueprint, setLinkedTextarea, getBlueprint } from './app-state';
-import {
-	getHistory,
-	saveHistory,
-	addBlueprintToHistory,
-	addBlueprintToHistoryWithId,
-	deleteBlueprintFromHistory,
-	renameBlueprintInHistory,
-	getBlueprintFromHistory,
-	isBlueprintInHistory,
-	type BlueprintHistoryEntry
-} from './my-blueprints';
-import { parsePlaygroundQueryApi, shouldUseMuPlugin } from './playground-integration';
-import { compressState, uncompressState, extractStepDataFromElement, type StepConfig } from './blueprint-compiler';
+import * as aceEditor from './ace-editor';
+import * as appState from './app-state';
+import * as blueprintCompiler from './blueprint-compiler';
+import * as blueprintUI from './blueprint-ui';
+import * as customSteps from './custom-steps';
+import * as domUtils from './dom-utils';
+import * as myBlueprints from './my-blueprints';
+import * as urlController from './url-controller';
+import * as wizard from './wizard';
+import { toastService } from './toast-service';
+import { parsePlaygroundQueryApi } from './playground-integration';
 import { getDragAfterElement } from './drag-drop';
-import { getMySteps, saveMyStep as saveMyStepToStorage, deleteMyStep, renameMyStep } from './custom-steps';
-import { migrateState } from './state-migration';
 import { parseQueryParamsForBlueprint } from './query-params';
 import { createStep } from './step-renderer';
-import {
-	addStepFromUrl,
-	addLandingPageStep,
-	addPostStepFromHtml,
-	addStepFromPhp,
-	type StepInserterDependencies
-} from './step-inserter';
-import {
-	updateBlueprintSizeWarning,
-	handleSplitViewMode,
-	updateIframeSrc,
-	type BlueprintUIDependencies
-} from './blueprint-ui';
-import { toastService } from './toast-service';
 import { generateLabel } from './label-generator';
-import {
-	generateRedirectUrl,
-	copyToClipboard,
-	shareUrl,
-	initMoreOptionsDropdown,
-	setupDropdownCloseHandler,
-	type URLControllerDependencies
-} from './url-controller';
 import { blueprintEventBus } from './blueprint-event-bus';
 import { HistoryController, type HistoryControllerDependencies } from './history-controller';
 import { StepLibraryController, type StepLibraryControllerDependencies } from './step-library-controller';
@@ -87,18 +27,7 @@ import { BlueprintCompilationController, type BlueprintCompilationControllerDepe
 import { PasteHandlerController, type PasteHandlerControllerDependencies } from './paste-handler-controller';
 import { StateController, type StateControllerDependencies } from './state-controller';
 import { EventHandlersController, type EventHandlersControllerDependencies } from './event-handlers-controller';
-import {
-	initWizard,
-	getWizardState,
-	removeWizardStep,
-	removeWizardPlugin,
-	removeWizardTheme,
-	updateWizardPluginList,
-	updateWizardThemeList,
-	finishWizard,
-	resetWizardState,
-	type WizardDependencies
-} from './wizard';
+import { AIInstructionsController, type AIInstructionsControllerDependencies } from './ai-instructions-controller';
 import { examples } from './examples';
 
 declare global {
@@ -120,23 +49,23 @@ addEventListener('DOMContentLoaded', function () {
 	const stepList = document.getElementById('step-library')!;
 	const blueprintSteps = document.getElementById('blueprint-steps')!;
 
-	// Note: showCallbacks and isManualEditMode are imported from app-state.ts
+	// Note: appState.showCallbacks and appState.isManualEditMode are imported from app-state.ts
 	// URL detection functions are imported from content-detection.ts
-	// DOM utility functions (fixMouseCursor, etc.) are imported from dom-utils.ts
+	// DOM utility functions (domUtils.fixMouseCursor, etc.) are imported from dom-utils.ts
 	// createStep is now imported from step-renderer.ts
 
 	// Helper functions to get/set blueprint value from Ace editor or textarea
 	function getBlueprintValue(): string {
-		if (blueprintAceEditor) {
-			return blueprintAceEditor.getValue();
+		if (aceEditor.blueprintAceEditor) {
+			return aceEditor.blueprintAceEditor.getValue();
 		}
 		const textarea = document.getElementById('blueprint-compiled') as HTMLTextAreaElement;
 		return textarea ? textarea.value : '';
 	}
 
 	function setBlueprintValue(value: string): void {
-		if (blueprintAceEditor) {
-			blueprintAceEditor.setValue(value, -1);
+		if (aceEditor.blueprintAceEditor) {
+			aceEditor.blueprintAceEditor.setValue(value, -1);
 		}
 		const textarea = document.getElementById('blueprint-compiled') as HTMLTextAreaElement;
 		if (textarea) {
@@ -148,7 +77,7 @@ addEventListener('DOMContentLoaded', function () {
 	const stepLibraryControllerDeps: StepLibraryControllerDependencies = {
 		stepList,
 		customSteps,
-		showCallbacks
+		showCallbacks: appState.showCallbacks
 	};
 	const stepLibraryController = new StepLibraryController(stepLibraryControllerDeps);
 	stepLibraryController.initializeStepLibrary();
@@ -179,7 +108,7 @@ addEventListener('DOMContentLoaded', function () {
 		const myStep = JSON.parse(stepData);
 		myStep.date = new Date().toISOString();
 		stepLibraryController.insertMyStep(myStepName, myStep);
-		saveMyStepToStorage(myStepName, myStep);
+		customSteps.saveMyStep(myStepName, myStep);
 		saveStepEl.close();
 		myStepNameEl.value = '';
 	}
@@ -358,7 +287,7 @@ addEventListener('DOMContentLoaded', function () {
 		blueprintSteps.appendChild(stepClone);
 		stepClone.classList.remove('dragging');
 		stepClone.classList.remove('hidden');
-		stepClone.querySelectorAll('input,textarea').forEach(fixMouseCursor);
+		stepClone.querySelectorAll('input,textarea').forEach(domUtils.fixMouseCursor);
 		blueprintEventBus.emit('blueprint:updated');
 		stepClone.querySelector('input,textarea')?.focus();
 
@@ -501,12 +430,12 @@ addEventListener('DOMContentLoaded', function () {
 			return false;
 		}
 	});
-	// makeParentStepDraggable, makeParentStepUnDraggable, and fixMouseCursor are now imported from dom-utils.ts
+	// makeParentStepDraggable, makeParentStepUnDraggable, and domUtils.fixMouseCursor are now imported from dom-utils.ts
 
 	// Initialize Event Handlers Controller
 	const eventHandlersControllerDeps: EventHandlersControllerDependencies = {
 		customSteps,
-		showCallbacks,
+		showCallbacks: appState.showCallbacks,
 		stateController,
 		insertStep: (target: EventTarget) => insertStep(target as Element),
 		saveMyStep,
@@ -529,7 +458,7 @@ addEventListener('DOMContentLoaded', function () {
 		if (droppedStep && droppedStep.parentNode === stepList) {
 			const stepClone = droppedStep.cloneNode(true);
 			blueprintSteps.appendChild(stepClone);
-			stepClone.querySelectorAll('input,textarea').forEach(fixMouseCursor);
+			stepClone.querySelectorAll('input,textarea').forEach(domUtils.fixMouseCursor);
 			stepClone.classList.remove('dragging');
 		}
 	});
@@ -635,7 +564,7 @@ addEventListener('DOMContentLoaded', function () {
 
 	window.addEventListener('hashchange', function () {
 		if (location.hash) {
-			stateController.restoreState(uncompressState(location.hash.replace(/^#+/, '')));
+			stateController.restoreState(blueprintCompiler.uncompressState(location.hash.replace(/^#+/, '')));
 		}
 	});
 
@@ -652,11 +581,11 @@ addEventListener('DOMContentLoaded', function () {
 	// Wrapper function to gather DOM values and call the imported compressState
 	function updateVariableVisibility(stepBlock) {
 		stepBlock.querySelectorAll('input,select,textarea,button').forEach(function (input) {
-			if (!input || typeof showCallbacks[stepBlock.dataset.step] === 'undefined' || typeof showCallbacks[stepBlock.dataset.step][input.name] !== 'function') {
+			if (!input || typeof appState.showCallbacks[stepBlock.dataset.step] === 'undefined' || typeof appState.showCallbacks[stepBlock.dataset.step][input.name] !== 'function') {
 				return;
 			}
 			const tr = input.closest('tr');
-			if (showCallbacks[stepBlock.dataset.step][input.name](stepBlock)) {
+			if (appState.showCallbacks[stepBlock.dataset.step][input.name](stepBlock)) {
 				tr.style.display = '';
 			} else {
 				tr.style.display = 'none';
@@ -665,7 +594,7 @@ addEventListener('DOMContentLoaded', function () {
 	}
 	// getStepData is now extracted to blueprint-compiler.ts as extractStepDataFromElement
 	function getStepData(stepBlock) {
-		return extractStepDataFromElement(stepBlock);
+		return blueprintCompiler.extractStepDataFromElement(stepBlock);
 	}
 
 	let lastCompressedState = '';
@@ -698,7 +627,7 @@ addEventListener('DOMContentLoaded', function () {
 			}
 		}
 
-		setBlueprint(JSON.stringify(combinedExamples, null, 2));
+		appState.setBlueprint(JSON.stringify(combinedExamples, null, 2));
 
 		const currentCompressedState = stateController.compressStateFromDOM(state);
 
@@ -719,7 +648,7 @@ addEventListener('DOMContentLoaded', function () {
 	const stepInserterDeps: StepInserterDependencies = {
 		blueprintSteps,
 		customSteps,
-		showCallbacks
+		showCallbacks: appState.showCallbacks
 	};
 
 	// Dependencies for blueprint UI functions
@@ -782,7 +711,7 @@ addEventListener('DOMContentLoaded', function () {
 			stateController.autoredirect(queryParamBlueprint.redir);
 		}
 	} else if (location.hash) {
-		stateController.restoreState(uncompressState(location.hash.replace(/^#+/, '')));
+		stateController.restoreState(blueprintCompiler.uncompressState(location.hash.replace(/^#+/, '')));
 		if (!document.getElementById('preview-mode').value && blueprintSteps.querySelectorAll('.step').length && !pageAccessedByReload) {
 			stateController.autoredirect();
 		}
@@ -811,26 +740,26 @@ addEventListener('DOMContentLoaded', function () {
 		customSteps,
 		setBlueprintValue,
 		createStep,
-		showCallbacks,
+		showCallbacks: appState.showCallbacks,
 		blueprintSteps
 	};
 
-	initWizard(wizardDeps);
+	wizard.initWizard(wizardDeps);
 
 	// Make wizard functions globally accessible
-	window.removeWizardStep = removeWizardStep;
-	window.removeWizardPlugin = removeWizardPlugin;
-	window.removeWizardTheme = removeWizardTheme;
+	window.removeWizardStep = wizard.removeWizardStep;
+	window.removeWizardPlugin = wizard.removeWizardPlugin;
+	window.removeWizardTheme = wizard.removeWizardTheme;
 
 	// Manual Edit Mode functionality
 	const blueprintTextarea = document.getElementById('blueprint-compiled');
 
 	blueprintTextarea.addEventListener('focus', function () {
-		initBlueprintAceEditor(getBlueprintValue, isManualEditMode, transformJson);
+		aceEditor.initBlueprintAceEditor(getBlueprintValue, appState.isManualEditMode, transformJson);
 	});
 
 	blueprintTextarea.addEventListener('click', function () {
-		initBlueprintAceEditor(getBlueprintValue, isManualEditMode, transformJson);
+		aceEditor.initBlueprintAceEditor(getBlueprintValue, appState.isManualEditMode, transformJson);
 	});
 
 	// Intercept playground link clicks to regenerate URL if in manual edit mode
@@ -849,7 +778,7 @@ addEventListener('DOMContentLoaded', function () {
 			showSavePromptToast();
 		}
 
-		if (isManualEditMode.value) {
+		if (appState.isManualEditMode.value) {
 			e.preventDefault();
 			transformJson();
 			// Allow the click to proceed after transformJson updates the href
@@ -863,11 +792,11 @@ addEventListener('DOMContentLoaded', function () {
 	// generateRedirectUrl and dropdown functions are now imported from url-controller.ts
 
 	// Setup dropdown close handler
-	setupDropdownCloseHandler();
+	urlController.setupDropdownCloseHandler();
 
 	const mainDropdown = document.getElementById('more-options-dropdown');
 	if (mainDropdown) {
-		initMoreOptionsDropdown(mainDropdown);
+		urlController.initMoreOptionsDropdown(mainDropdown);
 	}
 
 	const moreOptionsMenu = document.getElementById('more-options-menu');
@@ -876,7 +805,7 @@ addEventListener('DOMContentLoaded', function () {
 		const playgroundUrl = (document.getElementById('playground-link') as HTMLAnchorElement).href;
 		const button = e.currentTarget as HTMLElement;
 		const originalContent = button.cloneNode(true);
-		const success = await copyToClipboard(playgroundUrl);
+		const success = await urlController.copyToClipboard(playgroundUrl);
 		if (success) {
 			showCopiedFeedback(button, originalContent);
 		}
@@ -898,7 +827,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		try {
-			const redirectUrl = generateRedirectUrl(1, false, urlControllerDeps);
+			const redirectUrl = urlController.generateRedirectUrl(1, false, urlControllerDeps);
 
 			if (!redirectUrl) {
 				console.error('No steps found');
@@ -909,7 +838,7 @@ addEventListener('DOMContentLoaded', function () {
 			const originalContent = button.cloneNode(true);
 			const title = (document.getElementById('title') as HTMLInputElement).value || 'WordPress Playground Blueprint';
 
-			const result = await shareUrl(redirectUrl, title);
+			const result = await urlController.shareUrl(redirectUrl, title);
 
 			if (result === 'shared' || result === 'copied') {
 				if (result === 'copied') {
@@ -949,7 +878,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		try {
-			const redirectUrl = generateRedirectUrl(1, true, urlControllerDeps);
+			const redirectUrl = urlController.generateRedirectUrl(1, true, urlControllerDeps);
 
 			if (!redirectUrl) {
 				console.error('No steps found');
@@ -958,7 +887,7 @@ addEventListener('DOMContentLoaded', function () {
 
 			const button = e.currentTarget as HTMLElement;
 			const originalContent = button.cloneNode(true);
-			const success = await copyToClipboard(redirectUrl);
+			const success = await urlController.copyToClipboard(redirectUrl);
 			if (success) {
 				showCopiedFeedback(button, originalContent);
 			}
@@ -966,6 +895,14 @@ addEventListener('DOMContentLoaded', function () {
 			console.error('Error in copy-redirect-url handler:', err);
 		}
 	});
+
+	// AI Instructions Controller
+	const aiInstructionsControllerDeps: AIInstructionsControllerDependencies = {
+		blueprintSteps,
+		customSteps,
+		moreOptionsMenu
+	};
+	new AIInstructionsController(aiInstructionsControllerDeps);
 
 	// History functionality is now handled by history-controller.ts
 	// Save dialog needs to be created after historyController is initialized
@@ -1001,9 +938,9 @@ addEventListener('DOMContentLoaded', function () {
 
 		const handleOverwrite = function () {
 			const title = defaultName;
-			const history = getHistory();
+			const history = myBlueprints.getHistory();
 			const updatedHistory = history.filter(entry => entry.title !== title);
-			saveHistory(updatedHistory);
+			myBlueprints.saveHistory(updatedHistory);
 
 			historyController.addToHistory(title);
 			const titleInput = document.getElementById('title');
@@ -1033,7 +970,7 @@ addEventListener('DOMContentLoaded', function () {
 				return;
 			}
 
-			const history = getHistory();
+			const history = myBlueprints.getHistory();
 			const existingEntry = history.find(entry => entry.title === title);
 
 			if (existingEntry) {
@@ -1107,7 +1044,7 @@ addEventListener('DOMContentLoaded', function () {
 			return true;
 		}
 
-		const history = getHistory();
+		const history = myBlueprints.getHistory();
 		if (history.length === 0) {
 			return false;
 		}
@@ -1122,7 +1059,7 @@ addEventListener('DOMContentLoaded', function () {
 		const titleInput = document.getElementById('title') as HTMLInputElement;
 		const blueprintTitle = titleInput && titleInput.value ? titleInput.value.trim() : '';
 
-		const history = getHistory();
+		const history = myBlueprints.getHistory();
 		const existingEntry = blueprintTitle ? history.find(entry => entry.title === blueprintTitle) : null;
 
 		let message: string;
@@ -1142,7 +1079,7 @@ addEventListener('DOMContentLoaded', function () {
 		toastService.showGlobalWithAction(message, actionLabel, () => {
 			if (existingEntry) {
 				const updatedHistory = history.filter(entry => entry.title !== blueprintTitle);
-				saveHistory(updatedHistory);
+				myBlueprints.saveHistory(updatedHistory);
 				const entryId = historyController.addToHistoryWithId(blueprintTitle);
 				if (entryId) {
 					showToast('Updated');
@@ -1317,7 +1254,7 @@ addEventListener('DOMContentLoaded', function () {
 			return;
 		}
 
-		isManualEditMode.value = false;
+		appState.isManualEditMode.value = false;
 		const manualEditBanner = document.getElementById('manual-edit-banner');
 		if (manualEditBanner) {
 			manualEditBanner.style.display = 'none';

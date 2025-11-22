@@ -7,6 +7,7 @@ export let blueprintAceEditor: AceEditorInstance = null;
 export let historyBlueprintAceEditor: AceEditorInstance = null;
 export let viewSourceAceEditor: AceEditorInstance = null;
 export let aceEditor: AceEditorInstance = null;
+export let aiInstructionsAceEditor: AceEditorInstance = null;
 
 export function getAceTheme(): string {
 	const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -55,6 +56,9 @@ export function updateAllAceEditorThemes(): void {
 	}
 	if (viewSourceAceEditor) {
 		viewSourceAceEditor.setTheme(theme);
+	}
+	if (aiInstructionsAceEditor) {
+		aiInstructionsAceEditor.setTheme(theme);
 	}
 }
 
@@ -445,5 +449,88 @@ export function cleanupAceEditor(): void {
 export function setBlueprintAceValue(value: string): void {
 	if (blueprintAceEditor) {
 		blueprintAceEditor.setValue(value, -1);
+	}
+}
+
+export function initAIInstructionsAceEditor(content: string): void {
+	const textarea = document.getElementById('ai-instructions-content') as HTMLTextAreaElement;
+	const wrapper = document.getElementById('ai-instructions-content-wrapper') as HTMLElement;
+
+	loadAceEditor().then(() => {
+		if (aiInstructionsAceEditor) {
+			aiInstructionsAceEditor.setValue(content, -1);
+			aiInstructionsAceEditor.resize();
+			return;
+		}
+
+		const container = document.createElement('div');
+		container.id = 'ai-instructions-ace';
+
+		wrapper.insertBefore(container, textarea);
+		textarea.style.display = 'none';
+
+		aiInstructionsAceEditor = (window as any).ace.edit(container);
+		aiInstructionsAceEditor.setTheme(getAceTheme());
+		aiInstructionsAceEditor.session.setMode('ace/mode/markdown');
+		aiInstructionsAceEditor.setFontSize(14);
+		aiInstructionsAceEditor.setShowPrintMargin(false);
+		aiInstructionsAceEditor.session.setUseWrapMode(true);
+		aiInstructionsAceEditor.session.setTabSize(2);
+		aiInstructionsAceEditor.session.setUseSoftTabs(true);
+		aiInstructionsAceEditor.setValue(content, -1);
+		aiInstructionsAceEditor.setOptions({
+			highlightActiveLine: true,
+			highlightGutterLine: true
+		});
+
+		const statusBar = document.getElementById('ai-instructions-status') as HTMLElement;
+		if (statusBar) {
+			statusBar.classList.add('active');
+
+			const updateStatus = () => {
+				updateAceStatusBar(aiInstructionsAceEditor, statusBar, 'Markdown');
+			};
+
+			aiInstructionsAceEditor.getSession().selection.on('changeCursor', updateStatus);
+			aiInstructionsAceEditor.getSession().selection.on('changeSelection', updateStatus);
+			updateStatus();
+		}
+
+		setTimeout(() => {
+			aiInstructionsAceEditor.resize();
+			aiInstructionsAceEditor.renderer.updateFull();
+		}, 0);
+	}).catch(err => {
+		console.error('Failed to load Ace Editor for AI instructions:', err);
+		textarea.style.display = '';
+		textarea.value = content;
+	});
+}
+
+export function getAIInstructionsValue(): string {
+	if (aiInstructionsAceEditor) {
+		return aiInstructionsAceEditor.getValue();
+	}
+	const textarea = document.getElementById('ai-instructions-content') as HTMLTextAreaElement;
+	return textarea ? textarea.value : '';
+}
+
+export function cleanupAIInstructionsAceEditor(): void {
+	if (aiInstructionsAceEditor) {
+		aiInstructionsAceEditor.destroy();
+		const aceContainer = document.getElementById('ai-instructions-ace');
+		if (aceContainer) {
+			aceContainer.remove();
+		}
+		aiInstructionsAceEditor = null;
+		const textarea = document.getElementById('ai-instructions-content') as HTMLTextAreaElement;
+		if (textarea) {
+			textarea.style.display = '';
+		}
+		const statusBar = document.getElementById('ai-instructions-status') as HTMLElement;
+		if (statusBar) {
+			statusBar.classList.remove('active');
+			statusBar.textContent = '';
+		}
 	}
 }

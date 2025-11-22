@@ -193,6 +193,10 @@
 								<svg width="16" height="16" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M768 832a128 128 0 0 1-128 128H192A128 128 0 0 1 64 832V384a128 128 0 0 1 128-128v64a64 64 0 0 0-64 64v448a64 64 0 0 0 64 64h448a64 64 0 0 0 64-64h64z"/><path fill="currentColor" d="M384 128a64 64 0 0 0-64 64v448a64 64 0 0 0 64 64h448a64 64 0 0 0 64-64V192a64 64 0 0 0-64-64H384zm0-64h448a128 128 0 0 1 128 128v448a128 128 0 0 1-128 128H384a128 128 0 0 1-128-128V192A128 128 0 0 1 384 64z"/></svg>
 								Copy Playground URL
 							</button>
+							<button id="generate-ai-instructions-menu">
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 13H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 17H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 9H9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+								Generate AI Instructions
+							</button>
 						</div>
 					</div>
 				</div>
@@ -467,6 +471,30 @@
 		<button id="global-toast-undo" style="display: none;">Undo</button>
 		<button id="global-toast-close">✕</button>
 	</div>
+
+	<dialog id="ai-instructions-dialog">
+		<div id="ai-instructions-header">
+			<h2>AI Instructions Snippet</h2>
+			<button id="ai-instructions-close" class="dialog-close-btn">✕</button>
+		</div>
+		<p>Add this to your AI agent's instructions file to enable testing changes in WordPress Playground. The URL is generated from your current blueprint.</p>
+		<div id="ai-instructions-options">
+			<label>URL Type:
+				<select id="ai-instructions-url-type">
+					<option value="step-library">Step Library (redirect)</option>
+					<option value="playground-hash">Playground (hash)</option>
+					<option value="playground-data">Playground (data URL)</option>
+				</select>
+			</label>
+		</div>
+		<div id="ai-instructions-content-wrapper">
+			<textarea id="ai-instructions-content"></textarea>
+			<div id="ai-instructions-status" class="ace-status-bar"></div>
+		</div>
+		<div class="dialog-buttons">
+			<button id="ai-instructions-copy" class="primary">Copy to Clipboard</button>
+		</div>
+	</dialog>
 </body>
 
 </html>

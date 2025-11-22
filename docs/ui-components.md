@@ -8,7 +8,7 @@ Complete guide to all user interface components in the WordPress Playground Step
 - [**Overview**](#overview) - Interface layout and components
 - [**Blueprint Settings**](#blueprint-settings) - Configure WordPress/PHP versions, display mode, storage
 - [**My Blueprints**](#my-blueprints) - Save, search, and manage your blueprints
-- [**Copy/Share Dropdown Menu**](#copyshare-dropdown-menu) - 5 ways to export and share
+- [**Copy/Share Dropdown Menu**](#copyshare-dropdown-menu) - 6 ways to export and share
 - [**Blueprint Import**](#blueprint-import) - Import blueprints via drag & drop or paste URLs
 
 ### 🎨 Display Modes
@@ -405,7 +405,7 @@ https://playground.wordpress.net/#<?php=base64url({compressed_json})
 **Format:** Same as Download, but copied to clipboard
 
 #### Copy Playground URL
-**Icon:** Copy documents  
+**Icon:** Copy documents
 **Copies:** Direct link to running WordPress Playground
 
 **Format:**
@@ -419,6 +419,46 @@ https://playground.wordpress.net/#{"steps":[...]}
 - Direct access to WordPress
 - Embedding in iframes
 
+#### Generate AI Instructions
+**Icon:** Document with lines
+**Opens:** Dialog with generated markdown for AI agent configuration files
+
+![Generate AI Instructions Dialog](images/ui/generate-ai-instructions.png)
+*The Generate AI Instructions dialog showing markdown content with URL type selector*
+
+**Purpose:** Generate markdown snippets for AI coding assistants (Claude Code, GitHub Copilot, Cursor, etc.) that include playground links with branch name placeholders.
+
+**When visible:** Only appears when your blueprint contains GitHub URLs (plugins/themes from GitHub repositories).
+
+**URL Type Options:**
+
+| Type | Format | Best For |
+|------|--------|----------|
+| **Step Library (redirect)** | Short redirect URL | Shorter URLs, easier to read |
+| **Playground (hash)** | `#{"steps":...}` | Direct, visible JSON |
+| **Playground (data URL)** | `?blueprint-url=data:...` | Query parameter format |
+
+**Generated content includes:**
+- Playground link with `BRANCH_NAME` placeholder
+- Instructions to replace `BRANCH_NAME` with actual branch
+- Example showing how the URL looks with a real branch name (`fix/bug-123`)
+
+**Use when:**
+- Setting up AI coding assistants for WordPress plugin/theme development
+- Creating `claude.md`, `agents.md`, or similar AI instruction files
+- Want AI to include testable playground links in its responses
+
+**Example output:**
+```markdown
+## Playground Link
+
+At the end of your messages, include a link to test the changes in WordPress Playground.
+
+**Important:** Replace `BRANCH_NAME` in the URL below with the actual git branch name you're working on.
+
+[Test in WordPress Playground](https://akirk.github.io/playground-step-library/?redir=1&step[0]=installPlugin&url[0]=github.com/org/repo/tree/BRANCH_NAME)
+```
+
 ### Comparison Table
 
 | Option | Editable | Short | Use Case |
@@ -428,6 +468,7 @@ https://playground.wordpress.net/#{"steps":[...]}
 | Download Blueprint | ✅ Yes* | N/A | Git, backups, documentation |
 | Copy Blueprint JSON | ✅ Yes* | N/A | Code examples, programmatic |
 | Copy Playground URL | ❌ No | ❌ No | Direct site access |
+| Generate AI Instructions | ✅ Yes | Varies | AI coding assistants |
 
 *Editable if loaded back into Step Library or used programmatically
 

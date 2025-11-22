@@ -104,3 +104,90 @@ summary:hover {
   color: var(--primary-600);
 }
 
+#ai-instructions-dialog {
+  width: 700px;
+  max-width: 90vw;
+}
+
+#ai-instructions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-2);
+}
+
+#ai-instructions-header h2 {
+  margin-bottom: 0;
+}
+
+#ai-instructions-dialog p {
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-4);
+  line-height: var(--line-height-normal);
+}
+
+#ai-instructions-options {
+  margin-bottom: var(--spacing-4);
+}
+
+#ai-instructions-options label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--text-color);
+  font-size: var(--font-size-sm);
+}
+
+#ai-instructions-url-type {
+  padding: var(--spacing-1) var(--spacing-2);
+  padding-right: var(--spacing-6);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text-color);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--spacing-2) center;
+}
+
+#ai-instructions-dialog code {
+  background: var(--surface-hover);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+}
+
+#ai-instructions-content-wrapper {
+  position: relative;
+}
+
+#ai-instructions-content {
+  width: 100%;
+  height: 350px;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-4);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text-color);
+  resize: vertical;
+  line-height: var(--line-height-relaxed);
+}
+
+#ai-instructions-ace {
+  width: 100%;
+  height: 350px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+#ai-instructions-status {
+  margin-top: var(--spacing-2);
+}
+
