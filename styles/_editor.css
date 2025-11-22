@@ -213,10 +213,17 @@ button.code-editor {
     border-radius: 0;
     border: none;
     display: none;
+    flex-direction: column;
   }
 
   #step-library-holder.mobile-visible {
-    display: block;
+    display: flex;
+  }
+
+  #step-library {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
   }
 
   #blueprint-steps {
