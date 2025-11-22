@@ -11,10 +11,10 @@ This document explains how the WordPress Playground Step Library works internall
 
 ### 🎨 Step Design
 - [**Step Design Patterns**](#step-design-patterns) - Common patterns for creating steps
-  - Single Step Transformation
-  - Multi-Step Composition
-  - Conditional Transformation
-  - Step Delegation
+  - V1-Only Pattern (Legacy)
+  - V1 + V2 Pattern (Current)
+  - Content Creation Pattern
+  - Hybrid Pattern
 - [**When to Create Custom vs Built-in Steps**](#when-to-create-custom-vs-built-in-steps) - Decision guide
 
 ### ⚙️ Advanced Features
@@ -71,7 +71,7 @@ Users can choose which output format they prefer via the web UI or programmatica
 
 ### Compilation Steps
 
-#### V1 Compiler (src/index.ts)
+#### V1 Compiler (src/v1-compiler.ts)
 1. **Parse Input** - Validates blueprint structure and step definitions
 2. **Transform Steps** - Each custom step returns `BlueprintV1` or `BlueprintV2`
 3. **Convert to V1** - `BlueprintV2` fragments are converted to v1 steps via converters
