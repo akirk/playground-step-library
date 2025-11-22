@@ -103,17 +103,17 @@ export class StateController {
 				return;
 			}
 			if (possibleBlocks.length > 1) {
-				const keys = Object.keys(step.vars || {});
+				const keys = Object.keys(step).filter(k => k !== 'step' && k !== 'count');
 				possibleBlocks = Array.from(possibleBlocks).filter((block) => {
 					for (const key of keys) {
-						const vars = Array.isArray(step.vars[key]) ? step.vars[key] : [step.vars[key]];
+						const values = Array.isArray(step[key]) ? step[key] : [step[key]];
 						const inputs = block.querySelectorAll('[name="' + key + '"]');
-						if (inputs.length !== vars.length) {
+						if (inputs.length !== values.length) {
 							return false;
 						}
 						for (let i = 0; i < inputs.length; i++) {
 							const input = inputs[i] as HTMLInputElement;
-							const value = vars[i];
+							const value = values[i];
 							if ('checkbox' === input.type) {
 								if (input.checked !== (value === 'true' || value === true)) {
 									return false;
@@ -142,25 +142,22 @@ export class StateController {
 			if (step.count) {
 				(stepBlock.querySelector('[name="count"]') as HTMLInputElement).value = step.count;
 			}
-			Object.keys(step.vars || {}).forEach((key) => {
-				if (key === 'step') {
-					return;
-				}
+			Object.keys(step).filter(k => k !== 'step' && k !== 'count').forEach((key) => {
 				const input = stepBlock.querySelector('[name="' + key + '"]') as HTMLInputElement | HTMLTextAreaElement;
 				if (!input) {
 					console.warn('Step "' + step.step + '" is missing variable "' + key + '" - step definition may have changed');
 					return;
 				}
-				if (Array.isArray(step.vars[key])) {
-					step.vars[key].forEach((value: any, index: number) => {
+				if (Array.isArray(step[key])) {
+					step[key].forEach((value: any, index: number) => {
 						if (!value) {
 							return;
 						}
 						const inputs = stepBlock.querySelectorAll('[name="' + key + '"]');
 						if (typeof inputs[index] === 'undefined') {
-							const vars = stepBlock.querySelector('.vars');
-							const clone = vars!.cloneNode(true);
-							vars!.parentNode!.appendChild(clone);
+							const varsTable = stepBlock.querySelector('.vars');
+							const clone = varsTable!.cloneNode(true);
+							varsTable!.parentNode!.appendChild(clone);
 						}
 						const input = stepBlock.querySelectorAll('[name="' + key + '"]')[index] as HTMLInputElement | HTMLTextAreaElement;
 						if (!input) {
@@ -177,9 +174,9 @@ export class StateController {
 				}
 
 				if ('checkbox' === input.type) {
-					(input as HTMLInputElement).checked = step.vars[key] === 'true' || step.vars[key] === true;
+					(input as HTMLInputElement).checked = step[key] === 'true' || step[key] === true;
 				} else {
-					input.value = step.vars[key];
+					input.value = step[key];
 				}
 			});
 		});

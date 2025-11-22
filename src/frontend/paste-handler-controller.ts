@@ -161,9 +161,8 @@ export class PasteHandlerController {
 				for (const url of urls) {
 					const stepsData = detectStepLibraryRedirectUrl(url);
 					if (stepsData) {
-						const steps = stepsData.map(s => ({ step: s.step, vars: s.vars }));
-						this.deps.appendSteps({ steps });
-						const stepText = steps.length === 1 ? 'step' : `${steps.length} steps`;
+						this.deps.appendSteps({ steps: stepsData });
+						const stepText = stepsData.length === 1 ? 'step' : `${stepsData.length} steps`;
 						toastService.showGlobal(`Added ${stepText} from pasted Step Library URL`);
 						addedAny = true;
 						break;
@@ -331,24 +330,13 @@ export class PasteHandlerController {
 
 			const stepConfig = {
 				steps: allSteps.map((step: any) => {
-					// If step already has vars property, use it directly (step-library format)
-					if ( 'vars' in step && typeof step.vars === 'object' && Object.keys( step ).length === 2 ) {
-						return {
-							step: step.step,
-							vars: step.vars
-						};
+					// If step has vars property, flatten it (legacy step-library format)
+					if ( 'vars' in step && typeof step.vars === 'object' ) {
+						const { vars, ...rest } = step;
+						return { ...rest, ...vars };
 					}
-					// Otherwise, wrap non-step properties into vars (native Playground format)
-					const vars: Record<string, any> = {};
-					for (const key in step) {
-						if (key !== 'step') {
-							vars[key] = step[key];
-						}
-					}
-					return {
-						step: step.step,
-						vars: vars
-					};
+					// Otherwise use flat structure directly (native Playground format)
+					return { ...step };
 				})
 			};
 

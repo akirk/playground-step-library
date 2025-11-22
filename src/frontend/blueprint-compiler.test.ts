@@ -16,7 +16,7 @@ describe('blueprint-compiler', () => {
 
 		it('should compress single step', () => {
 			const steps: StepConfig[] = [
-				{ step: 'login', vars: { username: 'admin' } }
+				{ step: 'login', username: 'admin' }
 			];
 			const result = compressState(steps, {});
 			expect(result).toBeTruthy();
@@ -115,9 +115,9 @@ describe('blueprint-compiler', () => {
 
 		it('should compress multiple steps', () => {
 			const steps: StepConfig[] = [
-				{ step: 'login', vars: { username: 'admin' } },
-				{ step: 'installPlugin', vars: { slug: 'hello-dolly' } },
-				{ step: 'installTheme', vars: { slug: 'twentytwentythree' } }
+				{ step: 'login', username: 'admin' },
+				{ step: 'installPlugin', slug: 'hello-dolly' },
+				{ step: 'installTheme', slug: 'twentytwentythree' }
 			];
 			const result = compressState(steps, {});
 			const decompressed = uncompressState(result);
@@ -127,29 +127,25 @@ describe('blueprint-compiler', () => {
 			expect(decompressed.steps[2].step).toBe('installTheme');
 		});
 
-		it('should preserve step vars', () => {
+		it('should preserve step properties', () => {
 			const steps: StepConfig[] = [
 				{
 					step: 'installPlugin',
-					vars: {
-						slug: 'hello-dolly',
-						activate: true,
-						version: '1.0.0'
-					}
+					slug: 'hello-dolly',
+					activate: true,
+					version: '1.0.0'
 				}
 			];
 			const result = compressState(steps, {});
 			const decompressed = uncompressState(result);
-			expect(decompressed.steps[0].vars).toEqual({
-				slug: 'hello-dolly',
-				activate: true,
-				version: '1.0.0'
-			});
+			expect(decompressed.steps[0].slug).toBe('hello-dolly');
+			expect(decompressed.steps[0].activate).toBe(true);
+			expect(decompressed.steps[0].version).toBe('1.0.0');
 		});
 
 		it('should include count field', () => {
 			const steps: StepConfig[] = [
-				{ step: 'installPlugin', vars: { slug: 'test' }, count: 5 }
+				{ step: 'installPlugin', slug: 'test', count: 5 }
 			];
 			const result = compressState(steps, {});
 			const decompressed = uncompressState(result);
@@ -160,15 +156,13 @@ describe('blueprint-compiler', () => {
 			const steps: StepConfig[] = [
 				{
 					step: 'runPHP',
-					vars: {
-						code: '<?php echo "Hello World"; ?>',
-						type: 'inline'
-					}
+					code: '<?php echo "Hello World"; ?>',
+					type: 'inline'
 				}
 			];
 			const result = compressState(steps, { title: 'Test Blueprint' });
 			const decompressed = uncompressState(result);
-			expect(decompressed.steps[0].vars!.code).toBe('<?php echo "Hello World"; ?>');
+			expect(decompressed.steps[0].code).toBe('<?php echo "Hello World"; ?>');
 			expect(decompressed.title).toBe('Test Blueprint');
 		});
 
@@ -215,7 +209,7 @@ describe('blueprint-compiler', () => {
 
 		it('should decompress valid state', () => {
 			const steps: StepConfig[] = [
-				{ step: 'login', vars: { username: 'admin' } }
+				{ step: 'login', username: 'admin' }
 			];
 			const compressed = compressState(steps, { title: 'Test' });
 			const result = uncompressState(compressed);
@@ -229,7 +223,7 @@ describe('blueprint-compiler', () => {
 		it('should preserve simple state', () => {
 			const original: CompressedState = {
 				steps: [
-					{ step: 'login', vars: { username: 'admin' } }
+					{ step: 'login', username: 'admin' }
 				]
 			};
 			const compressed = compressState(original.steps, {});
@@ -240,9 +234,9 @@ describe('blueprint-compiler', () => {
 		it('should preserve complex state', () => {
 			const original: CompressedState = {
 				steps: [
-					{ step: 'login', vars: { username: 'admin', password: 'password' } },
-					{ step: 'installPlugin', vars: { slug: 'test-plugin' }, count: 3 },
-					{ step: 'runPHP', vars: { code: '<?php echo "test"; ?>' } }
+					{ step: 'login', username: 'admin', password: 'password' },
+					{ step: 'installPlugin', slug: 'test-plugin', count: 3 },
+					{ step: 'runPHP', code: '<?php echo "test"; ?>' }
 				],
 				title: 'Complex Blueprint',
 				autosave: '15'
@@ -258,25 +252,25 @@ describe('blueprint-compiler', () => {
 		it('should preserve unicode characters', () => {
 			const original: CompressedState = {
 				steps: [
-					{ step: 'runPHP', vars: { code: 'echo "Hello 世界";' } }
+					{ step: 'runPHP', code: 'echo "Hello 世界";' }
 				],
 				title: 'Unicode Test 测试'
 			};
 			const compressed = compressState(original.steps, { title: original.title });
 			const decompressed = uncompressState(compressed);
-			expect(decompressed.steps[0].vars!.code).toBe('echo "Hello 世界";');
+			expect(decompressed.steps[0].code).toBe('echo "Hello 世界";');
 			expect(decompressed.title).toBe('Unicode Test 测试');
 		});
 
 		it('should preserve special characters', () => {
 			const original: CompressedState = {
 				steps: [
-					{ step: 'runPHP', vars: { code: 'test & <html> "quotes" \'apostrophes\'' } }
+					{ step: 'runPHP', code: 'test & <html> "quotes" \'apostrophes\'' }
 				]
 			};
 			const compressed = compressState(original.steps, {});
 			const decompressed = uncompressState(compressed);
-			expect(decompressed.steps[0].vars!.code).toBe('test & <html> "quotes" \'apostrophes\'');
+			expect(decompressed.steps[0].code).toBe('test & <html> "quotes" \'apostrophes\'');
 		});
 
 		it('should preserve empty arrays', () => {
@@ -321,7 +315,7 @@ describe('blueprint-compiler', () => {
 			stepElement.appendChild(input);
 
 			const result = extractStepDataFromElement(stepElement);
-			expect(result.vars!.username).toBe('admin');
+			expect(result.username).toBe('admin');
 		});
 
 		it('should extract checkbox values', () => {
@@ -333,7 +327,7 @@ describe('blueprint-compiler', () => {
 			stepElement.appendChild(checkbox);
 
 			const result = extractStepDataFromElement(stepElement);
-			expect(result.vars!.activate).toBe(true);
+			expect(result.activate).toBe(true);
 		});
 
 		it('should extract unchecked checkbox as false', () => {
@@ -345,7 +339,7 @@ describe('blueprint-compiler', () => {
 			stepElement.appendChild(checkbox);
 
 			const result = extractStepDataFromElement(stepElement);
-			expect(result.vars!.activate).toBe(false);
+			expect(result.activate).toBe(false);
 		});
 
 		it('should extract textarea values', () => {
@@ -356,7 +350,7 @@ describe('blueprint-compiler', () => {
 			stepElement.appendChild(textarea);
 
 			const result = extractStepDataFromElement(stepElement);
-			expect(result.vars!.code).toBe('<?php echo "test"; ?>');
+			expect(result.code).toBe('<?php echo "test"; ?>');
 		});
 
 		it('should extract select values', () => {
@@ -370,7 +364,7 @@ describe('blueprint-compiler', () => {
 			stepElement.appendChild(select);
 
 			const result = extractStepDataFromElement(stepElement);
-			expect(result.vars!.language).toBe('en_US');
+			expect(result.language).toBe('en_US');
 		});
 
 		it('should extract count field separately', () => {
@@ -401,8 +395,8 @@ describe('blueprint-compiler', () => {
 			stepElement.appendChild(input2);
 
 			const result = extractStepDataFromElement(stepElement);
-			expect(Array.isArray(result.vars!.plugin)).toBe(true);
-			expect(result.vars!.plugin).toEqual(['plugin1', 'plugin2']);
+			expect(Array.isArray(result.plugin)).toBe(true);
+			expect(result.plugin).toEqual(['plugin1', 'plugin2']);
 		});
 
 		it('should handle multiple checkboxes with same name', () => {
@@ -420,8 +414,8 @@ describe('blueprint-compiler', () => {
 			stepElement.appendChild(cb2);
 
 			const result = extractStepDataFromElement(stepElement);
-			expect(Array.isArray(result.vars!.options)).toBe(true);
-			expect(result.vars!.options).toEqual([true, false]);
+			expect(Array.isArray(result.options)).toBe(true);
+			expect(result.options).toEqual([true, false]);
 		});
 
 		it('should extract multiple different inputs', () => {
@@ -446,9 +440,9 @@ describe('blueprint-compiler', () => {
 			stepElement.appendChild(version);
 
 			const result = extractStepDataFromElement(stepElement);
-			expect(result.vars!.slug).toBe('hello-dolly');
-			expect(result.vars!.activate).toBe(true);
-			expect(result.vars!.version).toBe('1.0.0');
+			expect(result.slug).toBe('hello-dolly');
+			expect(result.activate).toBe(true);
+			expect(result.version).toBe('1.0.0');
 		});
 
 		it('should handle empty input values', () => {
@@ -460,7 +454,7 @@ describe('blueprint-compiler', () => {
 			stepElement.appendChild(input);
 
 			const result = extractStepDataFromElement(stepElement);
-			expect(result.vars!.value).toBe('');
+			expect(result.value).toBe('');
 		});
 
 		it('should combine count with other vars', () => {
@@ -478,7 +472,7 @@ describe('blueprint-compiler', () => {
 
 			const result = extractStepDataFromElement(stepElement);
 			expect(result.count).toBe(3);
-			expect(result.vars!.slug).toBe('test-plugin');
+			expect(result.slug).toBe('test-plugin');
 		});
 	});
 });

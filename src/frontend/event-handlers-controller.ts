@@ -298,13 +298,15 @@ export class EventHandlersController {
 		const myStep = Object.assign({}, this.deps.customSteps[stepData.step]);
 
 		for (let i = 0; i < myStep.vars!.length; i++) {
-			if (stepData.vars && myStep.vars![i].name in stepData.vars && stepData.vars[myStep.vars![i].name]) {
-				myStep.vars![i].setValue = stepData.vars[myStep.vars![i].name];
+			const varName = myStep.vars![i].name;
+			if (varName in stepData && stepData[varName]) {
+				myStep.vars![i].setValue = stepData[varName];
 			}
 		}
 
 		const input = dialog.querySelector('input') as HTMLInputElement;
-		input.value = stepData.step + Object.values(stepData.vars || {}).map((value: any) => {
+		const stepValues = Object.keys(stepData).filter(k => k !== 'step' && k !== 'count').map(k => stepData[k]);
+		input.value = stepData.step + stepValues.map((value: any) => {
 			if (typeof value !== 'string') {
 				return '';
 			}

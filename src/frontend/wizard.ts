@@ -584,18 +584,14 @@ function generateFinalBlueprint(): any {
 	wizardState.selectedPlugins.forEach(pluginUrl => {
 		blueprint.steps.push({
 			step: 'installPlugin',
-			vars: {
-				url: pluginUrl
-			}
+			url: pluginUrl
 		});
 	});
 
 	wizardState.selectedThemes.forEach(themeUrl => {
 		blueprint.steps.push({
 			step: 'installTheme',
-			vars: {
-				url: themeUrl
-			}
+			url: themeUrl
 		});
 	});
 
@@ -605,17 +601,12 @@ function generateFinalBlueprint(): any {
 		};
 
 		if (wizardState.stepConfigurations[stepName]) {
-			const vars: Record<string, any> = {};
 			Object.keys(wizardState.stepConfigurations[stepName]).forEach(varName => {
 				const value = wizardState.stepConfigurations[stepName][varName];
 				if (value !== '' && value !== null && value !== undefined) {
-					vars[varName] = value;
+					stepConfig[varName] = value;
 				}
 			});
-
-			if (Object.keys(vars).length > 0) {
-				stepConfig.vars = vars;
-			}
 		}
 
 		blueprint.steps.push(stepConfig);
@@ -801,18 +792,16 @@ function applyWizardToMainInterface(): void {
 					showCallbacks
 				);
 
-				if (stepConfig.vars) {
-					Object.keys(stepConfig.vars).forEach(varName => {
-						const input = stepElement.querySelector(`[name="${varName}"]`) as HTMLInputElement;
-						if (input) {
-							if (input.type === 'checkbox') {
-								input.checked = stepConfig.vars[varName];
-							} else {
-								input.value = stepConfig.vars[varName];
-							}
+				Object.keys(stepConfig).filter(k => k !== 'step' && k !== 'count').forEach(varName => {
+					const input = stepElement.querySelector(`[name="${varName}"]`) as HTMLInputElement;
+					if (input) {
+						if (input.type === 'checkbox') {
+							input.checked = stepConfig[varName];
+						} else {
+							input.value = stepConfig[varName];
 						}
-					});
-				}
+					}
+				});
 
 				blueprintSteps.appendChild(stepElement);
 			}

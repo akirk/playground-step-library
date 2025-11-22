@@ -103,8 +103,7 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 
 Many steps can reference and use other steps. For example:
 - `addProduct` automatically calls `installPlugin` to install WooCommerce
-- `debug` calls `installPlugin` to install Query Monitor when enabled
-- `generateProducts` calls `installPlugin` for WooCommerce and WC Smooth Generator
+- `importFriendFeeds` calls `installPlugin` to install the Friends plugin
 
 ## 📖 Detailed Documentation
 

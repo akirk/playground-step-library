@@ -296,7 +296,7 @@ export function detectStepJson(text: string): any {
  * @param url - The URL to analyze
  * @returns Parsed steps array or null if not a valid redirect URL
  */
-export function detectStepLibraryRedirectUrl( url: string ): Array<{ step: string; vars: Record<string, string> }> | null {
+export function detectStepLibraryRedirectUrl( url: string ): Array<{ step: string; [key: string]: string }> | null {
 	if ( !url || typeof url !== 'string' ) {
 		return null;
 	}
@@ -330,16 +330,17 @@ export function detectStepLibraryRedirectUrl( url: string ): Array<{ step: strin
 
 		const steps = indices.map( index => {
 			const idx = parseInt( index );
-			const stepName = paramMap.step[idx];
-			const vars: Record<string, string> = {};
+			const stepConfig: { step: string; [key: string]: string } = {
+				step: paramMap.step[idx]
+			};
 
 			for ( const [paramName, values] of Object.entries( paramMap ) ) {
 				if ( paramName !== 'step' && values[idx] !== undefined ) {
-					vars[paramName] = values[idx];
+					stepConfig[paramName] = values[idx];
 				}
 			}
 
-			return { step: stepName, vars };
+			return stepConfig;
 		} );
 
 		return steps;

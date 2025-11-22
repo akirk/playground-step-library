@@ -48,7 +48,7 @@ describe('StateController', () => {
 	describe('compressStateFromDOM', () => {
 		it('should compress state with title', () => {
 			(mockElements.title as HTMLInputElement).value = 'Test Blueprint';
-			const steps = [{ step: 'login', vars: { username: 'admin' } }];
+			const steps = [{ step: 'login', username: 'admin' }];
 
 			const result = controller.compressStateFromDOM(steps);
 			expect(result).toBeTruthy();
@@ -236,7 +236,7 @@ describe('StateController', () => {
 
 			const state = {
 				steps: [
-					{ step: 'login', vars: { username: 'admin' } }
+					{ step: 'login', username: 'admin' }
 				]
 			};
 
@@ -306,7 +306,7 @@ describe('StateController', () => {
 
 			const state = {
 				steps: [
-					{ step: 'login', vars: { username: 'testuser' } }
+					{ step: 'login', username: 'testuser' }
 				]
 			};
 
@@ -331,7 +331,7 @@ describe('StateController', () => {
 
 			const state = {
 				steps: [
-					{ step: 'installPlugin', vars: { activate: 'true' } }
+					{ step: 'installPlugin', activate: 'true' }
 				]
 			};
 
@@ -356,7 +356,7 @@ describe('StateController', () => {
 
 			const state = {
 				steps: [
-					{ step: 'installPlugin', vars: { activate: 'false' } }
+					{ step: 'installPlugin', activate: 'false' }
 				]
 			};
 
@@ -387,7 +387,7 @@ describe('StateController', () => {
 
 			const state = {
 				steps: [
-					{ step: 'login', vars: { nonexistent: 'value' } }
+					{ step: 'login', nonexistent: 'value' }
 				]
 			};
 

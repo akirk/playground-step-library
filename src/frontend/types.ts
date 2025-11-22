@@ -33,8 +33,8 @@ export interface StepDefinition {
 
 export interface StepData {
 	step: string;
-	vars?: Record<string, any>;
 	count?: number;
+	[key: string]: any;
 }
 
 export interface AppState {
