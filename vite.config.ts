@@ -76,10 +76,10 @@ function copyStepsPlugin() {
 
 export default defineConfig({
   root: '.',
-  base: '/playground-step-library/',
+  base: process.env.BASE_URL || '/',
   server: {
     port: 8127,
-    open: '/index.html'
+    open: true
   },
   build: {
     outDir: 'dist',
