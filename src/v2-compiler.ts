@@ -110,6 +110,16 @@ class StepLibraryCompilerV2 {
 
             const step = stepItem as BlueprintStep;
 
+            // Flatten legacy vars format
+            if (step.vars) {
+                for (const key in step.vars) {
+                    if (!(key in step)) {
+                        step[key] = step.vars[key];
+                    }
+                }
+                delete step.vars;
+            }
+
             step.stepIndex = index;
 
             // Get v2 fragments from step

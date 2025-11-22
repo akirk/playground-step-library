@@ -160,6 +160,16 @@ class StepLibraryCompiler {
             
             const step = stepItem as BlueprintStep;
             let customStepResult: BlueprintV1Declaration | null = null;
+            
+            // Support legacy format: if step has vars, flatten them to top level
+            if (step.vars) {
+                for (const key in step.vars) {
+                    if (!(key in step)) {
+                        step[key] = step.vars[key];
+                    }
+                }
+                delete step.vars;
+            }
 
             step.stepIndex = index;
 

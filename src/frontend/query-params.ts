@@ -8,7 +8,7 @@ import { expandUrl } from './utils';
 export interface BlueprintQueryParams {
 	steps: Array<{
 		step: string;
-		[key: string]: any;
+		vars: Record<string, any>;
 	}>;
 	redir: number | null;
 }
@@ -44,9 +44,8 @@ export function parseQueryParamsForBlueprint(): BlueprintQueryParams | null {
 		const indices = Object.keys(paramMap.step).sort((a, b) => parseInt(a) - parseInt(b));
 
 		const steps = indices.map(index => {
-			const stepConfig: { step: string; [key: string]: any } = {
-				step: paramMap.step[parseInt(index)]
-			};
+			const stepName = paramMap.step[parseInt(index)];
+			const stepVars: Record<string, any> = {};
 
 			for (const [paramName, values] of Object.entries(paramMap)) {
 				if (paramName !== 'step' && values[parseInt(index)] !== undefined) {
@@ -54,11 +53,14 @@ export function parseQueryParamsForBlueprint(): BlueprintQueryParams | null {
 					if (paramName === 'url' || paramName.includes('url') || paramName.includes('Url')) {
 						value = expandUrl(value);
 					}
-					stepConfig[paramName] = value;
+					stepVars[paramName] = value;
 				}
 			}
 
-			return stepConfig;
+			return {
+				step: stepName,
+				vars: stepVars
+			};
 		});
 
 		return {
