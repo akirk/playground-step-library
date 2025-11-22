@@ -14,7 +14,8 @@ import {
 	detectCss,
 	detectJs,
 	detectWpCli,
-	detectStepJson
+	detectStepJson,
+	detectStepLibraryRedirectUrl
 } from './content-detection';
 import { parsePlaygroundQueryApi, shouldUseMuPlugin } from './playground-integration';
 import {
@@ -63,66 +64,59 @@ export class PasteHandlerController {
 
 		const urls = pastedText.split('\n').map(line => line.trim()).filter(line => line);
 
-		// Detect content types
-		let hasPlaygroundUrl = false;
-		let hasPlaygroundQueryApiUrl = false;
-		let hasBlueprintJson = false;
-		let hasStepJson = false;
-		let hasUrl = false;
-		let hasWpAdminUrl = false;
-		let hasHtml = false;
-		let hasPhp = false;
-		let hasCss = false;
-		let hasJs = false;
+		// Detect content type (in priority order)
+		type ContentType = 'playgroundUrl' | 'playgroundQueryApi' | 'stepLibraryRedirect' | 'stepJson' | 'blueprintJson' | 'php' | 'html' | 'wpCli' | 'css' | 'js' | 'url' | 'wpAdminUrl';
+		let detectedType: ContentType | null = null;
 		let wpCliCommands: string[] | null = null;
 
+		// Check URL-based content types first
 		for (const url of urls) {
 			if (detectPlaygroundUrl(url)) {
-				hasPlaygroundUrl = true;
+				detectedType = 'playgroundUrl';
 				break;
 			}
 			if (detectPlaygroundQueryApiUrl(url)) {
-				hasPlaygroundQueryApiUrl = true;
+				detectedType = 'playgroundQueryApi';
 				break;
 			}
-			if (detectUrlType(url)) {
-				hasUrl = true;
+			if (detectStepLibraryRedirectUrl(url)) {
+				detectedType = 'stepLibraryRedirect';
 				break;
 			}
 			if (detectWpAdminUrl(url)) {
-				hasWpAdminUrl = true;
+				detectedType = 'wpAdminUrl';
+				break;
+			}
+			if (detectUrlType(url)) {
+				detectedType = 'url';
 				break;
 			}
 		}
 
-		if (detectBlueprintJson(pastedText)) {
-			hasBlueprintJson = true;
-		}
-
-		if (detectStepJson(pastedText)) {
-			hasStepJson = true;
-		}
-
-		if (detectPhp(pastedText)) {
-			hasPhp = true;
-		}
-
-		if (detectHtml(pastedText)) {
-			hasHtml = true;
-		}
-
-		wpCliCommands = detectWpCli(pastedText);
-
-		if (detectCss(pastedText)) {
-			hasCss = true;
-		}
-
-		if (detectJs(pastedText)) {
-			hasJs = true;
+		// Check text-based content types if no URL type found
+		if (!detectedType) {
+			if (detectBlueprintJson(pastedText)) {
+				detectedType = 'blueprintJson';
+			} else if (detectStepJson(pastedText)) {
+				detectedType = 'stepJson';
+			} else if (detectPhp(pastedText)) {
+				detectedType = 'php';
+			} else if (detectHtml(pastedText)) {
+				detectedType = 'html';
+			} else {
+				wpCliCommands = detectWpCli(pastedText);
+				if (wpCliCommands) {
+					detectedType = 'wpCli';
+				} else if (detectCss(pastedText)) {
+					detectedType = 'css';
+				} else if (detectJs(pastedText)) {
+					detectedType = 'js';
+				}
+			}
 		}
 
 		// If nothing detected, let default paste behavior happen
-		if (!hasPlaygroundUrl && !hasPlaygroundQueryApiUrl && !hasBlueprintJson && !hasStepJson && !hasUrl && !hasWpAdminUrl && !hasHtml && !hasPhp && !hasCss && !hasJs && !wpCliCommands) {
+		if (!detectedType) {
 			return;
 		}
 
@@ -136,88 +130,133 @@ export class PasteHandlerController {
 
 		let addedAny = false;
 
-		// Handle different content types in priority order
-		if (hasPlaygroundUrl) {
-			for (const url of urls) {
-				const blueprintData = detectPlaygroundUrl(url);
+		// Handle detected content type
+		switch (detectedType) {
+			case 'playgroundUrl':
+				for (const url of urls) {
+					const blueprintData = detectPlaygroundUrl(url);
+					if (blueprintData) {
+						if (await this.handlePlaygroundBlueprint(blueprintData)) {
+							addedAny = true;
+						}
+						break;
+					}
+				}
+				break;
+
+			case 'playgroundQueryApi':
+				for (const url of urls) {
+					const blueprintData = parsePlaygroundQueryApi(url);
+					if (blueprintData) {
+						if (await this.handlePlaygroundBlueprint(blueprintData)) {
+							addedAny = true;
+						}
+						break;
+					}
+				}
+				break;
+
+			case 'stepLibraryRedirect':
+				for (const url of urls) {
+					const stepsData = detectStepLibraryRedirectUrl(url);
+					if (stepsData) {
+						const steps = stepsData.map(s => ({ step: s.step, vars: s.vars }));
+						this.deps.appendSteps({ steps });
+						const stepText = steps.length === 1 ? 'step' : `${steps.length} steps`;
+						toastService.showGlobal(`Added ${stepText} from pasted Step Library URL`);
+						addedAny = true;
+						break;
+					}
+				}
+				break;
+
+			case 'stepJson': {
+				const stepData = detectStepJson(pastedText);
+				if (stepData) {
+					const blueprintData = { steps: [stepData] };
+					if (await this.handlePlaygroundBlueprint(blueprintData)) {
+						addedAny = true;
+					}
+				}
+				break;
+			}
+
+			case 'blueprintJson': {
+				const blueprintData = detectBlueprintJson(pastedText);
 				if (blueprintData) {
 					if (await this.handlePlaygroundBlueprint(blueprintData)) {
 						addedAny = true;
 					}
-					break;
 				}
+				break;
 			}
-		} else if (hasPlaygroundQueryApiUrl) {
-			for (const url of urls) {
-				const blueprintData = parsePlaygroundQueryApi(url);
-				if (blueprintData) {
-					if (await this.handlePlaygroundBlueprint(blueprintData)) {
+
+			case 'php':
+				if (addStepFromPhp(pastedText, this.deps.stepInserterDeps)) {
+					const stepType = shouldUseMuPlugin(pastedText) ? 'MU Plugin' : 'Run PHP';
+					toastService.showGlobal(`Added ${stepType} step from pasted PHP code`);
+					addedAny = true;
+				}
+				break;
+
+			case 'html':
+				if (addPostStepFromHtml(pastedText, this.deps.stepInserterDeps)) {
+					toastService.showGlobal('Added post step from pasted HTML content');
+					addedAny = true;
+				}
+				break;
+
+			case 'wpCli':
+				if (wpCliCommands && wpCliCommands.length > 0) {
+					const count = addStepsFromWpCli(wpCliCommands, this.deps.stepInserterDeps);
+					if (count > 0) {
+						const commandText = count === 1 ? 'WP-CLI command' : `${count} WP-CLI commands`;
+						toastService.showGlobal(`Added ${commandText} from pasted text`);
 						addedAny = true;
 					}
-					break;
 				}
-			}
-		} else if (hasStepJson) {
-			const stepData = detectStepJson(pastedText);
-			if (stepData) {
-				const blueprintData = { steps: [stepData] };
-				if (await this.handlePlaygroundBlueprint(blueprintData)) {
+				break;
+
+			case 'css':
+				if (addStepFromCss(pastedText, this.deps.stepInserterDeps)) {
+					toastService.showGlobal('Added CSS enqueue step from pasted styles');
 					addedAny = true;
 				}
-			}
-		} else if (hasBlueprintJson) {
-			const blueprintData = detectBlueprintJson(pastedText);
-			if (blueprintData) {
-				if (await this.handlePlaygroundBlueprint(blueprintData)) {
+				break;
+
+			case 'js':
+				if (addStepFromJs(pastedText, this.deps.stepInserterDeps)) {
+					toastService.showGlobal('Added JS enqueue step from pasted script');
 					addedAny = true;
 				}
-			}
-		} else if (hasPhp && !hasUrl && !hasWpAdminUrl) {
-			if (addStepFromPhp(pastedText, this.deps.stepInserterDeps)) {
-				const stepType = shouldUseMuPlugin(pastedText) ? 'MU Plugin' : 'Run PHP';
-				toastService.showGlobal(`Added ${stepType} step from pasted PHP code`);
-				addedAny = true;
-			}
-		} else if (hasHtml && !hasUrl && !hasWpAdminUrl) {
-			if (addPostStepFromHtml(pastedText, this.deps.stepInserterDeps)) {
-				toastService.showGlobal('Added post step from pasted HTML content');
-				addedAny = true;
-			}
-		} else if (wpCliCommands && wpCliCommands.length > 0 && !hasUrl && !hasWpAdminUrl) {
-			const count = addStepsFromWpCli(wpCliCommands, this.deps.stepInserterDeps);
-			if (count > 0) {
-				const commandText = count === 1 ? 'WP-CLI command' : `${count} WP-CLI commands`;
-				toastService.showGlobal(`Added ${commandText} from pasted text`);
-				addedAny = true;
-			}
-		} else if (hasCss && !hasUrl && !hasWpAdminUrl && !hasHtml) {
-			if (addStepFromCss(pastedText, this.deps.stepInserterDeps)) {
-				toastService.showGlobal('Added CSS enqueue step from pasted styles');
-				addedAny = true;
-			}
-		} else if (hasJs && !hasUrl && !hasWpAdminUrl && !hasHtml) {
-			if (addStepFromJs(pastedText, this.deps.stepInserterDeps)) {
-				toastService.showGlobal('Added JS enqueue step from pasted script');
-				addedAny = true;
-			}
-		} else {
-			let urlCount = 0;
-			for (const url of urls) {
-				const wpAdminPath = detectWpAdminUrl(url);
-				if (wpAdminPath) {
-					if (addLandingPageStep(wpAdminPath, this.deps.stepInserterDeps)) {
-						toastService.showGlobal('Set landing page from pasted admin URL');
+				break;
+
+			case 'wpAdminUrl':
+				for (const url of urls) {
+					const wpAdminPath = detectWpAdminUrl(url);
+					if (wpAdminPath) {
+						if (addLandingPageStep(wpAdminPath, this.deps.stepInserterDeps)) {
+							toastService.showGlobal('Set landing page from pasted admin URL');
+							addedAny = true;
+						}
+						break;
+					}
+				}
+				break;
+
+			case 'url': {
+				let urlCount = 0;
+				for (const url of urls) {
+					if (addStepFromUrl(url, this.deps.stepInserterDeps)) {
 						addedAny = true;
 						urlCount++;
 					}
-				} else if (addStepFromUrl(url, this.deps.stepInserterDeps)) {
-					addedAny = true;
-					urlCount++;
 				}
-			}
-			if (urlCount > 0 && !hasWpAdminUrl) {
-				const itemText = urlCount === 1 ? 'plugin/theme' : `${urlCount} plugins/themes`;
-				toastService.showGlobal(`Added ${itemText} from pasted URL${urlCount === 1 ? '' : 's'}`);
+				if (urlCount > 0) {
+					const itemText = urlCount === 1 ? 'plugin/theme' : `${urlCount} plugins/themes`;
+					toastService.showGlobal(`Added ${itemText} from pasted URL${urlCount === 1 ? '' : 's'}`);
+				}
+				break;
 			}
 		}
 

@@ -292,6 +292,63 @@ export function detectStepJson(text: string): any {
 }
 
 /**
+ * Detects and parses Step Library redirect URLs with step[N] query parameters
+ * @param url - The URL to analyze
+ * @returns Parsed steps array or null if not a valid redirect URL
+ */
+export function detectStepLibraryRedirectUrl( url: string ): Array<{ step: string; vars: Record<string, string> }> | null {
+	if ( !url || typeof url !== 'string' ) {
+		return null;
+	}
+
+	const trimmed = url.trim();
+
+	try {
+		const urlObj = new URL( trimmed );
+		const params = urlObj.searchParams;
+
+		const paramMap: Record<string, Record<number, string>> = {};
+
+		for ( const [key, value] of params.entries() ) {
+			const arrayMatch = key.match( /^(\w+)\[(\d+)\]$/ );
+			if ( arrayMatch ) {
+				const paramName = arrayMatch[1];
+				const index = parseInt( arrayMatch[2], 10 );
+
+				if ( !paramMap[paramName] ) {
+					paramMap[paramName] = {};
+				}
+				paramMap[paramName][index] = value;
+			}
+		}
+
+		if ( !paramMap.step || Object.keys( paramMap.step ).length === 0 ) {
+			return null;
+		}
+
+		const indices = Object.keys( paramMap.step ).sort( ( a, b ) => parseInt( a ) - parseInt( b ) );
+
+		const steps = indices.map( index => {
+			const idx = parseInt( index );
+			const stepName = paramMap.step[idx];
+			const vars: Record<string, string> = {};
+
+			for ( const [paramName, values] of Object.entries( paramMap ) ) {
+				if ( paramName !== 'step' && values[idx] !== undefined ) {
+					vars[paramName] = values[idx];
+				}
+			}
+
+			return { step: stepName, vars };
+		} );
+
+		return steps;
+	} catch ( e ) {
+		return null;
+	}
+}
+
+/**
  * Normalizes WordPress plugin/theme download URLs to their canonical wordpress.org URLs
  * Converts downloads.wordpress.org URLs to wordpress.org/plugins or wordpress.org/themes URLs
  * @param url - The URL to normalize
