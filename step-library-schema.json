@@ -227,6 +227,7 @@
   "required": [
     "steps"
   ],
+  "additionalProperties": false,
   "definitions": {
     "importWxr": {
       "type": "object",

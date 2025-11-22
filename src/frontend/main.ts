@@ -770,6 +770,9 @@ addEventListener('DOMContentLoaded', function () {
 
 	const queryParamBlueprint = parseQueryParamsForBlueprint();
 	if (queryParamBlueprint) {
+		if ( queryParamBlueprint.redir ) {
+			( document.getElementById( 'encoding-format' ) as HTMLSelectElement ).value = 'base64';
+		}
 		stateController.restoreState({ steps: queryParamBlueprint.steps });
 		// Clear step[] and url[] parameters from URL to prevent conflicts with hash state
 		const newUrl = new URL(window.location);

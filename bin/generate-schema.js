@@ -98,7 +98,6 @@ function generateSchema() {
                 }
             },
             title: { type: 'string' },
-            landingPage: { type: 'string' },
             preferredVersions: {
                 type: 'object',
                 properties: {
@@ -113,6 +112,7 @@ function generateSchema() {
             }
         },
         required: ['steps'],
+        additionalProperties: false,
         definitions: stepDefinitions
     };
 

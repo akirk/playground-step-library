@@ -88,6 +88,14 @@ describe('Step Library Schema', () => {
 			};
 			expect(validate(blueprint)).toBe(false);
 		});
+
+		it('should reject a blueprint with top-level landingPage property', () => {
+			const blueprint = {
+				landingPage: '/wp-admin/',
+				steps: []
+			};
+			expect(validate(blueprint)).toBe(false);
+		});
 	});
 
 	describe('example files', () => {
