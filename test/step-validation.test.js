@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import PlaygroundStepLibrary from '../lib/src/index.js';
+import { stepsRegistry } from '../lib/src/steps-registry.js';
 
 // Valid WordPress Playground step types based on @wp-playground/blueprints
 const VALID_STEP_TYPES = [
@@ -157,7 +158,7 @@ describe('Step Output Validation', () => {
         const steps = compiler.getAvailableSteps();
         expect(steps, `Step ${stepName} should be available`).toHaveProperty(stepName);
         
-        const stepFunction = compiler.customSteps[stepName];
+        const stepFunction = stepsRegistry[stepName];
         
         // Create a minimal valid input based on the step's variable requirements
         const stepInput = createStepInput(stepName, steps[stepName].vars);
@@ -215,7 +216,7 @@ describe('Step Output Validation', () => {
         const steps = compiler.getAvailableSteps();
         expect(steps, `Step ${stepName} should be available`).toHaveProperty(stepName);
         
-        const stepFunction = compiler.customSteps[stepName];
+        const stepFunction = stepsRegistry[stepName];
         
         // Create a minimal valid input based on the step's variable requirements
         const stepInput = createStepInput(stepName, steps[stepName].vars);

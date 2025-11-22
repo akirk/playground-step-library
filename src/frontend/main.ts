@@ -2,7 +2,7 @@
  * Main application entry point
  *
  */
-import PlaygroundStepLibrary from '../index';
+import PlaygroundStepLibrary, { BlueprintDecompiler } from '../index';
 import { StepDefinition, ShowCallbacks, StepData, StepConfig, CombinedExamples } from './types';
 import * as aceEditor from './ace-editor';
 import * as appState from './app-state';
@@ -232,7 +232,6 @@ addEventListener('DOMContentLoaded', function () {
 				return;
 			}
 
-			const { BlueprintDecompiler } = await import('../decompiler');
 			const decompiler = new BlueprintDecompiler();
 			const result = decompiler.decompile(nativeBlueprint);
 

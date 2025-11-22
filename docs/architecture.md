@@ -341,8 +341,10 @@ playground-step-library/
 │   ├── addPost.ts
 │   └── ...
 ├── src/
-│   ├── index.ts          # V1 compiler (PlaygroundStepLibrary)
-│   ├── v2-compiler.ts    # V2 compiler (PlaygroundStepLibraryV2)
+│   ├── index.ts          # Main entry point (PlaygroundStepLibrary facade)
+│   ├── v1-compiler.ts    # V1 compiler (StepLibraryCompiler)
+│   ├── v2-compiler.ts    # V2 compiler (StepLibraryCompilerV2)
+│   ├── decompiler.ts     # Blueprint decompiler (BlueprintDecompiler)
 │   ├── steps-registry.ts # Step registry (imports all steps)
 │   ├── converters/       # V1 ↔ V2 conversion utilities
 │   └── frontend/         # Frontend TypeScript modules
@@ -433,11 +435,32 @@ npm test
 
 ## Dual Compiler Architecture
 
-### V1 Compiler (src/index.ts)
+The library uses a facade pattern with specialized compilers:
 
-The original compiler that outputs imperative Blueprint v1 format:
+- **`PlaygroundStepLibrary`** (src/index.ts) - Main facade providing unified API
+- **`StepLibraryCompiler`** (src/v1-compiler.ts) - V1 compilation logic
+- **`StepLibraryCompilerV2`** (src/v2-compiler.ts) - V2 compilation logic
 
-**Class:** `PlaygroundStepLibrary`
+### PlaygroundStepLibrary (Facade)
+
+The main entry point that delegates to the appropriate compiler:
+
+```typescript
+const compiler = new PlaygroundStepLibrary();
+
+// Delegates to StepLibraryCompiler
+const v1Blueprint = compiler.compile(blueprint);
+
+// Delegates to StepLibraryCompilerV2
+const v2Blueprint = compiler.compileV2(blueprint);
+
+// Uses decompiler + V2 compiler
+const result = compiler.transpile(nativeV1Blueprint);
+```
+
+### V1 Compiler (src/v1-compiler.ts)
+
+**Class:** `StepLibraryCompiler`
 
 **Process:**
 1. Executes each custom step via `executeCustomStep()`
@@ -447,18 +470,9 @@ The original compiler that outputs imperative Blueprint v1 format:
 5. Applies deduplication strategies
 6. Returns final v1 blueprint with `steps` array
 
-**Usage:**
-```typescript
-const compiler = new PlaygroundStepLibrary();
-const v1Blueprint = compiler.compile(blueprint);
-// Output: { steps: [...], landingPage: '/', ... }
-```
-
 ### V2 Compiler (src/v2-compiler.ts)
 
-New compiler that outputs declarative Blueprint v2 format:
-
-**Class:** `PlaygroundStepLibraryV2`
+**Class:** `StepLibraryCompilerV2`
 
 **Process:**
 1. Executes each custom step
@@ -470,13 +484,6 @@ New compiler that outputs declarative Blueprint v2 format:
    - Plugin/theme steps are handled specially (extracts slugs if from wordpress.org)
 5. Collects `additionalSteps` into `additionalStepsAfterExecution`
 6. Returns final v2 blueprint with declarative schema
-
-**Usage:**
-```typescript
-const compiler = new PlaygroundStepLibraryV2();
-const v2Blueprint = compiler.compile(blueprint);
-// Output: { content: [...], users: [...], plugins: [...], ... }
-```
 
 ### Frontend Integration
 

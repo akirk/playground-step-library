@@ -210,9 +210,14 @@ const result = compiler.transpile(nativeV1);
 
 ## API Reference
 
-### `PlaygroundStepLibrary` (V1 Compiler)
+### `PlaygroundStepLibrary`
 
-Compiles to imperative Blueprint v1 format.
+The main facade class providing a unified API for compilation, transpilation, and validation.
+
+Internally delegates to:
+- `StepLibraryCompiler` for V1 compilation
+- `StepLibraryCompilerV2` for V2 compilation
+- `BlueprintDecompiler` for decompilation/transpilation
 
 #### Constructor
 

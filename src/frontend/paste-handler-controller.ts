@@ -30,6 +30,7 @@ import {
 } from './step-inserter';
 import { toastService } from './toast-service';
 import { stepsRegistry } from '../steps-registry';
+import { BlueprintDecompiler } from '../decompiler';
 
 export interface PasteHandlerControllerDependencies {
 	stepInserterDeps: StepInserterDependencies;
@@ -316,7 +317,6 @@ export class PasteHandlerController {
 			allSteps.push(...customSteps);
 
 			if (nativeSteps.length > 0) {
-				const { BlueprintDecompiler } = await import('../decompiler');
 				const decompiler = new BlueprintDecompiler();
 				const result = decompiler.decompile({...blueprintData, steps: nativeSteps});
 

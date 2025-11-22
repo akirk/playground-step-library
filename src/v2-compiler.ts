@@ -34,7 +34,7 @@ interface ValidationResult {
  * WordPress Playground Step Library V2 Compiler
  * Transforms blueprints with custom steps into native v2 blueprints with declarative schema
  */
-class PlaygroundStepLibraryV2 {
+class StepLibraryCompilerV2 {
     private customSteps: Record<string, CustomStepDefinition> = {};
     private lastQueryParams: Record<string, string> = {};
 
@@ -282,4 +282,5 @@ class PlaygroundStepLibraryV2 {
     }
 }
 
-export default PlaygroundStepLibraryV2;
+export default StepLibraryCompilerV2;
+export { StepLibraryCompilerV2 };
