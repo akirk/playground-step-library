@@ -6,11 +6,11 @@ describe('addProduct', () => {
     describe('toV1()', () => {
     it('should create a basic product with new variable names', () => {
         const step: AddProductStep = {
-            step: 'addProduct',
+            step: 'addProduct', vars: {
             title: 'Test Product',
             description: '<p>Great product</p>',
             price: '29.99'
-        };
+        } };
 
         const result = addProduct(step, { steps: [] }).toV1();
 
@@ -28,11 +28,11 @@ describe('addProduct', () => {
 
     it('should create a product with deprecated variable names (backward compatibility)', () => {
         const step: AddProductStep = {
-            step: 'addProduct',
+            step: 'addProduct', vars: {
             productTitle: 'Test Product',
             productDescription: '<p>Great product</p>',
             productPrice: '29.99'
-        };
+        } };
 
         const result = addProduct(step, { steps: [] }).toV1();
 
@@ -44,7 +44,7 @@ describe('addProduct', () => {
 
     it('should prefer new variable names over deprecated ones', () => {
         const step: AddProductStep = {
-            step: 'addProduct',
+            step: 'addProduct', vars: {
             title: 'New Title',
             description: '<p>New Description</p>',
             price: '19.99',
@@ -53,7 +53,7 @@ describe('addProduct', () => {
             productDescription: '<p>Old Description</p>',
             productPrice: '29.99',
             productSalePrice: '25.99'
-        };
+        } };
 
         const result = addProduct(step, { steps: [] }).toV1();
 
@@ -67,12 +67,12 @@ describe('addProduct', () => {
 
     it('should handle sale pricing correctly', () => {
         const step: AddProductStep = {
-            step: 'addProduct',
+            step: 'addProduct', vars: {
             title: 'Sale Product',
             description: '<p>On sale now</p>',
             price: '100.00',
             salePrice: '80.00'
-        };
+        } };
 
         const result = addProduct(step, { steps: [] }).toV1();
 
@@ -86,12 +86,12 @@ describe('addProduct', () => {
 
     it('should not set sale price if it is higher than regular price', () => {
         const step: AddProductStep = {
-            step: 'addProduct',
+            step: 'addProduct', vars: {
             title: 'Invalid Sale Product',
             description: '<p>Invalid sale</p>',
             price: '50.00',
             salePrice: '60.00' // Higher than regular price
-        };
+        } };
 
         const result = addProduct(step, { steps: [] }).toV1();
 
@@ -106,13 +106,13 @@ describe('addProduct', () => {
 
     it('should include SKU and status when provided', () => {
         const step: AddProductStep = {
-            step: 'addProduct',
+            step: 'addProduct', vars: {
             title: 'Product with SKU',
             description: '<p>Has SKU</p>',
             price: '25.00',
             sku: 'PROD-123',
             status: 'draft'
-        };
+        } };
 
         const result = addProduct(step, { steps: [] }).toV1();
 
@@ -123,11 +123,11 @@ describe('addProduct', () => {
 
     it('should auto-install WooCommerce if not present', () => {
         const step: AddProductStep = {
-            step: 'addProduct',
+            step: 'addProduct', vars: {
             title: 'Test Product',
             description: '<p>Test</p>',
             price: '10.00'
-        };
+        } };
 
         const blueprint = { steps: [] }; // No WooCommerce plugin
         const result = addProduct(step, blueprint).toV1();
@@ -139,11 +139,11 @@ describe('addProduct', () => {
 
     it('should not auto-install WooCommerce if already present', () => {
         const step: AddProductStep = {
-            step: 'addProduct',
+            step: 'addProduct', vars: {
             title: 'Test Product',
             description: '<p>Test</p>',
             price: '10.00'
-        };
+        } };
 
         const blueprint = {
             steps: [

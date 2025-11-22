@@ -6,10 +6,10 @@ import type { StepDefinition, BlueprintV1Declaration, BlueprintV2Declaration } f
 export const debug: StepFunction<DebugStep> = (step: DebugStep, blueprint: any): StepResult => {
 	return {
 		toV1() {
-			const wpDebug = step.wpDebug !== false;
-			const wpDebugDisplay = step.wpDebugDisplay !== false;
-			const scriptDebug = step.scriptDebug === true;
-			const queryMonitor = step.queryMonitor !== false;
+			const wpDebug = step.vars?.wpDebug !== false;
+			const wpDebugDisplay = step.vars?.wpDebugDisplay !== false;
+			const scriptDebug = step.vars?.scriptDebug === true;
+			const queryMonitor = step.vars?.queryMonitor !== false;
 
 			const steps: StepDefinition[] = [];
 
@@ -25,10 +25,7 @@ export const debug: StepFunction<DebugStep> = (step: DebugStep, blueprint: any):
 				consts.SCRIPT_DEBUG = true;
 			}
 
-			steps.push({
-				step: 'defineWpConfigConsts',
-				consts: consts
-			});
+			steps.push( { step: 'defineWpConfigConsts', consts: consts } );
 
 			if (queryMonitor) {
 				let hasQueryMonitorPlugin = false;
@@ -38,7 +35,7 @@ export const debug: StepFunction<DebugStep> = (step: DebugStep, blueprint: any):
 					}
 				}
 				if (!hasQueryMonitorPlugin) {
-					const queryMonitor = installPlugin({ step: 'installPlugin', url: 'query-monitor' }).toV1();
+					const queryMonitor = installPlugin( { step: 'installPlugin', vars: { url: 'query-monitor' } } ).toV1();
 					if (queryMonitor.steps) steps.push(...queryMonitor.steps);
 				}
 			}
@@ -65,7 +62,7 @@ debug.vars = [
 		description: "Display errors in HTML output. Only applies when the above is enabled.",
 		type: "boolean",
 		required: false,
-		show: (step: DebugStep) => step.wpDebug !== false
+		show: (step: DebugStep) => step.vars?.wpDebug !== false
 	},
 	{
 		name: "scriptDebug",

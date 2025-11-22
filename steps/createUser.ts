@@ -2,11 +2,11 @@ import type { StepFunction, CreateUserStep, StepResult } from './types.js';
 import type { BlueprintV1Declaration, BlueprintV2Declaration, StepDefinition } from '@wp-playground/blueprints';
 
 export const createUser: StepFunction<CreateUserStep> = (step: CreateUserStep): StepResult => {
-	const username = step.username;
-	const password = step.password;
-	const role = step.role;
-	const display_name = step.display_name;
-	const email = step.email;
+	const username = step.vars?.username;
+	const password = step.vars?.password;
+	const role = step.vars?.role;
+	const display_name = step.vars?.display_name;
+	const email = step.vars?.email;
 
 	return {
 		toV1() {
@@ -39,12 +39,9 @@ export const createUser: StepFunction<CreateUserStep> = (step: CreateUserStep): 
 				]
 			};
 
-			if (step.login) {
-				result.steps!.push({
-					step: "login",
-					username: username,
-					password: password
-				});
+			if (step.vars?.login) {
+				result.steps!.push( { step: "login", vars: { username: username,
+					password: password } } );
 				result.landingPage = '/wp-admin/';
 			}
 
@@ -80,7 +77,7 @@ if ( $user ) {
 			}
 
 			// Login if requested - use applicationOptions for v2
-			if (step.login) {
+			if (step.vars?.login) {
 				const isDefault = username === 'admin' && password === 'password';
 				result.applicationOptions = {
 					'wordpress-playground': {

@@ -19,9 +19,9 @@ describe('blockExamples', () => {
 
 	it('should use custom post title', () => {
 		const step: BlockExamplesStep = {
-			step: 'blockExamples',
+			step: 'blockExamples', vars: {
 			postTitle: 'My Custom Block Examples'
-		};
+		} };
 
 		const result = blockExamples(step).toV1();
 
@@ -30,9 +30,9 @@ describe('blockExamples', () => {
 
 	it('should filter by block namespace', () => {
 		const step: BlockExamplesStep = {
-			step: 'blockExamples',
+			step: 'blockExamples', vars: {
 			blockNamespace: 'gutenberg'
-		};
+		} };
 
 		const result = blockExamples(step).toV1();
 
@@ -52,9 +52,9 @@ describe('blockExamples', () => {
 
 	it('should escape single quotes in post title', () => {
 		const step: BlockExamplesStep = {
-			step: 'blockExamples',
+			step: 'blockExamples', vars: {
 			postTitle: "Block's Examples"
-		};
+		} };
 
 		const result = blockExamples(step).toV1();
 
@@ -94,9 +94,9 @@ describe('blockExamples', () => {
 
 	it('should not set landing page when disabled', () => {
 		const step: BlockExamplesStep = {
-			step: 'blockExamples',
+			step: 'blockExamples', vars: {
 			landingPage: false
-		};
+		} };
 
 		const result = blockExamples(step).toV1();
 
@@ -105,9 +105,9 @@ describe('blockExamples', () => {
 
 	it('should use custom post ID', () => {
 		const step: BlockExamplesStep = {
-			step: 'blockExamples',
+			step: 'blockExamples', vars: {
 			postId: 5000
-		};
+		} };
 
 		const result = blockExamples(step).toV1();
 
@@ -127,9 +127,9 @@ describe('blockExamples', () => {
 
 	it('should exclude core blocks when excludeCore is true', () => {
 		const step: BlockExamplesStep = {
-			step: 'blockExamples',
+			step: 'blockExamples', vars: {
 			excludeCore: true
-		};
+		} };
 
 		const result = blockExamples(step).toV1();
 
@@ -139,9 +139,9 @@ describe('blockExamples', () => {
 
 	it('should exclude core blocks when excludeCore is string "true"', () => {
 		const step: BlockExamplesStep = {
-			step: 'blockExamples',
+			step: 'blockExamples', vars: {
 			excludeCore: 'true'
-		};
+		} };
 
 		const result = blockExamples(step).toV1();
 
@@ -150,9 +150,9 @@ describe('blockExamples', () => {
 
 	it('should include limit parameter', () => {
 		const step: BlockExamplesStep = {
-			step: 'blockExamples',
+			step: 'blockExamples', vars: {
 			limit: 10
-		};
+		} };
 
 		const result = blockExamples(step).toV1();
 

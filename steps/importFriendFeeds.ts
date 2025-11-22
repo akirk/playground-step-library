@@ -6,7 +6,7 @@ import { v1ToV2Fallback } from './types.js';
 export const importFriendFeeds: StepFunction<ImportFriendFeedsStep> = (step: ImportFriendFeedsStep): StepResult => {
 	return {
 		toV1() {
-			let opml = step.opml || '';
+			let opml = step.vars?.opml || '';
 			let phpCode = '';
 
 			if (!opml.match(/<opml/)) {

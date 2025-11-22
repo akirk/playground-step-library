@@ -249,19 +249,9 @@ addEventListener('DOMContentLoaded', function () {
 				console.warn('Decompiler warnings:', result.warnings);
 			}
 
+			// Decompiler already outputs vars format, use directly
 			const stepConfig: StepConfig = {
-				steps: result.steps.map( ( step: Record<string, any> ) => {
-					const vars: Record<string, any> = {};
-					for ( const key in step ) {
-						if ( key !== 'step' ) {
-							vars[key] = step[key];
-						}
-					}
-					return {
-						step: step.step,
-						vars: vars
-					};
-				} )
+				steps: result.steps as any
 			};
 
 			restoreSteps(stepConfig, title);

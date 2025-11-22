@@ -19,7 +19,7 @@ describe( 'debug', () => {
 		} );
 
 		it( 'should allow disabling WP_DEBUG', () => {
-			const result = debug( { step: 'debug', wpDebug: false }, { steps: [] } ).toV1();
+			const result = debug( { step: 'debug', vars: { wpDebug: false } }, { steps: [] } ).toV1();
 
 			const configStep = result.steps?.find( r => r.step === 'defineWpConfigConsts' );
 			expect( configStep?.consts.WP_DEBUG ).toBe( false );
@@ -27,7 +27,7 @@ describe( 'debug', () => {
 		} );
 
 		it( 'should allow disabling WP_DEBUG_DISPLAY', () => {
-			const result = debug( { step: 'debug', wpDebugDisplay: false }, { steps: [] } ).toV1();
+			const result = debug( { step: 'debug', vars: { wpDebugDisplay: false } }, { steps: [] } ).toV1();
 
 			const configStep = result.steps?.find( r => r.step === 'defineWpConfigConsts' );
 			expect( configStep?.consts.WP_DEBUG ).toBe( true );
@@ -35,7 +35,7 @@ describe( 'debug', () => {
 		} );
 
 		it( 'should set SCRIPT_DEBUG when enabled', () => {
-			const result = debug( { step: 'debug', scriptDebug: true }, { steps: [] } ).toV1();
+			const result = debug( { step: 'debug', vars: { scriptDebug: true } }, { steps: [] } ).toV1();
 
 			const configStep = result.steps?.find( r => r.step === 'defineWpConfigConsts' );
 			expect( configStep?.consts.SCRIPT_DEBUG ).toBe( true );
@@ -57,7 +57,7 @@ describe( 'debug', () => {
 		} );
 
 		it( 'should allow disabling Query Monitor', () => {
-			const result = debug( { step: 'debug', queryMonitor: false }, { steps: [] } ).toV1();
+			const result = debug( { step: 'debug', vars: { queryMonitor: false } }, { steps: [] } ).toV1();
 
 			const installSteps = result.steps?.filter( r => r.step === 'installPlugin' );
 			expect( installSteps ).toHaveLength( 0 );
@@ -77,11 +77,11 @@ describe( 'debug', () => {
 
 		it( 'should combine all settings', () => {
 			const result = debug( {
-				step: 'debug',
+				step: 'debug', vars: {
 				wpDebug: true,
 				wpDebugDisplay: false,
 				scriptDebug: true
-			}, { steps: [] } ).toV1();
+			} }, { steps: [] } ).toV1();
 
 			const configStep = result.steps?.find( r => r.step === 'defineWpConfigConsts' );
 			expect( configStep?.consts.WP_DEBUG ).toBe( true );

@@ -6,10 +6,10 @@ describe('addPage', () => {
   describe('toV1()', () => {
     it('should create a basic page with new variable names', () => {
       const step: AddPageStep = {
-        step: 'addPage',
+        step: 'addPage', vars: {
         title: 'Test Page',
         content: '<p>Test content</p>'
-      };
+      } };
 
       const result = addPage(step).toV1();
 
@@ -28,10 +28,10 @@ describe('addPage', () => {
 
     it('should create a basic page with deprecated variable names (backward compatibility)', () => {
       const step: AddPageStep = {
-        step: 'addPage',
+        step: 'addPage', vars: {
         postTitle: 'Test Page',
         postContent: '<p>Test content</p>'
-      };
+      } };
 
       const result = addPage(step).toV1();
 
@@ -50,11 +50,11 @@ describe('addPage', () => {
 
     it('should set as homepage when homepage flag is true', () => {
       const step: AddPageStep = {
-        step: 'addPage',
+        step: 'addPage', vars: {
         title: 'Home Page',
         content: '<p>Welcome home</p>',
         homepage: true
-      };
+      } };
 
       const result = addPage(step).toV1();
 
@@ -65,10 +65,10 @@ describe('addPage', () => {
 
     it('should escape single quotes in title and content', () => {
       const step: AddPageStep = {
-        step: 'addPage',
+        step: 'addPage', vars: {
         title: "John's Page",
         content: "<p>Here's some content</p>"
-      };
+      } };
 
       const result = addPage(step).toV1();
 
@@ -78,12 +78,12 @@ describe('addPage', () => {
 
     it('should prefer new variable names over deprecated ones', () => {
       const step: AddPageStep = {
-        step: 'addPage',
+        step: 'addPage', vars: {
         title: 'New Title',
         content: '<p>New Content</p>',
         postTitle: 'Old Title',
         postContent: '<p>Old Content</p>'
-      };
+      } };
 
       const result = addPage(step).toV1();
 
@@ -95,10 +95,10 @@ describe('addPage', () => {
   describe('toV2()', () => {
     it('should create a page using content array', () => {
       const step: AddPageStep = {
-        step: 'addPage',
+        step: 'addPage', vars: {
         title: 'Test Page',
         content: '<p>Test content</p>'
-      };
+      } };
 
       const result = addPage(step).toV2();
 
@@ -113,11 +113,11 @@ describe('addPage', () => {
 
     it('should set homepage with siteOptions and additionalStepsAfterExecution', () => {
       const step: AddPageStep = {
-        step: 'addPage',
+        step: 'addPage', vars: {
         title: 'Home Page',
         content: '<p>Welcome</p>',
         homepage: true
-      };
+      } };
 
       const result = addPage(step).toV2();
 
@@ -129,10 +129,10 @@ describe('addPage', () => {
 
     it('should use deprecated variable names when new ones not provided', () => {
       const step: AddPageStep = {
-        step: 'addPage',
+        step: 'addPage', vars: {
         postTitle: 'Old Title',
         postContent: '<p>Old Content</p>'
-      };
+      } };
 
       const result = addPage(step).toV2();
 

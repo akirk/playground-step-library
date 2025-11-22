@@ -5,11 +5,11 @@ import { v1ToV2Fallback } from './types.js';
 export const blockExamples: StepFunction<BlockExamplesStep> = (step: BlockExamplesStep, blueprint?: any): StepResult => {
 	return {
 		toV1() {
-			const blockNamespace = (step.blockNamespace || '').replace(/'/g, "\\'");
-			const postTitle = (step.postTitle || 'Block Examples').replace(/'/g, "\\'");
-			const limit = (step.limit !== undefined && step.limit !== null && String(step.limit) !== '') ? Number(step.limit) : 0;
-			const postId = (step.postId !== undefined && step.postId !== null && String(step.postId) !== '') ? Number(step.postId) : 1000;
-			const excludeCore = step.excludeCore === true || step.excludeCore === 'true';
+			const blockNamespace = (step.vars?.blockNamespace || '').replace(/'/g, "\\'");
+			const postTitle = (step.vars?.postTitle || 'Block Examples').replace(/'/g, "\\'");
+			const limit = (step.vars?.limit !== undefined && step.vars?.limit !== null && String(step.vars?.limit) !== '') ? Number(step.vars?.limit) : 0;
+			const postId = (step.vars?.postId !== undefined && step.vars?.postId !== null && String(step.vars?.postId) !== '') ? Number(step.vars?.postId) : 1000;
+			const excludeCore = step.vars?.excludeCore === true || step.vars?.excludeCore === 'true';
 
 			const code = `
 <?php
@@ -125,7 +125,7 @@ wp_insert_post( array(
 				]
 			};
 
-			if (step.landingPage !== false) {
+			if (step.vars?.landingPage !== false) {
 				result.landingPage = `/wp-admin/post.php?post=${postId}&action=edit`;
 			}
 

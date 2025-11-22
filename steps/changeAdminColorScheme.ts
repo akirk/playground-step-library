@@ -9,7 +9,7 @@ export const changeAdminColorScheme: StepFunction<ChangeAdminColorSchemeStep> = 
 					{
 						step: "updateUserMeta",
 						meta: {
-							admin_color: step.colorScheme
+							admin_color: step.vars?.colorScheme
 						},
 						userId: 1
 					}

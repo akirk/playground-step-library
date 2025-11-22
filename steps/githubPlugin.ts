@@ -8,11 +8,11 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 		toV1() {
 			// Parse PR URLs
 			const prPattern = /^(?:https:\/\/)?(?:github\.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)\/pull\/(?<prNumber>\d+)/;
-			const prTest = prPattern.exec(step.url);
+			const prTest = prPattern.exec(step.vars?.url);
 
 			// Parse regular GitHub URLs (branches, etc.)
 			const regexPattern = /^(?:https:\/\/)?(?:github\.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branchAndDir>.+))?$/;
-			const urlTest = regexPattern.exec(step.url);
+			const urlTest = regexPattern.exec(step.vars?.url);
 			if (!urlTest && !prTest) {
 				return { steps: [] };
 			}
@@ -88,7 +88,7 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 				}]
 			};
 
-			if (step.prs) {
+			if (step.vars?.prs) {
 				(result.steps![0] as any).queryParams = {
 					'gh-ensure-auth': 'yes',
 					'ghexport-repo-url': repoUrl,

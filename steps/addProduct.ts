@@ -4,12 +4,12 @@ import type { StepDefinition, BlueprintV2Declaration } from '@wp-playground/blue
 
 
 export const addProduct: StepFunction<AddProductStep> = (step: AddProductStep, blueprint: any): StepResult => {
-	const title = step.title || step.productTitle || '';
-	const description = step.description || step.productDescription || '';
-	const productPrice = step.price || step.productPrice || '';
-	const productSalePrice = step.salePrice || step.productSalePrice || '';
-	const productSku = step.sku || step.productSku || '';
-	const productStatus = step.status || step.productStatus || 'publish';
+	const title = step.vars?.title || step.vars?.productTitle || '';
+	const description = step.vars?.description || step.vars?.productDescription || '';
+	const productPrice = step.vars?.price || step.vars?.productPrice || '';
+	const productSalePrice = step.vars?.salePrice || step.vars?.productSalePrice || '';
+	const productSku = step.vars?.sku || step.vars?.productSku || '';
+	const productStatus = step.vars?.status || step.vars?.productStatus || 'publish';
 
 	return {
 		toV1() {
@@ -83,7 +83,7 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 				}
 			}
 			if (!hasWoocommercePlugin) {
-				const wooResult = installPlugin({ step: 'installPlugin', url: 'woocommerce', permalink: true }).toV1();
+				const wooResult = installPlugin( { step: 'installPlugin', vars: { url: 'woocommerce', permalink: true } } ).toV1();
 				if (wooResult.steps) {
 					steps = wooResult.steps.concat(steps);
 				}

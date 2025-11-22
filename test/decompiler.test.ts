@@ -26,11 +26,10 @@ describe('BlueprintDecompiler', () => {
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps).toHaveLength(1);
-			expect(result.steps[0]).toEqual({
-				step: 'installPlugin',
+			expect(result.steps[0]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://wordpress.org/plugins/duplicate-page/',
 				prs: false
-			});
+			} } );
 			expect(result.confidence).toBe('high');
 			expect(result.unmappedSteps).toHaveLength(0);
 		});
@@ -56,13 +55,12 @@ describe('BlueprintDecompiler', () => {
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps).toHaveLength(1);
-			expect(result.steps[0]).toEqual({
-				step: 'installPlugin',
+			expect(result.steps[0]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://github.com/WordPress/wordpress-playground/pull/2727',
 				auth: true,
 				prs: false,
 				permalink: false
-			});
+			} } );
 			expect(result.confidence).toBe('high');
 		});
 
@@ -85,12 +83,11 @@ describe('BlueprintDecompiler', () => {
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps).toHaveLength(1);
-			expect(result.steps[0]).toEqual({
-				step: 'installPlugin',
+			expect(result.steps[0]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://alex.kirk.at/wp-content/uploads/sites/2/2025/11/iconick-1.0.0.zip',
 				prs: false,
 				permalink: false
-			});
+			} } );
 		});
 
 		it('should convert downloads.wordpress.org plugin URL to wordpress.org', () => {
@@ -112,11 +109,10 @@ describe('BlueprintDecompiler', () => {
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps).toHaveLength(1);
-			expect(result.steps[0]).toEqual({
-				step: 'installPlugin',
+			expect(result.steps[0]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://wordpress.org/plugins/view-transitions/',
 				prs: false
-			});
+			} } );
 			expect(result.confidence).toBe('high');
 		});
 
@@ -138,11 +134,10 @@ describe('BlueprintDecompiler', () => {
 
 			const result = decompiler.decompile(nativeBlueprint);
 
-			expect(result.steps[0]).toEqual({
-				step: 'installPlugin',
+			expect(result.steps[0]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://wordpress.org/plugins/woocommerce/',
 				prs: false
-			});
+			} } );
 		});
 	});
 
@@ -166,11 +161,10 @@ describe('BlueprintDecompiler', () => {
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps).toHaveLength(1);
-			expect(result.steps[0]).toEqual({
-				step: 'installTheme',
+			expect(result.steps[0]).toEqual( { step: 'installTheme', vars: {
 				url: 'https://wordpress.org/themes/hello-biz/',
 				prs: false
-			});
+			} } );
 			expect(result.confidence).toBe('high');
 		});
 
@@ -193,11 +187,10 @@ describe('BlueprintDecompiler', () => {
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps).toHaveLength(1);
-			expect(result.steps[0]).toEqual({
-				step: 'installTheme',
+			expect(result.steps[0]).toEqual( { step: 'installTheme', vars: {
 				url: 'https://wordpress.org/themes/twentytwentyfour/',
 				prs: false
-			});
+			} } );
 		});
 	});
 
@@ -218,11 +211,10 @@ describe('BlueprintDecompiler', () => {
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps).toHaveLength(1);
-			expect(result.steps[0]).toEqual({
-				step: 'setSiteName',
+			expect(result.steps[0]).toEqual( { step: 'setSiteName', vars: {
 				sitename: 'My Amazing Site',
 				tagline: 'Just another WordPress site'
-			});
+			} } );
 			expect(result.confidence).toBe('high');
 		});
 
@@ -240,11 +232,10 @@ describe('BlueprintDecompiler', () => {
 
 			const result = decompiler.decompile(nativeBlueprint);
 
-			expect(result.steps[0]).toEqual({
-				step: 'setSiteName',
+			expect(result.steps[0]).toEqual( { step: 'setSiteName', vars: {
 				sitename: 'My Site',
 				tagline: ''
-			});
+			} } );
 		});
 	});
 
@@ -258,10 +249,9 @@ describe('BlueprintDecompiler', () => {
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps).toHaveLength(1);
-			expect(result.steps[0]).toEqual({
-				step: 'setLandingPage',
+			expect(result.steps[0]).toEqual( { step: 'setLandingPage', vars: {
 				landingPage: '/wp-admin/options-general.php?page=duplicate_page_settings'
-			});
+			} } );
 		});
 
 		it('should combine plugin install with landingPage', () => {
@@ -308,11 +298,10 @@ describe('BlueprintDecompiler', () => {
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps).toHaveLength(1);
-			expect(result.steps[0]).toEqual({
-				step: 'muPlugin',
+			expect(result.steps[0]).toEqual( { step: 'muPlugin', vars: {
 				name: 'my-plugin',
 				code: expect.stringContaining('Plugin Name: Test Plugin')
-			});
+			} } );
 		});
 	});
 
@@ -355,11 +344,10 @@ describe('BlueprintDecompiler', () => {
 
 			const result = decompiler.decompile(nativeBlueprint);
 
-			expect(result.steps[0]).toEqual({
-				step: 'addFilter',
+			expect(result.steps[0]).toEqual( { step: 'addFilter', vars: {
 				filter: 'the_content',
 				code: '__return_false'
-			});
+			} } );
 		});
 	});
 
@@ -488,10 +476,9 @@ wp_insert_post( array(
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps).toHaveLength(1);
-			expect(result.steps[0]).toEqual({
-				step: 'runWpCliCommand',
+			expect(result.steps[0]).toEqual( { step: 'runWpCliCommand', vars: {
 				command: 'plugin list'
-			});
+			} } );
 			expect(result.confidence).toBe('high');
 		});
 
@@ -783,16 +770,14 @@ wp_insert_post( array(
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps).toHaveLength(2);
-			expect(result.steps[0]).toEqual({
-				step: 'installPlugin',
+			expect(result.steps[0]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://wordpress.org/plugins/hello-dolly/',
 				prs: false
-			});
-			expect(result.steps[1]).toEqual({
-				step: 'installPlugin',
+			} } );
+			expect(result.steps[1]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://wordpress.org/plugins/akismet/',
 				prs: false
-			});
+			} } );
 		});
 
 		it('should decompile plugin objects', () => {
@@ -812,17 +797,15 @@ wp_insert_post( array(
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps).toHaveLength(2);
-			expect(result.steps[0]).toEqual({
-				step: 'installPlugin',
+			expect(result.steps[0]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://wordpress.org/plugins/woocommerce/',
 				prs: false
-			});
-			expect(result.steps[1]).toEqual({
-				step: 'installPlugin',
+			} } );
+			expect(result.steps[1]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://example.com/my-plugin.zip',
 				prs: false,
 				permalink: false
-			});
+			} } );
 		});
 
 		it('should decompile mixed plugin formats', () => {
@@ -839,16 +822,14 @@ wp_insert_post( array(
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps).toHaveLength(2);
-			expect(result.steps[0]).toEqual({
-				step: 'installPlugin',
+			expect(result.steps[0]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://wordpress.org/plugins/hello-dolly/',
 				prs: false
-			});
-			expect(result.steps[1]).toEqual({
-				step: 'installPlugin',
+			} } );
+			expect(result.steps[1]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://wordpress.org/plugins/jetpack/',
 				prs: false
-			});
+			} } );
 		});
 
 		it('should add plugins before steps', () => {
@@ -1177,16 +1158,14 @@ wp_insert_post( array(
 			const result = decompiler.decompile(v2Blueprint);
 
 			expect(result.steps).toHaveLength(2);
-			expect(result.steps[0]).toEqual({
-				step: 'installPlugin',
+			expect(result.steps[0]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://wordpress.org/plugins/gutenberg/',
 				prs: false
-			});
-			expect(result.steps[1]).toEqual({
-				step: 'installPlugin',
+			} } );
+			expect(result.steps[1]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://wordpress.org/plugins/woocommerce/',
 				prs: false
-			});
+			} } );
 		});
 
 		it('should decompile V2 plugins array with objects', () => {
@@ -1201,17 +1180,15 @@ wp_insert_post( array(
 			const result = decompiler.decompile(v2Blueprint);
 
 			expect(result.steps).toHaveLength(2);
-			expect(result.steps[0]).toEqual({
-				step: 'installPlugin',
+			expect(result.steps[0]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://wordpress.org/plugins/jetpack/',
 				prs: false
-			});
-			expect(result.steps[1]).toEqual({
-				step: 'installPlugin',
+			} } );
+			expect(result.steps[1]).toEqual( { step: 'installPlugin', vars: {
 				url: 'https://example.com/plugin.zip',
 				prs: false,
 				permalink: false
-			});
+			} } );
 		});
 
 		it('should decompile V2 themes array', () => {
@@ -1223,11 +1200,10 @@ wp_insert_post( array(
 			const result = decompiler.decompile(v2Blueprint);
 
 			expect(result.steps).toHaveLength(2);
-			expect(result.steps[0]).toEqual({
-				step: 'installTheme',
+			expect(result.steps[0]).toEqual( { step: 'installTheme', vars: {
 				url: 'https://wordpress.org/themes/flavor/',
 				prs: false
-			});
+			} } );
 		});
 
 		it('should decompile V2 siteOptions', () => {
@@ -1243,16 +1219,14 @@ wp_insert_post( array(
 			const result = decompiler.decompile(v2Blueprint);
 
 			expect(result.steps).toHaveLength(2);
-			expect(result.steps[0]).toEqual({
-				step: 'setSiteName',
+			expect(result.steps[0]).toEqual( { step: 'setSiteName', vars: {
 				sitename: 'My Site',
 				tagline: 'A tagline'
-			});
-			expect(result.steps[1]).toEqual({
-				step: 'setSiteOption',
+			} } );
+			expect(result.steps[1]).toEqual( { step: 'setSiteOption', vars: {
 				name: 'permalink_structure',
 				value: '/%postname%/'
-			});
+			} } );
 		});
 
 		it('should decompile V2 content array', () => {
@@ -1374,10 +1348,9 @@ wp_insert_post( array(
 			const result = decompiler.decompile(v2Blueprint);
 
 			expect(result.steps).toHaveLength(1);
-			expect(result.steps[0]).toEqual({
-				step: 'setLandingPage',
+			expect(result.steps[0]).toEqual( { step: 'setLandingPage', vars: {
 				landingPage: '/wp-admin/'
-			});
+			} } );
 		});
 
 		it('should decompile V2 additionalStepsAfterExecution', () => {
@@ -1394,10 +1367,9 @@ wp_insert_post( array(
 			const result = decompiler.decompile(v2Blueprint);
 
 			expect(result.steps).toHaveLength(1);
-			expect(result.steps[0]).toEqual({
-				step: 'runWpCliCommand',
+			expect(result.steps[0]).toEqual( { step: 'runWpCliCommand', vars: {
 				command: 'plugin list'
-			});
+			} } );
 		});
 
 		it('should decompile complex V2 blueprint', () => {

@@ -6,11 +6,11 @@ describe('addPost', () => {
     describe('toV1()', () => {
         it('should create a basic post with new variable names', () => {
         const step: AddPostStep = {
-            step: 'addPost',
+            step: 'addPost', vars: {
             title: 'Test Post',
             content: '<p>Test content</p>',
             type: 'post'
-        };
+        } };
 
         const result = addPost(step).toV1();
 
@@ -25,11 +25,11 @@ describe('addPost', () => {
 
     it('should create a basic post with deprecated variable names (backward compatibility)', () => {
         const step: AddPostStep = {
-            step: 'addPost',
+            step: 'addPost', vars: {
             postTitle: 'Test Post',
             postContent: '<p>Test content</p>',
             postType: 'post'
-        };
+        } };
 
         const result = addPost(step).toV1();
 
@@ -44,12 +44,12 @@ describe('addPost', () => {
 
     it('should handle custom post status', () => {
         const step: AddPostStep = {
-            step: 'addPost',
+            step: 'addPost', vars: {
             title: 'Draft Post',
             content: '<p>Draft content</p>',
             type: 'post',
             status: 'draft'
-        };
+        } };
 
         const result = addPost(step).toV1();
 
@@ -58,12 +58,12 @@ describe('addPost', () => {
 
     it('should include post date when provided', () => {
         const step: AddPostStep = {
-            step: 'addPost',
+            step: 'addPost', vars: {
             title: 'Scheduled Post',
             content: '<p>Future content</p>',
             type: 'post',
             date: '2024-12-25 10:00:00'
-        };
+        } };
 
         const result = addPost(step).toV1();
 
@@ -72,11 +72,11 @@ describe('addPost', () => {
 
     it('should not include post date when not provided', () => {
         const step: AddPostStep = {
-            step: 'addPost',
+            step: 'addPost', vars: {
             title: 'Regular Post',
             content: '<p>Regular content</p>',
             type: 'post'
-        };
+        } };
 
         const result = addPost(step).toV1();
 
@@ -85,12 +85,12 @@ describe('addPost', () => {
 
     it('should set homepage when homepage flag is true', () => {
         const step: AddPostStep = {
-            step: 'addPost',
+            step: 'addPost', vars: {
             title: 'Home Page',
             content: '<p>Welcome to our site</p>',
             type: 'page',
             homepage: true
-        };
+        } };
 
         const result = addPost(step).toV1();
 
@@ -100,12 +100,12 @@ describe('addPost', () => {
 
     it('should not set homepage when homepage flag is false', () => {
         const step: AddPostStep = {
-            step: 'addPost',
+            step: 'addPost', vars: {
             title: 'Regular Page',
             content: '<p>Just a page</p>',
             type: 'page',
             homepage: false
-        };
+        } };
 
         const result = addPost(step).toV1();
 
@@ -115,11 +115,11 @@ describe('addPost', () => {
 
     it('should escape single quotes in title and content', () => {
         const step: AddPostStep = {
-            step: 'addPost',
+            step: 'addPost', vars: {
             title: "Title with 'single quotes'",
             content: "<p>Content with 'quotes' here</p>",
             type: 'post'
-        };
+        } };
 
         const result = addPost(step).toV1();
 
@@ -129,12 +129,12 @@ describe('addPost', () => {
 
     it('should escape single quotes in post date', () => {
         const step: AddPostStep = {
-            step: 'addPost',
+            step: 'addPost', vars: {
             title: 'Test Post',
             content: '<p>Test content</p>',
             type: 'post',
             date: "2024-01-01 12:00:00 O'Clock"
-        };
+        } };
 
         const result = addPost(step).toV1();
 
@@ -143,11 +143,11 @@ describe('addPost', () => {
 
     it('should handle custom post types', () => {
         const step: AddPostStep = {
-            step: 'addPost',
+            step: 'addPost', vars: {
             title: 'Custom Post',
             content: '<p>Custom content</p>',
             type: 'custom_type'
-        };
+        } };
 
         const result = addPost(step).toV1();
 
@@ -156,7 +156,7 @@ describe('addPost', () => {
 
     it('should prefer new variable names over deprecated ones', () => {
         const step: AddPostStep = {
-            step: 'addPost',
+            step: 'addPost', vars: {
             title: 'New Title',
             content: '<p>New Content</p>',
             type: 'post',
@@ -167,7 +167,7 @@ describe('addPost', () => {
             postType: 'page',
             postStatus: 'publish',
             postDate: '2025-01-01'
-        };
+        } };
 
         const result = addPost(step).toV1();
 
@@ -182,11 +182,11 @@ describe('addPost', () => {
     describe('toV2()', () => {
         it('should create a post using content array', () => {
             const step: AddPostStep = {
-                step: 'addPost',
+                step: 'addPost', vars: {
                 title: 'Test Post',
                 content: '<p>Test content</p>',
                 type: 'post'
-            };
+            } };
 
             const result = addPost(step).toV2();
 
@@ -201,12 +201,12 @@ describe('addPost', () => {
 
         it('should include post_date when provided', () => {
             const step: AddPostStep = {
-                step: 'addPost',
+                step: 'addPost', vars: {
                 title: 'Dated Post',
                 content: '<p>Content</p>',
                 type: 'post',
                 date: '2024-12-25 10:00:00'
-            };
+            } };
 
             const result = addPost(step).toV2();
 
@@ -215,12 +215,12 @@ describe('addPost', () => {
 
         it('should set homepage with siteOptions and additionalStepsAfterExecution', () => {
             const step: AddPostStep = {
-                step: 'addPost',
+                step: 'addPost', vars: {
                 title: 'Home Page',
                 content: '<p>Welcome</p>',
                 type: 'page',
                 homepage: true
-            };
+            } };
 
             const result = addPost(step).toV2();
 
@@ -232,11 +232,11 @@ describe('addPost', () => {
 
         it('should use deprecated variable names when new ones not provided', () => {
             const step: AddPostStep = {
-                step: 'addPost',
+                step: 'addPost', vars: {
                 postTitle: 'Old Title',
                 postContent: '<p>Old Content</p>',
                 postType: 'post'
-            };
+            } };
 
             const result = addPost(step).toV2();
 
@@ -247,12 +247,12 @@ describe('addPost', () => {
 
         it('should set landing page when landingPage is not false and postId is provided', () => {
             const step: AddPostStep = {
-                step: 'addPost',
+                step: 'addPost', vars: {
                 title: 'Test Post',
                 content: '<p>Test content</p>',
                 type: 'post',
                 postId: 1000
-            };
+            } };
 
             const result = addPost(step).toV2();
 
@@ -262,13 +262,13 @@ describe('addPost', () => {
 
         it('should not set landing page when landingPage is false', () => {
             const step: AddPostStep = {
-                step: 'addPost',
+                step: 'addPost', vars: {
                 title: 'Test Post',
                 content: '<p>Test content</p>',
                 type: 'post',
                 postId: 1000,
                 landingPage: false
-            };
+            } };
 
             const result = addPost(step).toV2();
 
@@ -277,11 +277,11 @@ describe('addPost', () => {
 
         it('should not set landing page when postId is not provided', () => {
             const step: AddPostStep = {
-                step: 'addPost',
+                step: 'addPost', vars: {
                 title: 'Test Post',
                 content: '<p>Test content</p>',
                 type: 'post'
-            };
+            } };
 
             const result = addPost(step).toV2();
 

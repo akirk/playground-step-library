@@ -51,11 +51,8 @@ add_action(
 	}
 );`;
 
-	return muPlugin({
-		step: 'muPlugin',
-		name: 'remove-dashboard-widgets',
-		code
-	});
+	return muPlugin( { step: 'muPlugin', vars: { name: 'remove-dashboard-widgets',
+		code } } );
 };
 
 removeDashboardWidgets.description = "Remove widgets from the wp-admin dashboard.";

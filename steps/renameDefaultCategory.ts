@@ -5,11 +5,11 @@ import { v1ToV2Fallback } from './types.js';
 export const renameDefaultCategory: StepFunction<RenameDefaultCategoryStep> = (step: RenameDefaultCategoryStep): StepResult => {
 	return {
 		toV1() {
-	const name = (step.categoryName || '').replace( /'/g, "\\'" ).trim();
+	const name = (step.vars?.categoryName || '').replace( /'/g, "\\'" ).trim();
 	if ( ! name ) {
 		return { steps: [] };
 	}
-	const slug = step.categorySlug || name.toLowerCase().replace( /[^a-z0-9]+/g, '-' ).replace( /-+$/g, '' ).replace( /^-+/g, '' );
+	const slug = step.vars?.categorySlug || name.toLowerCase().replace( /[^a-z0-9]+/g, '-' ).replace( /-+$/g, '' ).replace( /^-+/g, '' );
 	return {
 		steps: [
 			{

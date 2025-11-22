@@ -4,10 +4,10 @@ import type { StepDefinition, BlueprintV2Declaration } from '@wp-playground/blue
 
 
 export const customPostType: StepFunction<CustomPostTypeStep> = (step: CustomPostTypeStep): StepResult => {
-	const slug = step.slug;
-	const name = step.name;
-	const supports = step.supports;
-	const isPublic = step.public !== false;
+	const slug = step.vars?.slug;
+	const name = step.vars?.name;
+	const supports = step.vars?.supports;
+	const isPublic = step.vars?.public !== false;
 
 	return {
 		toV1() {

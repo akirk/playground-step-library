@@ -5,7 +5,7 @@ import { v1ToV2Fallback } from './types.js';
 export const importWxr: StepFunction<ImportWxrFromUrlStep> = (step: ImportWxrFromUrlStep): StepResult => {
 	return {
 		toV1() {
-			if ( ! step.url || ! step.url.match( /^https?:/ ) ) {
+			if ( ! step.vars?.url || ! step.vars?.url.match( /^https?:/ ) ) {
 				return { steps: [] };
 			}
 			return {
@@ -14,7 +14,7 @@ export const importWxr: StepFunction<ImportWxrFromUrlStep> = (step: ImportWxrFro
 						"step": "importWxr",
 						"file": {
 							"resource": "url",
-							"url": step.url
+							"url": step.vars?.url
 						}
 					}
 				]

@@ -3,12 +3,12 @@ import { muPlugin } from './muPlugin.js';
 import type { StepDefinition } from '@wp-playground/blueprints';
 
 export const enqueueCss: StepFunction<EnqueueCssStep> = (step: EnqueueCssStep): StepResult => {
-	const filename = step.filename || `custom-styles-${step.stepIndex || 0}`;
+	const filename = step.vars?.filename || `custom-styles-${step.stepIndex || 0}`;
 	const sanitizedFilename = filename.replace(/\.css$/, '');
 	const cssFilePath = `/wordpress/wp-content/mu-plugins/${sanitizedFilename}.css`;
 
-	const frontend = step.frontend !== false;
-	const wpAdmin = step.wpAdmin !== false;
+	const frontend = step.vars?.frontend !== false;
+	const wpAdmin = step.vars?.wpAdmin !== false;
 
 	let phpCode = '';
 	if (frontend) {
@@ -34,7 +34,7 @@ export const enqueueCss: StepFunction<EnqueueCssStep> = (step: EnqueueCssStep): 
 
 	return {
 		toV1() {
-			if (!step.css || !step.css.trim() || (!frontend && !wpAdmin)) {
+			if (!step.vars?.css || !step.vars?.css.trim() || (!frontend && !wpAdmin)) {
 				return { steps: [] };
 			}
 
@@ -45,7 +45,7 @@ export const enqueueCss: StepFunction<EnqueueCssStep> = (step: EnqueueCssStep): 
 					{
 						step: 'writeFile',
 						path: cssFilePath,
-						data: step.css
+						data: step.vars?.css
 					},
 					...(muSteps.steps || [])
 				]
@@ -53,7 +53,7 @@ export const enqueueCss: StepFunction<EnqueueCssStep> = (step: EnqueueCssStep): 
 		},
 
 		toV2() {
-			if (!step.css || !step.css.trim() || (!frontend && !wpAdmin)) {
+			if (!step.vars?.css || !step.vars?.css.trim() || (!frontend && !wpAdmin)) {
 				return { version: 2 };
 			}
 
@@ -66,7 +66,7 @@ export const enqueueCss: StepFunction<EnqueueCssStep> = (step: EnqueueCssStep): 
 					{
 						file: {
 							filename: `${sanitizedFilename}.css`,
-							content: step.css
+							content: step.vars?.css
 						}
 					}
 				]

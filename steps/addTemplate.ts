@@ -2,10 +2,10 @@ import type { StepFunction, AddTemplateStep, StepResult } from './types.js';
 import { v1ToV2Fallback } from './types.js';
 
 export const addTemplate: StepFunction<AddTemplateStep> = ( step: AddTemplateStep ): StepResult => {
-	const slug = step.slug || '';
-	const theme = step.theme || ''; // Empty means current active theme
-	const content = step.content || '';
-	const title = step.title || slug;
+	const slug = step.vars?.slug || '';
+	const theme = step.vars?.theme || ''; // Empty means current active theme
+	const content = step.vars?.content || '';
+	const title = step.vars?.title || slug;
 
 	return {
 		toV1() {

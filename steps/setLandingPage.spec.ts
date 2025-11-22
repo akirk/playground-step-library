@@ -6,9 +6,9 @@ describe('setLandingPage', () => {
     describe('toV1()', () => {
         it('should return empty steps with landingPage property', () => {
             const step: SetLandingPageStep = {
-                step: 'setLandingPage',
+                step: 'setLandingPage', vars: {
                 landingPage: '/wp-admin/post-new.php'
-            };
+            } };
 
             const result = setLandingPage(step).toV1();
 
@@ -19,9 +19,9 @@ describe('setLandingPage', () => {
 
         it('should work with root path', () => {
             const step: SetLandingPageStep = {
-                step: 'setLandingPage',
+                step: 'setLandingPage', vars: {
                 landingPage: '/'
-            };
+            } };
 
             const result = setLandingPage(step).toV1();
 
@@ -30,9 +30,9 @@ describe('setLandingPage', () => {
 
         it('should work with admin paths', () => {
             const step: SetLandingPageStep = {
-                step: 'setLandingPage',
+                step: 'setLandingPage', vars: {
                 landingPage: '/wp-admin/'
-            };
+            } };
 
             const result = setLandingPage(step).toV1();
 
@@ -41,9 +41,9 @@ describe('setLandingPage', () => {
 
         it('should work with complex admin paths', () => {
             const step: SetLandingPageStep = {
-                step: 'setLandingPage',
+                step: 'setLandingPage', vars: {
                 landingPage: '/wp-admin/post-new.php?post_type=page'
-            };
+            } };
 
             const result = setLandingPage(step).toV1();
 
@@ -60,9 +60,9 @@ describe('setLandingPage', () => {
 
             testPaths.forEach(path => {
                 const step: SetLandingPageStep = {
-                    step: 'setLandingPage',
+                    step: 'setLandingPage', vars: {
                     landingPage: path
-                };
+                } };
 
                 const result = setLandingPage(step).toV1();
                 expect(result.landingPage).toBe(path);
@@ -73,9 +73,9 @@ describe('setLandingPage', () => {
     describe('toV2()', () => {
         it('should set landingPage via applicationOptions', () => {
             const step: SetLandingPageStep = {
-                step: 'setLandingPage',
+                step: 'setLandingPage', vars: {
                 landingPage: '/wp-admin/post-new.php'
-            };
+            } };
 
             const result = setLandingPage(step).toV2();
 
@@ -86,9 +86,9 @@ describe('setLandingPage', () => {
 
         it('should work with root path', () => {
             const step: SetLandingPageStep = {
-                step: 'setLandingPage',
+                step: 'setLandingPage', vars: {
                 landingPage: '/'
-            };
+            } };
 
             const result = setLandingPage(step).toV2();
 
@@ -97,9 +97,9 @@ describe('setLandingPage', () => {
 
         it('should work with complex admin paths', () => {
             const step: SetLandingPageStep = {
-                step: 'setLandingPage',
+                step: 'setLandingPage', vars: {
                 landingPage: '/wp-admin/post-new.php?post_type=page'
-            };
+            } };
 
             const result = setLandingPage(step).toV2();
 
@@ -135,9 +135,9 @@ describe('setLandingPage', () => {
             const blueprint = {
                 steps: [
                     {
-                        step: 'setLandingPage',
+                        step: 'setLandingPage', vars: {
                         landingPage: '/wp-admin/post-new.php'
-                    }
+                    } }
                 ]
             };
 
@@ -150,9 +150,9 @@ describe('setLandingPage', () => {
             const blueprint = {
                 steps: [
                     {
-                        step: 'setLandingPage',
+                        step: 'setLandingPage', vars: {
                         landingPage: '/'
-                    }
+                    } }
                 ]
             };
 
@@ -165,14 +165,14 @@ describe('setLandingPage', () => {
             const blueprint = {
                 steps: [
                     {
-                        step: 'setSiteName',
+                        step: 'setSiteName', vars: {
                         sitename: 'Test Site',
                         tagline: 'Test tagline'
-                    },
+                    } },
                     {
-                        step: 'setLandingPage',
+                        step: 'setLandingPage', vars: {
                         landingPage: '/wp-admin/themes.php'
-                    }
+                    } }
                 ]
             };
 
@@ -201,9 +201,9 @@ describe('setLandingPage', () => {
             const validBlueprint = {
                 steps: [
                     {
-                        step: 'setLandingPage',
+                        step: 'setLandingPage', vars: {
                         landingPage: '/wp-admin/post-new.php'
-                    }
+                    } }
                 ]
             };
 

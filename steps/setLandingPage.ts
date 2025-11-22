@@ -6,7 +6,7 @@ export const setLandingPage: StepFunction<SetLandingPageStep> = (step: SetLandin
 	return {
 		toV1() {
 			const result: BlueprintV1Declaration = {
-				landingPage: step.landingPage,
+				landingPage: step.vars?.landingPage,
 				steps: []
 			};
 			return result;
@@ -17,7 +17,7 @@ export const setLandingPage: StepFunction<SetLandingPageStep> = (step: SetLandin
 				version: 2,
 				applicationOptions: {
 					'wordpress-playground': {
-						landingPage: step.landingPage
+						landingPage: step.vars?.landingPage
 					}
 				}
 			};
