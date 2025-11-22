@@ -260,7 +260,7 @@ A local storage system for saving and managing your blueprints.
 
 Same as main Copy Dropdown:
 - Share Step Library URL
-- Copy Shorter Redirect URL
+- Copy Redirect URL
 - Download Blueprint
 - Copy Blueprint JSON
 - Copy Playground URL
@@ -348,7 +348,7 @@ https://akirk.github.io/playground-step-library/#{base64_blueprint}
 - Shows the step-by-step construction
 - Educational
 
-#### Copy Shorter Redirect URL
+#### Copy Redirect URL
 **Icon:** Upload arrow  
 **Copies:** Compact URL that redirects to Playground
 
@@ -464,7 +464,7 @@ At the end of your messages, include a link to test the changes in WordPress Pla
 | Option | Editable | Short | Use Case |
 |--------|----------|-------|----------|
 | Share Step Library URL | ✅ Yes | ❌ No | Collaboration, teaching |
-| Shorter Redirect URL | ✅ Yes | ✅ Yes | Social media, quick shares |
+| Redirect URL | ✅ Yes | ✅ Yes | Social media, quick shares |
 | Download Blueprint | ✅ Yes* | N/A | Git, backups, documentation |
 | Copy Blueprint JSON | ✅ Yes* | N/A | Code examples, programmatic |
 | Copy Playground URL | ❌ No | ❌ No | Direct site access |

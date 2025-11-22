@@ -345,7 +345,7 @@ Click the **"Mine"** bookmark icon to open your saved blueprints.
 Click the **three dots** next to "Launch in Playground" for more options:
 
 - **Share Step Library URL** - Link that opens the blueprint in Step Library
-- **Copy Shorter Redirect URL** - Compact URL that redirects to Playground
+- **Copy Redirect URL** - Compact URL that redirects to Playground
 - **Download Blueprint** - Save as .json file
 - **Copy Blueprint JSON** - Raw JSON to clipboard
 - **Copy Playground URL** - Direct Playground link
@@ -355,7 +355,7 @@ Click the **three dots** next to "Launch in Playground" for more options:
 | Option | Use Case |
 |--------|----------|
 | Share Step Library URL | Let others edit/remix your blueprint |
-| Shorter Redirect URL | Share on social media (character limits) |
+| Redirect URL | Share on social media (character limits) |
 | Download Blueprint | Store locally or commit to git |
 | Copy Blueprint JSON | Paste into documentation |
 | Copy Playground URL | Direct link to running site |
@@ -472,7 +472,7 @@ Steps like `githubPlugin` with `prs: true` enable GitHub PR creation from Playgr
 If you see a size warning:
 
 1. **Remove unnecessary steps** - Combine operations
-2. **Use shorter redirect URL** - More efficient encoding
+2. **Use redirect URL** - More efficient encoding
 3. **Download as file** - Store locally instead
 4. **Split into multiple blueprints** - Modular approach
 

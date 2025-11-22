@@ -631,18 +631,29 @@ addEventListener('DOMContentLoaded', function () {
 
 		const currentCompressedState = stateController.compressStateFromDOM(state);
 
-		// Only update history and transform JSON if the state has changed
+		// Only update history if the state has changed
 		if (currentCompressedState !== lastCompressedState) {
 			lastCompressedState = currentCompressedState;
 			history.pushState(state, '', '#' + currentCompressedState);
-			transformJson();
 		}
+
+		// Always transform JSON to update playground link
+		transformJson();
 	}
 
 	// Subscribe to blueprint:updated events to trigger loadCombinedExamples
 	blueprintEventBus.on('blueprint:updated', () => {
 		loadCombinedExamples();
+		updateMenuItemVisibility();
 	});
+
+	function updateMenuItemVisibility() {
+		const hasSteps = blueprintSteps.querySelectorAll('.step').length > 0;
+		const copyRedirectUrlMenu = document.getElementById('copy-redirect-url-menu');
+		if (copyRedirectUrlMenu) {
+			copyRedirectUrlMenu.style.display = hasSteps ? '' : 'none';
+		}
+	}
 
 	// Dependencies for step inserter functions
 	const stepInserterDeps: StepInserterDependencies = {
@@ -827,18 +838,15 @@ addEventListener('DOMContentLoaded', function () {
 		}
 
 		try {
+			// Use redirect URL if steps exist, otherwise share current URL with hash
 			const redirectUrl = urlController.generateRedirectUrl(1, false, urlControllerDeps);
-
-			if (!redirectUrl) {
-				console.error('No steps found');
-				return;
-			}
+			const shareUrl = redirectUrl || window.location.href;
 
 			const button = e.currentTarget as HTMLElement;
 			const originalContent = button.cloneNode(true);
 			const title = (document.getElementById('title') as HTMLInputElement).value || 'WordPress Playground Blueprint';
 
-			const result = await urlController.shareUrl(redirectUrl, title);
+			const result = await urlController.shareUrl(shareUrl, title);
 
 			if (result === 'shared' || result === 'copied') {
 				if (result === 'copied') {
