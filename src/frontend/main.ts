@@ -316,93 +316,94 @@ addEventListener('DOMContentLoaded', function () {
 		if (event.ctrlKey || event.altKey || event.metaKey) {
 			return;
 		}
-		if (!(event.target instanceof Element)) return;
-
-		if ((event.target as HTMLElement).id === 'blueprint-compiled') {
+		if (!(event.target instanceof Element)) {
+			return;
+		}
+		const targetId = (event.target as HTMLElement).id;
+		if (targetId === 'blueprint-compiled') {
+			return;
+		}
+		if (targetId === 'filter') {
+			if (event.key === 'Enter') {
+				const stepLibrary = document.getElementById('step-library');
+				if (stepLibrary && stepLibrary.querySelectorAll('.step:not(.hidden)').length === 1) {
+					const step = stepLibrary.querySelector('.step:not(.hidden)');
+					if (step) {
+						insertStep(step);
+					}
+				}
+			}
+			return;
+		}
+		if (event.key === 'Escape') {
+			const focusable = event.target.closest('input,textarea,.step');
+			if (focusable instanceof HTMLElement) {
+				focusable.blur();
+			}
 			return;
 		}
 		if (event.key === 'Enter') {
 			if (event.target.closest('#save-step')) {
-				return saveMyStep();
+				saveMyStep();
+				return;
 			}
 			if (event.target.closest('#step-library .step')) {
 				insertStep(event.target);
-				return false;
-			}
-			if (event.target.closest('#filter')) {
-				const stepLibrary = document.getElementById('step-library');
-				if (stepLibrary && stepLibrary.querySelectorAll('.step:not(.hidden)').length === 1) {
-					const step = stepLibrary.querySelector('.step:not(.hidden)');
-					if (step) insertStep(step);
-				}
-				return false;
+				return;
 			}
 			if (event.target.closest('input') && !event.target.closest('.ace_search_form')) {
 				blueprintEventBus.emit('blueprint:updated');
 				const playgroundLink = document.getElementById('playground-link');
-				if (playgroundLink instanceof HTMLElement) playgroundLink.click();
-				return false;
-			}
-		}
-		if (event.key == 'Escape') {
-			const closestInput = event.target.closest('input,textarea');
-			if (closestInput instanceof HTMLElement) {
-				closestInput.blur();
-				return false;
+				if (playgroundLink instanceof HTMLElement) {
+					playgroundLink.click();
+				}
+				return;
 			}
 		}
 		if (event.target.closest('#step-library .step')) {
-			if (event.key === 'Escape') {
-				const stepEl = event.target.closest('.step');
-				if (stepEl instanceof HTMLElement) stepEl.blur();
-			} else if (event.key === 'ArrowDown') {
+			if (event.key === 'ArrowDown') {
 				const focused = stepList.querySelector('.step:focus');
 				let nextStep = focused?.nextElementSibling;
 				while (nextStep && nextStep.classList.contains('hidden')) {
-					if (!nextStep) {
-						break;
-					}
 					nextStep = nextStep.nextElementSibling;
 				}
 				if (nextStep instanceof HTMLElement) {
 					nextStep.focus();
 				}
-				return false;
-			} else if (event.key === 'ArrowUp') {
+				return;
+			}
+			if (event.key === 'ArrowUp') {
 				const focused = stepList.querySelector('.step:focus');
 				let prevStep = focused?.previousElementSibling;
 				while (prevStep && prevStep.classList.contains('hidden')) {
-					if (!prevStep) {
-						break;
-					}
 					prevStep = prevStep.previousElementSibling;
 				}
 				if (prevStep instanceof HTMLElement) {
 					prevStep.focus();
 				}
-				return false;
-			}
-		}
-
-		if (!event.target.closest('input,textarea')) {
-			if (event.key.match(/^[a-z0-9]$/i) && !event.ctrlKey && !event.altKey && !event.metaKey) {
-				const filterEl = document.getElementById('filter');
-				if (filterEl instanceof HTMLInputElement) {
-					filterEl.value = event.key;
-					filterEl.focus();
-					filterEl.dispatchEvent(new Event('keyup'));
-				}
-				return;
-			} else if ( event.key === 'ArrowUp' ) {
-				( stepList.querySelector( '.step:last-child' ) as HTMLElement | null )?.focus();
-				return;
-			} else if ( event.key === 'ArrowDown' ) {
-				( stepList.querySelector( '.step' ) as HTMLElement | null )?.focus();
 				return;
 			}
 		}
-
-		blueprintEventBus.emit('blueprint:updated');
+		if (event.target.closest('input,textarea')) {
+			return;
+		}
+		if (event.key.match(/^[a-z0-9]$/i)) {
+			const filterEl = document.getElementById('filter');
+			if (filterEl instanceof HTMLInputElement) {
+				filterEl.value = event.key;
+				filterEl.focus();
+				filterEl.dispatchEvent(new Event('keyup'));
+			}
+			return;
+		}
+		if (event.key === 'ArrowUp') {
+			(stepList.querySelector('.step:last-child') as HTMLElement | null)?.focus();
+			return;
+		}
+		if (event.key === 'ArrowDown') {
+			(stepList.querySelector('.step') as HTMLElement | null)?.focus();
+			return;
+		}
 	});
 	document.addEventListener( 'change', ( event ) => {
 		const target = event.target as HTMLElement | null;
