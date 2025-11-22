@@ -46,6 +46,16 @@ declare global {
 	}
 }
 
+function debounce<T extends (...args: any[]) => void>(fn: T, delay: number): T {
+	let timeoutId: ReturnType<typeof setTimeout> | null = null;
+	return ((...args: Parameters<T>) => {
+		if (timeoutId) {
+			clearTimeout(timeoutId);
+		}
+		timeoutId = setTimeout(() => fn(...args), delay);
+	}) as T;
+}
+
 addEventListener('DOMContentLoaded', function () {
 	const compiler = new PlaygroundStepLibrary();
 	const customSteps = compiler.getAvailableSteps() as Record<string, StepDefinition>;
@@ -312,6 +322,10 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
+	const debouncedBlueprintUpdate = debounce(() => {
+		blueprintEventBus.emit('blueprint:updated');
+	}, 300);
+
 	document.addEventListener('keyup', (event) => {
 		if (event.ctrlKey || event.altKey || event.metaKey) {
 			return;
@@ -385,6 +399,7 @@ addEventListener('DOMContentLoaded', function () {
 			}
 		}
 		if (event.target.closest('input,textarea')) {
+			debouncedBlueprintUpdate();
 			return;
 		}
 		if (event.key.match(/^[a-z0-9]$/i)) {
