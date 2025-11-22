@@ -1,6 +1,7 @@
 node_modules
 examples/node_modules
 examples/package-lock.json
+logs/
 
 # Build artifacts
 lib/

@@ -29,37 +29,7 @@ body.blueprint-drop-active::before {
 body.blueprint-drop-active * {
   pointer-events: none;
 }
-/* Blueprint file drag-and-drop visual feedback */
-body.blueprint-drop-active {
-  position: relative;
-}
 
-body.blueprint-drop-active::before {
-  content: 'Drop blueprint file to import';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: light-dark(
-    rgba(59, 130, 246, 0.1),
-    rgba(59, 130, 246, 0.2)
-  );
-  border: 4px dashed light-dark(var(--primary-500), var(--primary-400));
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: light-dark(var(--primary-700), var(--primary-300));
-  pointer-events: none;
-  backdrop-filter: blur(4px);
-}
-
-body.blueprint-drop-active * {
-  pointer-events: none;
-}
 /* Blueprint Compiled Header */
 #blueprint-compiled-header {
   display: flex;
@@ -142,5 +112,16 @@ body.blueprint-drop-active * {
 
 #resume-compilation:hover {
   background: light-dark(var(--warning-700), var(--warning-800));
+}
+
+/* Mobile overrides - must be after base styles */
+@media (max-width: 734px) {
+  #blueprint-compiled-wrapper {
+    height: 300px !important;
+  }
+
+  textarea#blueprint-compiled {
+    height: 300px;
+  }
 }
 

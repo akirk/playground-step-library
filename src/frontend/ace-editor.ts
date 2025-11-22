@@ -175,18 +175,30 @@ function initializeAceEditor(
 			name: 'closeEditorAndResume',
 			bindKey: { win: 'Esc', mac: 'Esc' },
 			exec: function () {
+				// Destroy ace editor if it exists
 				if (blueprintAceEditor) {
-					const aceContainer = document.getElementById('blueprint-compiled-ace');
-					if (aceContainer) {
-						blueprintAceEditor.destroy();
-						aceContainer.remove();
-					}
+					blueprintAceEditor.destroy();
 					blueprintAceEditor = null;
-					textarea.style.display = '';
-					document.getElementById('blueprint-status')!.classList.remove('active');
 				}
+
+				// Remove ALL ace containers (in case there are duplicates)
+				const wrapper = document.getElementById('blueprint-compiled-wrapper');
+				if (wrapper) {
+					const aceContainers = wrapper.querySelectorAll('#blueprint-compiled-ace');
+					aceContainers.forEach(container => container.remove());
+					wrapper.style.removeProperty('height');
+				}
+
+				// Ensure textarea is visible
+				const blueprintTextarea = document.getElementById('blueprint-compiled') as HTMLTextAreaElement;
+				if (blueprintTextarea) {
+					blueprintTextarea.style.removeProperty('display');
+					// Force a reflow to ensure the textarea is rendered
+					blueprintTextarea.offsetHeight;
+				}
+
+				document.getElementById('blueprint-status')!.classList.remove('active');
 				isManualEditMode.value = false;
-				updateBlueprintStatus();
 				transformJson();
 			}
 		});
@@ -197,29 +209,46 @@ function initializeAceEditor(
 
 		blueprintStatus.addEventListener('click', function (e) {
 			if ((e.target as HTMLElement).id === 'resume-compilation-status') {
+				// Destroy ace editor if it exists
 				if (blueprintAceEditor) {
-					const aceContainer = document.getElementById('blueprint-compiled-ace');
-					if (aceContainer) {
-						blueprintAceEditor.destroy();
-						aceContainer.remove();
-					}
+					blueprintAceEditor.destroy();
 					blueprintAceEditor = null;
-					textarea.style.display = '';
-					blueprintStatus.classList.remove('active');
 				}
+
+				// Remove ALL ace containers (in case there are duplicates)
+				const wrapper = document.getElementById('blueprint-compiled-wrapper');
+				if (wrapper) {
+					const aceContainers = wrapper.querySelectorAll('#blueprint-compiled-ace');
+					aceContainers.forEach(container => container.remove());
+					wrapper.style.removeProperty('height');
+				}
+
+				// Ensure textarea is visible
+				const blueprintTextarea = document.getElementById('blueprint-compiled') as HTMLTextAreaElement;
+				if (blueprintTextarea) {
+					blueprintTextarea.style.removeProperty('display');
+					// Force a reflow to ensure the textarea is rendered
+					blueprintTextarea.offsetHeight;
+				}
+
+				blueprintStatus.classList.remove('active');
 				isManualEditMode.value = false;
 				transformJson();
 			}
 		});
 
 		setTimeout(() => {
-			blueprintAceEditor.resize();
-			blueprintAceEditor.renderer.updateFull();
-			blueprintAceEditor.focus();
+			if (blueprintAceEditor) {
+				blueprintAceEditor.resize();
+				blueprintAceEditor.renderer.updateFull();
+				blueprintAceEditor.focus();
+			}
 		}, 0);
 
 		setTimeout(() => {
-			blueprintAceEditor.resize();
+			if (blueprintAceEditor) {
+				blueprintAceEditor.resize();
+			}
 		}, 200);
 
 		window.addEventListener('resize', () => {
@@ -297,8 +326,10 @@ export function initHistoryBlueprintAceEditor(): void {
 		updateHistoryStatus();
 
 		setTimeout(() => {
-			historyBlueprintAceEditor.resize();
-			historyBlueprintAceEditor.renderer.updateFull();
+			if (historyBlueprintAceEditor) {
+				historyBlueprintAceEditor.resize();
+				historyBlueprintAceEditor.renderer.updateFull();
+			}
 		}, 0);
 
 		window.addEventListener('resize', () => {
@@ -376,9 +407,11 @@ export function initCodeEditorAce(
 		updateCodeEditorStatus();
 
 		setTimeout(() => {
-			aceEditor.resize();
-			aceEditor.renderer.updateFull();
-			aceEditor.focus();
+			if (aceEditor) {
+				aceEditor.resize();
+				aceEditor.renderer.updateFull();
+				aceEditor.focus();
+			}
 		}, 0);
 	});
 }
@@ -497,8 +530,10 @@ export function initAIInstructionsAceEditor(content: string): void {
 		}
 
 		setTimeout(() => {
-			aiInstructionsAceEditor.resize();
-			aiInstructionsAceEditor.renderer.updateFull();
+			if (aiInstructionsAceEditor) {
+				aiInstructionsAceEditor.resize();
+				aiInstructionsAceEditor.renderer.updateFull();
+			}
 		}, 0);
 	}).catch(err => {
 		console.error('Failed to load Ace Editor for AI instructions:', err);
