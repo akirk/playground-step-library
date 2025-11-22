@@ -326,6 +326,22 @@ addEventListener('DOMContentLoaded', function () {
 		blueprintEventBus.emit('blueprint:updated');
 	}, 300);
 
+	// Use input event for debounced blueprint updates (more reliable on mobile)
+	document.addEventListener('input', (event) => {
+		const target = event.target as HTMLElement;
+		if (!target) {
+			return;
+		}
+		// Skip filter, blueprint-compiled, and title (title has its own handler)
+		if (target.id === 'filter' || target.id === 'blueprint-compiled' || target.id === 'title') {
+			return;
+		}
+		// Only handle inputs/textareas in blueprint-steps
+		if (target.closest('#blueprint-steps') && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
+			debouncedBlueprintUpdate();
+		}
+	});
+
 	document.addEventListener('keyup', (event) => {
 		if (event.ctrlKey || event.altKey || event.metaKey) {
 			return;
@@ -399,7 +415,6 @@ addEventListener('DOMContentLoaded', function () {
 			}
 		}
 		if (event.target.closest('input,textarea')) {
-			debouncedBlueprintUpdate();
 			return;
 		}
 		if (event.key.match(/^[a-z0-9]$/i)) {

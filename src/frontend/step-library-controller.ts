@@ -77,11 +77,14 @@ export class StepLibraryController {
 	 * Setup event listeners for step library UI
 	 */
 	private setupEventListeners(): void {
-		// Filter input
+		// Filter input - use 'input' event for better mobile support
 		const filterInput = document.getElementById('filter') as HTMLInputElement;
 		if (filterInput) {
-			filterInput.addEventListener('keyup', (event) => {
-				this.handleFilterKeyup(event);
+			filterInput.addEventListener('input', () => {
+				this.handleFilterInput();
+			});
+			filterInput.addEventListener('keydown', (event) => {
+				this.handleFilterKeydown(event);
 			});
 		}
 
@@ -102,10 +105,10 @@ export class StepLibraryController {
 	}
 
 	/**
-	 * Handle filter input keyup event
+	 * Handle filter input event
 	 */
-	private handleFilterKeyup(event: KeyboardEvent): void {
-		const filterInput = event.target as HTMLInputElement;
+	private handleFilterInput(): void {
+		const filterInput = document.getElementById('filter') as HTMLInputElement;
 
 		// Convert to a fuzzy search term by allowing any character to be followed by any number of any characters
 		const filter = new RegExp(filterInput.value.replace(/(.)/g, '$1.*'), 'i');
@@ -118,8 +121,12 @@ export class StepLibraryController {
 				stepElement.classList.add('hidden');
 			}
 		});
+	}
 
-		// Handle keyboard navigation - ArrowDown to focus first visible step
+	/**
+	 * Handle filter keydown for navigation
+	 */
+	private handleFilterKeydown(event: KeyboardEvent): void {
 		if (event.key === 'ArrowDown') {
 			const steps = this.deps.stepList.querySelectorAll('.step');
 			for (let i = 0; i < steps.length; i++) {
