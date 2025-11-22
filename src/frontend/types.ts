@@ -68,6 +68,29 @@ export interface BlueprintHistoryEntry {
 
 export type AceEditorInstance = any;
 
+export interface StepConfig {
+	steps: StepData[];
+	options?: {
+		wpVersion?: string;
+		phpVersion?: string;
+		phpExtensionBundles?: boolean;
+		mode?: string;
+		storage?: string;
+		autosave?: string;
+		playground?: string;
+		encodingFormat?: string;
+		base64?: boolean;
+		previewMode?: string;
+	};
+	title?: string;
+}
+
+export interface CombinedExamples {
+	title?: string;
+	landingPage: string;
+	steps: any[];
+}
+
 export interface ShowCallbacks {
 	[stepName: string]: {
 		[varName: string]: (stepBlock: HTMLElement) => boolean;

@@ -13,7 +13,7 @@ import { StepDefinition } from './types';
 export interface AIInstructionsControllerDependencies {
 	blueprintSteps: HTMLElement;
 	customSteps: Record<string, StepDefinition>;
-	moreOptionsMenu: HTMLElement;
+	moreOptionsMenu: HTMLElement | null;
 }
 
 const EXAMPLE_BRANCH = 'fix/bug-123';
@@ -75,7 +75,7 @@ export class AIInstructionsController {
 			} );
 		}
 
-		this.deps.moreOptionsMenu.style.display = 'none';
+		if ( this.deps.moreOptionsMenu ) this.deps.moreOptionsMenu.style.display = 'none';
 
 		this.currentUrls = aiInstructions.generateBranchPlaceholderUrls( this.aiInstructionsDeps );
 		this.currentUrlType = this.urlTypeSelect.value as aiInstructions.AIInstructionsUrlType;

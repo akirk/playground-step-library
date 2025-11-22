@@ -2,18 +2,21 @@
  * Main application entry point
  *
  */
-// @ts-nocheck - TODO: Fix type errors and remove this
 import PlaygroundStepLibrary from '../index';
-import { StepDefinition, ShowCallbacks } from './types';
+import { StepDefinition, ShowCallbacks, StepData, StepConfig, CombinedExamples } from './types';
 import * as aceEditor from './ace-editor';
 import * as appState from './app-state';
 import * as blueprintCompiler from './blueprint-compiler';
 import * as blueprintUI from './blueprint-ui';
-import * as customSteps from './custom-steps';
+import { type BlueprintUIDependencies } from './blueprint-ui';
+import * as customStepsModule from './custom-steps';
 import * as domUtils from './dom-utils';
 import * as myBlueprints from './my-blueprints';
 import * as urlController from './url-controller';
+import { type URLControllerDependencies } from './url-controller';
 import * as wizard from './wizard';
+import { type WizardDependencies } from './wizard';
+import { type StepInserterDependencies } from './step-inserter';
 import { toastService } from './toast-service';
 import { parsePlaygroundQueryApi } from './playground-integration';
 import { getDragAfterElement } from './drag-drop';
@@ -108,7 +111,7 @@ addEventListener('DOMContentLoaded', function () {
 		const myStep = JSON.parse(stepData);
 		myStep.date = new Date().toISOString();
 		stepLibraryController.insertMyStep(myStepName, myStep);
-		customSteps.saveMyStep(myStepName, myStep);
+		customStepsModule.saveMyStep(myStepName, myStep);
 		saveStepEl.close();
 		myStepNameEl.value = '';
 	}
@@ -235,11 +238,11 @@ addEventListener('DOMContentLoaded', function () {
 				console.warn('Decompiler warnings:', result.warnings);
 			}
 
-			const stepConfig = {
-				steps: result.steps.map(step => {
-					const vars = {};
-					for (const key in step) {
-						if (key !== 'step') {
+			const stepConfig: StepConfig = {
+				steps: result.steps.map( ( step: Record<string, any> ) => {
+					const vars: Record<string, any> = {};
+					for ( const key in step ) {
+						if ( key !== 'step' ) {
 							vars[key] = step[key];
 						}
 					}
@@ -247,7 +250,7 @@ addEventListener('DOMContentLoaded', function () {
 						step: step.step,
 						vars: vars
 					};
-				})
+				} )
 			};
 
 			restoreSteps(stepConfig, title);
@@ -281,22 +284,24 @@ addEventListener('DOMContentLoaded', function () {
 	});
 
 	function insertStep(step: Element) {
-		const stepElement = step.closest('.step');
-		const stepClone = stepElement.cloneNode(true);
-		stepClone.removeAttribute('id');
-		blueprintSteps.appendChild(stepClone);
-		stepClone.classList.remove('dragging');
-		stepClone.classList.remove('hidden');
-		stepClone.querySelectorAll('input,textarea').forEach(domUtils.fixMouseCursor);
-		blueprintEventBus.emit('blueprint:updated');
-		stepClone.querySelector('input,textarea')?.focus();
+		const stepElement = step.closest('.step') as HTMLElement | null;
+		if ( !stepElement ) return;
 
-		if (window.goatcounter && stepElement.dataset.step) {
-			window.goatcounter.count({
+		const stepClone = stepElement.cloneNode( true ) as HTMLElement;
+		stepClone.removeAttribute( 'id' );
+		blueprintSteps.appendChild( stepClone );
+		stepClone.classList.remove( 'dragging' );
+		stepClone.classList.remove( 'hidden' );
+		stepClone.querySelectorAll( 'input,textarea' ).forEach( domUtils.fixMouseCursor );
+		blueprintEventBus.emit( 'blueprint:updated' );
+		( stepClone.querySelector( 'input,textarea' ) as HTMLElement | null )?.focus();
+
+		if ( window.goatcounter && stepElement.dataset.step ) {
+			window.goatcounter.count( {
 				path: 'step-used/' + stepElement.dataset.step,
 				title: 'Step Used: ' + stepElement.dataset.step,
 				event: true
-			});
+			} );
 		}
 
 		// Hide the mobile step library overlay after adding a step
@@ -387,34 +392,37 @@ addEventListener('DOMContentLoaded', function () {
 					filterEl.dispatchEvent(new Event('keyup'));
 				}
 				return;
-			} else if (event.key === 'ArrowUp') {
-				stepList.querySelector('.step:last-child').focus();
+			} else if ( event.key === 'ArrowUp' ) {
+				( stepList.querySelector( '.step:last-child' ) as HTMLElement | null )?.focus();
 				return;
-			} else if (event.key === 'ArrowDown') {
-				stepList.querySelector('.step').focus();
+			} else if ( event.key === 'ArrowDown' ) {
+				( stepList.querySelector( '.step' ) as HTMLElement | null )?.focus();
 				return;
 			}
 		}
 
 		blueprintEventBus.emit('blueprint:updated');
 	});
-	document.addEventListener('change', (event) => {
-		if (event.target.id === 'mode' || event.target.id === 'preview-mode' || event.target.id === 'exclude-meta' || event.target.id === 'wp-version' || event.target.id === 'php-version') {
-			blueprintEventBus.emit('blueprint:updated');
+	document.addEventListener( 'change', ( event ) => {
+		const target = event.target as HTMLElement | null;
+		if ( !target ) return;
+
+		if ( target.id === 'mode' || target.id === 'preview-mode' || target.id === 'exclude-meta' || target.id === 'wp-version' || target.id === 'php-version' ) {
+			blueprintEventBus.emit( 'blueprint:updated' );
 			return;
 		}
-		if (event.target.name === 'blueprint-version') {
+		if ( ( target as HTMLInputElement ).name === 'blueprint-version' ) {
 			transformJson();
 			return;
 		}
-		if (!event.target.closest('#blueprint')) {
+		if ( !target.closest( '#blueprint' ) ) {
 			return;
 		}
-		if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT' || event.target.tagName === 'TEXTAREA') {
-			blueprintEventBus.emit('blueprint:updated');
+		if ( target.tagName === 'INPUT' || target.tagName === 'SELECT' || target.tagName === 'TEXTAREA' ) {
+			blueprintEventBus.emit( 'blueprint:updated' );
 			return;
 		}
-	});
+	} );
 	document.addEventListener('dblclick', (event) => {
 		if (!(event.target instanceof Element)) return;
 
@@ -451,17 +459,17 @@ addEventListener('DOMContentLoaded', function () {
 		event.preventDefault();
 	});
 
-	blueprintSteps.addEventListener('drop', (event) => {
+	blueprintSteps.addEventListener( 'drop', ( event ) => {
 		event.preventDefault();
 
-		const droppedStep = document.querySelector('.dragging');
-		if (droppedStep && droppedStep.parentNode === stepList) {
-			const stepClone = droppedStep.cloneNode(true);
-			blueprintSteps.appendChild(stepClone);
-			stepClone.querySelectorAll('input,textarea').forEach(domUtils.fixMouseCursor);
-			stepClone.classList.remove('dragging');
+		const droppedStep = document.querySelector( '.dragging' );
+		if ( droppedStep && droppedStep.parentNode === stepList ) {
+			const stepClone = droppedStep.cloneNode( true ) as HTMLElement;
+			blueprintSteps.appendChild( stepClone );
+			stepClone.querySelectorAll( 'input,textarea' ).forEach( domUtils.fixMouseCursor );
+			stepClone.classList.remove( 'dragging' );
 		}
-	});
+	} );
 
 	// Enable reordering of blocks within block area
 	blueprintSteps.addEventListener('dragover', (event) => {
@@ -480,19 +488,19 @@ addEventListener('DOMContentLoaded', function () {
 	});
 
 	// Remove block when dragged out
-	blueprintSteps.addEventListener('dragleave', (event) => {
-		const draggable = document.querySelector('.dragging');
-		if (!draggable || draggable.parentNode === stepList) {
+	blueprintSteps.addEventListener( 'dragleave', ( event ) => {
+		const draggable = document.querySelector( '.dragging' );
+		if ( !draggable || draggable.parentNode === stepList ) {
 			return;
 		}
-		if (event.relatedTarget === null || !blueprintSteps.contains(event.relatedTarget)) {
-			const removedBlock = document.querySelector('.dragging');
-			if (removedBlock) {
+		if ( event.relatedTarget === null || !blueprintSteps.contains( event.relatedTarget as Node ) ) {
+			const removedBlock = document.querySelector( '.dragging' );
+			if ( removedBlock ) {
 				removedBlock.remove();
 			}
 		}
-		blueprintEventBus.emit('blueprint:updated');
-	});
+		blueprintEventBus.emit( 'blueprint:updated' );
+	} );
 
 	// detectUrlType, detectWpAdminUrl are now imported from content-detection.ts
 	// Step insertion functions are now imported from step-inserter.ts
@@ -505,46 +513,46 @@ addEventListener('DOMContentLoaded', function () {
 
 	// getDragAfterElement is now imported from drag-drop.ts
 
-	document.getElementById('clear').addEventListener('click', function () {
-		document.getElementById('title').value = '';
+	document.getElementById( 'clear' )!.addEventListener( 'click', function () {
+		( document.getElementById( 'title' ) as HTMLInputElement ).value = '';
 		blueprintSteps.textContent = '';
-		const draghint = document.createElement('div');
+		const draghint = document.createElement( 'div' );
 		draghint.id = 'draghint';
 		draghint.textContent = 'Click or drag the steps to add them here.';
-		blueprintSteps.appendChild(draghint);
-		document.getElementById('examples').value = 'Examples';
-		blueprintEventBus.emit('blueprint:updated');
-	});
+		blueprintSteps.appendChild( draghint );
+		( document.getElementById( 'examples' ) as HTMLSelectElement ).value = 'Examples';
+		blueprintEventBus.emit( 'blueprint:updated' );
+	} );
 
 	function downloadBlueprint() {
-		if (window.goatcounter) {
-			window.goatcounter.count({
+		if ( window.goatcounter ) {
+			window.goatcounter.count( {
 				path: 'download-blueprint',
 				title: 'Download Blueprint',
 				event: true
-			});
+			} );
 		}
 		const blueprintContent = getBlueprintValue();
-		let title = document.getElementById('title').value;
+		let title = ( document.getElementById( 'title' ) as HTMLInputElement ).value;
 
-		if (!title || !title.trim()) {
-			const stepBlocks = blueprintSteps.querySelectorAll('.step');
-			const pluginSteps = Array.from(stepBlocks).filter(block => block.dataset.step === 'installPlugin');
-			const hasLandingPage = Array.from(stepBlocks).some(block => block.dataset.step === 'setLandingPage');
+		if ( !title || !title.trim() ) {
+			const stepBlocks = blueprintSteps.querySelectorAll( '.step' );
+			const pluginSteps = Array.from( stepBlocks ).filter( block => ( block as HTMLElement ).dataset.step === 'installPlugin' );
+			const hasLandingPage = Array.from( stepBlocks ).some( block => ( block as HTMLElement ).dataset.step === 'setLandingPage' );
 
-			if (pluginSteps.length === 1) {
-				const pluginSlug = pluginSteps[0].querySelector('[name="pluginData"]')?.value ||
-					pluginSteps[0].querySelector('[name="slug"]')?.value ||
-					pluginSteps[0].querySelector('[name="url"]')?.value;
-				if (pluginSlug && pluginSlug.trim()) {
-					const parts = pluginSlug.split('/').filter(p => p.trim());
-					const slug = parts[parts.length - 1].replace(/\.zip$/, '');
-					title = 'blueprint-' + slug + (hasLandingPage ? '-landingpage' : '');
+			if ( pluginSteps.length === 1 ) {
+				const pluginSlug = ( pluginSteps[0].querySelector( '[name="pluginData"]' ) as HTMLInputElement | null )?.value ||
+					( pluginSteps[0].querySelector( '[name="slug"]' ) as HTMLInputElement | null )?.value ||
+					( pluginSteps[0].querySelector( '[name="url"]' ) as HTMLInputElement | null )?.value;
+				if ( pluginSlug && pluginSlug.trim() ) {
+					const parts = pluginSlug.split( '/' ).filter( ( p: string ) => p.trim() );
+					const slug = parts[parts.length - 1].replace( /\.zip$/, '' );
+					title = 'blueprint-' + slug + ( hasLandingPage ? '-landingpage' : '' );
 				}
 			}
 		}
 
-		if (!title || !title.trim()) {
+		if ( !title || !title.trim() ) {
 			title = 'blueprint';
 		}
 
@@ -571,70 +579,76 @@ addEventListener('DOMContentLoaded', function () {
 	// Filter and show-builtin event listeners are now handled by step-library-controller.ts
 
 	// Handle title input changes
-	document.addEventListener('input', function (e) {
-		if (e.target.id === 'title') {
-			blueprintEventBus.emit('blueprint:updated');
+	document.addEventListener( 'input', function ( e ) {
+		const target = e.target as HTMLElement | null;
+		if ( target && target.id === 'title' ) {
+			blueprintEventBus.emit( 'blueprint:updated' );
 		}
-	});
+	} );
 
 	// compressState and uncompressState are now imported from blueprint-compiler.ts
 	// Wrapper function to gather DOM values and call the imported compressState
-	function updateVariableVisibility(stepBlock) {
-		stepBlock.querySelectorAll('input,select,textarea,button').forEach(function (input) {
-			if (!input || typeof appState.showCallbacks[stepBlock.dataset.step] === 'undefined' || typeof appState.showCallbacks[stepBlock.dataset.step][input.name] !== 'function') {
+	function updateVariableVisibility( stepBlock: HTMLElement ) {
+		stepBlock.querySelectorAll( 'input,select,textarea,button' ).forEach( function ( input ) {
+			const inputEl = input as HTMLInputElement;
+			if ( !inputEl || typeof appState.showCallbacks[stepBlock.dataset.step as string] === 'undefined' || typeof appState.showCallbacks[stepBlock.dataset.step as string][inputEl.name] !== 'function' ) {
 				return;
 			}
-			const tr = input.closest('tr');
-			if (appState.showCallbacks[stepBlock.dataset.step][input.name](stepBlock)) {
-				tr.style.display = '';
-			} else {
-				tr.style.display = 'none';
+			const tr = inputEl.closest( 'tr' ) as HTMLTableRowElement | null;
+			if ( tr ) {
+				if ( appState.showCallbacks[stepBlock.dataset.step as string][inputEl.name]( stepBlock ) ) {
+					tr.style.display = '';
+				} else {
+					tr.style.display = 'none';
+				}
 			}
-		});
+		} );
 	}
 	// getStepData is now extracted to blueprint-compiler.ts as extractStepDataFromElement
-	function getStepData(stepBlock) {
-		return blueprintCompiler.extractStepDataFromElement(stepBlock);
+	function getStepData( stepBlock: HTMLElement ) {
+		return blueprintCompiler.extractStepDataFromElement( stepBlock );
 	}
 
 	let lastCompressedState = '';
 
 	function loadCombinedExamples() {
-		const combinedExamples = {};
-		if (document.getElementById('title').value) {
-			combinedExamples.title = document.getElementById('title').value;
+		const combinedExamples: CombinedExamples = {
+			landingPage: '/',
+			steps: []
+		};
+		const titleEl = document.getElementById( 'title' ) as HTMLInputElement;
+		if ( titleEl.value ) {
+			combinedExamples.title = titleEl.value;
 		}
-		combinedExamples.landingPage = '/';
-		combinedExamples.steps = [];
-		const state = [];
+		const state: StepData[] = [];
 
-		blueprintSteps.querySelectorAll('.step').forEach(function (stepBlock) {
-			updateVariableVisibility(stepBlock);
-			const step = getStepData(stepBlock);
-			state.push(step);
-			combinedExamples.steps = combinedExamples.steps.concat(step);
-		});
+		blueprintSteps.querySelectorAll( '.step' ).forEach( function ( stepBlock ) {
+			updateVariableVisibility( stepBlock as HTMLElement );
+			const step = getStepData( stepBlock as HTMLElement );
+			state.push( step );
+			combinedExamples.steps = combinedExamples.steps.concat( step );
+		} );
 
-		if (combinedExamples.steps.length > 0) {
-			const draghint = document.getElementById('draghint');
-			if (draghint) {
+		if ( combinedExamples.steps.length > 0 ) {
+			const draghint = document.getElementById( 'draghint' );
+			if ( draghint ) {
 				draghint.style.display = 'none';
 			}
 		} else {
-			const draghint = document.getElementById('draghint');
-			if (draghint) {
+			const draghint = document.getElementById( 'draghint' );
+			if ( draghint ) {
 				draghint.style.display = '';
 			}
 		}
 
-		appState.setBlueprint(JSON.stringify(combinedExamples, null, 2));
+		appState.setBlueprint( JSON.stringify( combinedExamples, null, 2 ) );
 
-		const currentCompressedState = stateController.compressStateFromDOM(state);
+		const currentCompressedState = stateController.compressStateFromDOM( state );
 
 		// Only update history if the state has changed
-		if (currentCompressedState !== lastCompressedState) {
+		if ( currentCompressedState !== lastCompressedState ) {
 			lastCompressedState = currentCompressedState;
-			history.pushState(state, '', '#' + currentCompressedState);
+			history.pushState( state, '', '#' + currentCompressedState );
 		}
 
 		// Always transform JSON to update playground link
@@ -697,52 +711,52 @@ addEventListener('DOMContentLoaded', function () {
 
 	// Detect if page was accessed via reload (F5, Ctrl+R, etc.)
 	// Use modern Performance Navigation API
-	const pageAccessedByReload = (() => {
+	const pageAccessedByReload = ( () => {
 		try {
-			const navigationEntry = performance.getEntriesByType('navigation')[0];
+			const navigationEntry = performance.getEntriesByType( 'navigation' )[0] as PerformanceNavigationTiming;
 			return navigationEntry && navigationEntry.type === 'reload';
-		} catch (e) {
+		} catch ( e ) {
 			// Fallback: check if document.referrer is the same as current URL
 			// This catches most reload cases across browsers
 			return document.referrer === window.location.href;
 		}
-	})();
+	} )();
 
 	const queryParamBlueprint = parseQueryParamsForBlueprint();
-	if (queryParamBlueprint) {
+	if ( queryParamBlueprint ) {
 		if ( queryParamBlueprint.redir ) {
 			( document.getElementById( 'encoding-format' ) as HTMLSelectElement ).value = 'base64';
 		}
-		stateController.restoreState({ steps: queryParamBlueprint.steps });
+		stateController.restoreState( { steps: queryParamBlueprint.steps } );
 		// Clear step[] and url[] parameters from URL to prevent conflicts with hash state
-		const newUrl = new URL(window.location);
+		const newUrl = new URL( window.location.href );
 		newUrl.search = '';
-		history.replaceState(null, '', newUrl.pathname + newUrl.hash);
-		if (queryParamBlueprint.redir && !document.getElementById('preview-mode').value && !pageAccessedByReload) {
-			stateController.autoredirect(queryParamBlueprint.redir);
+		history.replaceState( null, '', newUrl.pathname + newUrl.hash );
+		if ( queryParamBlueprint.redir && !( document.getElementById( 'preview-mode' ) as HTMLSelectElement ).value && !pageAccessedByReload ) {
+			stateController.autoredirect( queryParamBlueprint.redir );
 		}
-	} else if (location.hash) {
-		stateController.restoreState(blueprintCompiler.uncompressState(location.hash.replace(/^#+/, '')));
-		if (!document.getElementById('preview-mode').value && blueprintSteps.querySelectorAll('.step').length && !pageAccessedByReload) {
+	} else if ( location.hash ) {
+		stateController.restoreState( blueprintCompiler.uncompressState( location.hash.replace( /^#+/, '' ) ) );
+		if ( !( document.getElementById( 'preview-mode' ) as HTMLSelectElement ).value && blueprintSteps.querySelectorAll( '.step' ).length && !pageAccessedByReload ) {
 			stateController.autoredirect();
 		}
 	} else {
-		blueprintEventBus.emit('blueprint:updated');
+		blueprintEventBus.emit( 'blueprint:updated' );
 	}
-	Object.keys(examples).forEach(function (example) {
-		const option = document.createElement('option');
+	Object.keys( examples ).forEach( function ( example ) {
+		const option = document.createElement( 'option' );
 		option.value = example;
 		option.innerText = example;
-		document.getElementById('examples').appendChild(option);
-	});
-	document.getElementById('examples').addEventListener('change', function () {
-		if ('Examples' === this.value) {
+		document.getElementById( 'examples' )!.appendChild( option );
+	} );
+	document.getElementById( 'examples' )!.addEventListener( 'change', function ( this: HTMLSelectElement ) {
+		if ( 'Examples' === this.value ) {
 			return;
 		}
-		document.getElementById('title').value = this.value;
-		stateController.restoreState({ steps: examples[this.value] });
-		blueprintEventBus.emit('blueprint:updated');
-	});
+		( document.getElementById( 'title' ) as HTMLInputElement ).value = this.value;
+		stateController.restoreState( { steps: examples[this.value] } );
+		blueprintEventBus.emit( 'blueprint:updated' );
+	} );
 	stepLibraryController.clearFilter();
 
 	// Wizard Mode Implementation
@@ -763,41 +777,41 @@ addEventListener('DOMContentLoaded', function () {
 	window.removeWizardTheme = wizard.removeWizardTheme;
 
 	// Manual Edit Mode functionality
-	const blueprintTextarea = document.getElementById('blueprint-compiled');
+	const blueprintTextarea = document.getElementById( 'blueprint-compiled' )!;
 
-	blueprintTextarea.addEventListener('focus', function () {
-		aceEditor.initBlueprintAceEditor(getBlueprintValue, appState.isManualEditMode, transformJson);
-	});
+	blueprintTextarea.addEventListener( 'focus', function () {
+		aceEditor.initBlueprintAceEditor( getBlueprintValue, appState.isManualEditMode, transformJson );
+	} );
 
-	blueprintTextarea.addEventListener('click', function () {
-		aceEditor.initBlueprintAceEditor(getBlueprintValue, appState.isManualEditMode, transformJson);
-	});
+	blueprintTextarea.addEventListener( 'click', function () {
+		aceEditor.initBlueprintAceEditor( getBlueprintValue, appState.isManualEditMode, transformJson );
+	} );
 
 	// Intercept playground link clicks to regenerate URL if in manual edit mode
-	document.getElementById('playground-link').addEventListener('click', function (e) {
-		if (window.goatcounter) {
-			window.goatcounter.count({
+	document.getElementById( 'playground-link' )!.addEventListener( 'click', function ( e ) {
+		if ( window.goatcounter ) {
+			window.goatcounter.count( {
 				path: 'launch-playground',
 				title: 'Launch in Playground',
 				event: true
-			});
+			} );
 		}
 
 		// Show save prompt only if blueprint hasn't been saved yet
 		const blueprintString = getBlueprintValue();
-		if (blueprintString && blueprintString.trim() && !isBlueprintAlreadySaved()) {
+		if ( blueprintString && blueprintString.trim() && !isBlueprintAlreadySaved() ) {
 			showSavePromptToast();
 		}
 
-		if (appState.isManualEditMode.value) {
+		if ( appState.isManualEditMode.value ) {
 			e.preventDefault();
 			transformJson();
 			// Allow the click to proceed after transformJson updates the href
-			setTimeout(() => {
-				window.open(document.getElementById('playground-link').href, '_blank');
-			}, 0);
+			setTimeout( () => {
+				window.open( ( document.getElementById( 'playground-link' ) as HTMLAnchorElement ).href, '_blank' );
+			}, 0 );
 		}
-	});
+	} );
 
 
 	// generateRedirectUrl and dropdown functions are now imported from url-controller.ts
@@ -810,99 +824,97 @@ addEventListener('DOMContentLoaded', function () {
 		urlController.initMoreOptionsDropdown(mainDropdown);
 	}
 
-	const moreOptionsMenu = document.getElementById('more-options-menu');
+	const moreOptionsMenu = document.getElementById( 'more-options-menu' );
 
-	document.getElementById('copy-playground-url-menu').addEventListener('click', async function (e) {
-		const playgroundUrl = (document.getElementById('playground-link') as HTMLAnchorElement).href;
+	document.getElementById( 'copy-playground-url-menu' )!.addEventListener( 'click', async function ( e ) {
+		const playgroundUrl = ( document.getElementById( 'playground-link' ) as HTMLAnchorElement ).href;
 		const button = e.currentTarget as HTMLElement;
-		const originalContent = button.cloneNode(true);
-		const success = await urlController.copyToClipboard(playgroundUrl);
-		if (success) {
-			showCopiedFeedback(button, originalContent);
+		const originalContent = button.cloneNode( true );
+		const success = await urlController.copyToClipboard( playgroundUrl );
+		if ( success ) {
+			showCopiedFeedback( button, originalContent );
 		}
-	});
+	} );
 
-	document.getElementById('download-blueprint-menu').addEventListener('click', function () {
-		moreOptionsMenu.style.display = 'none';
+	document.getElementById( 'download-blueprint-menu' )!.addEventListener( 'click', function () {
+		if ( moreOptionsMenu ) moreOptionsMenu.style.display = 'none';
 		downloadBlueprint();
-	});
+	} );
 
-	document.getElementById('share-url-menu').addEventListener('click', async function (e) {
-
-		if (window.goatcounter) {
-			window.goatcounter.count({
+	document.getElementById( 'share-url-menu' )!.addEventListener( 'click', async function ( e ) {
+		if ( window.goatcounter ) {
+			window.goatcounter.count( {
 				path: 'share-url',
 				title: 'Share URL',
 				event: true
-			});
+			} );
 		}
 
 		try {
 			// Use redirect URL if steps exist, otherwise share current URL with hash
-			const redirectUrl = urlController.generateRedirectUrl(1, false, urlControllerDeps);
+			const redirectUrl = urlController.generateRedirectUrl( 1, false, urlControllerDeps );
 			const shareUrl = redirectUrl || window.location.href;
 
 			const button = e.currentTarget as HTMLElement;
-			const originalContent = button.cloneNode(true);
-			const title = (document.getElementById('title') as HTMLInputElement).value || 'WordPress Playground Blueprint';
+			const originalContent = button.cloneNode( true );
+			const title = ( document.getElementById( 'title' ) as HTMLInputElement ).value || 'WordPress Playground Blueprint';
 
-			const result = await urlController.shareUrl(shareUrl, title);
+			const result = await urlController.shareUrl( shareUrl, title );
 
-			if (result === 'shared' || result === 'copied') {
-				if (result === 'copied') {
-					showCopiedFeedback(button, originalContent);
-				} else {
+			if ( result === 'shared' || result === 'copied' ) {
+				if ( result === 'copied' ) {
+					showCopiedFeedback( button, originalContent );
+				} else if ( moreOptionsMenu ) {
 					moreOptionsMenu.style.display = 'none';
 				}
 			}
-		} catch (err) {
-			console.error('Error in share-url handler:', err);
+		} catch ( err ) {
+			console.error( 'Error in share-url handler:', err );
 		}
-	});
+	} );
 
 	// copyToClipboard is now imported from url-controller.ts
 
-	function showCopiedFeedback(button: HTMLElement, originalContent: Node) {
+	function showCopiedFeedback( button: HTMLElement, originalContent: Node ) {
 		button.textContent = '✓ Copied!';
-		setTimeout(() => {
+		setTimeout( () => {
 			button.textContent = '';
-			while (originalContent.firstChild) {
-				button.appendChild(originalContent.firstChild);
+			while ( originalContent.firstChild ) {
+				button.appendChild( originalContent.firstChild );
 			}
-			if (moreOptionsMenu) {
+			if ( moreOptionsMenu ) {
 				moreOptionsMenu.style.display = 'none';
 			}
-		}, 1500);
+		}, 1500 );
 	}
 
-	document.getElementById('copy-redirect-url-menu').addEventListener('click', async function (e) {
-
-		if (window.goatcounter) {
-			window.goatcounter.count({
+	document.getElementById( 'copy-redirect-url-menu' )!.addEventListener( 'click', async function ( e ) {
+		if ( window.goatcounter ) {
+			window.goatcounter.count( {
 				path: 'copy-redirect-url',
 				title: 'Copy Redirect URL',
 				event: true
-			});
+			} );
 		}
 
 		try {
-			const redirectUrl = urlController.generateRedirectUrl(1, true, urlControllerDeps);
+			const redirectUrl = urlController.generateRedirectUrl( 1, true, urlControllerDeps );
 
-			if (!redirectUrl) {
-				console.error('No steps found');
+			if ( !redirectUrl ) {
+				console.error( 'No steps found' );
 				return;
 			}
 
 			const button = e.currentTarget as HTMLElement;
-			const originalContent = button.cloneNode(true);
-			const success = await urlController.copyToClipboard(redirectUrl);
-			if (success) {
-				showCopiedFeedback(button, originalContent);
+			const originalContent = button.cloneNode( true );
+			const success = await urlController.copyToClipboard( redirectUrl );
+			if ( success ) {
+				showCopiedFeedback( button, originalContent );
 			}
-		} catch (err) {
-			console.error('Error in copy-redirect-url handler:', err);
+		} catch ( err ) {
+			console.error( 'Error in copy-redirect-url handler:', err );
 		}
-	});
+	} );
 
 	// AI Instructions Controller
 	const aiInstructionsControllerDeps: AIInstructionsControllerDependencies = {
@@ -916,19 +928,19 @@ addEventListener('DOMContentLoaded', function () {
 	// Save dialog needs to be created after historyController is initialized
 	let historyController: HistoryController;
 
-	function showSaveBlueprintDialog(defaultName, isOverwrite) {
-		const dialog = document.getElementById('save-blueprint-dialog');
-		const messageDiv = document.getElementById('save-blueprint-message');
-		const nameInput = document.getElementById('save-blueprint-name');
-		const nameLabel = document.getElementById('save-blueprint-label');
-		const overwriteBtn = document.getElementById('save-blueprint-overwrite');
-		const renameBtn = document.getElementById('save-blueprint-rename');
-		const saveBtn = document.getElementById('save-blueprint-save');
-		const cancelBtn = document.getElementById('save-blueprint-cancel');
+	function showSaveBlueprintDialog( defaultName: string, isOverwrite: boolean ) {
+		const dialog = document.getElementById( 'save-blueprint-dialog' ) as HTMLDialogElement;
+		const messageDiv = document.getElementById( 'save-blueprint-message' )!;
+		const nameInput = document.getElementById( 'save-blueprint-name' ) as HTMLInputElement;
+		const nameLabel = document.getElementById( 'save-blueprint-label' )!;
+		const overwriteBtn = document.getElementById( 'save-blueprint-overwrite' )!;
+		const renameBtn = document.getElementById( 'save-blueprint-rename' )!;
+		const saveBtn = document.getElementById( 'save-blueprint-save' )!;
+		const cancelBtn = document.getElementById( 'save-blueprint-cancel' )!;
 
 		nameInput.value = defaultName;
 
-		if (isOverwrite) {
+		if ( isOverwrite ) {
 			messageDiv.textContent = `A blueprint with this name already exists. Do you want to overwrite it or choose a new name?`;
 			messageDiv.style.display = 'block';
 			nameLabel.style.display = 'none';
@@ -947,15 +959,15 @@ addEventListener('DOMContentLoaded', function () {
 		const handleOverwrite = function () {
 			const title = defaultName;
 			const history = myBlueprints.getHistory();
-			const updatedHistory = history.filter(entry => entry.title !== title);
-			myBlueprints.saveHistory(updatedHistory);
+			const updatedHistory = history.filter( entry => entry.title !== title );
+			myBlueprints.saveHistory( updatedHistory );
 
-			historyController.addToHistory(title);
-			const titleInput = document.getElementById('title');
-			if (titleInput) {
-				titleInput.value = title;
+			historyController.addToHistory( title );
+			const titleInputEl = document.getElementById( 'title' ) as HTMLInputElement;
+			if ( titleInputEl ) {
+				titleInputEl.value = title;
 			}
-			showToast('Updated');
+			showToast( 'Updated' );
 			historyController.renderHistoryList();
 
 			dialog.close();
@@ -974,25 +986,25 @@ addEventListener('DOMContentLoaded', function () {
 
 		const handleSave = function () {
 			const title = nameInput.value.trim();
-			if (!title) {
+			if ( !title ) {
 				return;
 			}
 
 			const history = myBlueprints.getHistory();
-			const existingEntry = history.find(entry => entry.title === title);
+			const existingEntry = history.find( entry => entry.title === title );
 
-			if (existingEntry) {
-				showSaveBlueprintDialog(title, true);
+			if ( existingEntry ) {
+				showSaveBlueprintDialog( title, true );
 				cleanup();
 				return;
 			}
 
-			historyController.addToHistory(title);
-			const titleInput = document.getElementById('title');
-			if (titleInput) {
-				titleInput.value = title;
+			historyController.addToHistory( title );
+			const titleInputEl = document.getElementById( 'title' ) as HTMLInputElement;
+			if ( titleInputEl ) {
+				titleInputEl.value = title;
 			}
-			showToast('Saved');
+			showToast( 'Saved' );
 			historyController.renderHistoryList();
 
 			dialog.close();
@@ -1004,32 +1016,32 @@ addEventListener('DOMContentLoaded', function () {
 			cleanup();
 		};
 
-		const handleKeyDown = function (e) {
-			if (e.key === 'Enter' && nameLabel.style.display !== 'none') {
+		const handleKeyDown = function ( e: KeyboardEvent ) {
+			if ( e.key === 'Enter' && nameLabel.style.display !== 'none' ) {
 				e.preventDefault();
 				handleSave();
-			} else if (e.key === 'Escape') {
+			} else if ( e.key === 'Escape' ) {
 				e.preventDefault();
 				handleCancel();
 			}
 		};
 
 		const cleanup = function () {
-			overwriteBtn.removeEventListener('click', handleOverwrite);
-			renameBtn.removeEventListener('click', handleRename);
-			saveBtn.removeEventListener('click', handleSave);
-			cancelBtn.removeEventListener('click', handleCancel);
-			nameInput.removeEventListener('keydown', handleKeyDown);
+			overwriteBtn.removeEventListener( 'click', handleOverwrite );
+			renameBtn.removeEventListener( 'click', handleRename );
+			saveBtn.removeEventListener( 'click', handleSave );
+			cancelBtn.removeEventListener( 'click', handleCancel );
+			nameInput.removeEventListener( 'keydown', handleKeyDown );
 		};
 
-		overwriteBtn.addEventListener('click', handleOverwrite);
-		renameBtn.addEventListener('click', handleRename);
-		saveBtn.addEventListener('click', handleSave);
-		cancelBtn.addEventListener('click', handleCancel);
-		nameInput.addEventListener('keydown', handleKeyDown);
+		overwriteBtn.addEventListener( 'click', handleOverwrite );
+		renameBtn.addEventListener( 'click', handleRename );
+		saveBtn.addEventListener( 'click', handleSave );
+		cancelBtn.addEventListener( 'click', handleCancel );
+		nameInput.addEventListener( 'keydown', handleKeyDown );
 
 		dialog.showModal();
-		if (!isOverwrite) {
+		if ( !isOverwrite ) {
 			nameInput.select();
 		}
 	}
@@ -1108,31 +1120,31 @@ addEventListener('DOMContentLoaded', function () {
 
 	const hideSavePromptToast = () => toastService.hide();
 
-	function captureCurrentSteps() {
-		const stepsData = {
+	function captureCurrentSteps(): StepConfig {
+		const stepsData: StepConfig = {
 			steps: []
 		};
 
-		document.querySelectorAll('#blueprint-steps .step').forEach(function (stepBlock) {
-			const stepData = getStepData(stepBlock);
-			if (stepData) {
-				stepsData.steps.push(stepData);
+		document.querySelectorAll( '#blueprint-steps .step' ).forEach( function ( stepBlock ) {
+			const stepData = getStepData( stepBlock as HTMLElement );
+			if ( stepData ) {
+				stepsData.steps.push( stepData );
 			}
-		});
+		} );
 
 		const options = {
-			wpVersion: document.getElementById('wp-version').value,
-			phpVersion: document.getElementById('php-version').value,
-			phpExtensionBundles: document.getElementById('phpExtensionBundles')?.checked || false,
-			mode: document.getElementById('mode').value,
-			storage: document.getElementById('storage').value,
-			autosave: document.getElementById('autosave').value,
-			playground: document.getElementById('playground').value,
-			encodingFormat: document.getElementById('encoding-format').value,
-			previewMode: document.getElementById('preview-mode').value
+			wpVersion: ( document.getElementById( 'wp-version' ) as HTMLSelectElement ).value,
+			phpVersion: ( document.getElementById( 'php-version' ) as HTMLSelectElement ).value,
+			phpExtensionBundles: ( document.getElementById( 'phpExtensionBundles' ) as HTMLInputElement | null )?.checked || false,
+			mode: ( document.getElementById( 'mode' ) as HTMLSelectElement ).value,
+			storage: ( document.getElementById( 'storage' ) as HTMLSelectElement ).value,
+			autosave: ( document.getElementById( 'autosave' ) as HTMLSelectElement ).value,
+			playground: ( document.getElementById( 'playground' ) as HTMLSelectElement ).value,
+			encodingFormat: ( document.getElementById( 'encoding-format' ) as HTMLSelectElement ).value,
+			previewMode: ( document.getElementById( 'preview-mode' ) as HTMLSelectElement ).value
 		};
 
-		const defaults = {
+		const defaults: typeof options = {
 			wpVersion: 'latest',
 			phpVersion: 'latest',
 			phpExtensionBundles: false,
@@ -1144,16 +1156,16 @@ addEventListener('DOMContentLoaded', function () {
 			previewMode: ''
 		};
 
-		const isAllDefaults = Object.keys(options).every(function (key) {
+		const isAllDefaults = ( Object.keys( options ) as Array<keyof typeof options> ).every( function ( key ) {
 			return options[key] === defaults[key];
-		});
+		} );
 
-		if (!isAllDefaults) {
+		if ( !isAllDefaults ) {
 			stepsData.options = options;
 		}
 
-		const titleInput = document.getElementById('title');
-		if (titleInput && titleInput.value) {
+		const titleInput = document.getElementById( 'title' ) as HTMLInputElement;
+		if ( titleInput && titleInput.value ) {
 			stepsData.title = titleInput.value;
 		}
 
@@ -1162,80 +1174,79 @@ addEventListener('DOMContentLoaded', function () {
 
 	// generateLabel is now imported from label-generator.ts
 
-	function formatDate(isoString) {
-		const date = new Date(isoString);
+	function formatDate( isoString: string ) {
+		const date = new Date( isoString );
 		const now = new Date();
-		const diffMs = now - date;
-		const diffMins = Math.floor(diffMs / 60000);
-		const diffHours = Math.floor(diffMs / 3600000);
-		const diffDays = Math.floor(diffMs / 86400000);
+		const diffMs = now.getTime() - date.getTime();
+		const diffMins = Math.floor( diffMs / 60000 );
+		const diffHours = Math.floor( diffMs / 3600000 );
+		const diffDays = Math.floor( diffMs / 86400000 );
 
-		if (diffMins < 1) {
+		if ( diffMins < 1 ) {
 			return 'Just now';
 		}
-		if (diffMins < 60) {
-			return diffMins + ' minute' + (diffMins !== 1 ? 's' : '') + ' ago';
+		if ( diffMins < 60 ) {
+			return diffMins + ' minute' + ( diffMins !== 1 ? 's' : '' ) + ' ago';
 		}
-		if (diffHours < 24) {
-			return diffHours + ' hour' + (diffHours !== 1 ? 's' : '') + ' ago';
+		if ( diffHours < 24 ) {
+			return diffHours + ' hour' + ( diffHours !== 1 ? 's' : '' ) + ' ago';
 		}
-		if (diffDays < 7) {
-			return diffDays + ' day' + (diffDays !== 1 ? 's' : '') + ' ago';
+		if ( diffDays < 7 ) {
+			return diffDays + ' day' + ( diffDays !== 1 ? 's' : '' ) + ' ago';
 		}
 		return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
 	}
 
 	// Save to History button
-	document.getElementById('save-to-history-btn').addEventListener('click', function () {
+	document.getElementById( 'save-to-history-btn' )!.addEventListener( 'click', function () {
 		historyController.saveToHistoryWithName();
-	});
+	} );
 
 
 	// Toast close button
-	document.getElementById('global-toast-close').addEventListener('click', function () {
+	document.getElementById( 'global-toast-close' )!.addEventListener( 'click', function () {
 		hideSavePromptToast();
-	});
+	} );
 
 	// Undo toast close button
-	document.getElementById('blueprints-dialog-toast-close').addEventListener('click', function () {
-		const toast = document.getElementById('blueprints-dialog-toast');
-		toast.style.display = 'none';
+	document.getElementById( 'blueprints-dialog-toast-close' )!.addEventListener( 'click', function () {
+		const toast = document.getElementById( 'blueprints-dialog-toast' );
+		if ( toast ) toast.style.display = 'none';
 		// Timeout is managed by toast-service.ts
-	});
+	} );
 
 
-	function appendSteps(stepsData) {
-		if (!stepsData || !stepsData.steps) {
+	function appendSteps( stepsData: StepConfig ) {
+		if ( !stepsData || !stepsData.steps ) {
 			return;
 		}
 
-		const blueprintStepsContainer = document.getElementById('blueprint-steps');
-		const draghint = document.getElementById('draghint');
-		if (draghint) {
+		const draghint = document.getElementById( 'draghint' );
+		if ( draghint ) {
 			draghint.remove();
 		}
 
-		const missingSteps = [];
+		const missingSteps: string[] = [];
 
-		stepsData.steps.forEach(function (stepData) {
-			const sourceStep = document.querySelector('#step-library .step[data-step="' + stepData.step + '"]');
-			if (!sourceStep) {
-				console.warn('Step not found in library:', stepData.step);
-				missingSteps.push(stepData.step);
+		stepsData.steps.forEach( function ( stepData ) {
+			const sourceStep = document.querySelector( '#step-library .step[data-step="' + stepData.step + '"]' );
+			if ( !sourceStep ) {
+				console.warn( 'Step not found in library:', stepData.step );
+				missingSteps.push( stepData.step );
 				return;
 			}
 
-			const stepBlock = sourceStep.cloneNode(true);
-			stepBlock.removeAttribute('id');
-			stepBlock.classList.remove('dragging');
-			stepBlock.classList.remove('hidden');
-			document.getElementById('blueprint-steps').appendChild(stepBlock);
+			const stepBlock = sourceStep.cloneNode( true ) as HTMLElement;
+			stepBlock.removeAttribute( 'id' );
+			stepBlock.classList.remove( 'dragging' );
+			stepBlock.classList.remove( 'hidden' );
+			document.getElementById( 'blueprint-steps' )!.appendChild( stepBlock );
 
-			if (stepData.vars) {
-				for (const key in stepData.vars) {
-					const input = stepBlock.querySelector('[name="' + key + '"]');
-					if (input) {
-						if (input.type === 'checkbox') {
+			if ( stepData.vars ) {
+				for ( const key in stepData.vars ) {
+					const input = stepBlock.querySelector( '[name="' + key + '"]' ) as HTMLInputElement | null;
+					if ( input ) {
+						if ( input.type === 'checkbox' ) {
 							input.checked = stepData.vars[key];
 						} else {
 							input.value = stepData.vars[key];
@@ -1244,63 +1255,63 @@ addEventListener('DOMContentLoaded', function () {
 				}
 			}
 
-			if (stepData.count) {
-				const countInput = stepBlock.querySelector('[name="count"]');
-				if (countInput) {
-					countInput.value = stepData.count;
+			if ( stepData.count ) {
+				const countInput = stepBlock.querySelector( '[name="count"]' ) as HTMLInputElement | null;
+				if ( countInput ) {
+					countInput.value = String( stepData.count );
 				}
 			}
-		});
+		} );
 
-		if (missingSteps.length > 0) {
-			toastService.showGlobal('Warning: ' + missingSteps.length + ' step(s) not found: ' + missingSteps.join(', '));
+		if ( missingSteps.length > 0 ) {
+			toastService.showGlobal( 'Warning: ' + missingSteps.length + ' step(s) not found: ' + missingSteps.join( ', ' ) );
 		}
 	}
 
-	function restoreSteps(stepsData, title) {
-		if (!stepsData || !stepsData.steps) {
+	function restoreSteps( stepsData: StepConfig, title: string ) {
+		if ( !stepsData || !stepsData.steps ) {
 			return;
 		}
 
 		appState.isManualEditMode.value = false;
-		const manualEditBanner = document.getElementById('manual-edit-banner');
-		if (manualEditBanner) {
+		const manualEditBanner = document.getElementById( 'manual-edit-banner' );
+		if ( manualEditBanner ) {
 			manualEditBanner.style.display = 'none';
 		}
 
-		const blueprintStepsContainer = document.getElementById('blueprint-steps');
+		const blueprintStepsContainer = document.getElementById( 'blueprint-steps' )!;
 		blueprintStepsContainer.textContent = '';
-		const draghint = document.createElement('div');
+		const draghint = document.createElement( 'div' );
 		draghint.id = 'draghint';
 		draghint.textContent = 'Click or drag the steps to add them here.';
-		blueprintStepsContainer.appendChild(draghint);
+		blueprintStepsContainer.appendChild( draghint );
 
-		if (title) {
-			document.getElementById('title').value = title;
+		if ( title ) {
+			( document.getElementById( 'title' ) as HTMLInputElement ).value = title;
 		}
 
-		const missingSteps = [];
+		const missingSteps: string[] = [];
 
-		stepsData.steps.forEach(function (stepData) {
-			const sourceStep = document.querySelector('#step-library .step[data-step="' + stepData.step + '"]');
-			if (!sourceStep) {
-				console.warn('Step not found in library:', stepData.step);
-				missingSteps.push(stepData.step);
+		stepsData.steps.forEach( function ( stepData ) {
+			const sourceStep = document.querySelector( '#step-library .step[data-step="' + stepData.step + '"]' );
+			if ( !sourceStep ) {
+				console.warn( 'Step not found in library:', stepData.step );
+				missingSteps.push( stepData.step );
 				return;
 			}
 
-			const stepBlock = sourceStep.cloneNode(true);
-			stepBlock.removeAttribute('id');
-			stepBlock.classList.remove('dragging');
-			stepBlock.classList.remove('hidden');
-			document.getElementById('blueprint-steps').appendChild(stepBlock);
+			const stepBlock = sourceStep.cloneNode( true ) as HTMLElement;
+			stepBlock.removeAttribute( 'id' );
+			stepBlock.classList.remove( 'dragging' );
+			stepBlock.classList.remove( 'hidden' );
+			document.getElementById( 'blueprint-steps' )!.appendChild( stepBlock );
 
 			// Restore vars
-			if (stepData.vars) {
-				for (const key in stepData.vars) {
-					const input = stepBlock.querySelector('[name="' + key + '"]');
-					if (input) {
-						if (input.type === 'checkbox') {
+			if ( stepData.vars ) {
+				for ( const key in stepData.vars ) {
+					const input = stepBlock.querySelector( '[name="' + key + '"]' ) as HTMLInputElement | null;
+					if ( input ) {
+						if ( input.type === 'checkbox' ) {
 							input.checked = stepData.vars[key];
 						} else {
 							input.value = stepData.vars[key];
@@ -1310,52 +1321,52 @@ addEventListener('DOMContentLoaded', function () {
 			}
 
 			// Restore count if present
-			if (stepData.count) {
-				const countInput = stepBlock.querySelector('[name="count"]');
-				if (countInput) {
-					countInput.value = stepData.count;
+			if ( stepData.count ) {
+				const countInput = stepBlock.querySelector( '[name="count"]' ) as HTMLInputElement | null;
+				if ( countInput ) {
+					countInput.value = String( stepData.count );
 				}
 			}
-		});
+		} );
 
-		if (missingSteps.length > 0) {
-			showMyBlueprintsToast('Warning: ' + missingSteps.length + ' step(s) not found: ' + missingSteps.join(', '));
+		if ( missingSteps.length > 0 ) {
+			showMyBlueprintsToast( 'Warning: ' + missingSteps.length + ' step(s) not found: ' + missingSteps.join( ', ' ) );
 		}
 
-		if (stepsData.options) {
+		if ( stepsData.options ) {
 			const opts = stepsData.options;
-			if (opts.wpVersion) {
-				document.getElementById('wp-version').value = opts.wpVersion;
+			if ( opts.wpVersion ) {
+				( document.getElementById( 'wp-version' ) as HTMLSelectElement ).value = opts.wpVersion;
 			}
-			if (opts.phpVersion) {
-				document.getElementById('php-version').value = opts.phpVersion;
+			if ( opts.phpVersion ) {
+				( document.getElementById( 'php-version' ) as HTMLSelectElement ).value = opts.phpVersion;
 			}
-			if (opts.phpExtensionBundles !== undefined) {
-				document.getElementById('phpExtensionBundles').checked = opts.phpExtensionBundles;
+			if ( opts.phpExtensionBundles !== undefined ) {
+				( document.getElementById( 'phpExtensionBundles' ) as HTMLInputElement ).checked = opts.phpExtensionBundles;
 			}
-			if (opts.mode) {
-				document.getElementById('mode').value = opts.mode;
+			if ( opts.mode ) {
+				( document.getElementById( 'mode' ) as HTMLSelectElement ).value = opts.mode;
 			}
-			if (opts.storage) {
-				document.getElementById('storage').value = opts.storage;
+			if ( opts.storage ) {
+				( document.getElementById( 'storage' ) as HTMLSelectElement ).value = opts.storage;
 			}
-			if (opts.autosave) {
-				document.getElementById('autosave').value = opts.autosave;
+			if ( opts.autosave ) {
+				( document.getElementById( 'autosave' ) as HTMLSelectElement ).value = opts.autosave;
 			}
-			if (opts.playground) {
-				document.getElementById('playground').value = opts.playground;
+			if ( opts.playground ) {
+				( document.getElementById( 'playground' ) as HTMLSelectElement ).value = opts.playground;
 			}
-			if (opts.encodingFormat) {
-				document.getElementById('encoding-format').value = opts.encodingFormat;
-			} else if (opts.base64 !== undefined) {
-				document.getElementById('encoding-format').value = opts.base64 ? 'base64' : 'auto';
+			if ( opts.encodingFormat ) {
+				( document.getElementById( 'encoding-format' ) as HTMLSelectElement ).value = opts.encodingFormat;
+			} else if ( opts.base64 !== undefined ) {
+				( document.getElementById( 'encoding-format' ) as HTMLSelectElement ).value = opts.base64 ? 'base64' : 'auto';
 			}
-			if (opts.previewMode) {
-				document.getElementById('preview-mode').value = opts.previewMode;
+			if ( opts.previewMode ) {
+				( document.getElementById( 'preview-mode' ) as HTMLSelectElement ).value = opts.previewMode;
 			}
 		}
 
-		blueprintEventBus.emit('blueprint:updated');
+		blueprintEventBus.emit( 'blueprint:updated' );
 	}
 
 	// Initialize History Controller
