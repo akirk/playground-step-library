@@ -370,11 +370,14 @@ export class HistoryController {
 
 		// Update blueprint content
 		if (blueprintView) {
-			blueprintView.value = entry.compiledBlueprint;
+			const blueprintStr = typeof entry.compiledBlueprint === 'string'
+				? entry.compiledBlueprint
+				: JSON.stringify( entry.compiledBlueprint, null, '\t' );
+			blueprintView.value = blueprintStr;
 
 			// If Ace editor exists, just update its value; otherwise initialize it
 			if (historyBlueprintAceEditor) {
-				historyBlueprintAceEditor.setValue(entry.compiledBlueprint, -1);
+				historyBlueprintAceEditor.setValue( blueprintStr, -1 );
 			} else {
 				initHistoryBlueprintAceEditor();
 			}
