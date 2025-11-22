@@ -31,6 +31,8 @@ import { PasteHandlerController, type PasteHandlerControllerDependencies } from 
 import { StateController, type StateControllerDependencies } from './state-controller';
 import { EventHandlersController, type EventHandlersControllerDependencies } from './event-handlers-controller';
 import { AIInstructionsController, type AIInstructionsControllerDependencies } from './ai-instructions-controller';
+import { SaveDialogController } from './save-dialog-controller';
+import { processSteps } from './step-utils';
 import { examples } from './examples';
 
 declare global {
@@ -927,123 +929,10 @@ addEventListener('DOMContentLoaded', function () {
 	// History functionality is now handled by history-controller.ts
 	// Save dialog needs to be created after historyController is initialized
 	let historyController: HistoryController;
+	let saveDialogController: SaveDialogController;
 
 	function showSaveBlueprintDialog( defaultName: string, isOverwrite: boolean ) {
-		const dialog = document.getElementById( 'save-blueprint-dialog' ) as HTMLDialogElement;
-		const messageDiv = document.getElementById( 'save-blueprint-message' )!;
-		const nameInput = document.getElementById( 'save-blueprint-name' ) as HTMLInputElement;
-		const nameLabel = document.getElementById( 'save-blueprint-label' )!;
-		const overwriteBtn = document.getElementById( 'save-blueprint-overwrite' )!;
-		const renameBtn = document.getElementById( 'save-blueprint-rename' )!;
-		const saveBtn = document.getElementById( 'save-blueprint-save' )!;
-		const cancelBtn = document.getElementById( 'save-blueprint-cancel' )!;
-
-		nameInput.value = defaultName;
-
-		if ( isOverwrite ) {
-			messageDiv.textContent = `A blueprint with this name already exists. Do you want to overwrite it or choose a new name?`;
-			messageDiv.style.display = 'block';
-			nameLabel.style.display = 'none';
-			overwriteBtn.style.display = 'inline-block';
-			renameBtn.style.display = 'inline-block';
-			saveBtn.style.display = 'none';
-		} else {
-			messageDiv.textContent = '';
-			messageDiv.style.display = 'none';
-			nameLabel.style.display = 'block';
-			overwriteBtn.style.display = 'none';
-			renameBtn.style.display = 'none';
-			saveBtn.style.display = 'inline-block';
-		}
-
-		const handleOverwrite = function () {
-			const title = defaultName;
-			const history = myBlueprints.getHistory();
-			const updatedHistory = history.filter( entry => entry.title !== title );
-			myBlueprints.saveHistory( updatedHistory );
-
-			historyController.addToHistory( title );
-			const titleInputEl = document.getElementById( 'title' ) as HTMLInputElement;
-			if ( titleInputEl ) {
-				titleInputEl.value = title;
-			}
-			showToast( 'Updated' );
-			historyController.renderHistoryList();
-
-			dialog.close();
-			cleanup();
-		};
-
-		const handleRename = function () {
-			messageDiv.textContent = '';
-			messageDiv.style.display = 'none';
-			nameLabel.style.display = 'block';
-			overwriteBtn.style.display = 'none';
-			renameBtn.style.display = 'none';
-			saveBtn.style.display = 'inline-block';
-			nameInput.select();
-		};
-
-		const handleSave = function () {
-			const title = nameInput.value.trim();
-			if ( !title ) {
-				return;
-			}
-
-			const history = myBlueprints.getHistory();
-			const existingEntry = history.find( entry => entry.title === title );
-
-			if ( existingEntry ) {
-				showSaveBlueprintDialog( title, true );
-				cleanup();
-				return;
-			}
-
-			historyController.addToHistory( title );
-			const titleInputEl = document.getElementById( 'title' ) as HTMLInputElement;
-			if ( titleInputEl ) {
-				titleInputEl.value = title;
-			}
-			showToast( 'Saved' );
-			historyController.renderHistoryList();
-
-			dialog.close();
-			cleanup();
-		};
-
-		const handleCancel = function () {
-			dialog.close();
-			cleanup();
-		};
-
-		const handleKeyDown = function ( e: KeyboardEvent ) {
-			if ( e.key === 'Enter' && nameLabel.style.display !== 'none' ) {
-				e.preventDefault();
-				handleSave();
-			} else if ( e.key === 'Escape' ) {
-				e.preventDefault();
-				handleCancel();
-			}
-		};
-
-		const cleanup = function () {
-			overwriteBtn.removeEventListener( 'click', handleOverwrite );
-			renameBtn.removeEventListener( 'click', handleRename );
-			saveBtn.removeEventListener( 'click', handleSave );
-			cancelBtn.removeEventListener( 'click', handleCancel );
-			nameInput.removeEventListener( 'keydown', handleKeyDown );
-		};
-
-		overwriteBtn.addEventListener( 'click', handleOverwrite );
-		renameBtn.addEventListener( 'click', handleRename );
-		saveBtn.addEventListener( 'click', handleSave );
-		cancelBtn.addEventListener( 'click', handleCancel );
-		nameInput.addEventListener( 'keydown', handleKeyDown );
-
-		dialog.showModal();
-		if ( !isOverwrite ) {
-			nameInput.select();
-		}
+		saveDialogController.show( defaultName, isOverwrite );
 	}
 
 	// showToast and showMyBlueprintsToast are now provided by toast-service.ts
@@ -1226,42 +1115,8 @@ addEventListener('DOMContentLoaded', function () {
 			draghint.remove();
 		}
 
-		const missingSteps: string[] = [];
-
-		stepsData.steps.forEach( function ( stepData ) {
-			const sourceStep = document.querySelector( '#step-library .step[data-step="' + stepData.step + '"]' );
-			if ( !sourceStep ) {
-				console.warn( 'Step not found in library:', stepData.step );
-				missingSteps.push( stepData.step );
-				return;
-			}
-
-			const stepBlock = sourceStep.cloneNode( true ) as HTMLElement;
-			stepBlock.removeAttribute( 'id' );
-			stepBlock.classList.remove( 'dragging' );
-			stepBlock.classList.remove( 'hidden' );
-			document.getElementById( 'blueprint-steps' )!.appendChild( stepBlock );
-
-			if ( stepData.vars ) {
-				for ( const key in stepData.vars ) {
-					const input = stepBlock.querySelector( '[name="' + key + '"]' ) as HTMLInputElement | null;
-					if ( input ) {
-						if ( input.type === 'checkbox' ) {
-							input.checked = stepData.vars[key];
-						} else {
-							input.value = stepData.vars[key];
-						}
-					}
-				}
-			}
-
-			if ( stepData.count ) {
-				const countInput = stepBlock.querySelector( '[name="count"]' ) as HTMLInputElement | null;
-				if ( countInput ) {
-					countInput.value = String( stepData.count );
-				}
-			}
-		} );
+		const container = document.getElementById( 'blueprint-steps' )!;
+		const missingSteps = processSteps( stepsData.steps, container );
 
 		if ( missingSteps.length > 0 ) {
 			toastService.showGlobal( 'Warning: ' + missingSteps.length + ' step(s) not found: ' + missingSteps.join( ', ' ) );
@@ -1290,44 +1145,7 @@ addEventListener('DOMContentLoaded', function () {
 			( document.getElementById( 'title' ) as HTMLInputElement ).value = title;
 		}
 
-		const missingSteps: string[] = [];
-
-		stepsData.steps.forEach( function ( stepData ) {
-			const sourceStep = document.querySelector( '#step-library .step[data-step="' + stepData.step + '"]' );
-			if ( !sourceStep ) {
-				console.warn( 'Step not found in library:', stepData.step );
-				missingSteps.push( stepData.step );
-				return;
-			}
-
-			const stepBlock = sourceStep.cloneNode( true ) as HTMLElement;
-			stepBlock.removeAttribute( 'id' );
-			stepBlock.classList.remove( 'dragging' );
-			stepBlock.classList.remove( 'hidden' );
-			document.getElementById( 'blueprint-steps' )!.appendChild( stepBlock );
-
-			// Restore vars
-			if ( stepData.vars ) {
-				for ( const key in stepData.vars ) {
-					const input = stepBlock.querySelector( '[name="' + key + '"]' ) as HTMLInputElement | null;
-					if ( input ) {
-						if ( input.type === 'checkbox' ) {
-							input.checked = stepData.vars[key];
-						} else {
-							input.value = stepData.vars[key];
-						}
-					}
-				}
-			}
-
-			// Restore count if present
-			if ( stepData.count ) {
-				const countInput = stepBlock.querySelector( '[name="count"]' ) as HTMLInputElement | null;
-				if ( countInput ) {
-					countInput.value = String( stepData.count );
-				}
-			}
-		} );
+		const missingSteps = processSteps( stepsData.steps, blueprintStepsContainer );
 
 		if ( missingSteps.length > 0 ) {
 			showMyBlueprintsToast( 'Warning: ' + missingSteps.length + ' step(s) not found: ' + missingSteps.join( ', ' ) );
@@ -1378,6 +1196,9 @@ addEventListener('DOMContentLoaded', function () {
 		showSaveBlueprintDialog
 	};
 	historyController = new HistoryController(historyControllerDeps);
+
+	// Initialize Save Dialog Controller (must be after historyController)
+	saveDialogController = new SaveDialogController( { historyController } );
 
 	// Initialize Paste Handler Controller
 	const pasteHandlerControllerDeps: PasteHandlerControllerDependencies = {
