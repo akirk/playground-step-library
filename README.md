@@ -73,14 +73,14 @@ const compiler = new PlaygroundStepLibrary();
 // Compile to V1 format (imperative, with steps array)
 const v1 = compiler.compile({
     steps: [
-        { step: 'setSiteName', sitename: 'My Site', tagline: 'A WordPress site' }
+        { step: 'setSiteName', vars: { sitename: 'My Site', tagline: 'A WordPress site' } }
     ]
 });
 
 // Compile to V2 format (declarative, with schema properties)
 const v2 = compiler.compileV2({
     steps: [
-        { step: 'setSiteName', sitename: 'My Site', tagline: 'A WordPress site' }
+        { step: 'setSiteName', vars: { sitename: 'My Site', tagline: 'A WordPress site' } }
     ]
 });
 

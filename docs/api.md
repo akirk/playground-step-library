@@ -56,14 +56,18 @@ const blueprint = {
     steps: [
         {
             step: 'setSiteName',
-            sitename: 'My Site',
-            tagline: 'A WordPress site'
+            vars: {
+                sitename: 'My Site',
+                tagline: 'A WordPress site'
+            }
         },
         {
             step: 'addPage',
-            title: 'Welcome',
-            content: '<p>Welcome to my site!</p>',
-            homepage: true
+            vars: {
+                title: 'Welcome',
+                content: '<p>Welcome to my site!</p>',
+                homepage: true
+            }
         }
     ]
 };
@@ -125,7 +129,13 @@ interface StepLibraryBlueprint {
 }
 ```
 
-Both nested (`vars: { sitename: "..." }`) and flat (`sitename: "..."`) formats are supported for step parameters.
+Step parameters must be nested inside a `vars` object (e.g., `vars: { sitename: "..." }`).
+
+### Native Step Passthrough
+
+Native WordPress Playground steps (using flat format like `pluginData`, `options`, etc.) are passed through to the output unchanged. This happens when pasting or importing native blueprints that contain steps without a Step Library equivalent.
+
+The compiler detects native steps by checking for the absence of `vars` and passes them through without transformation.
 
 ## V1 vs V2 Compilation
 
@@ -146,8 +156,8 @@ const compiler = new PlaygroundStepLibrary();
 
 const blueprint = {
     steps: [
-        { step: 'setSiteName', sitename: 'My Demo Site', tagline: 'A WordPress Playground demo' },
-        { step: 'addPage', title: 'Welcome Page', content: '<p>Welcome!</p>' }
+        { step: 'setSiteName', vars: { sitename: 'My Demo Site', tagline: 'A WordPress Playground demo' } },
+        { step: 'addPage', vars: { title: 'Welcome Page', content: '<p>Welcome!</p>' } }
     ]
 };
 
@@ -169,8 +179,8 @@ const compiler = new PlaygroundStepLibrary();
 
 const blueprint = {
     steps: [
-        { step: 'setSiteName', sitename: 'My Demo Site', tagline: 'A WordPress Playground demo' },
-        { step: 'addPage', title: 'Welcome Page', content: '<p>Welcome!</p>' }
+        { step: 'setSiteName', vars: { sitename: 'My Demo Site', tagline: 'A WordPress Playground demo' } },
+        { step: 'addPage', vars: { title: 'Welcome Page', content: '<p>Welcome!</p>' } }
     ]
 };
 
@@ -252,8 +262,8 @@ const compiler = new PlaygroundStepLibrary();
 
 const v2Blueprint = compiler.compileV2({
     steps: [
-        { step: 'installPlugin', url: 'https://wordpress.org/plugins/gutenberg/' },
-        { step: 'setSiteName', sitename: 'My Site', tagline: 'A tagline' }
+        { step: 'installPlugin', vars: { url: 'https://wordpress.org/plugins/gutenberg/' } },
+        { step: 'setSiteName', vars: { sitename: 'My Site', tagline: 'A tagline' } }
     ]
 });
 // Output: { version: 2, plugins: ['gutenberg'], siteOptions: { blogname: 'My Site', blogdescription: 'A tagline' } }
