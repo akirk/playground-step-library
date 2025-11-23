@@ -9,10 +9,10 @@ Useful to combine with a login step.
 
 **Compiles to:** [`updateUserMeta`](../builtin-step-usage.md#updateusermeta)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `colorScheme` | string | ✅ Yes | Color scheme |
 
 
@@ -22,7 +22,9 @@ Useful to combine with a login step.
 ```json
     {
           "step": "changeAdminColorScheme",
-          "colorScheme": "modern"
+          "vars": {
+                "colorScheme": "modern"
+          }
     }
 ```
 
@@ -35,9 +37,7 @@ Useful to combine with a login step.
   "steps": [
     {
       "step": "updateUserMeta",
-      "meta": {
-        "admin_color": "modern"
-      },
+      "meta": {},
       "userId": 1
     }
   ]
@@ -52,9 +52,7 @@ Useful to combine with a login step.
   "additionalStepsAfterExecution": [
     {
       "step": "updateUserMeta",
-      "meta": {
-        "admin_color": "modern"
-      },
+      "meta": {},
       "userId": 1
     }
   ]
@@ -71,7 +69,9 @@ const blueprint = {
   steps: [
         {
           "step": "changeAdminColorScheme",
-          "colorScheme": "modern"
+          "vars": {
+                "colorScheme": "modern"
+          }
     }
   ]
 };

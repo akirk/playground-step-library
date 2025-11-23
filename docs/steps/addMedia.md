@@ -7,12 +7,11 @@ Add files to the media library.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile), [`runPHP`](../builtin-step-usage.md#runphp)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `downloadUrl` | string | ✅ Yes | Where to download the media from (can be a zip). |
 
 
@@ -22,50 +21,13 @@ Add files to the media library.
 ```json
     {
           "step": "addMedia",
-          "downloadUrl": "https://s.w.org/style/images/about/WordPress-logotype-wmark.png"
+          "vars": {
+                "downloadUrl": "https://s.w.org/style/images/about/WordPress-logotype-wmark.png"
+          }
     }
 ```
 
-## Compiled Output
 
-### V1 (Imperative)
-
-```json
-{
-  "steps": [
-    {
-      "step": "mkdir",
-      "path": "/tmp/media"
-    },
-    {
-      "step": "writeFile",
-      "path": "/tmp/media/WordPress-logotype-wmark.png",
-      "data": {
-        "resource": "url",
-        "url": "https://s.w.org/style/images/about/WordPress-logotype-wmark.png"
-      }
-    },
-    {
-      "step": "runPHP",
-      "progress": {
-        "caption": "Importing media to library"
-      },
-      "code": "<?php\n// DEDUP_STRATEGY: keep_last\nrequire_once '/wordpress/wp-load.php';\nr..."
-    }
-  ]
-}
-```
-
-### V2 (Declarative)
-
-```json
-{
-  "version": 2,
-  "media": [
-    "https://s.w.org/style/images/about/WordPress-logotype-wmark.png"
-  ]
-}
-```
 
 ## Usage with Library
 
@@ -77,7 +39,9 @@ const blueprint = {
   steps: [
         {
           "step": "addMedia",
-          "downloadUrl": "https://s.w.org/style/images/about/WordPress-logotype-wmark.png"
+          "vars": {
+                "downloadUrl": "https://s.w.org/style/images/about/WordPress-logotype-wmark.png"
+          }
     }
   ]
 };

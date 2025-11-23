@@ -9,10 +9,10 @@ Set the site name and tagline.
 
 **Compiles to:** [`setSiteOptions`](../builtin-step-usage.md#setsiteoptions)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `sitename` | string | ✅ Yes | Name of the site |
 | `tagline` | string | ✅ Yes | What the site is about |
 
@@ -23,8 +23,10 @@ Set the site name and tagline.
 ```json
     {
           "step": "setSiteName",
-          "sitename": "Step Library Demo",
-          "tagline": "Trying out WordPress Playground."
+          "vars": {
+                "sitename": "Step Library Demo",
+                "tagline": "Trying out WordPress Playground."
+          }
     }
 ```
 
@@ -37,10 +39,7 @@ Set the site name and tagline.
   "steps": [
     {
       "step": "setSiteOptions",
-      "options": {
-        "blogname": "Step Library Demo",
-        "blogdescription": "Trying out WordPress Playground."
-      }
+      "options": {}
     }
   ]
 }
@@ -51,10 +50,7 @@ Set the site name and tagline.
 ```json
 {
   "version": 2,
-  "siteOptions": {
-    "blogname": "Step Library Demo",
-    "blogdescription": "Trying out WordPress Playground."
-  }
+  "siteOptions": {}
 }
 ```
 
@@ -68,8 +64,10 @@ const blueprint = {
   steps: [
         {
           "step": "setSiteName",
-          "sitename": "Step Library Demo",
-          "tagline": "Trying out WordPress Playground."
+          "vars": {
+                "sitename": "Step Library Demo",
+                "tagline": "Trying out WordPress Playground."
+          }
     }
   ]
 };

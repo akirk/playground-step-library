@@ -9,10 +9,10 @@ Add a WooCommerce product (will install WooCommerce if not present)
 
 **Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin), [`runPHP`](../builtin-step-usage.md#runphp)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `title` | string | ✅ Yes | The title of the product |
 | `description` | textarea | ✅ Yes | The description of the product |
 | `price` | string | ❌ No | Regular price (without currency symbol) |
@@ -27,26 +27,26 @@ Add a WooCommerce product (will install WooCommerce if not present)
 ```json
     {
           "step": "addProduct",
-          "title": "Sample Product",
-          "description": "<p>This is a great product!</p>",
-          "price": "19.99",
-          "salePrice": "15.99",
-          "sku": "PROD-001",
-          "status": "publish"
+          "vars": {
+                "title": "Sample Product",
+                "description": "<p>This is a great product!</p>"
+          }
     }
 ```
 
 ### Advanced Usage
 ```json
 {
-  "step": "addProduct",
-  "title": "T-Shirt",
-  "description": "<p>High quality item with excellent features.</p>",
-  "price": "29.95",
-  "salePrice": "24.95",
-  "sku": "SHIRT-RED-M",
-  "status": "draft"
-}
+          "step": "addProduct",
+          "vars": {
+                "title": "T-Shirt",
+                "description": "<p>High quality item with excellent features.</p>",
+                "price": "29.95",
+                "salePrice": "24.95",
+                "sku": "SHIRT-RED-M",
+                "status": "draft"
+          }
+    }
 ```
 
 ## Compiled Output
@@ -70,7 +70,7 @@ Add a WooCommerce product (will install WooCommerce if not present)
       "step": "runPHP",
       "code": "<?php require_once '/wordpress/wp-load.php';\n// Create the product post\n$pr...",
       "progress": {
-        "caption": "addProduct: Sample Product"
+        "caption": "addProduct:"
       }
     }
   ]
@@ -86,8 +86,8 @@ Add a WooCommerce product (will install WooCommerce if not present)
     {
       "type": "posts",
       "source": {
-        "post_title": "Sample Product",
-        "post_content": "<p>This is a great product!</p>",
+        "post_title": "",
+        "post_content": "",
         "post_type": "product",
         "post_status": "publish",
         "meta_input": {
@@ -96,11 +96,7 @@ Add a WooCommerce product (will install WooCommerce if not present)
           "_manage_stock": "no",
           "_sold_individually": "no",
           "_virtual": "no",
-          "_downloadable": "no",
-          "_regular_price": "19.99",
-          "_price": "15.99",
-          "_sale_price": "15.99",
-          "_sku": "PROD-001"
+          "_downloadable": "no"
         },
         "tax_input": {
           "product_type": [
@@ -126,12 +122,14 @@ const blueprint = {
   steps: [
         {
           "step": "addProduct",
-          "title": "Sample Product",
-          "description": "<p>This is a great product!</p>",
-          "price": "19.99",
-          "salePrice": "15.99",
-          "sku": "PROD-001",
-          "status": "publish"
+          "vars": {
+                "title": "Sample Product",
+                "description": "<p>This is a great product!</p>",
+                "price": "19.99",
+                "salePrice": "15.99",
+                "sku": "PROD-001",
+                "status": "publish"
+          }
     }
   ]
 };

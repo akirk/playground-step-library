@@ -9,10 +9,10 @@ Easily add a filtered value.
 
 **Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `filter` | string | ✅ Yes | Name of the filter |
 | `code` | textarea | ✅ Yes | Code for the filter |
 | `priority` | string | ❌ No | Priority of the filter |
@@ -24,9 +24,22 @@ Easily add a filtered value.
 ```json
     {
           "step": "addFilter",
-          "filter": "init",
-          "code": "'__return_false'",
-          "priority": "10"
+          "vars": {
+                "filter": "init",
+                "code": "'__return_false'"
+          }
+    }
+```
+
+### Advanced Usage
+```json
+{
+          "step": "addFilter",
+          "vars": {
+                "filter": "init",
+                "code": "'__return_true'",
+                "priority": "10"
+          }
     }
 ```
 
@@ -44,7 +57,7 @@ Easily add a filtered value.
     {
       "step": "writeFile",
       "path": "/wordpress/wp-content/mu-plugins/addFilter-0-0.php",
-      "data": "<?php add_filter( 'init', '__return_false' );"
+      "data": "<?php add_filter( 'undefined',  );"
     }
   ]
 }
@@ -59,7 +72,7 @@ Easily add a filtered value.
     {
       "file": {
         "filename": "addFilter-0.php",
-        "content": "<?php add_filter( 'init', '__return_false' );"
+        "content": "<?php add_filter( 'undefined',  );"
       }
     }
   ]
@@ -76,9 +89,11 @@ const blueprint = {
   steps: [
         {
           "step": "addFilter",
-          "filter": "init",
-          "code": "'__return_false'",
-          "priority": "10"
+          "vars": {
+                "filter": "init",
+                "code": "'__return_false'",
+                "priority": "10"
+          }
     }
   ]
 };

@@ -9,9 +9,9 @@ Record steps made and compile a new blueprint.
 
 **Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin)
 
-## Parameters
+## Variables
 
-*No parameters defined.*
+*No variables defined.*
 
 ## Examples
 

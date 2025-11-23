@@ -6,7 +6,8 @@ import { v1ToV2Fallback } from './types.js';
 export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep): StepResult => {
 	return {
 		toV1() {
-	const urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.vars?.url );
+	const urlPattern = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/;
+	const urlTest = (step.vars?.url || '').match( urlPattern );
 	if ( ! urlTest ) {
 		return [];
 	}

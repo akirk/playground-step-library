@@ -9,10 +9,10 @@ Install a theme via WordPress.org or Github.
 
 **Compiles to:** [`installTheme`](../builtin-step-usage.md#installtheme)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of the theme or WordPress.org slug |
 | `prs` | boolean | ❌ No | Add support for submitting Github Requests. |
 
@@ -23,8 +23,20 @@ Install a theme via WordPress.org or Github.
 ```json
     {
           "step": "installTheme",
-          "url": "pendant",
-          "prs": "false"
+          "vars": {
+                "url": "pendant"
+          }
+    }
+```
+
+### Advanced Usage
+```json
+{
+          "step": "installTheme",
+          "vars": {
+                "url": "https://github.com/richtabor/kanso",
+                "prs": true
+          }
     }
 ```
 
@@ -37,16 +49,8 @@ Install a theme via WordPress.org or Github.
   "steps": [
     {
       "step": "installTheme",
-      "themeData": {
-        "resource": "wordpress.org/themes",
-        "slug": "pendant"
-      },
-      "options": {
-        "activate": true
-      },
-      "progress": {
-        "caption": "Installing theme: pendant"
-      }
+      "url": "pendant",
+      "prs": "false"
     }
   ]
 }
@@ -56,10 +60,7 @@ Install a theme via WordPress.org or Github.
 
 ```json
 {
-  "version": 2,
-  "themes": [
-    "pendant"
-  ]
+  "version": 2
 }
 ```
 
@@ -73,8 +74,10 @@ const blueprint = {
   steps: [
         {
           "step": "installTheme",
-          "url": "pendant",
-          "prs": "false"
+          "vars": {
+                "url": "pendant",
+                "prs": false
+          }
     }
   ]
 };

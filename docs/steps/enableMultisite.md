@@ -9,9 +9,9 @@ Enable WordPress Multisite functionality.
 
 **Compiles to:** [`enableMultisite`](../builtin-step-usage.md#enablemultisite)
 
-## Parameters
+## Variables
 
-*No parameters defined.*
+*No variables defined.*
 
 ## Examples
 

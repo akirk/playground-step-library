@@ -9,9 +9,9 @@ Inserts sample pages to the site.
 
 **Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
-## Parameters
+## Variables
 
-*No parameters defined.*
+*No variables defined.*
 
 ## Examples
 

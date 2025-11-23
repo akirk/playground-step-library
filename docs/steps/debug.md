@@ -7,12 +7,12 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** [`defineWpConfigConsts`](../builtin-step-usage.md#definewpconfigconsts)
+**Compiles to:** [`defineWpConfigConsts`](../builtin-step-usage.md#definewpconfigconsts), [`installPlugin`](../builtin-step-usage.md#installplugin)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `wpDebug` | boolean | ❌ No | Enable WordPress debug mode |
 | `wpDebugDisplay` | boolean | ❌ No | Display errors in HTML output. Only applies when the above is enabled. |
 | `scriptDebug` | boolean | ❌ No | Use non-minified JavaScript and CSS files. |
@@ -24,23 +24,8 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
 ### Basic Usage
 ```json
     {
-          "step": "debug",
-          "wpDebug": false,
-          "wpDebugDisplay": false,
-          "scriptDebug": false,
-          "queryMonitor": false
+          "step": "debug"
     }
-```
-
-### Advanced Usage
-```json
-{
-  "step": "debug",
-  "wpDebug": false,
-  "wpDebugDisplay": false,
-  "scriptDebug": false,
-  "queryMonitor": false
-}
 ```
 
 ## Compiled Output
@@ -53,7 +38,18 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
     {
       "step": "defineWpConfigConsts",
       "consts": {
-        "WP_DEBUG": false
+        "WP_DEBUG": true,
+        "WP_DEBUG_DISPLAY": true
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "query-monitor"
+      },
+      "options": {
+        "activate": true
       }
     }
   ]
@@ -69,7 +65,18 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
     {
       "step": "defineWpConfigConsts",
       "consts": {
-        "WP_DEBUG": false
+        "WP_DEBUG": true,
+        "WP_DEBUG_DISPLAY": true
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "query-monitor"
+      },
+      "options": {
+        "activate": true
       }
     }
   ]
@@ -86,10 +93,12 @@ const blueprint = {
   steps: [
         {
           "step": "debug",
-          "wpDebug": false,
-          "wpDebugDisplay": false,
-          "scriptDebug": false,
-          "queryMonitor": false
+          "vars": {
+                "wpDebug": false,
+                "wpDebugDisplay": false,
+                "scriptDebug": false,
+                "queryMonitor": false
+          }
     }
   ]
 };

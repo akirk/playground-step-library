@@ -9,10 +9,10 @@ Add a page with title and content.
 
 **Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `title` | string | ✅ Yes | The title of the page |
 | `content` | textarea | ✅ Yes | The HTML content of the page |
 | `homepage` | boolean | ❌ No | Set it as the Homepage |
@@ -24,9 +24,22 @@ Add a page with title and content.
 ```json
     {
           "step": "addPage",
-          "title": "Hello World",
-          "content": "<p>Hello World</p>",
-          "homepage": "false"
+          "vars": {
+                "title": "Hello World",
+                "content": "<p>Hello World</p>"
+          }
+    }
+```
+
+### Advanced Usage
+```json
+{
+          "step": "addPage",
+          "vars": {
+                "title": "Hello World",
+                "content": "<p>Hello World</p>",
+                "homepage": true
+          }
     }
 ```
 
@@ -41,7 +54,7 @@ Add a page with title and content.
       "step": "runPHP",
       "code": "<?php require_once '/wordpress/wp-load.php';\n$page_args = array(\n'post_type...",
       "progress": {
-        "caption": "addPage: Hello World"
+        "caption": "addPage:"
       }
     }
   ]
@@ -57,25 +70,13 @@ Add a page with title and content.
     {
       "type": "posts",
       "source": {
-        "post_title": "Hello World",
-        "post_content": "<p>Hello World</p>",
+        "post_title": "",
+        "post_content": "",
         "post_type": "page",
         "post_status": "publish"
       }
     }
-  ],
-  "additionalStepsAfterExecution": [
-    {
-      "step": "runPHP",
-      "code": {
-        "filename": "set-homepage.php",
-        "content": "<?php\nrequire_once '/wordpress/wp-load.php';\n$pages = get_posts( array(\n\t'post_type' => 'page',\n\t'title' => 'Hello World',\n\t'posts_per_page' => 1,\n\t'orderby' => 'ID',\n\t'order' => 'DESC'\n) );\nif ( ! empty( $pages ) ) {\n\tupdate_option( 'page_on_front', $pages[0]->ID );\n\tupdate_option( 'show_on_front', 'page' );\n}"
-      }
-    }
-  ],
-  "siteOptions": {
-    "show_on_front": "page"
-  }
+  ]
 }
 ```
 
@@ -89,9 +90,11 @@ const blueprint = {
   steps: [
         {
           "step": "addPage",
-          "title": "Hello World",
-          "content": "<p>Hello World</p>",
-          "homepage": "false"
+          "vars": {
+                "title": "Hello World",
+                "content": "<p>Hello World</p>",
+                "homepage": false
+          }
     }
   ]
 };

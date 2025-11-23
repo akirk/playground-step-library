@@ -9,9 +9,9 @@ When running WooCommerce, don't show the wizard.
 
 **Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin), [`runPHP`](../builtin-step-usage.md#runphp), [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile)
 
-## Parameters
+## Variables
 
-*No parameters defined.*
+*No variables defined.*
 
 ## Examples
 

@@ -9,10 +9,10 @@ Register a custom post type.
 
 **Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `slug` | string | ✅ Yes | Post type key |
 | `name` | string | ✅ Yes | The user visible label |
 | `supports` | string | ❌ No | Features this post type supports |
@@ -25,22 +25,24 @@ Register a custom post type.
 ```json
     {
           "step": "customPostType",
-          "slug": "book",
-          "name": "Books",
-          "supports": "['title', 'editor']",
-          "public": "true"
+          "vars": {
+                "slug": "book",
+                "name": "Books"
+          }
     }
 ```
 
 ### Advanced Usage
 ```json
 {
-  "step": "customPostType",
-  "slug": "music",
-  "name": "Music",
-  "supports": "['title', 'editor', 'thumbnail']",
-  "public": "false"
-}
+          "step": "customPostType",
+          "vars": {
+                "slug": "music",
+                "name": "Music",
+                "supports": "['title', 'editor', 'thumbnail']",
+                "public": false
+          }
+    }
 ```
 
 ## Compiled Output
@@ -57,9 +59,9 @@ Register a custom post type.
     {
       "step": "writeFile",
       "path": "/wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
-      "data": "<?php add_action( 'init', function() { register_post_type('book', array('pu...",
+      "data": "<?php add_action( 'init', function() { register_post_type('undefined', arra...",
       "progress": {
-        "caption": "customPostType: Books"
+        "caption": "customPostType: undefined"
       }
     }
   ]
@@ -79,9 +81,9 @@ Register a custom post type.
     {
       "step": "writeFile",
       "path": "/wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
-      "data": "<?php add_action( 'init', function() { register_post_type('book', array('public' => true, 'label' => 'Books', 'supports' => \"['title', 'editor']\")); } ); ?>",
+      "data": "<?php add_action( 'init', function() { register_post_type('undefined', array('public' => true, 'label' => 'undefined', 'supports' => array( 'title', 'editor' ))); } ); ?>",
       "progress": {
-        "caption": "customPostType: Books"
+        "caption": "customPostType: undefined"
       }
     }
   ]
@@ -98,10 +100,12 @@ const blueprint = {
   steps: [
         {
           "step": "customPostType",
-          "slug": "book",
-          "name": "Books",
-          "supports": "['title', 'editor']",
-          "public": "true"
+          "vars": {
+                "slug": "book",
+                "name": "Books",
+                "supports": "['title', 'editor']",
+                "public": true
+          }
     }
   ]
 };

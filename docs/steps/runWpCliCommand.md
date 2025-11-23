@@ -9,10 +9,10 @@ Run a wp-cli command.
 
 **Compiles to:** [`wp-cli`](../builtin-step-usage.md#wp-cli)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `command` | string | ✅ Yes | The wp-cli command to run |
 
 
@@ -22,7 +22,9 @@ Run a wp-cli command.
 ```json
     {
           "step": "runWpCliCommand",
-          "command": ""
+          "vars": {
+                "command": ""
+          }
     }
 ```
 
@@ -34,8 +36,7 @@ Run a wp-cli command.
 {
   "steps": [
     {
-      "step": "wp-cli",
-      "command": ""
+      "step": "wp-cli"
     }
   ]
 }
@@ -48,8 +49,7 @@ Run a wp-cli command.
   "version": 2,
   "additionalStepsAfterExecution": [
     {
-      "step": "wp-cli",
-      "command": ""
+      "step": "wp-cli"
     }
   ]
 }
@@ -65,7 +65,9 @@ const blueprint = {
   steps: [
         {
           "step": "runWpCliCommand",
-          "command": ""
+          "vars": {
+                "command": ""
+          }
     }
   ]
 };

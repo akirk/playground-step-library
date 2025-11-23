@@ -7,11 +7,12 @@ Import a WXR from a URL.
 ## Type
 🔧 **Built-in Step**
 
+**Compiles to:** [`importWxr`](../builtin-step-usage.md#importwxr)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of a WXR file |
 
 
@@ -21,11 +22,34 @@ Import a WXR from a URL.
 ```json
     {
           "step": "importWxr",
-          "url": ""
+          "vars": {
+                "url": ""
+          }
     }
 ```
 
+## Compiled Output
 
+### V1 (Imperative)
+
+```json
+{
+  "steps": [
+    {
+      "step": "importWxr",
+      "url": ""
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2
+}
+```
 
 ## Usage with Library
 
@@ -37,7 +61,9 @@ const blueprint = {
   steps: [
         {
           "step": "importWxr",
-          "url": ""
+          "vars": {
+                "url": ""
+          }
     }
   ]
 };

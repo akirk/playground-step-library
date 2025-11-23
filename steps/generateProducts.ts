@@ -201,7 +201,7 @@ error_log( "Generated " . count( $term_ids ) . " product categories" );
 
 	// Install WooCommerce if not present
 	if (!hasWoocommercePlugin) {
-		const wooResult = installPlugin( { step: 'installPlugin', vars: { url: 'woocommerce', permalink: true } } ).toV1();
+		const wooResult = installPlugin( { step: 'installPlugin', vars: { url: 'woocommerce' } } ).toV1();
 		steps = steps.concat(wooResult.steps);
 	}
 

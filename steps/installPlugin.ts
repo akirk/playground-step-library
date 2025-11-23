@@ -5,20 +5,22 @@ import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
 export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPluginStep): StepResult => {
+	const url = step.vars?.url || '';
+
 	// Parse GitHub release URL
 	const releasePattern = /\/releases\/download\/(?<version>[^\/]+)\/(?<asset>[^\/]+)$/;
-	const releaseMatch = step.vars?.url.match(releasePattern);
+	const releaseMatch = url.match(releasePattern);
 
 	// Check if it's a GitHub URL
-	const isGitHubUrl = step.vars?.url.match(/^(?:https:\/\/)?github\.com\//i) ||
-	                    (!step.vars?.url.includes('://') && step.vars?.url.match(/^[^\/]+\/[^\/]+/));
+	const isGitHubUrl = url.match(/^(?:https:\/\/)?github\.com\//i) ||
+	                    (!url.includes('://') && url.match(/^[^\/]+\/[^\/]+/));
 	const urlPattern = /^(?:https:\/\/)?(?:github\.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)/;
-	const urlTest = isGitHubUrl ? urlPattern.exec(step.vars?.url) : null;
+	const urlTest = isGitHubUrl ? url.match(urlPattern) : null;
 
 	// Extract WordPress.org slug
-	let plugin = step.vars?.url;
+	let plugin: string = url;
 	const slugPattern = /^https:\/\/wordpress.org\/plugins\/(?<slug>[^\/]+)/;
-	const slugTest = slugPattern.exec(step.vars?.url);
+	const slugTest = url.match(slugPattern);
 	if (slugTest) {
 		plugin = slugTest.groups!.slug;
 	}
@@ -31,7 +33,7 @@ export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPlug
 	}
 
 	if (urlTest) {
-		return githubPlugin( { step: 'githubPlugin', vars: { url: step.vars?.url,
+		return githubPlugin( { step: 'githubPlugin', vars: { url: url,
 			prs: step.vars?.prs } } );
 	}
 

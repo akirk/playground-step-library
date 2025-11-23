@@ -21,14 +21,16 @@ export const login: StepFunction<LoginStep> = (step: LoginStep): StepResult => {
 		},
 
 		toV2() {
-			const isDefault = step.vars?.username === 'admin' && step.vars?.password === 'password';
+			const username = step.vars?.username || 'admin';
+			const password = step.vars?.password || 'password';
+			const isDefault = username === 'admin' && password === 'password';
 			const result: BlueprintV2Declaration = {
 				version: 2,
 				applicationOptions: {
 					'wordpress-playground': {
 						login: isDefault ? true : {
-							username: step.vars?.username,
-							password: step.vars?.password
+							username: username,
+							password: password
 						}
 					}
 				}

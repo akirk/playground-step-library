@@ -9,10 +9,10 @@ Add subscriptions to the Friends plugin.
 
 **Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `opml` | textarea | ✅ Yes | An OPML file, or a list of RSS feed URLs, one per line. |
 
 
@@ -22,7 +22,9 @@ Add subscriptions to the Friends plugin.
 ```json
     {
           "step": "importFriendFeeds",
-          "opml": ""
+          "vars": {
+                "opml": ""
+          }
     }
 ```
 
@@ -79,7 +81,9 @@ const blueprint = {
   steps: [
         {
           "step": "importFriendFeeds",
-          "opml": ""
+          "vars": {
+                "opml": ""
+          }
     }
   ]
 };

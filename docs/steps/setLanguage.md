@@ -7,12 +7,11 @@ Set the WordPress site language.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** [`setSiteLanguage`](../builtin-step-usage.md#setsitelanguage)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `language` | string | ✅ Yes | A valid WordPress language slug |
 
 
@@ -22,38 +21,13 @@ Set the WordPress site language.
 ```json
     {
           "step": "setLanguage",
-          "language": "de"
+          "vars": {
+                "language": "de"
+          }
     }
 ```
 
-## Compiled Output
 
-### V1 (Imperative)
-
-```json
-{
-  "steps": [
-    {
-      "step": "setSiteLanguage",
-      "language": "de_DE"
-    }
-  ]
-}
-```
-
-### V2 (Declarative)
-
-```json
-{
-  "version": 2,
-  "additionalStepsAfterExecution": [
-    {
-      "step": "setSiteLanguage",
-      "language": "de_DE"
-    }
-  ]
-}
-```
 
 ## Usage with Library
 
@@ -65,7 +39,9 @@ const blueprint = {
   steps: [
         {
           "step": "setLanguage",
-          "language": "de"
+          "vars": {
+                "language": "de"
+          }
     }
   ]
 };

@@ -4,9 +4,9 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 📊 Overview
 
-- **Total Steps**: 62
+- **Total Steps**: 52
 - **Built-in Steps**: 8
-- **Custom Steps**: 54
+- **Custom Steps**: 44
 
 ## 🚀 Quick Start
 
@@ -18,8 +18,10 @@ const blueprint = {
   steps: [
     {
       step: 'setSiteName',
-      sitename: 'My WordPress Site',
-      tagline: 'Powered by Playground'
+      vars: {
+        sitename: 'My WordPress Site',
+        tagline: 'Powered by Playground'
+      }
     }
   ]
 };
@@ -88,23 +90,12 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`setTT4Homepage`](steps/setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
 - [`showAdminNotice`](steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
-- [`activatePlugin`](steps/activatePlugin.md) - Activate an already installed plugin.
-- [`activateTheme`](steps/activateTheme.md) - Activate an already installed theme.
-- [`cp`](steps/cp.md) - Copy a file or directory.
-- [`mv`](steps/mv.md) - Move a file or directory.
-- [`rm`](steps/rm.md) - Remove a file.
-- [`rmdir`](steps/rmdir.md) - Remove a directory.
-- [`mkdir`](steps/mkdir.md) - Create a directory.
-- [`unzip`](steps/unzip.md) - Extract a zip file.
-- [`runSQL`](steps/runSQL.md) - Execute SQL queries.
-- [`writeFile`](steps/writeFile.md) - Write content to a file.
 
 ## 🔗 Cross-References
 
 Many steps can reference and use other steps. For example:
 - `addProduct` automatically calls `installPlugin` to install WooCommerce
-- `debug` calls `installPlugin` to install Query Monitor when enabled
-- `generateProducts` calls `installPlugin` for WooCommerce and WC Smooth Generator
+- `importFriendFeeds` calls `installPlugin` to install the Friends plugin
 
 ## 📖 Detailed Documentation
 

@@ -4,59 +4,13 @@ This document provides detailed information about all available steps, including
 
 ---
 
-## [`activatePlugin`](steps/activatePlugin.md)
-
-**Type**: Custom Step
-**Description**: Activate an already installed plugin.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `pluginPath` | string | ✅ Yes | Path to the plugin file relative to wp-content/plugins/ |
-| `pluginName` | string | ❌ No | Human-readable plugin name for progress display |
-
-
-### Example Usage
-
-```json
-    {
-          "step": "activatePlugin",
-          "pluginPath": "/example/path",
-          "pluginName": "example-name"
-    }
-```
-
-
----
-
-## [`activateTheme`](steps/activateTheme.md)
-
-**Type**: Custom Step
-**Description**: Activate an already installed theme.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `themeFolderName` | string | ✅ Yes | The theme folder name in wp-content/themes/ |
-
-
-### Example Usage
-
-```json
-    {
-          "step": "activateTheme",
-          "themeFolderName": "example-name"
-    }
-```
-
-
----
-
 ## [`addClientRole`](steps/addClientRole.md)
 
 **Type**: Custom Step
 **Description**: Adds a role for clients with additional capabilities than editors, but not quite admin.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `displayName` | string | ✅ Yes | Display name for the client role |
 
 
@@ -65,7 +19,9 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "addClientRole",
-          "displayName": "Client"
+          "vars": {
+                "displayName": "Client"
+          }
     }
 ```
 
@@ -77,8 +33,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Easily add a filtered value.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `filter` | string | ✅ Yes | Name of the filter |
 | `code` | textarea | ✅ Yes | Code for the filter |
 | `priority` | string | ❌ No | Priority of the filter |
@@ -89,9 +45,11 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "addFilter",
-          "filter": "init",
-          "code": "'__return_false'",
-          "priority": "10"
+          "vars": {
+                "filter": "init",
+                "code": "'__return_false'",
+                "priority": "10"
+          }
     }
 ```
 
@@ -103,8 +61,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Add files to the media library.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `downloadUrl` | string | ✅ Yes | Where to download the media from (can be a zip). |
 
 
@@ -113,7 +71,9 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "addMedia",
-          "downloadUrl": "https://s.w.org/style/images/about/WordPress-logotype-wmark.png"
+          "vars": {
+                "downloadUrl": "https://s.w.org/style/images/about/WordPress-logotype-wmark.png"
+          }
     }
 ```
 
@@ -125,8 +85,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Add a page with title and content.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `title` | string | ✅ Yes | The title of the page |
 | `content` | textarea | ✅ Yes | The HTML content of the page |
 | `homepage` | boolean | ❌ No | Set it as the Homepage |
@@ -137,9 +97,11 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "addPage",
-          "title": "Hello World",
-          "content": "<p>Hello World</p>",
-          "homepage": "false"
+          "vars": {
+                "title": "Hello World",
+                "content": "<p>Hello World</p>",
+                "homepage": false
+          }
     }
 ```
 
@@ -151,8 +113,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Add a post with title, content, type, status, and date.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `title` | string | ✅ Yes | The title of the post |
 | `content` | textarea | ✅ Yes | The HTML content of the post |
 | `date` | string | ❌ No | The date of the post (optional) |
@@ -168,14 +130,16 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "addPost",
-          "title": "Hello World",
-          "content": "<p>Hello World</p>",
-          "date": "now",
-          "type": "post",
-          "status": "publish",
-          "postId": "",
-          "landingPage": "false",
-          "registerPostType": "example-value"
+          "vars": {
+                "title": "Hello World",
+                "content": "<p>Hello World</p>",
+                "date": "now",
+                "type": "post",
+                "status": "publish",
+                "postId": "",
+                "landingPage": false,
+                "registerPostType": "example-value"
+          }
     }
 ```
 
@@ -187,8 +151,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Add a WooCommerce product (will install WooCommerce if not present)
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `title` | string | ✅ Yes | The title of the product |
 | `description` | textarea | ✅ Yes | The description of the product |
 | `price` | string | ❌ No | Regular price (without currency symbol) |
@@ -202,12 +166,14 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "addProduct",
-          "title": "Sample Product",
-          "description": "<p>This is a great product!</p>",
-          "price": "19.99",
-          "salePrice": "15.99",
-          "sku": "PROD-001",
-          "status": "publish"
+          "vars": {
+                "title": "Sample Product",
+                "description": "<p>This is a great product!</p>",
+                "price": "19.99",
+                "salePrice": "15.99",
+                "sku": "PROD-001",
+                "status": "publish"
+          }
     }
 ```
 
@@ -219,8 +185,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Add a template (home, single, page, etc.) for a block theme.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `slug` | text | ✅ Yes | The template slug (e.g., "home", "single", "page", "archive") |
 | `theme` | text | ❌ No | The theme slug (empty = current active theme) |
 | `content` | textarea | ✅ Yes | The block markup content |
@@ -232,10 +198,12 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "addTemplate",
-          "slug": "home",
-          "theme": "",
-          "content": "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\",\"area\":\"header\"} /-->\n\n<!-- wp:post-content /-->\n\n<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\",\"area\":\"footer\"} /-->",
-          "title": "Home"
+          "vars": {
+                "slug": "home",
+                "theme": "",
+                "content": "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\",\"area\":\"header\"} /-->\n\n<!-- wp:post-content /-->\n\n<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\",\"area\":\"footer\"} /-->",
+                "title": "Home"
+          }
     }
 ```
 
@@ -247,8 +215,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Add a template part (header, footer, etc.) for a block theme.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `slug` | text | ✅ Yes | The template part slug (e.g., "header", "footer", "sidebar") |
 | `theme` | text | ❌ No | The theme slug (empty = current active theme) |
 | `content` | textarea | ✅ Yes | The block markup content |
@@ -261,11 +229,13 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "addTemplatePart",
-          "slug": "header",
-          "theme": "",
-          "content": "<!-- wp:site-title /-->",
-          "area": "header",
-          "title": "Header"
+          "vars": {
+                "slug": "header",
+                "theme": "",
+                "content": "<!-- wp:site-title /-->",
+                "area": "header",
+                "title": "Header"
+          }
     }
 ```
 
@@ -277,8 +247,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Creates a post with all block examples from registered blocks
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `blockNamespace` | text | ❌ No | Limit to a specific plugin slug (leave empty for all plugins) |
 | `postTitle` | text | ❌ No | Title of the post to create |
 | `limit` | text | ❌ No | Maximum number of blocks to include (leave empty for no limit) |
@@ -292,12 +262,14 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "blockExamples",
-          "blockNamespace": "",
-          "postTitle": "Block Examples",
-          "limit": "",
-          "postId": "1000",
-          "excludeCore": "false",
-          "landingPage": "true"
+          "vars": {
+                "blockNamespace": "",
+                "postTitle": "Block Examples",
+                "limit": "",
+                "postId": "1000",
+                "excludeCore": false,
+                "landingPage": true
+          }
     }
 ```
 
@@ -309,7 +281,7 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Generate a new blueprint after modifying the WordPress.
 
-*No parameters defined.*
+*No variables defined.*
 
 ### Example Usage
 
@@ -327,7 +299,7 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Record steps made and compile a new blueprint.
 
-*No parameters defined.*
+*No variables defined.*
 
 ### Example Usage
 
@@ -345,8 +317,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Useful to combine with a login step.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `colorScheme` | string | ✅ Yes | Color scheme |
 
 
@@ -355,31 +327,9 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "changeAdminColorScheme",
-          "colorScheme": "modern"
-    }
-```
-
-
----
-
-## [`cp`](steps/cp.md)
-
-**Type**: Custom Step
-**Description**: Copy a file or directory.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `fromPath` | string | ✅ Yes | Source path |
-| `toPath` | string | ✅ Yes | Destination path |
-
-
-### Example Usage
-
-```json
-    {
-          "step": "cp",
-          "fromPath": "/example/path",
-          "toPath": "/example/path"
+          "vars": {
+                "colorScheme": "modern"
+          }
     }
 ```
 
@@ -391,8 +341,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Create a new user.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `username` | string | ✅ Yes | Username |
 | `password` | string | ✅ Yes | Password |
 | `role` | text | ✅ Yes | Role |
@@ -406,12 +356,14 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "createUser",
-          "username": "user",
-          "password": "password",
-          "role": "administrator",
-          "display_name": "User",
-          "email": "",
-          "login": "true"
+          "vars": {
+                "username": "user",
+                "password": "password",
+                "role": "administrator",
+                "display_name": "User",
+                "email": "",
+                "login": true
+          }
     }
 ```
 
@@ -423,8 +375,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Register a custom post type.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `slug` | string | ✅ Yes | Post type key |
 | `name` | string | ✅ Yes | The user visible label |
 | `supports` | string | ❌ No | Features this post type supports |
@@ -436,10 +388,12 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "customPostType",
-          "slug": "book",
-          "name": "Books",
-          "supports": "['title', 'editor']",
-          "public": "true"
+          "vars": {
+                "slug": "book",
+                "name": "Books",
+                "supports": "['title', 'editor']",
+                "public": true
+          }
     }
 ```
 
@@ -451,8 +405,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Configure WordPress debug settings and optionally install Query Monitor plugin.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `wpDebug` | boolean | ❌ No | Enable WordPress debug mode |
 | `wpDebugDisplay` | boolean | ❌ No | Display errors in HTML output. Only applies when the above is enabled. |
 | `scriptDebug` | boolean | ❌ No | Use non-minified JavaScript and CSS files. |
@@ -464,10 +418,12 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "debug",
-          "wpDebug": false,
-          "wpDebugDisplay": false,
-          "scriptDebug": false,
-          "queryMonitor": false
+          "vars": {
+                "wpDebug": false,
+                "wpDebugDisplay": false,
+                "scriptDebug": false,
+                "queryMonitor": false
+          }
     }
 ```
 
@@ -479,8 +435,8 @@ This document provides detailed information about all available steps, including
 **Type**: Built-in Step
 **Description**: Define a wp-config PHP constant.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `name` | string | ✅ Yes | Constant name |
 | `value` | string | ✅ Yes | Constant value |
 
@@ -490,8 +446,10 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "defineWpConfigConst",
-          "name": "WP_DEBUG",
-          "value": "true"
+          "vars": {
+                "name": "WP_DEBUG",
+                "value": "true"
+          }
     }
 ```
 
@@ -503,7 +461,7 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Delete all posts, pages, attachments, revisions and menu items.
 
-*No parameters defined.*
+*No variables defined.*
 
 ### Example Usage
 
@@ -521,7 +479,7 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Disable the welcome guides in the site editor.
 
-*No parameters defined.*
+*No variables defined.*
 
 ### Example Usage
 
@@ -539,8 +497,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Execute a custom action.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `action` | text | ✅ Yes | Execute a custom action. |
 | `parameter1` | text | ❌ No | First parameter for the action. |
 | `parameter2` | text | ❌ No | Second parameter for the action. |
@@ -554,12 +512,14 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "doAction",
-          "action": "",
-          "parameter1": "",
-          "parameter2": "",
-          "parameter3": "",
-          "parameter4": "",
-          "parameter5": ""
+          "vars": {
+                "action": "",
+                "parameter1": "",
+                "parameter2": "",
+                "parameter3": "",
+                "parameter4": "",
+                "parameter5": ""
+          }
     }
 ```
 
@@ -571,7 +531,7 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Prevent automatic login (Playground logs in as admin by default).
 
-*No parameters defined.*
+*No variables defined.*
 
 ### Example Usage
 
@@ -589,7 +549,7 @@ This document provides detailed information about all available steps, including
 **Type**: Built-in Step
 **Description**: Enable WordPress Multisite functionality.
 
-*No parameters defined.*
+*No variables defined.*
 
 ### Example Usage
 
@@ -607,8 +567,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Enqueue custom CSS on frontend and/or admin.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `filename` | text | ❌ No | Filename for the CSS file (without .css extension) |
 | `css` | textarea | ✅ Yes | CSS code to enqueue |
 | `frontend` | boolean | ❌ No | Enqueue on frontend |
@@ -620,10 +580,12 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "enqueueCss",
-          "filename": "custom-styles",
-          "css": "",
-          "frontend": "true",
-          "wpAdmin": "true"
+          "vars": {
+                "filename": "custom-styles",
+                "css": "",
+                "frontend": true,
+                "wpAdmin": true
+          }
     }
 ```
 
@@ -635,8 +597,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Enqueue custom JavaScript on frontend and/or admin.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `filename` | text | ❌ No | Filename for the JavaScript file (without .js extension) |
 | `js` | textarea | ✅ Yes | JavaScript code to enqueue |
 | `frontend` | boolean | ❌ No | Enqueue on frontend |
@@ -648,10 +610,12 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "enqueueJs",
-          "filename": "custom-script",
-          "js": "",
-          "frontend": "true",
-          "wpAdmin": "true"
+          "vars": {
+                "filename": "custom-script",
+                "js": "",
+                "frontend": true,
+                "wpAdmin": true
+          }
     }
 ```
 
@@ -663,8 +627,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Fake a wp_remote_request() response.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `url` | url | ✅ Yes | URL like https://wordpress.org/ |
 | `response` | textarea | ❌ No | The data to return |
 
@@ -674,8 +638,10 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "fakeHttpResponse",
-          "url": "https://wordpress.org/",
-          "response": "hello world"
+          "vars": {
+                "url": "https://wordpress.org/",
+                "response": "hello world"
+          }
     }
 ```
 
@@ -687,8 +653,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `count` | number | ❌ No | Number of products to generate |
 | `orders` | number | ❌ No | Number of orders to generate (optional) |
 | `customers` | number | ❌ No | Number of customers to generate (optional) |
@@ -701,11 +667,13 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "generateProducts",
-          "count": "10",
-          "orders": "5",
-          "customers": "3",
-          "coupons": "2",
-          "categories": "3"
+          "vars": {
+                "count": 10,
+                "orders": 5,
+                "customers": 3,
+                "coupons": 2,
+                "categories": 3
+          }
     }
 ```
 
@@ -717,8 +685,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Provide useful additional info.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `repo` | string | ✅ Yes | The WXR file resides in this GitHub repository. |
 | `branch` | string | ❌ No | Which branch to use. |
 | `filename` | string | ✅ Yes | Which filename and path to use. |
@@ -730,10 +698,12 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "githubImportExportWxr",
-          "repo": "carstingaxion/gatherpress-demo-data",
-          "branch": "main",
-          "filename": "GatherPress-demo-data-2024.xml",
-          "targetUrl": "https://gatherpress.test"
+          "vars": {
+                "repo": "carstingaxion/gatherpress-demo-data",
+                "branch": "main",
+                "filename": "GatherPress-demo-data-2024.xml",
+                "targetUrl": "https://gatherpress.test"
+          }
     }
 ```
 
@@ -745,8 +715,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Install a plugin from a Github repository.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `url` | string | ✅ Yes | Github URL of the plugin. |
 | `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
 
@@ -756,8 +726,10 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "githubPlugin",
-          "url": "https://github.com/akirk/blueprint-recorder",
-          "prs": "false"
+          "vars": {
+                "url": "https://github.com/akirk/blueprint-recorder",
+                "prs": false
+          }
     }
 ```
 
@@ -769,8 +741,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Install a specific plugin release from a Github repository.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `repo` | string | ✅ Yes | The plugin resides in this GitHub repository. |
 | `release` | string | ✅ Yes | The release tag. |
 | `filename` | string | ✅ Yes | Which filename to use. |
@@ -781,9 +753,11 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "githubPluginRelease",
-          "repo": "ryanwelcher/interactivity-api-todomvc",
-          "release": "v0.1.3",
-          "filename": "to-do-mvc.zip"
+          "vars": {
+                "repo": "ryanwelcher/interactivity-api-todomvc",
+                "release": "v0.1.3",
+                "filename": "to-do-mvc.zip"
+          }
     }
 ```
 
@@ -795,8 +769,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Install a theme from a Github repository.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `url` | string | ✅ Yes | Github URL of the theme. |
 | `prs` | boolean | ❌ No | Add support for submitting Github Requests. |
 
@@ -806,8 +780,10 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "githubTheme",
-          "url": "https://github.com/richtabor/kanso",
-          "prs": "false"
+          "vars": {
+                "url": "https://github.com/richtabor/kanso",
+                "prs": false
+          }
     }
 ```
 
@@ -819,8 +795,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Add subscriptions to the Friends plugin.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `opml` | textarea | ✅ Yes | An OPML file, or a list of RSS feed URLs, one per line. |
 
 
@@ -829,7 +805,9 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "importFriendFeeds",
-          "opml": ""
+          "vars": {
+                "opml": ""
+          }
     }
 ```
 
@@ -841,8 +819,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Import a WordPress.com export file (WXR in a ZIP)
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of a WordPress.com export ZIP file |
 
 
@@ -851,7 +829,9 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "importWordPressComExport",
-          "url": ""
+          "vars": {
+                "url": ""
+          }
     }
 ```
 
@@ -863,8 +843,8 @@ This document provides detailed information about all available steps, including
 **Type**: Built-in Step
 **Description**: Import a WXR from a URL.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of a WXR file |
 
 
@@ -873,7 +853,9 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "importWxr",
-          "url": ""
+          "vars": {
+                "url": ""
+          }
     }
 ```
 
@@ -885,7 +867,7 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Install Adminer with auto login link.
 
-*No parameters defined.*
+*No variables defined.*
 
 ### Example Usage
 
@@ -903,7 +885,7 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Install phEditor. Password: admin
 
-*No parameters defined.*
+*No variables defined.*
 
 ### Example Usage
 
@@ -921,7 +903,7 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Provide phpLiteAdmin. Password: admin
 
-*No parameters defined.*
+*No variables defined.*
 
 ### Example Usage
 
@@ -939,8 +921,8 @@ This document provides detailed information about all available steps, including
 **Type**: Built-in Step
 **Description**: Install a plugin via WordPress.org or Github (branches, releases, PRs).
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of the plugin or WordPress.org slug. |
 | `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
 
@@ -950,8 +932,10 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "installPlugin",
-          "url": "hello-dolly",
-          "prs": "false"
+          "vars": {
+                "url": "hello-dolly",
+                "prs": false
+          }
     }
 ```
 
@@ -963,8 +947,8 @@ This document provides detailed information about all available steps, including
 **Type**: Built-in Step
 **Description**: Install a theme via WordPress.org or Github.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of the theme or WordPress.org slug |
 | `prs` | boolean | ❌ No | Add support for submitting Github Requests. |
 
@@ -974,8 +958,10 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "installTheme",
-          "url": "pendant",
-          "prs": "false"
+          "vars": {
+                "url": "pendant",
+                "prs": false
+          }
     }
 ```
 
@@ -987,8 +973,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Start Jetpack in Offline mode.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `blocks` | boolean | ❌ No | Activate the Jetpack Blocks module. |
 | `subscriptions` | boolean | ❌ No | Activate the Jetpack Subscriptions module. |
 
@@ -998,8 +984,10 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "jetpackOfflineMode",
-          "blocks": "true",
-          "subscriptions": "true"
+          "vars": {
+                "blocks": true,
+                "subscriptions": true
+          }
     }
 ```
 
@@ -1011,8 +999,8 @@ This document provides detailed information about all available steps, including
 **Type**: Built-in Step
 **Description**: Login to the site.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `username` | string | ✅ Yes | Username |
 | `password` | string | ✅ Yes | Password |
 | `landingPage` | boolean | ❌ No | Change landing page to wp-admin |
@@ -1023,31 +1011,11 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "login",
-          "username": "admin",
-          "password": "password",
-          "landingPage": "false"
-    }
-```
-
-
----
-
-## [`mkdir`](steps/mkdir.md)
-
-**Type**: Custom Step
-**Description**: Create a directory.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `path` | string | ✅ Yes | Path to the directory to create |
-
-
-### Example Usage
-
-```json
-    {
-          "step": "mkdir",
-          "path": "/example/path"
+          "vars": {
+                "username": "admin",
+                "password": "password",
+                "landingPage": false
+          }
     }
 ```
 
@@ -1059,8 +1027,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Add code for a plugin.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `name` | text | ❌ No | Name for your mu-plugin file |
 | `code` | textarea | ✅ Yes | Code for your mu-plugin |
 
@@ -1070,32 +1038,10 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "muPlugin",
-          "name": "my-plugin",
-          "code": ""
-    }
-```
-
-
----
-
-## [`mv`](steps/mv.md)
-
-**Type**: Custom Step
-**Description**: Move a file or directory.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `fromPath` | string | ✅ Yes | Source path |
-| `toPath` | string | ✅ Yes | Destination path |
-
-
-### Example Usage
-
-```json
-    {
-          "step": "mv",
-          "fromPath": "/example/path",
-          "toPath": "/example/path"
+          "vars": {
+                "name": "my-plugin",
+                "code": ""
+          }
     }
 ```
 
@@ -1107,8 +1053,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Remove widgets from the wp-admin dashboard.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `welcome` | boolean | ❌ No | Remove Welcome Panel |
 | `glance` | boolean | ❌ No | Remove At a Glance |
 | `events` | boolean | ❌ No | Remove Upcoming Events |
@@ -1122,12 +1068,14 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "removeDashboardWidgets",
-          "welcome": "true",
-          "glance": "true",
-          "events": "true",
-          "quickpress": "true",
-          "activity": "true",
-          "sitehealth": "true"
+          "vars": {
+                "welcome": true,
+                "glance": true,
+                "events": true,
+                "quickpress": true,
+                "activity": true,
+                "sitehealth": true
+          }
     }
 ```
 
@@ -1139,8 +1087,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Change the default "Uncategorized".
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `categoryName` | string | ✅ Yes | Change the default category name |
 | `categorySlug` | string | ✅ Yes | Change the default category slug |
 
@@ -1150,52 +1098,10 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "renameDefaultCategory",
-          "categoryName": "",
-          "categorySlug": ""
-    }
-```
-
-
----
-
-## [`rm`](steps/rm.md)
-
-**Type**: Custom Step
-**Description**: Remove a file.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `path` | string | ✅ Yes | Path to the file to remove |
-
-
-### Example Usage
-
-```json
-    {
-          "step": "rm",
-          "path": "/example/path"
-    }
-```
-
-
----
-
-## [`rmdir`](steps/rmdir.md)
-
-**Type**: Custom Step
-**Description**: Remove a directory.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `path` | string | ✅ Yes | Path to the directory to remove |
-
-
-### Example Usage
-
-```json
-    {
-          "step": "rmdir",
-          "path": "/example/path"
+          "vars": {
+                "categoryName": "",
+                "categorySlug": ""
+          }
     }
 ```
 
@@ -1207,8 +1113,8 @@ This document provides detailed information about all available steps, including
 **Type**: Built-in Step
 **Description**: Run code in the context of WordPress.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `code` | textarea | ✅ Yes | The code to run |
 
 
@@ -1217,29 +1123,9 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "runPHP",
-          "code": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
-    }
-```
-
-
----
-
-## [`runSQL`](steps/runSQL.md)
-
-**Type**: Custom Step
-**Description**: Execute SQL queries.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `sql` | textarea | ✅ Yes | SQL query or file reference to execute |
-
-
-### Example Usage
-
-```json
-    {
-          "step": "runSQL",
-          "sql": "example-value"
+          "vars": {
+                "code": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
+          }
     }
 ```
 
@@ -1251,8 +1137,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Run a wp-cli command.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `command` | string | ✅ Yes | The wp-cli command to run |
 
 
@@ -1261,7 +1147,9 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "runWpCliCommand",
-          "command": ""
+          "vars": {
+                "command": ""
+          }
     }
 ```
 
@@ -1273,7 +1161,7 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Inserts sample pages to the site.
 
-*No parameters defined.*
+*No variables defined.*
 
 ### Example Usage
 
@@ -1291,8 +1179,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Set the landing page.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `landingPage` | string | ✅ Yes | The relative URL for the landing page |
 
 
@@ -1301,7 +1189,9 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "setLandingPage",
-          "landingPage": "/"
+          "vars": {
+                "landingPage": "/"
+          }
     }
 ```
 
@@ -1313,8 +1203,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Set the WordPress site language.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `language` | string | ✅ Yes | A valid WordPress language slug |
 
 
@@ -1323,7 +1213,9 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "setLanguage",
-          "language": "de"
+          "vars": {
+                "language": "de"
+          }
     }
 ```
 
@@ -1335,8 +1227,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Set the site name and tagline.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `sitename` | string | ✅ Yes | Name of the site |
 | `tagline` | string | ✅ Yes | What the site is about |
 
@@ -1346,8 +1238,10 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "setSiteName",
-          "sitename": "Step Library Demo",
-          "tagline": "Trying out WordPress Playground."
+          "vars": {
+                "sitename": "Step Library Demo",
+                "tagline": "Trying out WordPress Playground."
+          }
     }
 ```
 
@@ -1359,8 +1253,8 @@ This document provides detailed information about all available steps, including
 **Type**: Built-in Step
 **Description**: Set a site option.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `name` | string | ❌ No | Option name |
 | `value` | string | ❌ No | Option value |
 
@@ -1370,8 +1264,10 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "setSiteOption",
-          "name": "",
-          "value": ""
+          "vars": {
+                "name": "",
+                "value": ""
+          }
     }
 ```
 
@@ -1383,7 +1279,7 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Set the homepage for the twentytwentyfour theme.
 
-*No parameters defined.*
+*No variables defined.*
 
 ### Example Usage
 
@@ -1401,8 +1297,8 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: Show an admin notice in the dashboard.
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `text` | string | ✅ Yes | The notice to be displayed |
 | `type` | select | ❌ No | The type of notice |
 | `dismissible` | boolean | ❌ No | Allow to dismiss |
@@ -1413,9 +1309,11 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "showAdminNotice",
-          "text": "Welcome to WordPress Playground!",
-          "type": "success",
-          "dismissible": "true"
+          "vars": {
+                "text": "Welcome to WordPress Playground!",
+                "type": "success",
+                "dismissible": true
+          }
     }
 ```
 
@@ -1427,63 +1325,13 @@ This document provides detailed information about all available steps, including
 **Type**: Custom Step
 **Description**: When running WooCommerce, don't show the wizard.
 
-*No parameters defined.*
+*No variables defined.*
 
 ### Example Usage
 
 ```json
     {
           "step": "skipWooCommerceWizard"
-    }
-```
-
-
----
-
-## [`unzip`](steps/unzip.md)
-
-**Type**: Custom Step
-**Description**: Extract a zip file.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `zipFile` | string | ❌ No | The zip file resource to extract |
-| `zipPath` | string | ❌ No | Path to an existing zip file in the filesystem |
-| `extractToPath` | string | ✅ Yes | Path where the zip contents should be extracted |
-
-
-### Example Usage
-
-```json
-    {
-          "step": "unzip",
-          "zipFile": "example-value",
-          "zipPath": "/example/path",
-          "extractToPath": "/example/path"
-    }
-```
-
-
----
-
-## [`writeFile`](steps/writeFile.md)
-
-**Type**: Custom Step
-**Description**: Write content to a file.
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `path` | string | ✅ Yes | Path to the file to write |
-| `data` | textarea | ✅ Yes | Content to write to the file |
-
-
-### Example Usage
-
-```json
-    {
-          "step": "writeFile",
-          "path": "/example/path",
-          "data": "example-value"
     }
 ```
 

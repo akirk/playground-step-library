@@ -9,10 +9,10 @@ Add a post with title, content, type, status, and date.
 
 **Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `title` | string | ✅ Yes | The title of the post |
 | `content` | textarea | ✅ Yes | The HTML content of the post |
 | `date` | string | ❌ No | The date of the post (optional) |
@@ -29,30 +29,29 @@ Add a post with title, content, type, status, and date.
 ```json
     {
           "step": "addPost",
-          "title": "Hello World",
-          "content": "<p>Hello World</p>",
-          "date": "now",
-          "type": "post",
-          "status": "publish",
-          "postId": "",
-          "landingPage": "false",
-          "registerPostType": "example-value"
+          "vars": {
+                "title": "Hello World",
+                "content": "<p>Hello World</p>",
+                "type": "post"
+          }
     }
 ```
 
 ### Advanced Usage
 ```json
 {
-  "step": "addPost",
-  "title": "Hello World",
-  "content": "<p>Hello World</p>",
-  "date": "2024-01-01 00:00:00",
-  "type": "page",
-  "status": "draft",
-  "postId": "1000",
-  "landingPage": "true",
-  "registerPostType": "example-value"
-}
+          "step": "addPost",
+          "vars": {
+                "title": "Hello World",
+                "content": "<p>Hello World</p>",
+                "date": "2024-01-01 00:00:00",
+                "type": "page",
+                "status": "draft",
+                "postId": "1000",
+                "landingPage": true,
+                "registerPostType": "example-value"
+          }
+    }
 ```
 
 ## Compiled Output
@@ -66,7 +65,7 @@ Add a post with title, content, type, status, and date.
       "step": "runPHP",
       "code": "<?php require_once '/wordpress/wp-load.php';\n$page_args = array(\n'post_type...",
       "progress": {
-        "caption": "addPost: Hello World"
+        "caption": "addPost:"
       }
     }
   ]
@@ -82,9 +81,8 @@ Add a post with title, content, type, status, and date.
     {
       "type": "posts",
       "source": {
-        "post_title": "Hello World",
-        "post_content": "<p>Hello World</p>",
-        "post_type": "post",
+        "post_title": "",
+        "post_content": "",
         "post_status": "publish"
       }
     }
@@ -102,14 +100,16 @@ const blueprint = {
   steps: [
         {
           "step": "addPost",
-          "title": "Hello World",
-          "content": "<p>Hello World</p>",
-          "date": "now",
-          "type": "post",
-          "status": "publish",
-          "postId": "",
-          "landingPage": "false",
-          "registerPostType": "example-value"
+          "vars": {
+                "title": "Hello World",
+                "content": "<p>Hello World</p>",
+                "date": "now",
+                "type": "post",
+                "status": "publish",
+                "postId": "",
+                "landingPage": false,
+                "registerPostType": "example-value"
+          }
     }
   ]
 };

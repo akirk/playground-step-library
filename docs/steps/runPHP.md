@@ -9,10 +9,10 @@ Run code in the context of WordPress.
 
 **Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `code` | textarea | ✅ Yes | The code to run |
 
 
@@ -22,7 +22,9 @@ Run code in the context of WordPress.
 ```json
     {
           "step": "runPHP",
-          "code": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
+          "vars": {
+                "code": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
+          }
     }
 ```
 
@@ -48,11 +50,7 @@ Run code in the context of WordPress.
   "version": 2,
   "additionalStepsAfterExecution": [
     {
-      "step": "runPHP",
-      "code": {
-        "filename": "code.php",
-        "content": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
-      }
+      "step": "runPHP"
     }
   ]
 }
@@ -68,7 +66,9 @@ const blueprint = {
   steps: [
         {
           "step": "runPHP",
-          "code": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
+          "vars": {
+                "code": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
+          }
     }
   ]
 };

@@ -9,10 +9,10 @@ Creates a post with all block examples from registered blocks
 
 **Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `blockNamespace` | text | ❌ No | Limit to a specific plugin slug (leave empty for all plugins) |
 | `postTitle` | text | ❌ No | Title of the post to create |
 | `limit` | text | ❌ No | Maximum number of blocks to include (leave empty for no limit) |
@@ -26,27 +26,8 @@ Creates a post with all block examples from registered blocks
 ### Basic Usage
 ```json
     {
-          "step": "blockExamples",
-          "blockNamespace": "",
-          "postTitle": "Block Examples",
-          "limit": "",
-          "postId": "1000",
-          "excludeCore": "false",
-          "landingPage": "true"
+          "step": "blockExamples"
     }
-```
-
-### Advanced Usage
-```json
-{
-  "step": "blockExamples",
-  "blockNamespace": "gutenberg",
-  "postTitle": "Plugin Blocks Showcase",
-  "limit": "10",
-  "postId": "2000",
-  "excludeCore": "true",
-  "landingPage": "false"
-}
 ```
 
 ## Compiled Output
@@ -102,12 +83,14 @@ const blueprint = {
   steps: [
         {
           "step": "blockExamples",
-          "blockNamespace": "",
-          "postTitle": "Block Examples",
-          "limit": "",
-          "postId": "1000",
-          "excludeCore": "false",
-          "landingPage": "true"
+          "vars": {
+                "blockNamespace": "",
+                "postTitle": "Block Examples",
+                "limit": "",
+                "postId": "1000",
+                "excludeCore": false,
+                "landingPage": true
+          }
     }
   ]
 };

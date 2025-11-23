@@ -7,12 +7,12 @@ Define a wp-config PHP constant.
 ## Type
 🔧 **Built-in Step**
 
-**Compiles to:** [`defineWpConfigConsts`](../builtin-step-usage.md#definewpconfigconsts)
+**Compiles to:** [`defineWpConfigConst`](../builtin-step-usage.md#definewpconfigconst)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `name` | string | ✅ Yes | Constant name |
 | `value` | string | ✅ Yes | Constant value |
 
@@ -23,8 +23,10 @@ Define a wp-config PHP constant.
 ```json
     {
           "step": "defineWpConfigConst",
-          "name": "WP_DEBUG",
-          "value": "true"
+          "vars": {
+                "name": "WP_DEBUG",
+                "value": "true"
+          }
     }
 ```
 
@@ -36,10 +38,9 @@ Define a wp-config PHP constant.
 {
   "steps": [
     {
-      "step": "defineWpConfigConsts",
-      "consts": {
-        "WP_DEBUG": true
-      }
+      "step": "defineWpConfigConst",
+      "name": "WP_DEBUG",
+      "value": "true"
     }
   ]
 }
@@ -49,10 +50,7 @@ Define a wp-config PHP constant.
 
 ```json
 {
-  "version": 2,
-  "constants": {
-    "WP_DEBUG": true
-  }
+  "version": 2
 }
 ```
 
@@ -66,8 +64,10 @@ const blueprint = {
   steps: [
         {
           "step": "defineWpConfigConst",
-          "name": "WP_DEBUG",
-          "value": "true"
+          "vars": {
+                "name": "WP_DEBUG",
+                "value": "true"
+          }
     }
   ]
 };

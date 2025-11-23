@@ -8,10 +8,10 @@ Enqueue custom CSS on frontend and/or admin.
 ⚡ **Custom Step**
 
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `filename` | text | ❌ No | Filename for the CSS file (without .css extension) |
 | `css` | textarea | ✅ Yes | CSS code to enqueue |
 | `frontend` | boolean | ❌ No | Enqueue on frontend |
@@ -24,22 +24,23 @@ Enqueue custom CSS on frontend and/or admin.
 ```json
     {
           "step": "enqueueCss",
-          "filename": "custom-styles",
-          "css": "",
-          "frontend": "true",
-          "wpAdmin": "true"
+          "vars": {
+                "css": ""
+          }
     }
 ```
 
 ### Advanced Usage
 ```json
 {
-  "step": "enqueueCss",
-  "filename": "theme-overrides",
-  "css": "",
-  "frontend": "true",
-  "wpAdmin": "true"
-}
+          "step": "enqueueCss",
+          "vars": {
+                "filename": "theme-overrides",
+                "css": "",
+                "frontend": true,
+                "wpAdmin": true
+          }
+    }
 ```
 
 
@@ -54,10 +55,12 @@ const blueprint = {
   steps: [
         {
           "step": "enqueueCss",
-          "filename": "custom-styles",
-          "css": "",
-          "frontend": "true",
-          "wpAdmin": "true"
+          "vars": {
+                "filename": "custom-styles",
+                "css": "",
+                "frontend": true,
+                "wpAdmin": true
+          }
     }
   ]
 };

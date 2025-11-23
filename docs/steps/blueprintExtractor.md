@@ -9,9 +9,9 @@ Generate a new blueprint after modifying the WordPress.
 
 **Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin)
 
-## Parameters
+## Variables
 
-*No parameters defined.*
+*No variables defined.*
 
 ## Examples
 

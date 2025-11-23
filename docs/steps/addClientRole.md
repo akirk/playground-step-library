@@ -9,10 +9,10 @@ Adds a role for clients with additional capabilities than editors, but not quite
 
 **Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `displayName` | string | ✅ Yes | Display name for the client role |
 
 
@@ -22,7 +22,9 @@ Adds a role for clients with additional capabilities than editors, but not quite
 ```json
     {
           "step": "addClientRole",
-          "displayName": "Client"
+          "vars": {
+                "displayName": "Client"
+          }
     }
 ```
 
@@ -72,7 +74,9 @@ const blueprint = {
   steps: [
         {
           "step": "addClientRole",
-          "displayName": "Client"
+          "vars": {
+                "displayName": "Client"
+          }
     }
   ]
 };

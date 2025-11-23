@@ -8,10 +8,10 @@ Execute a custom action.
 ⚡ **Custom Step**
 
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `action` | text | ✅ Yes | Execute a custom action. |
 | `parameter1` | text | ❌ No | First parameter for the action. |
 | `parameter2` | text | ❌ No | Second parameter for the action. |
@@ -26,26 +26,25 @@ Execute a custom action.
 ```json
     {
           "step": "doAction",
-          "action": "",
-          "parameter1": "",
-          "parameter2": "",
-          "parameter3": "",
-          "parameter4": "",
-          "parameter5": ""
+          "vars": {
+                "action": ""
+          }
     }
 ```
 
 ### Advanced Usage
 ```json
 {
-  "step": "doAction",
-  "action": "",
-  "parameter1": "",
-  "parameter2": "",
-  "parameter3": "",
-  "parameter4": "",
-  "parameter5": ""
-}
+          "step": "doAction",
+          "vars": {
+                "action": "",
+                "parameter1": "",
+                "parameter2": "",
+                "parameter3": "",
+                "parameter4": "",
+                "parameter5": ""
+          }
+    }
 ```
 
 
@@ -60,12 +59,14 @@ const blueprint = {
   steps: [
         {
           "step": "doAction",
-          "action": "",
-          "parameter1": "",
-          "parameter2": "",
-          "parameter3": "",
-          "parameter4": "",
-          "parameter5": ""
+          "vars": {
+                "action": "",
+                "parameter1": "",
+                "parameter2": "",
+                "parameter3": "",
+                "parameter4": "",
+                "parameter5": ""
+          }
     }
   ]
 };

@@ -9,10 +9,10 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
 
 **Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of the plugin or WordPress.org slug. |
 | `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
 
@@ -23,8 +23,20 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
 ```json
     {
           "step": "installPlugin",
-          "url": "hello-dolly",
-          "prs": "false"
+          "vars": {
+                "url": "hello-dolly"
+          }
+    }
+```
+
+### Advanced Usage
+```json
+{
+          "step": "installPlugin",
+          "vars": {
+                "url": "https://wordpress.org/plugins/friends",
+                "prs": true
+          }
     }
 ```
 
@@ -37,13 +49,8 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
   "steps": [
     {
       "step": "installPlugin",
-      "pluginData": {
-        "resource": "wordpress.org/plugins",
-        "slug": "hello-dolly"
-      },
-      "options": {
-        "activate": true
-      }
+      "url": "hello-dolly",
+      "prs": "false"
     }
   ]
 }
@@ -55,7 +62,7 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
 {
   "version": 2,
   "plugins": [
-    "hello-dolly"
+    null
   ]
 }
 ```
@@ -70,8 +77,10 @@ const blueprint = {
   steps: [
         {
           "step": "installPlugin",
-          "url": "hello-dolly",
-          "prs": "false"
+          "vars": {
+                "url": "hello-dolly",
+                "prs": false
+          }
     }
   ]
 };

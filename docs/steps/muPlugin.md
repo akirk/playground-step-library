@@ -9,10 +9,10 @@ Add code for a plugin.
 
 **Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `name` | text | ❌ No | Name for your mu-plugin file |
 | `code` | textarea | ✅ Yes | Code for your mu-plugin |
 
@@ -23,8 +23,20 @@ Add code for a plugin.
 ```json
     {
           "step": "muPlugin",
-          "name": "my-plugin",
-          "code": ""
+          "vars": {
+                "code": ""
+          }
+    }
+```
+
+### Advanced Usage
+```json
+{
+          "step": "muPlugin",
+          "vars": {
+                "name": "custom-hooks",
+                "code": ""
+          }
     }
 ```
 
@@ -41,7 +53,7 @@ Add code for a plugin.
     },
     {
       "step": "writeFile",
-      "path": "/wordpress/wp-content/mu-plugins/my-plugin-0.php",
+      "path": "/wordpress/wp-content/mu-plugins/mu-plugin-0.php",
       "data": "<?php"
     }
   ]
@@ -56,7 +68,7 @@ Add code for a plugin.
   "muPlugins": [
     {
       "file": {
-        "filename": "my-plugin.php",
+        "filename": "mu-plugin.php",
         "content": "<?php "
       }
     }
@@ -74,8 +86,10 @@ const blueprint = {
   steps: [
         {
           "step": "muPlugin",
-          "name": "my-plugin",
-          "code": ""
+          "vars": {
+                "name": "my-plugin",
+                "code": ""
+          }
     }
   ]
 };

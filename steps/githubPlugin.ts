@@ -8,11 +8,11 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 		toV1() {
 			// Parse PR URLs
 			const prPattern = /^(?:https:\/\/)?(?:github\.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)\/pull\/(?<prNumber>\d+)/;
-			const prTest = prPattern.exec(step.vars?.url);
+			const prTest = (step.vars?.url || '').match(prPattern);
 
 			// Parse regular GitHub URLs (branches, etc.)
 			const regexPattern = /^(?:https:\/\/)?(?:github\.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branchAndDir>.+))?$/;
-			const urlTest = regexPattern.exec(step.vars?.url);
+			const urlTest = regexPattern.exec(step.vars?.url || '');
 			if (!urlTest && !prTest) {
 				return { steps: [] };
 			}

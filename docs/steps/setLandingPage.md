@@ -8,10 +8,10 @@ Set the landing page.
 ⚡ **Custom Step**
 
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `landingPage` | string | ✅ Yes | The relative URL for the landing page |
 
 
@@ -21,7 +21,9 @@ Set the landing page.
 ```json
     {
           "step": "setLandingPage",
-          "landingPage": "/"
+          "vars": {
+                "landingPage": "/"
+          }
     }
 ```
 
@@ -37,7 +39,9 @@ const blueprint = {
   steps: [
         {
           "step": "setLandingPage",
-          "landingPage": "/"
+          "vars": {
+                "landingPage": "/"
+          }
     }
   ]
 };

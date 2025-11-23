@@ -8,10 +8,10 @@ Enqueue custom JavaScript on frontend and/or admin.
 ⚡ **Custom Step**
 
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `filename` | text | ❌ No | Filename for the JavaScript file (without .js extension) |
 | `js` | textarea | ✅ Yes | JavaScript code to enqueue |
 | `frontend` | boolean | ❌ No | Enqueue on frontend |
@@ -24,22 +24,23 @@ Enqueue custom JavaScript on frontend and/or admin.
 ```json
     {
           "step": "enqueueJs",
-          "filename": "custom-script",
-          "js": "",
-          "frontend": "true",
-          "wpAdmin": "true"
+          "vars": {
+                "js": ""
+          }
     }
 ```
 
 ### Advanced Usage
 ```json
 {
-  "step": "enqueueJs",
-  "filename": "interactive-features",
-  "js": "",
-  "frontend": "true",
-  "wpAdmin": "true"
-}
+          "step": "enqueueJs",
+          "vars": {
+                "filename": "interactive-features",
+                "js": "",
+                "frontend": true,
+                "wpAdmin": true
+          }
+    }
 ```
 
 
@@ -54,10 +55,12 @@ const blueprint = {
   steps: [
         {
           "step": "enqueueJs",
-          "filename": "custom-script",
-          "js": "",
-          "frontend": "true",
-          "wpAdmin": "true"
+          "vars": {
+                "filename": "custom-script",
+                "js": "",
+                "frontend": true,
+                "wpAdmin": true
+          }
     }
   ]
 };

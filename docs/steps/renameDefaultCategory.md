@@ -8,10 +8,10 @@ Change the default "Uncategorized".
 ⚡ **Custom Step**
 
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `categoryName` | string | ✅ Yes | Change the default category name |
 | `categorySlug` | string | ✅ Yes | Change the default category slug |
 
@@ -22,8 +22,10 @@ Change the default "Uncategorized".
 ```json
     {
           "step": "renameDefaultCategory",
-          "categoryName": "",
-          "categorySlug": ""
+          "vars": {
+                "categoryName": "",
+                "categorySlug": ""
+          }
     }
 ```
 
@@ -39,8 +41,10 @@ const blueprint = {
   steps: [
         {
           "step": "renameDefaultCategory",
-          "categoryName": "",
-          "categorySlug": ""
+          "vars": {
+                "categoryName": "",
+                "categorySlug": ""
+          }
     }
   ]
 };

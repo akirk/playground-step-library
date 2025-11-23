@@ -76,7 +76,7 @@ if ( $user ) {
 			}
 
 			// Login if requested - use applicationOptions for v2
-			if (step.vars?.login) {
+			if (step.vars?.login && password) {
 				const isDefault = username === 'admin' && password === 'password';
 				result.applicationOptions = {
 					'wordpress-playground': {

@@ -219,8 +219,10 @@ const blueprint = {
   steps: [
     {
       step: 'setSiteName',
-      sitename: 'My WordPress Site',
-      tagline: 'Powered by Playground'
+      vars: {
+        sitename: 'My WordPress Site',
+        tagline: 'Powered by Playground'
+      }
     }
   ]
 };
@@ -323,7 +325,7 @@ ${stepInfo.description || 'No description available.'}
 ${stepInfo.builtin ? '🔧 **Built-in Step**' : '⚡ **Custom Step**'}
 ${compilationInfo.compilesToSteps}
 
-## Parameters
+## Variables
 
 ${this.generateParametersTable(stepInfo.vars || [])}
 
@@ -505,17 +507,17 @@ ${this.generateJsonExample(stepName, stepInfo.vars || [])}
      */
     generateParametersTable(vars) {
         if (!vars || vars.length === 0) {
-            return '*No parameters defined.*';
+            return '*No variables defined.*';
         }
 
         // Filter out deprecated variables
         const activeVars = vars.filter(varDef => !varDef.deprecated);
 
         if (activeVars.length === 0) {
-            return '*No parameters defined.*';
+            return '*No variables defined.*';
         }
 
-        let table = `| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n`;
+        let table = `| Variable | Type | Required | Description |\n|----------|------|----------|-------------|\n`;
 
         activeVars.forEach(varDef => {
             const name = varDef.name || 'unknown';
@@ -530,23 +532,49 @@ ${this.generateJsonExample(stepName, stepInfo.vars || [])}
     }
 
     /**
-     * Generate JSON example for a step
+     * Convert a sample value to the appropriate type
      */
-    generateJsonExample(stepName, vars) {
+    convertSampleToType(sample, type) {
+        if (type === 'boolean') {
+            return sample === 'true' || sample === true;
+        }
+        if (type === 'number') {
+            return Number(sample);
+        }
+        return sample;
+    }
+
+    /**
+     * Generate JSON example for a step
+     * @param {string} stepName - The step name
+     * @param {Array} vars - Variable definitions
+     * @param {Object} options - Options: { requiredOnly: boolean, sampleIndex: number }
+     */
+    generateJsonExample(stepName, vars, options = {}) {
+        const { requiredOnly = false, sampleIndex = 0 } = options;
         const example = { step: stepName };
 
         if (vars && vars.length > 0) {
             // Filter out deprecated variables
-            const activeVars = vars.filter(varDef => !varDef.deprecated);
-            
-            activeVars.forEach(varDef => {
-                if (varDef.samples && varDef.samples.length > 0) {
-                    example[varDef.name] = varDef.samples[0];
-                } else {
-                    // Generate sensible defaults based on type and name
-                    example[varDef.name] = this.generateDefaultValue(varDef);
-                }
-            });
+            let activeVars = vars.filter(varDef => !varDef.deprecated);
+
+            // Filter to required only if specified
+            if (requiredOnly) {
+                activeVars = activeVars.filter(varDef => varDef.required);
+            }
+
+            if (activeVars.length > 0) {
+                example.vars = {};
+                activeVars.forEach(varDef => {
+                    const idx = Math.min(sampleIndex, (varDef.samples?.length || 1) - 1);
+                    if (varDef.samples && varDef.samples.length > 0) {
+                        example.vars[varDef.name] = this.convertSampleToType(varDef.samples[idx], varDef.type);
+                    } else {
+                        // Generate sensible defaults based on type and name
+                        example.vars[varDef.name] = this.generateDefaultValue(varDef);
+                    }
+                });
+            }
         }
 
         return JSON.stringify(example, null, 6).replace(/^/gm, '    ');
@@ -616,30 +644,21 @@ ${this.generateJsonExample(stepName, stepInfo.vars || [])}
      */
     generateStepExamples(stepName, stepInfo) {
         const examples = [];
+        const activeVars = stepInfo.vars ? stepInfo.vars.filter(varDef => !varDef.deprecated) : [];
+        const requiredVars = activeVars.filter(varDef => varDef.required);
+        const optionalVars = activeVars.filter(varDef => !varDef.required);
 
-        // Basic example
+        // Basic example - required variables only
         examples.push(`### Basic Usage
 \`\`\`json
-${this.generateJsonExample(stepName, stepInfo.vars || [])}
+${this.generateJsonExample(stepName, stepInfo.vars || [], { requiredOnly: true })}
 \`\`\``);
 
-        // Advanced example if step has multiple parameters
-        const activeVars = stepInfo.vars ? stepInfo.vars.filter(varDef => !varDef.deprecated) : [];
-        if (activeVars.length > 3) {
-            const advancedExample = { step: stepName };
-            activeVars.forEach(varDef => {
-                if (varDef.samples && varDef.samples.length > 1) {
-                    advancedExample[varDef.name] = varDef.samples[1];
-                } else if (varDef.samples && varDef.samples.length > 0) {
-                    advancedExample[varDef.name] = varDef.samples[0];
-                } else {
-                    advancedExample[varDef.name] = this.generateDefaultValue(varDef);
-                }
-            });
-
+        // Advanced example - all variables (only if there are optional ones)
+        if (optionalVars.length > 0 && requiredVars.length > 0) {
             examples.push(`### Advanced Usage
 \`\`\`json
-${JSON.stringify(advancedExample, null, 2)}
+${this.generateJsonExample(stepName, stepInfo.vars || [], { requiredOnly: false, sampleIndex: 1 }).trim()}
 \`\`\``);
         }
 

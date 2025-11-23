@@ -9,9 +9,9 @@ Install phEditor. Password: admin
 
 **Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile), [`unzip`](../builtin-step-usage.md#unzip)
 
-## Parameters
+## Variables
 
-*No parameters defined.*
+*No variables defined.*
 
 ## Examples
 

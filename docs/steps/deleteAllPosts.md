@@ -9,9 +9,9 @@ Delete all posts, pages, attachments, revisions and menu items.
 
 **Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp)
 
-## Parameters
+## Variables
 
-*No parameters defined.*
+*No variables defined.*
 
 ## Examples
 

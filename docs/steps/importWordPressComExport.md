@@ -8,10 +8,10 @@ Import a WordPress.com export file (WXR in a ZIP)
 ⚡ **Custom Step**
 
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of a WordPress.com export ZIP file |
 
 
@@ -21,7 +21,9 @@ Import a WordPress.com export file (WXR in a ZIP)
 ```json
     {
           "step": "importWordPressComExport",
-          "url": ""
+          "vars": {
+                "url": ""
+          }
     }
 ```
 
@@ -37,7 +39,9 @@ const blueprint = {
   steps: [
         {
           "step": "importWordPressComExport",
-          "url": ""
+          "vars": {
+                "url": ""
+          }
     }
   ]
 };

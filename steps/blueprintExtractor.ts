@@ -7,7 +7,6 @@ export const blueprintExtractor: StepFunction<BlueprintExtractorStep> = (step: B
 		stepIndex: step.stepIndex,
 		vars: {
 			url: "https://github.com/akirk/blueprint-extractor",
-			branch: "main",
 		}
 	});
 };

@@ -9,10 +9,10 @@ Remove widgets from the wp-admin dashboard.
 
 **Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `welcome` | boolean | ❌ No | Remove Welcome Panel |
 | `glance` | boolean | ❌ No | Remove At a Glance |
 | `events` | boolean | ❌ No | Remove Upcoming Events |
@@ -26,27 +26,8 @@ Remove widgets from the wp-admin dashboard.
 ### Basic Usage
 ```json
     {
-          "step": "removeDashboardWidgets",
-          "welcome": "true",
-          "glance": "true",
-          "events": "true",
-          "quickpress": "true",
-          "activity": "true",
-          "sitehealth": "true"
+          "step": "removeDashboardWidgets"
     }
-```
-
-### Advanced Usage
-```json
-{
-  "step": "removeDashboardWidgets",
-  "welcome": "true",
-  "glance": "true",
-  "events": "true",
-  "quickpress": "true",
-  "activity": "true",
-  "sitehealth": "true"
-}
 ```
 
 ## Compiled Output
@@ -95,12 +76,14 @@ const blueprint = {
   steps: [
         {
           "step": "removeDashboardWidgets",
-          "welcome": "true",
-          "glance": "true",
-          "events": "true",
-          "quickpress": "true",
-          "activity": "true",
-          "sitehealth": "true"
+          "vars": {
+                "welcome": true,
+                "glance": true,
+                "events": true,
+                "quickpress": true,
+                "activity": true,
+                "sitehealth": true
+          }
     }
   ]
 };

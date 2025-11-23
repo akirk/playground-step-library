@@ -7,12 +7,11 @@ Install a theme from a Github repository.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** [`installTheme`](../builtin-step-usage.md#installtheme)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `url` | string | ✅ Yes | Github URL of the theme. |
 | `prs` | boolean | ❌ No | Add support for submitting Github Requests. |
 
@@ -23,68 +22,24 @@ Install a theme from a Github repository.
 ```json
     {
           "step": "githubTheme",
-          "url": "https://github.com/richtabor/kanso",
-          "prs": "false"
+          "vars": {
+                "url": "https://github.com/richtabor/kanso"
+          }
     }
 ```
 
-## Compiled Output
-
-### V1 (Imperative)
-
+### Advanced Usage
 ```json
 {
-  "steps": [
-    {
-      "step": "installTheme",
-      "themeData": {
-        "resource": "git:directory",
-        "url": "https://github.com/richtabor/kanso",
-        "ref": "HEAD"
-      },
-      "options": {
-        "activate": true
-      },
-      "progress": {
-        "caption": "Installing theme from GitHub: richtabor/kanso"
-      }
+          "step": "githubTheme",
+          "vars": {
+                "url": "ndiego/nautilus",
+                "prs": true
+          }
     }
-  ]
-}
 ```
 
-### V2 (Declarative)
 
-```json
-{
-  "version": 2,
-  "additionalStepsAfterExecution": [
-    {
-      "step": "installTheme",
-      "themeData": {
-        "resource": "git:directory",
-        "url": "https://github.com/richtabor/kanso",
-        "ref": "HEAD"
-      },
-      "options": {
-        "activate": true
-      },
-      "progress": {
-        "caption": "Installing theme from GitHub: richtabor/kanso"
-      },
-      "queryParams": {
-        "gh-ensure-auth": "yes",
-        "ghexport-repo-url": "https://github.com/richtabor/kanso",
-        "ghexport-content-type": "theme",
-        "ghexport-theme": "kanso",
-        "ghexport-playground-root": "/wordpress/wp-content/themes/kanso",
-        "ghexport-pr-action": "create",
-        "ghexport-allow-include-zip": "no"
-      }
-    }
-  ]
-}
-```
 
 ## Usage with Library
 
@@ -96,8 +51,10 @@ const blueprint = {
   steps: [
         {
           "step": "githubTheme",
-          "url": "https://github.com/richtabor/kanso",
-          "prs": "false"
+          "vars": {
+                "url": "https://github.com/richtabor/kanso",
+                "prs": false
+          }
     }
   ]
 };

@@ -83,7 +83,7 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 				}
 			}
 			if (!hasWoocommercePlugin) {
-				const wooResult = installPlugin( { step: 'installPlugin', vars: { url: 'woocommerce', permalink: true } } ).toV1();
+				const wooResult = installPlugin( { step: 'installPlugin', vars: { url: 'woocommerce' } } ).toV1();
 				if (wooResult.steps) {
 					steps = wooResult.steps.concat(steps);
 				}

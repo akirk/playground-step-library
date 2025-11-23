@@ -9,10 +9,10 @@ Show an admin notice in the dashboard.
 
 **Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `text` | string | ✅ Yes | The notice to be displayed |
 | `type` | select | ❌ No | The type of notice |
 | `dismissible` | boolean | ❌ No | Allow to dismiss |
@@ -24,9 +24,21 @@ Show an admin notice in the dashboard.
 ```json
     {
           "step": "showAdminNotice",
-          "text": "Welcome to WordPress Playground!",
-          "type": "success",
-          "dismissible": "true"
+          "vars": {
+                "text": "Welcome to WordPress Playground!"
+          }
+    }
+```
+
+### Advanced Usage
+```json
+{
+          "step": "showAdminNotice",
+          "vars": {
+                "text": "This is a demo of the Step Library",
+                "type": "success",
+                "dismissible": true
+          }
     }
 ```
 
@@ -76,9 +88,11 @@ const blueprint = {
   steps: [
         {
           "step": "showAdminNotice",
-          "text": "Welcome to WordPress Playground!",
-          "type": "success",
-          "dismissible": "true"
+          "vars": {
+                "text": "Welcome to WordPress Playground!",
+                "type": "success",
+                "dismissible": true
+          }
     }
   ]
 };

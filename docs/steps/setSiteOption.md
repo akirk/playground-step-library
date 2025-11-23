@@ -7,11 +7,12 @@ Set a site option.
 ## Type
 🔧 **Built-in Step**
 
+**Compiles to:** [`setSiteOption`](../builtin-step-usage.md#setsiteoption)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `name` | string | ❌ No | Option name |
 | `value` | string | ❌ No | Option value |
 
@@ -21,13 +22,33 @@ Set a site option.
 ### Basic Usage
 ```json
     {
-          "step": "setSiteOption",
-          "name": "",
-          "value": ""
+          "step": "setSiteOption"
     }
 ```
 
+## Compiled Output
 
+### V1 (Imperative)
+
+```json
+{
+  "steps": [
+    {
+      "step": "setSiteOption",
+      "name": "",
+      "value": ""
+    }
+  ]
+}
+```
+
+### V2 (Declarative)
+
+```json
+{
+  "version": 2
+}
+```
 
 ## Usage with Library
 
@@ -39,8 +60,10 @@ const blueprint = {
   steps: [
         {
           "step": "setSiteOption",
-          "name": "",
-          "value": ""
+          "vars": {
+                "name": "",
+                "value": ""
+          }
     }
   ]
 };

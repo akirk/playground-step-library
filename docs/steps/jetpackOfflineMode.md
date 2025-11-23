@@ -9,10 +9,10 @@ Start Jetpack in Offline mode.
 
 **Compiles to:** [`defineWpConfigConsts`](../builtin-step-usage.md#definewpconfigconsts), [`setSiteOptions`](../builtin-step-usage.md#setsiteoptions)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `blocks` | boolean | ❌ No | Activate the Jetpack Blocks module. |
 | `subscriptions` | boolean | ❌ No | Activate the Jetpack Subscriptions module. |
 
@@ -22,9 +22,7 @@ Start Jetpack in Offline mode.
 ### Basic Usage
 ```json
     {
-          "step": "jetpackOfflineMode",
-          "blocks": "true",
-          "subscriptions": "true"
+          "step": "jetpackOfflineMode"
     }
 ```
 
@@ -46,10 +44,7 @@ Start Jetpack in Offline mode.
     {
       "step": "setSiteOptions",
       "options": {
-        "jetpack_active_modules": [
-          "blocks",
-          "subscriptions"
-        ]
+        "jetpack_active_modules": []
       }
     }
   ]
@@ -62,10 +57,7 @@ Start Jetpack in Offline mode.
 {
   "version": 2,
   "siteOptions": {
-    "jetpack_active_modules": [
-      "blocks",
-      "subscriptions"
-    ]
+    "jetpack_active_modules": []
   },
   "constants": {
     "JETACK_DEBUG": "true",
@@ -85,8 +77,10 @@ const blueprint = {
   steps: [
         {
           "step": "jetpackOfflineMode",
-          "blocks": "true",
-          "subscriptions": "true"
+          "vars": {
+                "blocks": true,
+                "subscriptions": true
+          }
     }
   ]
 };

@@ -8,7 +8,8 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 		toV1() {
 	// modelled after https://github.com/carstingaxion/crud-the-docs-playground
 	// props @carstingaxion
-	const repoTest = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/.exec( step.vars?.repo );
+	const repoRegex = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/;
+	const repoTest = repoRegex.test( step.vars?.repo || '' ) ? ( step.vars?.repo || '' ).match( repoRegex ) : null;
 	if ( ! repoTest ) {
 		return [];
 	}

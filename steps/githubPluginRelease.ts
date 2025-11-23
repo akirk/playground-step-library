@@ -8,7 +8,7 @@ export const githubPluginRelease: StepFunction<GithubPluginReleaseStep> = (step:
 
 	return {
 		toV1() {
-			const repoTest = repoPattern.exec( step.vars?.repo );
+			const repoTest = (step.vars?.repo || '').match( repoPattern );
 			if ( ! repoTest ) {
 				return { steps: [] };
 			}
@@ -36,7 +36,7 @@ export const githubPluginRelease: StepFunction<GithubPluginReleaseStep> = (step:
 		},
 
 		toV2(): BlueprintV2Declaration {
-			const repoTest = repoPattern.exec( step.vars?.repo );
+			const repoTest = repoPattern.exec( step.vars?.repo || '' );
 			if ( ! repoTest ) {
 				return { version: 2 };
 			}

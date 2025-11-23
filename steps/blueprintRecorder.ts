@@ -7,7 +7,6 @@ export const blueprintRecorder: StepFunction<BlueprintRecorderStep> = (step: Blu
 		stepIndex: step.stepIndex,
 		vars: {
 			url: "https://github.com/akirk/blueprint-recorder",
-			branch: "main",
 		}
 	});
 };

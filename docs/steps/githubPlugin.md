@@ -7,12 +7,11 @@ Install a plugin from a Github repository.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin)
 
-## Parameters
+## Variables
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
 | `url` | string | ✅ Yes | Github URL of the plugin. |
 | `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
 
@@ -23,68 +22,24 @@ Install a plugin from a Github repository.
 ```json
     {
           "step": "githubPlugin",
-          "url": "https://github.com/akirk/blueprint-recorder",
-          "prs": "false"
+          "vars": {
+                "url": "https://github.com/akirk/blueprint-recorder"
+          }
     }
 ```
 
-## Compiled Output
-
-### V1 (Imperative)
-
+### Advanced Usage
 ```json
 {
-  "steps": [
-    {
-      "step": "installPlugin",
-      "pluginData": {
-        "resource": "git:directory",
-        "url": "https://github.com/akirk/blueprint-recorder",
-        "ref": "HEAD"
-      },
-      "options": {
-        "activate": true
-      },
-      "progress": {
-        "caption": "Installing plugin from GitHub: akirk/blueprint-recorder"
-      }
+          "step": "githubPlugin",
+          "vars": {
+                "url": "https://github.com/akirk/blueprint-recorder",
+                "prs": true
+          }
     }
-  ]
-}
 ```
 
-### V2 (Declarative)
 
-```json
-{
-  "version": 2,
-  "additionalStepsAfterExecution": [
-    {
-      "step": "installPlugin",
-      "pluginData": {
-        "resource": "git:directory",
-        "url": "https://github.com/akirk/blueprint-recorder",
-        "ref": "HEAD"
-      },
-      "options": {
-        "activate": true
-      },
-      "progress": {
-        "caption": "Installing plugin from GitHub: akirk/blueprint-recorder"
-      },
-      "queryParams": {
-        "gh-ensure-auth": "yes",
-        "ghexport-repo-url": "https://github.com/akirk/blueprint-recorder",
-        "ghexport-content-type": "plugin",
-        "ghexport-plugin": "blueprint-recorder",
-        "ghexport-playground-root": "/wordpress/wp-content/plugins/blueprint-recorder",
-        "ghexport-pr-action": "create",
-        "ghexport-allow-include-zip": "no"
-      }
-    }
-  ]
-}
-```
 
 ## Usage with Library
 
@@ -96,8 +51,10 @@ const blueprint = {
   steps: [
         {
           "step": "githubPlugin",
-          "url": "https://github.com/akirk/blueprint-recorder",
-          "prs": "false"
+          "vars": {
+                "url": "https://github.com/akirk/blueprint-recorder",
+                "prs": false
+          }
     }
   ]
 };

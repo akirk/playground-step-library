@@ -8,9 +8,9 @@ Prevent automatic login (Playground logs in as admin by default).
 ⚡ **Custom Step**
 
 
-## Parameters
+## Variables
 
-*No parameters defined.*
+*No variables defined.*
 
 ## Examples
 
