@@ -344,6 +344,14 @@ export class PasteHandlerController {
 			};
 
 			this.deps.appendSteps(stepConfig);
+
+			if (blueprintData.meta?.title) {
+				const titleInput = document.getElementById('title') as HTMLInputElement;
+				if (titleInput) {
+					titleInput.value = blueprintData.meta.title;
+				}
+			}
+
 			blueprintEventBus.emit( 'blueprint:updated' );
 
 			if (unmappedSteps.length === 0 && warnings.length === 0) {
