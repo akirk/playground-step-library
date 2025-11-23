@@ -10,22 +10,59 @@ npm install playground-step-library
 
 ## Command Line Interface
 
+### Compiler CLI
+
+The compiler CLI supports multiple output formats and operations:
+
 ```bash
-# Compile a blueprint
-node bin/cli.js blueprint.json
+# Compile to v1 format (default)
+node bin/cli.js v1 blueprint.json -p
+node bin/cli.js blueprint.json -p          # v1 is the default
 
-# Compile with pretty output
-node bin/cli.js blueprint.json --pretty
+# Compile to v2 format
+node bin/cli.js v2 blueprint.json -p
 
-# Save to file
-node bin/cli.js blueprint.json --output compiled.json
+# Transpile a native v1 blueprint to v2 format
+node bin/cli.js transpile native-v1.json -p
 
 # Validate a blueprint
-node bin/cli.js blueprint.json --validate
+node bin/cli.js validate blueprint.json
 
 # List available custom steps
-node bin/cli.js --list-steps
+node bin/cli.js steps
+node bin/cli.js steps -p                   # Human-readable format
+
+# Read from stdin
+cat blueprint.json | node bin/cli.js v2 -p
+
+# Save to file
+node bin/cli.js v2 blueprint.json -o compiled.json
 ```
+
+Run `node bin/cli.js --help` for all options.
+
+### Paste CLI
+
+The paste CLI (`bin/paste.js`) provides the same content detection as the [Smart Paste Handlers](tips.md#smart-paste-handlers) in the UI, but for command-line use.
+
+```bash
+# Process from stdin
+echo "<?php echo 'Hello';" | node bin/paste.js
+
+# Process a file
+node bin/paste.js blueprint.json
+
+# Pretty print output
+echo "https://wordpress.org/plugins/akismet/" | node bin/paste.js -p
+
+# Save to file
+node bin/paste.js input.txt -o steps.json
+
+# Detect content type only (no conversion)
+echo "wp plugin activate akismet" | node bin/paste.js -t
+```
+
+Run `node bin/paste.js --help` for all options.
 
 ## Usage
 
