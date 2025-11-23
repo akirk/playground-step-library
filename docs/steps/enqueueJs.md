@@ -25,7 +25,7 @@ Enqueue custom JavaScript on frontend and/or admin.
     {
           "step": "enqueueJs",
           "vars": {
-                "js": "console.log(\"Hello from custom script!\");"
+                "js": "console.log('Hello from custom script!');"
           }
     }
 ```
@@ -36,7 +36,7 @@ Enqueue custom JavaScript on frontend and/or admin.
           "step": "enqueueJs",
           "vars": {
                 "filename": "interactive-features",
-                "js": "console.log(\"Hello from custom script!\");",
+                "js": "console.log('Hello from custom script!');",
                 "frontend": true,
                 "wpAdmin": true
           }
@@ -57,7 +57,7 @@ const blueprint = {
           "step": "enqueueJs",
           "vars": {
                 "filename": "custom-script",
-                "js": "console.log(\"Hello from custom script!\");",
+                "js": "console.log('Hello from custom script!');",
                 "frontend": true,
                 "wpAdmin": true
           }

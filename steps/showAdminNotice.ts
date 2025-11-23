@@ -62,7 +62,7 @@ add_action('admin_footer', function() {
 		step: 'muPlugin',
 		stepIndex: step.stepIndex,
 		vars: {
-			name: `show-admin-notice-${step.stepIndex || 0}`,
+			name: 'show-admin-notice',
 			code
 		}
 	});

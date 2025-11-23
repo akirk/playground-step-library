@@ -39,7 +39,7 @@ export const addFilter: StepFunction<AddFilterStep> = (step: AddFilterStep): Ste
 		step: 'muPlugin',
 		stepIndex: step.stepIndex,
 		vars: {
-			name: `addFilter-${step.stepIndex || 0}`,
+			name: 'addFilter',
 			code
 		}
 	});

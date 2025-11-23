@@ -612,7 +612,7 @@ This document provides detailed information about all available steps, including
           "step": "enqueueJs",
           "vars": {
                 "filename": "custom-script",
-                "js": "console.log(\"Hello from custom script!\");",
+                "js": "console.log('Hello from custom script!');",
                 "frontend": true,
                 "wpAdmin": true
           }

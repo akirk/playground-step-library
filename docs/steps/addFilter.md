@@ -56,7 +56,7 @@ Easily add a filtered value.
     },
     {
       "step": "writeFile",
-      "path": "/wordpress/wp-content/mu-plugins/addFilter-0-0.php",
+      "path": "/wordpress/wp-content/mu-plugins/addFilter-0.php",
       "data": "<?php add_filter( 'undefined',  );"
     }
   ]
@@ -71,7 +71,7 @@ Easily add a filtered value.
   "muPlugins": [
     {
       "file": {
-        "filename": "addFilter-0.php",
+        "filename": "addFilter.php",
         "content": "<?php add_filter( 'undefined',  );"
       }
     }
