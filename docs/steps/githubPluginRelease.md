@@ -7,6 +7,7 @@ Install a specific plugin release from a Github repository.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** [`installPlugin`](../builtin-step-usage.md#installplugin)
 
 ## Variables
 
@@ -31,7 +32,40 @@ Install a specific plugin release from a Github repository.
     }
 ```
 
+## Compiled Output
 
+### Blueprint V1
+
+```json
+{
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "url",
+        "url": "https://github.com/ryanwelcher/interactivity-api-todomvc/releases/download/..."
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing to-do-mvc.zip from ryanwelcher/interactivity-api-todomvc (v0.1.3..."
+      }
+    }
+  ]
+}
+```
+
+### Blueprint V2
+
+```json
+{
+  "version": 2,
+  "plugins": [
+    "https://github.com/ryanwelcher/interactivity-api-todomvc/releases/download/v0.1.3/to-do-mvc.zip"
+  ]
+}
+```
 
 ## Usage with Library
 

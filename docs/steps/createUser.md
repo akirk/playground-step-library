@@ -7,6 +7,7 @@ Create a new user.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** [`runPHP`](../builtin-step-usage.md#runphp), [`login`](../builtin-step-usage.md#login)
 
 ## Variables
 
@@ -49,7 +50,61 @@ Create a new user.
     }
 ```
 
+## Compiled Output
 
+### Blueprint V1
+
+```json
+{
+  "landingPage": "/wp-admin/",
+  "steps": [
+    {
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; $data = array( 'user_login' =>...",
+      "progress": {
+        "caption": "createUser: user"
+      }
+    },
+    {
+      "step": "login",
+      "username": "user",
+      "password": "password"
+    }
+  ]
+}
+```
+
+### Blueprint V2
+
+```json
+{
+  "version": 2,
+  "users": [
+    {
+      "username": "user",
+      "email": "user@example.com",
+      "role": "administrator",
+      "meta": {
+        "display_name": "User"
+      }
+    }
+  ],
+  "additionalStepsAfterExecution": [
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n$user = get_user_by( 'login', 'user' );\nif ( $user ) {\n\twp_set_password( 'password', $user->ID );\n}"
+    }
+  ],
+  "applicationOptions": {
+    "wordpress-playground": {
+      "login": {
+        "username": "user",
+        "password": "password"
+      }
+    }
+  }
+}
+```
 
 ## Usage with Library
 

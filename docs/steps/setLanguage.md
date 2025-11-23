@@ -7,6 +7,7 @@ Set the WordPress site language.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** [`setSiteLanguage`](../builtin-step-usage.md#setsitelanguage)
 
 ## Variables
 
@@ -27,7 +28,34 @@ Set the WordPress site language.
     }
 ```
 
+## Compiled Output
 
+### Blueprint V1
+
+```json
+{
+  "steps": [
+    {
+      "step": "setSiteLanguage",
+      "language": "de_DE"
+    }
+  ]
+}
+```
+
+### Blueprint V2
+
+```json
+{
+  "version": 2,
+  "additionalStepsAfterExecution": [
+    {
+      "step": "setSiteLanguage",
+      "language": "de_DE"
+    }
+  ]
+}
+```
 
 ## Usage with Library
 

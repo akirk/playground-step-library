@@ -9,16 +9,14 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## Table of Contents
 
-- [`defineWpConfigConst`](#definewpconfigconst)
 - [`defineWpConfigConsts`](#definewpconfigconsts)
 - [`enableMultisite`](#enablemultisite)
-- [`importWxr`](#importwxr)
 - [`installPlugin`](#installplugin)
 - [`installTheme`](#installtheme)
 - [`login`](#login)
 - [`mkdir`](#mkdir)
 - [`runPHP`](#runphp)
-- [`setSiteOption`](#setsiteoption)
+- [`setSiteLanguage`](#setsitelanguage)
 - [`setSiteOptions`](#setsiteoptions)
 - [`unzip`](#unzip)
 - [`updateUserMeta`](#updateusermeta)
@@ -27,19 +25,13 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ---
 
-## `defineWpConfigConst`
-
-**Used by 1 step:**
-
-- 🔧 [`defineWpConfigConst`](steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
-
----
-
 ## `defineWpConfigConsts`
 
-**Used by 2 steps:**
+**Used by 4 steps:**
 
 - ⚡ [`debug`](steps/debug.md) - Configure WordPress debug settings and optionally install Query Monitor plugin.
+- 🔧 [`defineWpConfigConst`](steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
+- ⚡ [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
 - ⚡ [`jetpackOfflineMode`](steps/jetpackOfflineMode.md) - Start Jetpack in Offline mode.
 
 ---
@@ -52,23 +44,17 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ---
 
-## `importWxr`
-
-**Used by 1 step:**
-
-- 🔧 [`importWxr`](steps/importWxr.md) - Import a WXR from a URL.
-
----
-
 ## `installPlugin`
 
-**Used by 7 steps:**
+**Used by 9 steps:**
 
 - ⚡ [`addProduct`](steps/addProduct.md) - Add a WooCommerce product (will install WooCommerce if not present)
 - ⚡ [`blueprintExtractor`](steps/blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
 - ⚡ [`blueprintRecorder`](steps/blueprintRecorder.md) - Record steps made and compile a new blueprint.
-- ⚡ [`debug`](steps/debug.md) - Configure WordPress debug settings and optionally install Query Monitor plugin.
 - ⚡ [`generateProducts`](steps/generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
+- ⚡ [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
+- ⚡ [`githubPlugin`](steps/githubPlugin.md) - Install a plugin from a Github repository.
+- ⚡ [`githubPluginRelease`](steps/githubPluginRelease.md) - Install a specific plugin release from a Github repository.
 - 🔧 [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Github (branches, releases, PRs).
 - ⚡ [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 
@@ -76,26 +62,29 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `installTheme`
 
-**Used by 1 step:**
+**Used by 2 steps:**
 
+- ⚡ [`githubTheme`](steps/githubTheme.md) - Install a theme from a Github repository.
 - 🔧 [`installTheme`](steps/installTheme.md) - Install a theme via WordPress.org or Github.
 
 ---
 
 ## `login`
 
-**Used by 1 step:**
+**Used by 2 steps:**
 
+- ⚡ [`createUser`](steps/createUser.md) - Create a new user.
 - 🔧 [`login`](steps/login.md) - Login to the site.
 
 ---
 
 ## `mkdir`
 
-**Used by 12 steps:**
+**Used by 13 steps:**
 
 - ⚡ [`addClientRole`](steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
 - ⚡ [`addFilter`](steps/addFilter.md) - Easily add a filtered value.
+- ⚡ [`addMedia`](steps/addMedia.md) - Add files to the media library.
 - ⚡ [`customPostType`](steps/customPostType.md) - Register a custom post type.
 - ⚡ [`disableWelcomeGuides`](steps/disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - ⚡ [`fakeHttpResponse`](steps/fakeHttpResponse.md) - Fake a wp_remote_request() response.
@@ -111,16 +100,19 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `runPHP`
 
-**Used by 13 steps:**
+**Used by 16 steps:**
 
+- ⚡ [`addMedia`](steps/addMedia.md) - Add files to the media library.
 - ⚡ [`addPage`](steps/addPage.md) - Add a page with title and content.
 - ⚡ [`addPost`](steps/addPost.md) - Add a post with title, content, type, status, and date.
 - ⚡ [`addProduct`](steps/addProduct.md) - Add a WooCommerce product (will install WooCommerce if not present)
 - ⚡ [`addTemplate`](steps/addTemplate.md) - Add a template (home, single, page, etc.) for a block theme.
 - ⚡ [`addTemplatePart`](steps/addTemplatePart.md) - Add a template part (header, footer, etc.) for a block theme.
 - ⚡ [`blockExamples`](steps/blockExamples.md) - Creates a post with all block examples from registered blocks
+- ⚡ [`createUser`](steps/createUser.md) - Create a new user.
 - ⚡ [`deleteAllPosts`](steps/deleteAllPosts.md) - Delete all posts, pages, attachments, revisions and menu items.
 - ⚡ [`generateProducts`](steps/generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
+- ⚡ [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
 - ⚡ [`importFriendFeeds`](steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.
 - 🔧 [`runPHP`](steps/runPHP.md) - Run code in the context of WordPress.
 - ⚡ [`sampleContent`](steps/sampleContent.md) - Inserts sample pages to the site.
@@ -129,18 +121,19 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ---
 
-## `setSiteOption`
+## `setSiteLanguage`
 
 **Used by 1 step:**
 
-- 🔧 [`setSiteOption`](steps/setSiteOption.md) - Set a site option.
+- ⚡ [`setLanguage`](steps/setLanguage.md) - Set the WordPress site language.
 
 ---
 
 ## `setSiteOptions`
 
-**Used by 2 steps:**
+**Used by 3 steps:**
 
+- ⚡ [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
 - ⚡ [`jetpackOfflineMode`](steps/jetpackOfflineMode.md) - Start Jetpack in Offline mode.
 - ⚡ [`setSiteName`](steps/setSiteName.md) - Set the site name and tagline.
 
@@ -148,8 +141,9 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `unzip`
 
-**Used by 1 step:**
+**Used by 2 steps:**
 
+- ⚡ [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
 - ⚡ [`installPhEditor`](steps/installPhEditor.md) - Install phEditor. Password: admin
 
 ---
@@ -172,13 +166,15 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `writeFile`
 
-**Used by 12 steps:**
+**Used by 14 steps:**
 
 - ⚡ [`addClientRole`](steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
 - ⚡ [`addFilter`](steps/addFilter.md) - Easily add a filtered value.
+- ⚡ [`addMedia`](steps/addMedia.md) - Add files to the media library.
 - ⚡ [`customPostType`](steps/customPostType.md) - Register a custom post type.
 - ⚡ [`disableWelcomeGuides`](steps/disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - ⚡ [`fakeHttpResponse`](steps/fakeHttpResponse.md) - Fake a wp_remote_request() response.
+- ⚡ [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
 - ⚡ [`installAdminer`](steps/installAdminer.md) - Install Adminer with auto login link.
 - ⚡ [`installPhEditor`](steps/installPhEditor.md) - Install phEditor. Password: admin
 - ⚡ [`installPhpLiteAdmin`](steps/installPhpLiteAdmin.md) - Provide phpLiteAdmin. Password: admin

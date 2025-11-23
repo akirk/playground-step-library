@@ -40,8 +40,8 @@ Set the site name and tagline.
     {
       "step": "setSiteOptions",
       "options": {
-        "blogname": "",
-        "blogdescription": ""
+        "blogname": "Step Library Demo",
+        "blogdescription": "Trying out WordPress Playground."
       }
     }
   ]
@@ -54,8 +54,8 @@ Set the site name and tagline.
 {
   "version": 2,
   "siteOptions": {
-    "blogname": "",
-    "blogdescription": ""
+    "blogname": "Step Library Demo",
+    "blogdescription": "Trying out WordPress Playground."
   }
 }
 ```

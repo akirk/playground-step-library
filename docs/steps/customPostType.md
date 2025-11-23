@@ -59,9 +59,9 @@ Register a custom post type.
     {
       "step": "writeFile",
       "path": "/wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
-      "data": "<?php add_action( 'init', function() { register_post_type('undefined', arra...",
+      "data": "<?php add_action( 'init', function() { register_post_type('book', array('pu...",
       "progress": {
-        "caption": "customPostType: undefined"
+        "caption": "customPostType: Books"
       }
     }
   ]
@@ -81,9 +81,9 @@ Register a custom post type.
     {
       "step": "writeFile",
       "path": "/wordpress/wp-content/mu-plugins/customPostType-${stepIndex}.php",
-      "data": "<?php add_action( 'init', function() { register_post_type('undefined', array('public' => true, 'label' => 'undefined', 'supports' => array( 'title', 'editor' ))); } ); ?>",
+      "data": "<?php add_action( 'init', function() { register_post_type('book', array('public' => true, 'label' => 'Books', 'supports' => \"['title', 'editor']\")); } ); ?>",
       "progress": {
-        "caption": "customPostType: undefined"
+        "caption": "customPostType: Books"
       }
     }
   ]

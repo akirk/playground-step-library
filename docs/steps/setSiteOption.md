@@ -7,7 +7,6 @@ Set a site option.
 ## Type
 🔧 **Built-in Step**
 
-**Compiles to:** [`setSiteOption`](../builtin-step-usage.md#setsiteoption)
 
 ## Variables
 
@@ -26,29 +25,7 @@ Set a site option.
     }
 ```
 
-## Compiled Output
 
-### Blueprint V1
-
-```json
-{
-  "steps": [
-    {
-      "step": "setSiteOption",
-      "name": "",
-      "value": ""
-    }
-  ]
-}
-```
-
-### Blueprint V2
-
-```json
-{
-  "version": 2
-}
-```
 
 ## Usage with Library
 

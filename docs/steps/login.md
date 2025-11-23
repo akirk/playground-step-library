@@ -49,12 +49,12 @@ Login to the site.
 
 ```json
 {
+  "landingPage": "/wp-admin/",
   "steps": [
     {
       "step": "login",
       "username": "admin",
-      "password": "password",
-      "landingPage": "false"
+      "password": "password"
     }
   ]
 }
@@ -67,7 +67,8 @@ Login to the site.
   "version": 2,
   "applicationOptions": {
     "wordpress-playground": {
-      "login": true
+      "login": true,
+      "landingPage": "/wp-admin/"
     }
   }
 }

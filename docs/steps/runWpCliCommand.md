@@ -36,7 +36,8 @@ Run a wp-cli command.
 {
   "steps": [
     {
-      "step": "wp-cli"
+      "step": "wp-cli",
+      "command": ""
     }
   ]
 }
@@ -49,7 +50,8 @@ Run a wp-cli command.
   "version": 2,
   "additionalStepsAfterExecution": [
     {
-      "step": "wp-cli"
+      "step": "wp-cli",
+      "command": ""
     }
   ]
 }

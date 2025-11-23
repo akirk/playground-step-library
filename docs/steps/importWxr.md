@@ -7,7 +7,6 @@ Import a WXR from a URL.
 ## Type
 🔧 **Built-in Step**
 
-**Compiles to:** [`importWxr`](../builtin-step-usage.md#importwxr)
 
 ## Variables
 
@@ -28,28 +27,7 @@ Import a WXR from a URL.
     }
 ```
 
-## Compiled Output
 
-### Blueprint V1
-
-```json
-{
-  "steps": [
-    {
-      "step": "importWxr",
-      "url": ""
-    }
-  ]
-}
-```
-
-### Blueprint V2
-
-```json
-{
-  "version": 2
-}
-```
 
 ## Usage with Library
 

@@ -44,7 +44,10 @@ Start Jetpack in Offline mode.
     {
       "step": "setSiteOptions",
       "options": {
-        "jetpack_active_modules": []
+        "jetpack_active_modules": [
+          "blocks",
+          "subscriptions"
+        ]
       }
     }
   ]
@@ -57,7 +60,10 @@ Start Jetpack in Offline mode.
 {
   "version": 2,
   "siteOptions": {
-    "jetpack_active_modules": []
+    "jetpack_active_modules": [
+      "blocks",
+      "subscriptions"
+    ]
   },
   "constants": {
     "JETACK_DEBUG": "true",

@@ -70,7 +70,7 @@ Add a WooCommerce product (will install WooCommerce if not present)
       "step": "runPHP",
       "code": "<?php require_once '/wordpress/wp-load.php';\n// Create the product post\n$pr...",
       "progress": {
-        "caption": "addProduct:"
+        "caption": "addProduct: Sample Product"
       }
     }
   ]
@@ -86,8 +86,8 @@ Add a WooCommerce product (will install WooCommerce if not present)
     {
       "type": "posts",
       "source": {
-        "post_title": "",
-        "post_content": "",
+        "post_title": "Sample Product",
+        "post_content": "<p>This is a great product!</p>",
         "post_type": "product",
         "post_status": "publish",
         "meta_input": {
@@ -96,7 +96,11 @@ Add a WooCommerce product (will install WooCommerce if not present)
           "_manage_stock": "no",
           "_sold_individually": "no",
           "_virtual": "no",
-          "_downloadable": "no"
+          "_downloadable": "no",
+          "_regular_price": "19.99",
+          "_price": "15.99",
+          "_sale_price": "15.99",
+          "_sku": "PROD-001"
         },
         "tax_input": {
           "product_type": [

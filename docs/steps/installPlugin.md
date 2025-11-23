@@ -49,8 +49,13 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
   "steps": [
     {
       "step": "installPlugin",
-      "url": "hello-dolly",
-      "prs": "false"
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "hello-dolly"
+      },
+      "options": {
+        "activate": true
+      }
     }
   ]
 }
@@ -62,7 +67,7 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
 {
   "version": 2,
   "plugins": [
-    ""
+    "hello-dolly"
   ]
 }
 ```

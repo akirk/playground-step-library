@@ -7,7 +7,7 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
 ## Type
 ⚡ **Custom Step**
 
-**Compiles to:** [`defineWpConfigConsts`](../builtin-step-usage.md#definewpconfigconsts), [`installPlugin`](../builtin-step-usage.md#installplugin)
+**Compiles to:** [`defineWpConfigConsts`](../builtin-step-usage.md#definewpconfigconsts)
 
 ## Variables
 
@@ -38,18 +38,7 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
     {
       "step": "defineWpConfigConsts",
       "consts": {
-        "WP_DEBUG": true,
-        "WP_DEBUG_DISPLAY": true
-      }
-    },
-    {
-      "step": "installPlugin",
-      "pluginData": {
-        "resource": "wordpress.org/plugins",
-        "slug": "query-monitor"
-      },
-      "options": {
-        "activate": true
+        "WP_DEBUG": false
       }
     }
   ]
@@ -65,18 +54,7 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
     {
       "step": "defineWpConfigConsts",
       "consts": {
-        "WP_DEBUG": true,
-        "WP_DEBUG_DISPLAY": true
-      }
-    },
-    {
-      "step": "installPlugin",
-      "pluginData": {
-        "resource": "wordpress.org/plugins",
-        "slug": "query-monitor"
-      },
-      "options": {
-        "activate": true
+        "WP_DEBUG": false
       }
     }
   ]

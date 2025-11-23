@@ -56,7 +56,7 @@ Add a template (home, single, page, etc.) for a block theme.
       "step": "runPHP",
       "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n$theme_slug = '';\nif ( empty( ...",
       "progress": {
-        "caption": "addTemplate:"
+        "caption": "addTemplate: home"
       }
     }
   ]
@@ -73,10 +73,10 @@ Add a template (home, single, page, etc.) for a block theme.
       "step": "runPHP",
       "code": {
         "filename": "code.php",
-        "content": "<?php\nrequire_once '/wordpress/wp-load.php';\n\n$theme_slug = '';\nif ( empty( $theme_slug ) ) {\n\t$theme_slug = get_stylesheet();\n}\n$term = get_term_by( 'slug', $theme_slug, 'wp_theme' );\nif ( ! $term ) {\n\t$term = wp_insert_term( $theme_slug, 'wp_theme' );\n\t$term_id = $term['term_id'];\n} else {\n\t$term_id = $term->term_id;\n}\n\n$post_id = wp_insert_post( array(\n\t'post_title'   => '',\n\t'post_name'    => '',\n\t'post_type'    => 'wp_template',\n\t'post_status'  => 'publish',\n\t'post_content' => '',\n\t'tax_input'    => array(\n\t\t'wp_theme' => array( $term_id )\n\t),\n) );\n\nif ( ! is_wp_error( $post_id ) ) {\n\twp_set_object_terms( $post_id, $term_id, 'wp_theme' );\n}\n"
+        "content": "<?php\nrequire_once '/wordpress/wp-load.php';\n\n$theme_slug = '';\nif ( empty( $theme_slug ) ) {\n\t$theme_slug = get_stylesheet();\n}\n$term = get_term_by( 'slug', $theme_slug, 'wp_theme' );\nif ( ! $term ) {\n\t$term = wp_insert_term( $theme_slug, 'wp_theme' );\n\t$term_id = $term['term_id'];\n} else {\n\t$term_id = $term->term_id;\n}\n\n$post_id = wp_insert_post( array(\n\t'post_title'   => 'Home',\n\t'post_name'    => 'home',\n\t'post_type'    => 'wp_template',\n\t'post_status'  => 'publish',\n\t'post_content' => '<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\",\"area\":\"header\"} /-->\n\n<!-- wp:post-content /-->\n\n<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\",\"area\":\"footer\"} /-->',\n\t'tax_input'    => array(\n\t\t'wp_theme' => array( $term_id )\n\t),\n) );\n\nif ( ! is_wp_error( $post_id ) ) {\n\twp_set_object_terms( $post_id, $term_id, 'wp_theme' );\n}\n"
       },
       "progress": {
-        "caption": "addTemplate: "
+        "caption": "addTemplate: home"
       }
     }
   ]

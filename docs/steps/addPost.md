@@ -65,7 +65,7 @@ Add a post with title, content, type, status, and date.
       "step": "runPHP",
       "code": "<?php require_once '/wordpress/wp-load.php';\n$page_args = array(\n'post_type...",
       "progress": {
-        "caption": "addPost:"
+        "caption": "addPost: Hello World"
       }
     }
   ]
@@ -81,8 +81,9 @@ Add a post with title, content, type, status, and date.
     {
       "type": "posts",
       "source": {
-        "post_title": "",
-        "post_content": "",
+        "post_title": "Hello World",
+        "post_content": "<p>Hello World</p>",
+        "post_type": "post",
         "post_status": "publish"
       }
     }

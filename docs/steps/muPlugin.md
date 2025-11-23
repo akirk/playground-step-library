@@ -53,7 +53,7 @@ Add code for a plugin.
     },
     {
       "step": "writeFile",
-      "path": "/wordpress/wp-content/mu-plugins/mu-plugin-0.php",
+      "path": "/wordpress/wp-content/mu-plugins/my-plugin-0.php",
       "data": "<?php"
     }
   ]
@@ -68,7 +68,7 @@ Add code for a plugin.
   "muPlugins": [
     {
       "file": {
-        "filename": "mu-plugin.php",
+        "filename": "my-plugin.php",
         "content": "<?php "
       }
     }

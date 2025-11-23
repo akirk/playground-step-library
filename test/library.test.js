@@ -110,6 +110,30 @@ describe('PlaygroundStepLibrary', () => {
       expect(compiled.steps).toHaveLength(1);
     });
 
+    it('should compile addFilter with correct filter name and code', () => {
+      const blueprint = {
+        steps: [
+          {
+            step: 'addFilter',
+            vars: {
+              filter: 'the_content',
+              code: "'__return_false'"
+            }
+          }
+        ]
+      };
+
+      const compiled = compiler.compile(blueprint);
+      expect(compiled.steps).toHaveLength(2);
+      expect(compiled.steps[0]).toEqual({
+        step: 'mkdir',
+        path: '/wordpress/wp-content/mu-plugins'
+      });
+      expect(compiled.steps[1].step).toBe('writeFile');
+      expect(compiled.steps[1].path).toBe('/wordpress/wp-content/mu-plugins/addFilter-0.php');
+      expect(compiled.steps[1].data).toBe("<?php add_filter( 'the_content', '__return_false' );");
+    });
+
     it('should extract queryParams from steps and store them separately', () => {
       const blueprint = {
         steps: [

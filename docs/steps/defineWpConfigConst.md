@@ -7,7 +7,7 @@ Define a wp-config PHP constant.
 ## Type
 🔧 **Built-in Step**
 
-**Compiles to:** [`defineWpConfigConst`](../builtin-step-usage.md#definewpconfigconst)
+**Compiles to:** [`defineWpConfigConsts`](../builtin-step-usage.md#definewpconfigconsts)
 
 ## Variables
 
@@ -38,9 +38,10 @@ Define a wp-config PHP constant.
 {
   "steps": [
     {
-      "step": "defineWpConfigConst",
-      "name": "WP_DEBUG",
-      "value": "true"
+      "step": "defineWpConfigConsts",
+      "consts": {
+        "WP_DEBUG": true
+      }
     }
   ]
 }
@@ -50,7 +51,10 @@ Define a wp-config PHP constant.
 
 ```json
 {
-  "version": 2
+  "version": 2,
+  "constants": {
+    "WP_DEBUG": true
+  }
 }
 ```
 

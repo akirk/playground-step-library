@@ -363,13 +363,16 @@ ${deprecationNotices}`;
             if (stepInfo.vars && stepInfo.vars.length > 0) {
                 const activeVars = stepInfo.vars.filter(varDef => !varDef.deprecated);
 
-                activeVars.forEach(varDef => {
-                    if (varDef.samples && varDef.samples.length > 0) {
-                        example[varDef.name] = varDef.samples[0];
-                    } else {
-                        example[varDef.name] = this.generateDefaultValue(varDef);
-                    }
-                });
+                if (activeVars.length > 0) {
+                    example.vars = {};
+                    activeVars.forEach(varDef => {
+                        if (varDef.samples && varDef.samples.length > 0) {
+                            example.vars[varDef.name] = varDef.samples[0];
+                        } else {
+                            example.vars[varDef.name] = this.generateDefaultValue(varDef);
+                        }
+                    });
+                }
             }
 
             // Compile v1

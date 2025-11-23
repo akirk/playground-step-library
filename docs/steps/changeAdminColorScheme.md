@@ -37,7 +37,9 @@ Useful to combine with a login step.
   "steps": [
     {
       "step": "updateUserMeta",
-      "meta": {},
+      "meta": {
+        "admin_color": "modern"
+      },
       "userId": 1
     }
   ]
@@ -52,7 +54,9 @@ Useful to combine with a login step.
   "additionalStepsAfterExecution": [
     {
       "step": "updateUserMeta",
-      "meta": {},
+      "meta": {
+        "admin_color": "modern"
+      },
       "userId": 1
     }
   ]

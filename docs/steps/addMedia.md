@@ -7,6 +7,7 @@ Add files to the media library.
 ## Type
 ⚡ **Custom Step**
 
+**Compiles to:** [`mkdir`](../builtin-step-usage.md#mkdir), [`writeFile`](../builtin-step-usage.md#writefile), [`runPHP`](../builtin-step-usage.md#runphp)
 
 ## Variables
 
@@ -27,7 +28,46 @@ Add files to the media library.
     }
 ```
 
+## Compiled Output
 
+### Blueprint V1
+
+```json
+{
+  "steps": [
+    {
+      "step": "mkdir",
+      "path": "/tmp/media"
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/media/WordPress-logotype-wmark.png",
+      "data": {
+        "resource": "url",
+        "url": "https://s.w.org/style/images/about/WordPress-logotype-wmark.png"
+      }
+    },
+    {
+      "step": "runPHP",
+      "progress": {
+        "caption": "Importing media to library"
+      },
+      "code": "<?php\n// DEDUP_STRATEGY: keep_last\nrequire_once '/wordpress/wp-load.php';\nr..."
+    }
+  ]
+}
+```
+
+### Blueprint V2
+
+```json
+{
+  "version": 2,
+  "media": [
+    "https://s.w.org/style/images/about/WordPress-logotype-wmark.png"
+  ]
+}
+```
 
 ## Usage with Library
 

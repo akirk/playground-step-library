@@ -50,7 +50,11 @@ Run code in the context of WordPress.
   "version": 2,
   "additionalStepsAfterExecution": [
     {
-      "step": "runPHP"
+      "step": "runPHP",
+      "code": {
+        "filename": "code.php",
+        "content": "<?php require_once '/wordpress/wp-load.php'; // Insert your code here that runs in the scope of WordPress"
+      }
     }
   ]
 }

@@ -49,8 +49,16 @@ Install a theme via WordPress.org or Github.
   "steps": [
     {
       "step": "installTheme",
-      "url": "pendant",
-      "prs": "false"
+      "themeData": {
+        "resource": "wordpress.org/themes",
+        "slug": "pendant"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing theme: pendant"
+      }
     }
   ]
 }
@@ -60,7 +68,10 @@ Install a theme via WordPress.org or Github.
 
 ```json
 {
-  "version": 2
+  "version": 2,
+  "themes": [
+    "pendant"
+  ]
 }
 ```
 
