@@ -8,7 +8,7 @@ import type {
 import type { StepDefinition, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 interface CustomStepDefinition {
-    (step: BlueprintStep, inputData?: any): any[] | StepResult;
+    (step: BlueprintStep, inputData?: any): StepResult;
     description?: string;
     vars?: StepVariable[];
     builtin?: boolean;
@@ -148,21 +148,7 @@ class StepLibraryCompilerV2 {
 
         if (stepFn) {
             const result = stepFn(step, inputData);
-
-            // New format: StepResult with toV2()
-            if (this.isStepResult(result)) {
-                return result.toV2();
-            }
-
-            // Legacy format: array of steps
-            if (Array.isArray(result) && result.length > 0) {
-                return {
-                    version: 2,
-                    additionalStepsAfterExecution: result as StepDefinition[]
-                } as BlueprintV2Declaration;
-            }
-
-            return null;
+            return result.toV2();
         }
 
         // Unknown step - pass through as-is
@@ -170,10 +156,6 @@ class StepLibraryCompilerV2 {
             version: 2,
             additionalStepsAfterExecution: [step as StepDefinition]
         } as BlueprintV2Declaration;
-    }
-
-    private isStepResult(result: any[] | StepResult): result is StepResult {
-        return result && typeof result === 'object' && !Array.isArray(result) && typeof result.toV2 === 'function';
     }
 
     /**

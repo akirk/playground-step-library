@@ -9,7 +9,7 @@ import type {
 import type { Blueprint, StepDefinition, BlueprintV1Declaration } from '@wp-playground/blueprints';
 
 interface CustomStepDefinition {
-    (step: BlueprintStep, inputData?: any): any[] | StepResult;
+    (step: BlueprintStep, inputData?: any): StepResult;
     description?: string;
     vars?: StepVariable[];
     builtin?: boolean;
@@ -64,26 +64,11 @@ class StepLibraryCompiler {
     }
 
     /**
-     * Execute a custom step and handle both old format (returns array)
-     * and new format (returns object with toV1/toV2 methods)
+     * Execute a custom step and return its v1 compilation result
      */
     private executeCustomStep(stepName: string, step: BlueprintStep, inputData: any): BlueprintV1Declaration {
         const result = this.customSteps[stepName](step, inputData);
-
-        // Check if this is a StepResult (new format)
-        if (this.isStepResult(result)) {
-            return result.toV1();
-        }
-
-        // Old format - return array directly, wrap it in a BlueprintV1Declaration
-        return { steps: result };
-    }
-
-    /**
-     * Type guard to check if result is a StepResult object
-     */
-    private isStepResult(result: any[] | StepResult): result is StepResult {
-        return result && typeof result === 'object' && !Array.isArray(result) && typeof result.toV1 === 'function';
+        return result.toV1();
     }
 
     /**

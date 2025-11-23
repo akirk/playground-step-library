@@ -11,8 +11,7 @@ This document explains how the WordPress Playground Step Library works internall
 
 ### 🎨 Step Design
 - [**Step Design Patterns**](#step-design-patterns) - Common patterns for creating steps
-  - V1-Only Pattern (Legacy)
-  - V1 + V2 Pattern (Current)
+  - V1 + V2 Pattern
   - Content Creation Pattern
   - Hybrid Pattern
 - [**When to Create Custom vs Built-in Steps**](#when-to-create-custom-vs-built-in-steps) - Decision guide
@@ -229,22 +228,7 @@ export const addPage: StepFunction<AddPageStep> = (step): StepResult => {
 
 ## Step Design Patterns
 
-### 1. V1-Only Pattern (Legacy)
-
-Older steps that only return v1 arrays. The compiler handles these automatically:
-
-```typescript
-export const muPlugin: StepFunction<MuPluginStep> = (step) => {
-  return [
-    { step: "mkdir", path: "/wordpress/wp-content/mu-plugins" },
-    { step: "writeFile", path: "...", data: step.vars?.code }
-  ];
-};
-```
-
-The compiler's `isStepResult()` check determines if a step returns the old array format or the new StepResult format.
-
-### 2. V1 + V2 Pattern (Current)
+### 1. V1 + V2 Pattern
 
 Steps implementing both compilation modes:
 
@@ -275,7 +259,7 @@ export const setSiteName: StepFunction<SetSiteNameStep> = (step): StepResult => 
 };
 ```
 
-### 3. Content Creation Pattern
+### 2. Content Creation Pattern
 
 Steps that create posts, pages, or media:
 
@@ -295,7 +279,7 @@ toV2(): BlueprintV2Declaration {
 }
 ```
 
-### 4. Hybrid Pattern (Declarative + Imperative)
+### 3. Hybrid Pattern (Declarative + Imperative)
 
 V2 fragments with fallback to imperative steps:
 

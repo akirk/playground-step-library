@@ -97,7 +97,7 @@ describe('compileV2', () => {
             expect(result.content[1].source.post_title).toBe('Contact');
         });
 
-        it('should handle steps that return old format (array)', () => {
+        it('should pass through native steps without vars wrapper', () => {
             const compiler = new PlaygroundStepLibrary();
             const blueprint = {
                 steps: [
@@ -110,7 +110,7 @@ describe('compileV2', () => {
 
             const result = compiler.compileV2(blueprint);
 
-            // Old format steps should go to additionalStepsAfterExecution
+            // Native steps (without vars) go to additionalStepsAfterExecution
             expect(result.additionalStepsAfterExecution).toBeDefined();
             expect(result.additionalStepsAfterExecution).toHaveLength(1);
             expect(result.additionalStepsAfterExecution[0].step).toBe('runPHP');
