@@ -66,7 +66,7 @@ const blueprint = {
                 "password": "password",
                 "role": "administrator",
                 "display_name": "User",
-                "email": "",
+                "email": "wordpress@example.org",
                 "login": true
           }
     }

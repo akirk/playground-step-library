@@ -30,7 +30,7 @@ Useful to combine with a login step.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -44,7 +44,7 @@ Useful to combine with a login step.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

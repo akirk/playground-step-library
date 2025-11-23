@@ -392,12 +392,13 @@ ${deprecationNotices}`;
                 ? `\n**Compiles to:** ${builtinSteps.map(s => `[\`${s}\`](../builtin-step-usage.md#${s.toLowerCase()})`).join(', ')}`
                 : '';
 
-            const truncatedStepsV1 = compiledV1.steps.map(step => this.truncateStepValues(step));
-            const formattedJsonV1 = JSON.stringify({ steps: truncatedStepsV1 }, null, 2);
+            const truncatedV1 = { ...compiledV1 };
+            truncatedV1.steps = compiledV1.steps.map(step => this.truncateStepValues(step));
+            const formattedJsonV1 = JSON.stringify(truncatedV1, null, 2);
 
             let compiledOutput = `## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 \`\`\`json
 ${formattedJsonV1}
@@ -410,7 +411,7 @@ ${formattedJsonV1}
 
                 compiledOutput += `
 
-### V2 (Declarative)
+### Blueprint V2
 
 \`\`\`json
 ${formattedJsonV2}
@@ -566,9 +567,30 @@ ${this.generateJsonExample(stepName, stepInfo.vars || [])}
             if (activeVars.length > 0) {
                 example.vars = {};
                 activeVars.forEach(varDef => {
-                    const idx = Math.min(sampleIndex, (varDef.samples?.length || 1) - 1);
                     if (varDef.samples && varDef.samples.length > 0) {
-                        example.vars[varDef.name] = this.convertSampleToType(varDef.samples[idx], varDef.type);
+                        // Find the first non-empty sample, starting from sampleIndex
+                        let sampleValue = null;
+                        for (let i = sampleIndex; i < varDef.samples.length; i++) {
+                            if (varDef.samples[i] !== '' && varDef.samples[i] != null) {
+                                sampleValue = varDef.samples[i];
+                                break;
+                            }
+                        }
+                        // If no non-empty sample found from sampleIndex, try from beginning
+                        if (sampleValue === null) {
+                            for (let i = 0; i < varDef.samples.length; i++) {
+                                if (varDef.samples[i] !== '' && varDef.samples[i] != null) {
+                                    sampleValue = varDef.samples[i];
+                                    break;
+                                }
+                            }
+                        }
+                        // If still no non-empty sample, use generateDefaultValue
+                        if (sampleValue !== null) {
+                            example.vars[varDef.name] = this.convertSampleToType(sampleValue, varDef.type);
+                        } else {
+                            example.vars[varDef.name] = this.generateDefaultValue(varDef);
+                        }
                     } else {
                         // Generate sensible defaults based on type and name
                         example.vars[varDef.name] = this.generateDefaultValue(varDef);
@@ -613,22 +635,22 @@ ${this.generateJsonExample(stepName, stepInfo.vars || [])}
         }
 
         const deprecatedVars = vars.filter(varDef => varDef.deprecated);
-        
+
         if (deprecatedVars.length === 0) {
             return '';
         }
 
         let notices = '## Deprecated Parameters\n\n';
         notices += 'The following parameters are deprecated but still supported for backward compatibility:\n\n';
-        
+
         deprecatedVars.forEach(varDef => {
             // Try to match deprecated parameter with new one based on description
-            const activeVar = vars.find(v => 
-                !v.deprecated && 
+            const activeVar = vars.find(v =>
+                !v.deprecated &&
                 (v.description?.toLowerCase().includes(varDef.name?.replace('post', '').toLowerCase()) ||
-                 varDef.description?.toLowerCase().includes(v.name?.toLowerCase()))
+                    varDef.description?.toLowerCase().includes(v.name?.toLowerCase()))
             );
-            
+
             if (activeVar) {
                 notices += `- \`${varDef.name}\` → Use \`${activeVar.name}\` instead\n`;
             } else {

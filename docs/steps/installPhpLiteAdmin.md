@@ -24,7 +24,7 @@ Provide phpLiteAdmin. Password: admin
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -55,7 +55,7 @@ Provide phpLiteAdmin. Password: admin
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

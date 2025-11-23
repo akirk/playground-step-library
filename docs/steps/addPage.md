@@ -45,7 +45,7 @@ Add a page with title and content.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -61,7 +61,7 @@ Add a page with title and content.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

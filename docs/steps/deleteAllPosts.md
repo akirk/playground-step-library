@@ -24,7 +24,7 @@ Delete all posts, pages, attachments, revisions and menu items.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -40,7 +40,7 @@ Delete all posts, pages, attachments, revisions and menu items.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

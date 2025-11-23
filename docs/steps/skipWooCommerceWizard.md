@@ -24,7 +24,7 @@ When running WooCommerce, don't show the wizard.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -59,7 +59,7 @@ When running WooCommerce, don't show the wizard.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

@@ -42,7 +42,7 @@ Fake a wp_remote_request() response.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -60,7 +60,7 @@ Fake a wp_remote_request() response.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

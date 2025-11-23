@@ -42,7 +42,7 @@ Install a theme via WordPress.org or Github.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -56,7 +56,7 @@ Install a theme via WordPress.org or Github.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

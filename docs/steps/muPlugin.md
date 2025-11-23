@@ -24,7 +24,7 @@ Add code for a plugin.
     {
           "step": "muPlugin",
           "vars": {
-                "code": ""
+                "code": "<?php echo \"Hello World\"; ?>"
           }
     }
 ```
@@ -35,14 +35,14 @@ Add code for a plugin.
           "step": "muPlugin",
           "vars": {
                 "name": "custom-hooks",
-                "code": ""
+                "code": "<?php echo \"Hello World\"; ?>"
           }
     }
 ```
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -60,7 +60,7 @@ Add code for a plugin.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {
@@ -88,7 +88,7 @@ const blueprint = {
           "step": "muPlugin",
           "vars": {
                 "name": "my-plugin",
-                "code": ""
+                "code": "<?php echo \"Hello World\"; ?>"
           }
     }
   ]

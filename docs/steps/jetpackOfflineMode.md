@@ -28,7 +28,7 @@ Start Jetpack in Offline mode.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -51,7 +51,7 @@ Start Jetpack in Offline mode.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

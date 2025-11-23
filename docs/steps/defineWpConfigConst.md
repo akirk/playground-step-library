@@ -32,7 +32,7 @@ Define a wp-config PHP constant.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -46,7 +46,7 @@ Define a wp-config PHP constant.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

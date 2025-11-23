@@ -90,7 +90,7 @@ enqueueCss.vars = [
 		type: "textarea",
 		language: "css",
 		required: true,
-		samples: [ '' ]
+		samples: [ '', 'body { background: #f0f0f0; }' ]
 	},
 	{
 		name: "frontend",

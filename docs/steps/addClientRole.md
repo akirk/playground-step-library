@@ -30,7 +30,7 @@ Adds a role for clients with additional capabilities than editors, but not quite
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -48,7 +48,7 @@ Adds a role for clients with additional capabilities than editors, but not quite
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

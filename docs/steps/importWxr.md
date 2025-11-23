@@ -23,14 +23,14 @@ Import a WXR from a URL.
     {
           "step": "importWxr",
           "vars": {
-                "url": ""
+                "url": "https://example.com"
           }
     }
 ```
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -43,7 +43,7 @@ Import a WXR from a URL.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {
@@ -62,7 +62,7 @@ const blueprint = {
         {
           "step": "importWxr",
           "vars": {
-                "url": ""
+                "url": "https://example.com"
           }
     }
   ]

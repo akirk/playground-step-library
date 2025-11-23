@@ -31,7 +31,7 @@ Generate WooCommerce products and other data using the WC Smooth Generator plugi
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -67,7 +67,7 @@ Generate WooCommerce products and other data using the WC Smooth Generator plugi
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

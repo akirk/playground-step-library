@@ -24,7 +24,7 @@ Record steps made and compile a new blueprint.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -47,7 +47,7 @@ Record steps made and compile a new blueprint.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

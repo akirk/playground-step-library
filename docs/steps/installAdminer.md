@@ -24,7 +24,7 @@ Install Adminer with auto login link.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -59,7 +59,7 @@ Install Adminer with auto login link.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

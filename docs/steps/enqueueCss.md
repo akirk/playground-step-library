@@ -25,7 +25,7 @@ Enqueue custom CSS on frontend and/or admin.
     {
           "step": "enqueueCss",
           "vars": {
-                "css": ""
+                "css": "body { background: #f0f0f0; }"
           }
     }
 ```
@@ -36,7 +36,7 @@ Enqueue custom CSS on frontend and/or admin.
           "step": "enqueueCss",
           "vars": {
                 "filename": "theme-overrides",
-                "css": "",
+                "css": "body { background: #f0f0f0; }",
                 "frontend": true,
                 "wpAdmin": true
           }
@@ -57,7 +57,7 @@ const blueprint = {
           "step": "enqueueCss",
           "vars": {
                 "filename": "custom-styles",
-                "css": "",
+                "css": "body { background: #f0f0f0; }",
                 "frontend": true,
                 "wpAdmin": true
           }

@@ -49,7 +49,7 @@ Add a template part (header, footer, etc.) for a block theme.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -65,7 +65,7 @@ Add a template part (header, footer, etc.) for a block theme.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {
@@ -97,7 +97,7 @@ const blueprint = {
           "step": "addTemplatePart",
           "vars": {
                 "slug": "header",
-                "theme": "",
+                "theme": "twentytwentyfour",
                 "content": "<!-- wp:site-title /-->",
                 "area": "header",
                 "title": "Header"

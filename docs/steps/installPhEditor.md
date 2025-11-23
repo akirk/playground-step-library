@@ -24,10 +24,11 @@ Install phEditor. Password: admin
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
+  "landingPage": "/pheditor-main/pheditor.php",
   "steps": [
     {
       "step": "mkdir",
@@ -51,7 +52,7 @@ Install phEditor. Password: admin
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

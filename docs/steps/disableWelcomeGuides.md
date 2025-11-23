@@ -24,7 +24,7 @@ Disable the welcome guides in the site editor.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -42,7 +42,7 @@ Disable the welcome guides in the site editor.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

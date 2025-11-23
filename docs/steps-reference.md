@@ -136,7 +136,7 @@ This document provides detailed information about all available steps, including
                 "date": "now",
                 "type": "post",
                 "status": "publish",
-                "postId": "",
+                "postId": "1000",
                 "landingPage": false,
                 "registerPostType": "example-value"
           }
@@ -200,7 +200,7 @@ This document provides detailed information about all available steps, including
           "step": "addTemplate",
           "vars": {
                 "slug": "home",
-                "theme": "",
+                "theme": "twentytwentyfour",
                 "content": "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\",\"area\":\"header\"} /-->\n\n<!-- wp:post-content /-->\n\n<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\",\"area\":\"footer\"} /-->",
                 "title": "Home"
           }
@@ -231,7 +231,7 @@ This document provides detailed information about all available steps, including
           "step": "addTemplatePart",
           "vars": {
                 "slug": "header",
-                "theme": "",
+                "theme": "twentytwentyfour",
                 "content": "<!-- wp:site-title /-->",
                 "area": "header",
                 "title": "Header"
@@ -263,9 +263,9 @@ This document provides detailed information about all available steps, including
     {
           "step": "blockExamples",
           "vars": {
-                "blockNamespace": "",
+                "blockNamespace": "gutenberg",
                 "postTitle": "Block Examples",
-                "limit": "",
+                "limit": "10",
                 "postId": "1000",
                 "excludeCore": false,
                 "landingPage": true
@@ -361,7 +361,7 @@ This document provides detailed information about all available steps, including
                 "password": "password",
                 "role": "administrator",
                 "display_name": "User",
-                "email": "",
+                "email": "wordpress@example.org",
                 "login": true
           }
     }
@@ -513,12 +513,12 @@ This document provides detailed information about all available steps, including
     {
           "step": "doAction",
           "vars": {
-                "action": "",
-                "parameter1": "",
-                "parameter2": "",
-                "parameter3": "",
-                "parameter4": "",
-                "parameter5": ""
+                "action": "example-value",
+                "parameter1": "example-value",
+                "parameter2": "example-value",
+                "parameter3": "example-value",
+                "parameter4": "example-value",
+                "parameter5": "example-value"
           }
     }
 ```
@@ -582,7 +582,7 @@ This document provides detailed information about all available steps, including
           "step": "enqueueCss",
           "vars": {
                 "filename": "custom-styles",
-                "css": "",
+                "css": "body { background: #f0f0f0; }",
                 "frontend": true,
                 "wpAdmin": true
           }
@@ -612,7 +612,7 @@ This document provides detailed information about all available steps, including
           "step": "enqueueJs",
           "vars": {
                 "filename": "custom-script",
-                "js": "",
+                "js": "console.log(\"Hello from custom script!\");",
                 "frontend": true,
                 "wpAdmin": true
           }
@@ -806,7 +806,7 @@ This document provides detailed information about all available steps, including
     {
           "step": "importFriendFeeds",
           "vars": {
-                "opml": ""
+                "opml": "https://alex.kirk.at Alex Kirk"
           }
     }
 ```
@@ -830,7 +830,7 @@ This document provides detailed information about all available steps, including
     {
           "step": "importWordPressComExport",
           "vars": {
-                "url": ""
+                "url": "https://example.com"
           }
     }
 ```
@@ -854,7 +854,7 @@ This document provides detailed information about all available steps, including
     {
           "step": "importWxr",
           "vars": {
-                "url": ""
+                "url": "https://example.com"
           }
     }
 ```
@@ -1040,7 +1040,7 @@ This document provides detailed information about all available steps, including
           "step": "muPlugin",
           "vars": {
                 "name": "my-plugin",
-                "code": ""
+                "code": "<?php echo \"Hello World\"; ?>"
           }
     }
 ```
@@ -1099,8 +1099,8 @@ This document provides detailed information about all available steps, including
     {
           "step": "renameDefaultCategory",
           "vars": {
-                "categoryName": "",
-                "categorySlug": ""
+                "categoryName": "example-name",
+                "categorySlug": "example-value"
           }
     }
 ```
@@ -1148,7 +1148,7 @@ This document provides detailed information about all available steps, including
     {
           "step": "runWpCliCommand",
           "vars": {
-                "command": ""
+                "command": "example-value"
           }
     }
 ```
@@ -1265,8 +1265,8 @@ This document provides detailed information about all available steps, including
     {
           "step": "setSiteOption",
           "vars": {
-                "name": "",
-                "value": ""
+                "name": "permalink_structure",
+                "value": "/%postname%/"
           }
     }
 ```

@@ -82,7 +82,7 @@ enqueueJs.vars = [
 		description: "Filename for the JavaScript file (without .js extension)",
 		type: "text",
 		required: false,
-		samples: [ 'custom-script', 'interactive-features' ]
+		samples: ['custom-script', 'interactive-features']
 	},
 	{
 		name: "js",
@@ -90,18 +90,18 @@ enqueueJs.vars = [
 		type: "textarea",
 		language: "javascript",
 		required: true,
-		samples: [ '' ]
+		samples: ['', "console.log('Hello from custom script!');"]
 	},
 	{
 		name: "frontend",
 		description: "Enqueue on frontend",
 		type: "boolean",
-		samples: [ "true" ]
+		samples: ["true"]
 	},
 	{
 		name: "wpAdmin",
 		description: "Enqueue in wp-admin",
 		type: "boolean",
-		samples: [ "true" ]
+		samples: ["true"]
 	}
 ];

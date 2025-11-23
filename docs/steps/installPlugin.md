@@ -42,7 +42,7 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -56,13 +56,13 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {
   "version": 2,
   "plugins": [
-    null
+    ""
   ]
 }
 ```

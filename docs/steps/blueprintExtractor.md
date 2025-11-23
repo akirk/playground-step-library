@@ -24,7 +24,7 @@ Generate a new blueprint after modifying the WordPress.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -47,7 +47,7 @@ Generate a new blueprint after modifying the WordPress.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

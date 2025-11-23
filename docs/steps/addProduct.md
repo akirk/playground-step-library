@@ -51,7 +51,7 @@ Add a WooCommerce product (will install WooCommerce if not present)
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -77,7 +77,7 @@ Add a WooCommerce product (will install WooCommerce if not present)
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

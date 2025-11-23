@@ -28,7 +28,7 @@ Set a site option.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -42,7 +42,7 @@ Set a site option.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {
@@ -61,8 +61,8 @@ const blueprint = {
         {
           "step": "setSiteOption",
           "vars": {
-                "name": "",
-                "value": ""
+                "name": "permalink_structure",
+                "value": "/%postname%/"
           }
     }
   ]

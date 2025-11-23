@@ -208,11 +208,12 @@ class StepLibraryCompiler {
             } else if (this.customSteps[step.step]) {
                 // Check if this is a builtin step wrapper being used in native flat format
                 const customStep = this.customSteps[step.step];
-                if (customStep.builtin && !step.vars) {
-                    // Builtin step in flat format - pass through as native
+                const stepHasVars = customStep.vars && customStep.vars.length > 0;
+                if (customStep.builtin && !step.vars && stepHasVars) {
+                    // Builtin step in flat format with no vars provided - pass through as native
                     customStepResult = { steps: [step as StepDefinition] };
                 } else {
-                    // Custom step with vars - transform it
+                    // Custom step (or builtin with no vars definition) - transform it
                     customStepResult = this.executeCustomStep(step.step, step, inputData);
                 }
             } else {

@@ -30,7 +30,7 @@ Run code in the context of WordPress.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -43,7 +43,7 @@ Run code in the context of WordPress.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

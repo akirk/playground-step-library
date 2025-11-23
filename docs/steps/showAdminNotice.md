@@ -44,7 +44,7 @@ Show an admin notice in the dashboard.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -62,7 +62,7 @@ Show an admin notice in the dashboard.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

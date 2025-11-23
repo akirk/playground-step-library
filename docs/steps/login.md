@@ -45,7 +45,7 @@ Login to the site.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -60,14 +60,14 @@ Login to the site.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {
   "version": 2,
   "applicationOptions": {
     "wordpress-playground": {
-      "login": {}
+      "login": true
     }
   }
 }

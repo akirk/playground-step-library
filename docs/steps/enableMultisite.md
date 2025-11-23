@@ -24,10 +24,11 @@ Enable WordPress Multisite functionality.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
+  "landingPage": "/wp-admin/network/sites.php",
   "steps": [
     {
       "step": "enableMultisite"
@@ -36,7 +37,7 @@ Enable WordPress Multisite functionality.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

@@ -30,7 +30,7 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -56,7 +56,7 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

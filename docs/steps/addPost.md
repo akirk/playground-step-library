@@ -56,7 +56,7 @@ Add a post with title, content, type, status, and date.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -72,7 +72,7 @@ Add a post with title, content, type, status, and date.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {
@@ -106,7 +106,7 @@ const blueprint = {
                 "date": "now",
                 "type": "post",
                 "status": "publish",
-                "postId": "",
+                "postId": "1000",
                 "landingPage": false,
                 "registerPostType": "example-value"
           }

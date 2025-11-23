@@ -32,7 +32,7 @@ Remove widgets from the wp-admin dashboard.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -50,7 +50,7 @@ Remove widgets from the wp-admin dashboard.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

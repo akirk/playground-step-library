@@ -23,14 +23,14 @@ Run a wp-cli command.
     {
           "step": "runWpCliCommand",
           "vars": {
-                "command": ""
+                "command": "example-value"
           }
     }
 ```
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -42,7 +42,7 @@ Run a wp-cli command.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {
@@ -66,7 +66,7 @@ const blueprint = {
         {
           "step": "runWpCliCommand",
           "vars": {
-                "command": ""
+                "command": "example-value"
           }
     }
   ]

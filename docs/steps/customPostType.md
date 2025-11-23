@@ -47,7 +47,7 @@ Register a custom post type.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -68,7 +68,7 @@ Register a custom post type.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

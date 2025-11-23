@@ -47,7 +47,7 @@ Add a template (home, single, page, etc.) for a block theme.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -63,7 +63,7 @@ Add a template (home, single, page, etc.) for a block theme.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {
@@ -95,7 +95,7 @@ const blueprint = {
           "step": "addTemplate",
           "vars": {
                 "slug": "home",
-                "theme": "",
+                "theme": "twentytwentyfour",
                 "content": "<!-- wp:template-part {\"slug\":\"header\",\"tagName\":\"header\",\"area\":\"header\"} /-->\n\n<!-- wp:post-content /-->\n\n<!-- wp:template-part {\"slug\":\"footer\",\"tagName\":\"footer\",\"area\":\"footer\"} /-->",
                 "title": "Home"
           }

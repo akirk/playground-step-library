@@ -32,10 +32,11 @@ Creates a post with all block examples from registered blocks
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
+  "landingPage": "/wp-admin/post.php?post=1000&action=edit",
   "steps": [
     {
       "step": "runPHP",
@@ -48,7 +49,7 @@ Creates a post with all block examples from registered blocks
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {
@@ -84,9 +85,9 @@ const blueprint = {
         {
           "step": "blockExamples",
           "vars": {
-                "blockNamespace": "",
+                "blockNamespace": "gutenberg",
                 "postTitle": "Block Examples",
-                "limit": "",
+                "limit": "10",
                 "postId": "1000",
                 "excludeCore": false,
                 "landingPage": true

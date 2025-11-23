@@ -22,7 +22,7 @@ Import a WordPress.com export file (WXR in a ZIP)
     {
           "step": "importWordPressComExport",
           "vars": {
-                "url": ""
+                "url": "https://example.com"
           }
     }
 ```
@@ -40,7 +40,7 @@ const blueprint = {
         {
           "step": "importWordPressComExport",
           "vars": {
-                "url": ""
+                "url": "https://example.com"
           }
     }
   ]

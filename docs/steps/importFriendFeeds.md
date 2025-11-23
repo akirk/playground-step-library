@@ -23,17 +23,18 @@ Add subscriptions to the Friends plugin.
     {
           "step": "importFriendFeeds",
           "vars": {
-                "opml": ""
+                "opml": "https://alex.kirk.at Alex Kirk"
           }
     }
 ```
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
+  "landingPage": "/friends/?refresh&welcome",
   "steps": [
     {
       "step": "runPHP",
@@ -46,7 +47,7 @@ Add subscriptions to the Friends plugin.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {
@@ -82,7 +83,7 @@ const blueprint = {
         {
           "step": "importFriendFeeds",
           "vars": {
-                "opml": ""
+                "opml": "https://alex.kirk.at Alex Kirk"
           }
     }
   ]

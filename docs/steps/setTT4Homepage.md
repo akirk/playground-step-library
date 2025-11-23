@@ -24,7 +24,7 @@ Set the homepage for the twentytwentyfour theme.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -40,7 +40,7 @@ Set the homepage for the twentytwentyfour theme.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

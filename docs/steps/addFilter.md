@@ -45,7 +45,7 @@ Easily add a filtered value.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
@@ -63,7 +63,7 @@ Easily add a filtered value.
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {

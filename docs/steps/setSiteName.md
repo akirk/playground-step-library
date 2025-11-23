@@ -32,25 +32,31 @@ Set the site name and tagline.
 
 ## Compiled Output
 
-### V1 (Imperative)
+### Blueprint V1
 
 ```json
 {
   "steps": [
     {
       "step": "setSiteOptions",
-      "options": {}
+      "options": {
+        "blogname": "",
+        "blogdescription": ""
+      }
     }
   ]
 }
 ```
 
-### V2 (Declarative)
+### Blueprint V2
 
 ```json
 {
   "version": 2,
-  "siteOptions": {}
+  "siteOptions": {
+    "blogname": "",
+    "blogdescription": ""
+  }
 }
 ```
 

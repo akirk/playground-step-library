@@ -23,8 +23,8 @@ Change the default "Uncategorized".
     {
           "step": "renameDefaultCategory",
           "vars": {
-                "categoryName": "",
-                "categorySlug": ""
+                "categoryName": "example-name",
+                "categorySlug": "example-value"
           }
     }
 ```
@@ -42,8 +42,8 @@ const blueprint = {
         {
           "step": "renameDefaultCategory",
           "vars": {
-                "categoryName": "",
-                "categorySlug": ""
+                "categoryName": "example-name",
+                "categorySlug": "example-value"
           }
     }
   ]

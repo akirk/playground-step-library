@@ -27,7 +27,7 @@ Execute a custom action.
     {
           "step": "doAction",
           "vars": {
-                "action": ""
+                "action": "example-value"
           }
     }
 ```
@@ -37,12 +37,12 @@ Execute a custom action.
 {
           "step": "doAction",
           "vars": {
-                "action": "",
-                "parameter1": "",
-                "parameter2": "",
-                "parameter3": "",
-                "parameter4": "",
-                "parameter5": ""
+                "action": "example-value",
+                "parameter1": "example-value",
+                "parameter2": "example-value",
+                "parameter3": "example-value",
+                "parameter4": "example-value",
+                "parameter5": "example-value"
           }
     }
 ```
@@ -60,12 +60,12 @@ const blueprint = {
         {
           "step": "doAction",
           "vars": {
-                "action": "",
-                "parameter1": "",
-                "parameter2": "",
-                "parameter3": "",
-                "parameter4": "",
-                "parameter5": ""
+                "action": "example-value",
+                "parameter1": "example-value",
+                "parameter2": "example-value",
+                "parameter3": "example-value",
+                "parameter4": "example-value",
+                "parameter5": "example-value"
           }
     }
   ]
