@@ -70,19 +70,14 @@ import PlaygroundStepLibrary from 'playground-step-library';
 
 const compiler = new PlaygroundStepLibrary();
 
-// Compile to V1 format (imperative, with steps array)
-const v1 = compiler.compile({
+const blueprint = {
     steps: [
         { step: 'setSiteName', vars: { sitename: 'My Site', tagline: 'A WordPress site' } }
     ]
-});
+};
 
-// Compile to V2 format (declarative, with schema properties)
-const v2 = compiler.compileV2({
-    steps: [
-        { step: 'setSiteName', vars: { sitename: 'My Site', tagline: 'A WordPress site' } }
-    ]
-});
+const v1 = compiler.compile(blueprint);    // V1: imperative, with steps array
+const v2 = compiler.compileV2(blueprint);  // V2: declarative, with schema properties
 
 // Transpile native V1 blueprints to V2 (limited support - see docs)
 const result = compiler.transpile(nativeV1Blueprint);

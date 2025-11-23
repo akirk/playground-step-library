@@ -73,15 +73,15 @@ Users can choose which output format they prefer via the web UI or programmatica
 
 #### V1 Compiler (src/v1-compiler.ts)
 1. **Parse Input** - Validates blueprint structure and step definitions
-2. **Transform Steps** - Each custom step returns `BlueprintV1` or `BlueprintV2`
-3. **Convert to V1** - `BlueprintV2` fragments are converted to v1 steps via converters
+2. **Transform Steps** - Calls `toV1()` on each step's `StepResult` to get native steps
+3. **Native Passthrough** - Steps without `vars` (native Playground format) pass through unchanged
 4. **Variable Substitution** - Variables are replaced throughout the transformed steps
 5. **Deduplication** - Identical steps are merged (configurable via strategies)
 6. **Output Generation** - Final blueprint with steps array
 
 #### V2 Compiler (src/v2-compiler.ts)
 1. **Parse Input** - Validates blueprint structure
-2. **Transform Steps** - Each custom step returns `BlueprintV1` or `BlueprintV2`
+2. **Transform Steps** - Calls `toV2()` on each step's `StepResult` to get schema fragments
 3. **Merge Fragments** - Collects and merges declarative fragments:
    - `content` - Posts, pages, media items
    - `users` - User accounts
@@ -100,8 +100,10 @@ Users can choose which output format they prefer via the web UI or programmatica
 ```json
 {
   "step": "addPage",
-  "title": "Welcome",
-  "content": "<p>Hello World!</p>"
+  "vars": {
+    "title": "Welcome",
+    "content": "<p>Hello World!</p>"
+  }
 }
 ```
 
@@ -168,32 +170,25 @@ Custom steps provide entirely new functionality:
 
 ### Overview
 
-Steps now return a `StepResult` object with two methods:
-- `toV1()`: Returns an array of v1 blueprint steps (imperative)
-- `toV2()`: Returns `V2SchemaFragments` (declarative schema)
+Steps return a `StepResult` object with two methods:
+- `toV1()`: Returns a `BlueprintV1Declaration` (imperative, with steps array)
+- `toV2()`: Returns a `BlueprintV2Declaration` (declarative schema)
 
-This allows each step to define how it should be compiled in both v1 (imperative) and v2 (declarative) modes.
+Each step defines how it compiles in both modes. The compiler calls the appropriate method and merges results.
 
 ### StepResult Interface
 
 ```typescript
 interface StepResult {
-  toV1(): any[];               // Returns array of native Playground steps
-  toV2(): V2SchemaFragments;   // Returns declarative schema fragments
-}
-
-interface V2SchemaFragments {
-  content?: any[];              // Posts, pages, custom post types
-  users?: any[];                // User accounts
-  media?: any[];                // Media library files
-  plugins?: any[];              // Plugin slugs or installation configs
-  themes?: any[];               // Theme slugs or installation configs
-  constants?: Record<string, any>;     // wp-config.php constants
-  siteOptions?: Record<string, any>;   // WordPress options
-  postTypes?: Record<string, any>;     // Custom post type definitions
-  additionalSteps?: any[];      // Fallback for imperative operations
+  toV1(): BlueprintV1Declaration;  // Returns v1 blueprint (with steps array)
+  toV2(): BlueprintV2Declaration;  // Returns v2 blueprint (declarative schema)
 }
 ```
+
+Both methods return full blueprint declarations. The v2 compiler merges properties from multiple steps:
+- Arrays (`content`, `users`, `plugins`, `themes`) are concatenated
+- Objects (`siteOptions`, `constants`) are merged
+- `additionalStepsAfterExecution` collects imperative fallback steps
 
 ### Step Implementation Example
 
@@ -202,26 +197,28 @@ export const addPage: StepFunction<AddPageStep> = (step): StepResult => {
   return {
     toV1() {
       // V1: Generate PHP code to insert the page
-      return [{
-        step: "runPHP",
-        code: `<?php wp_insert_post(...); ?>`
-      }];
+      return {
+        steps: [{
+          step: "runPHP",
+          code: `<?php wp_insert_post(...); ?>`
+        }]
+      };
     },
 
-    toV2(): V2SchemaFragments {
+    toV2(): BlueprintV2Declaration {
       // V2: Return declarative content
       return {
         content: [{
           type: 'posts',
           source: {
-            post_title: step.title,
-            post_content: step.content,
+            post_title: step.vars?.title,
+            post_content: step.vars?.content,
             post_type: 'page',
             post_status: 'publish'
           }
         }],
         // Use additionalSteps for operations that can't be declarative
-        additionalSteps: step.homepage ? [
+        additionalSteps: step.vars?.homepage ? [
           { step: 'runPHP', code: '<?php /* set page_on_front */ ?>' }
         ] : undefined
       };
@@ -240,7 +237,7 @@ Older steps that only return v1 arrays. The compiler handles these automatically
 export const muPlugin: StepFunction<MuPluginStep> = (step) => {
   return [
     { step: "mkdir", path: "/wordpress/wp-content/mu-plugins" },
-    { step: "writeFile", path: "...", data: step.code }
+    { step: "writeFile", path: "...", data: step.vars?.code }
   ];
 };
 ```
@@ -255,20 +252,22 @@ Steps implementing both compilation modes:
 export const setSiteName: StepFunction<SetSiteNameStep> = (step): StepResult => {
   return {
     toV1() {
-      return [{
-        step: "setSiteOptions",
-        options: {
-          blogname: step.sitename,
-          blogdescription: step.tagline
-        }
-      }];
+      return {
+        steps: [{
+          step: "setSiteOptions",
+          options: {
+            blogname: step.vars?.sitename,
+            blogdescription: step.vars?.tagline
+          }
+        }]
+      };
     },
 
-    toV2(): V2SchemaFragments {
+    toV2(): BlueprintV2Declaration {
       return {
         siteOptions: {
-          blogname: step.sitename,
-          blogdescription: step.tagline
+          blogname: step.vars?.sitename,
+          blogdescription: step.vars?.tagline
         }
       };
     }
@@ -281,13 +280,13 @@ export const setSiteName: StepFunction<SetSiteNameStep> = (step): StepResult => 
 Steps that create posts, pages, or media:
 
 ```typescript
-toV2(): V2SchemaFragments {
+toV2(): BlueprintV2Declaration {
   return {
     content: [{
       type: 'posts',
       source: {
-        post_title: step.title,
-        post_content: step.content,
+        post_title: step.vars?.title,
+        post_content: step.vars?.content,
         post_type: 'page',
         post_status: 'publish'
       }
@@ -301,7 +300,7 @@ toV2(): V2SchemaFragments {
 V2 fragments with fallback to imperative steps:
 
 ```typescript
-toV2(): V2SchemaFragments {
+toV2(): BlueprintV2Declaration {
   return {
     siteOptions: { show_on_front: 'page' },
     // Use additionalSteps when declarative approach isn't enough
@@ -336,7 +335,7 @@ Useful for configuration files or mu-plugins.
 ```
 playground-step-library/
 ├── steps/                 # Step definitions
-│   ├── types.ts          # TypeScript interfaces (StepResult, V2SchemaFragments)
+│   ├── types.ts          # TypeScript interfaces (StepResult, step-specific types)
 │   ├── addPage.ts        # Individual step files (with toV1/toV2 methods)
 │   ├── addPost.ts
 │   └── ...
@@ -376,16 +375,18 @@ node bin/new-step.js myStepName
 export const myStepName: StepFunction<MyStepNameStep> = (step): StepResult => {
   return {
     toV1() {
-      // Return array of native Playground steps for v1
-      return [
-        { step: "runPHP", code: "<?php /* ... */ ?>" }
-      ];
+      // Return v1 blueprint with steps array
+      return {
+        steps: [
+          { step: "runPHP", code: "<?php /* ... */ ?>" }
+        ]
+      };
     },
 
-    toV2(): V2SchemaFragments {
+    toV2(): BlueprintV2Declaration {
       // Return declarative schema fragments for v2
       return {
-        siteOptions: { myOption: step.value },
+        siteOptions: { myOption: step.vars?.value },
         additionalSteps: [] // Optional imperative fallback
       };
     }
@@ -477,7 +478,7 @@ const result = compiler.transpile(nativeV1Blueprint);
 **Process:**
 1. Executes each custom step
 2. Checks if result is `StepResult` (has `toV2()` method)
-3. Calls `.toV2()` to get `V2SchemaFragments`
+3. Calls `.toV2()` to get `BlueprintV2Declaration`
 4. Merges all fragments into unified v2 schema:
    - Arrays (`content`, `users`, `media`) are concatenated
    - Objects (`siteOptions`, `constants`) are merged
@@ -529,7 +530,7 @@ Be careful with PHP code generation:
 
 ```typescript
 // Use JSON.stringify for safe escaping
-code: `<?php echo ${JSON.stringify(step.text)}; ?>`
+code: `<?php echo ${JSON.stringify(step.vars?.text)}; ?>`
 ```
 
 ### URL Validation
@@ -537,8 +538,8 @@ code: `<?php echo ${JSON.stringify(step.text)}; ?>`
 Always validate URLs:
 
 ```typescript
-const urlTest = /^https:\/\/github\.com\/[^\/]+\/[^\/]+/.exec(step.url);
-if (!urlTest) {
+const urlPattern = /^https:\/\/github\.com\/[^\/]+\/[^\/]+/;
+if (!urlPattern.test(step.vars?.url || '')) {
   return []; // Invalid, return nothing
 }
 ```
