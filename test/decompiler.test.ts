@@ -485,10 +485,10 @@ wp_insert_post( array(
 			expect(result.steps).toHaveLength(1);
 			expect(result.steps[0]).toMatchObject({
 				step: 'importFriendFeeds',
-				opml: expect.stringContaining('Alex Kirk')
+				vars: { opml: expect.stringContaining('Alex Kirk') }
 			});
-			expect(result.steps[0].opml).toContain('https://alex.kirk.at');
-			expect(result.steps[0].opml).toContain('https://adamadam.blog');
+			expect((result.steps[0] as any).vars.opml).toContain('https://alex.kirk.at');
+			expect((result.steps[0] as any).vars.opml).toContain('https://adamadam.blog');
 		});
 	});
 
@@ -927,8 +927,8 @@ wp_insert_post( array(
 
 			expect(result.steps.length).toBeGreaterThanOrEqual(7);
 
-			expect(result.steps.find(s => s.step === 'installPlugin' && (s as any).url?.includes('akismet'))).toBeDefined();
-			expect(result.steps.find(s => s.step === 'installPlugin' && (s as any).url?.includes('hello-dolly'))).toBeDefined();
+			expect(result.steps.find(s => s.step === 'installPlugin' && (s as any).vars?.url?.includes('akismet'))).toBeDefined();
+			expect(result.steps.find(s => s.step === 'installPlugin' && (s as any).vars?.url?.includes('hello-dolly'))).toBeDefined();
 			expect(result.steps.find(s => s.step === 'login')).toBeDefined();
 			expect(result.steps.find(s => s.step === 'setSiteName')).toBeDefined();
 			expect(result.steps.find(s => s.step === 'setSiteOption' && (s as any).vars?.name === 'permalink_structure')).toBeDefined();
@@ -2084,10 +2084,8 @@ $page_id = wp_insert_post( $page_args );`,
 			expect(result.steps).toHaveLength(1);
 			expect(result.steps[0]).toMatchObject({
 				step: 'activatePlugin',
-				vars: {
-					pluginPath: 'hello-dolly/hello.php',
-					pluginName: 'Hello Dolly'
-				}
+				pluginPath: 'hello-dolly/hello.php',
+				pluginName: 'Hello Dolly'
 			});
 			expect(result.confidence).toBe('high');
 		});
@@ -2107,7 +2105,7 @@ $page_id = wp_insert_post( $page_args );`,
 			expect(result.steps).toHaveLength(1);
 			expect(result.steps[0]).toMatchObject({
 				step: 'activateTheme',
-				vars: { themeFolderName: 'flavor' }
+				themeFolderName: 'flavor'
 			});
 		});
 
@@ -2125,7 +2123,7 @@ $page_id = wp_insert_post( $page_args );`,
 
 			expect(result.steps[0]).toMatchObject({
 				step: 'activateTheme',
-				vars: { themeFolderName: 'flavor' }
+				themeFolderName: 'flavor'
 			});
 		});
 
@@ -2145,10 +2143,8 @@ $page_id = wp_insert_post( $page_args );`,
 			expect(result.steps).toHaveLength(1);
 			expect(result.steps[0]).toMatchObject({
 				step: 'cp',
-				vars: {
-					fromPath: '/wp-content/themes/flavor/style.css',
-					toPath: '/wp-content/themes/flavor/style-backup.css'
-				}
+				fromPath: '/wp-content/themes/flavor/style.css',
+				toPath: '/wp-content/themes/flavor/style-backup.css'
 			});
 		});
 
@@ -2167,10 +2163,8 @@ $page_id = wp_insert_post( $page_args );`,
 
 			expect(result.steps[0]).toMatchObject({
 				step: 'mv',
-				vars: {
-					fromPath: '/wp-content/plugins/old-plugin',
-					toPath: '/wp-content/plugins/new-plugin'
-				}
+				fromPath: '/wp-content/plugins/old-plugin',
+				toPath: '/wp-content/plugins/new-plugin'
 			});
 		});
 
@@ -2188,7 +2182,7 @@ $page_id = wp_insert_post( $page_args );`,
 
 			expect(result.steps[0]).toMatchObject({
 				step: 'rm',
-				vars: { path: '/wp-content/plugins/hello.php' }
+				path: '/wp-content/plugins/hello.php'
 			});
 		});
 
@@ -2206,7 +2200,7 @@ $page_id = wp_insert_post( $page_args );`,
 
 			expect(result.steps[0]).toMatchObject({
 				step: 'rmdir',
-				vars: { path: '/wp-content/plugins/old-plugin' }
+				path: '/wp-content/plugins/old-plugin'
 			});
 		});
 
@@ -2225,7 +2219,7 @@ $page_id = wp_insert_post( $page_args );`,
 			expect(result.steps).toHaveLength(1);
 			expect(result.steps[0]).toMatchObject({
 				step: 'mkdir',
-				vars: { path: '/wp-content/custom-folder' }
+				path: '/wp-content/custom-folder'
 			});
 		});
 
@@ -2259,9 +2253,9 @@ $page_id = wp_insert_post( $page_args );`,
 
 			expect(result.steps[0]).toMatchObject({
 				step: 'unzip',
-				vars: { extractToPath: '/wp-content/plugins' }
+				extractToPath: '/wp-content/plugins'
 			});
-			expect((result.steps[0] as any).vars?.zipFile).toBeDefined();
+			expect((result.steps[0] as any).zipFile).toBeDefined();
 		});
 
 		it('should decompile unzip step with zipPath', () => {
@@ -2279,10 +2273,8 @@ $page_id = wp_insert_post( $page_args );`,
 
 			expect(result.steps[0]).toMatchObject({
 				step: 'unzip',
-				vars: {
-					zipPath: '/tmp/plugin.zip',
-					extractToPath: '/wp-content/plugins'
-				}
+				zipPath: '/tmp/plugin.zip',
+				extractToPath: '/wp-content/plugins'
 			});
 		});
 
@@ -2299,8 +2291,8 @@ $page_id = wp_insert_post( $page_args );`,
 			const result = decompiler.decompile(nativeBlueprint);
 
 			expect(result.steps[0]).toMatchObject({
-				step: 'runSQL',
-				vars: { sql: { resource: 'literal', contents: 'DELETE FROM wp_posts WHERE ID > 1;' } }
+				step: 'runSql',
+				sql: { resource: 'literal', contents: 'DELETE FROM wp_posts WHERE ID > 1;' }
 			});
 		});
 
@@ -2318,7 +2310,7 @@ $page_id = wp_insert_post( $page_args );`,
 
 			expect(result.steps[0]).toMatchObject({
 				step: 'importWxr',
-				vars: { file: { resource: 'url', url: 'https://example.com/export.xml' } }
+				file: { resource: 'url', url: 'https://example.com/export.xml' }
 			});
 		});
 

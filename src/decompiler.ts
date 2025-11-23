@@ -764,30 +764,48 @@ export class BlueprintDecompiler {
 	}
 
 	private decompileActivatePlugin(nativeStep: any): StepLibraryStepDefinition | null {
-		return makeStep( 'activatePlugin', { pluginPath: nativeStep.pluginPath || '',
-			pluginName: nativeStep.pluginName } );
+		return {
+			step: 'activatePlugin',
+			pluginPath: nativeStep.pluginPath || '',
+			pluginName: nativeStep.pluginName
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileActivateTheme(nativeStep: any): StepLibraryStepDefinition | null {
-		return makeStep( 'activateTheme', { themeFolderName: nativeStep.themeFolderName || nativeStep.themeDirectoryName || '' } );
+		return {
+			step: 'activateTheme',
+			themeFolderName: nativeStep.themeFolderName || nativeStep.themeDirectoryName || ''
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileCp(nativeStep: any): StepLibraryStepDefinition | null {
-		return makeStep( 'cp', { fromPath: this.translatePath( nativeStep.fromPath || '' ),
-			toPath: this.translatePath( nativeStep.toPath || '' ) } );
+		return {
+			step: 'cp',
+			fromPath: this.translatePath( nativeStep.fromPath || '' ),
+			toPath: this.translatePath( nativeStep.toPath || '' )
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileMv(nativeStep: any): StepLibraryStepDefinition | null {
-		return makeStep( 'mv', { fromPath: this.translatePath( nativeStep.fromPath || '' ),
-			toPath: this.translatePath( nativeStep.toPath || '' ) } );
+		return {
+			step: 'mv',
+			fromPath: this.translatePath( nativeStep.fromPath || '' ),
+			toPath: this.translatePath( nativeStep.toPath || '' )
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileRm(nativeStep: any): StepLibraryStepDefinition | null {
-		return makeStep( 'rm', { path: this.translatePath( nativeStep.path || '' ) } );
+		return {
+			step: 'rm',
+			path: this.translatePath( nativeStep.path || '' )
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileRmdir(nativeStep: any): StepLibraryStepDefinition | null {
-		return makeStep( 'rmdir', { path: this.translatePath( nativeStep.path || '' ) } );
+		return {
+			step: 'rmdir',
+			path: this.translatePath( nativeStep.path || '' )
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileMkdir(nativeStep: any): StepLibraryStepDefinition | null {
@@ -809,30 +827,40 @@ export class BlueprintDecompiler {
 			return null;
 		}
 
-		return makeStep( 'mkdir', { path: this.translatePath( path ) } );
+		return {
+			step: 'mkdir',
+			path: this.translatePath( path )
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileUnzip(nativeStep: any): StepLibraryStepDefinition | null {
-		const vars: any = {
+		const result: any = {
+			step: 'unzip',
 			extractToPath: this.translatePath( nativeStep.extractToPath || '' )
 		};
 
 		if ( nativeStep.zipFile ) {
-			vars.zipFile = nativeStep.zipFile;
+			result.zipFile = nativeStep.zipFile;
 		}
 		if ( nativeStep.zipPath ) {
-			vars.zipPath = this.translatePath( nativeStep.zipPath );
+			result.zipPath = this.translatePath( nativeStep.zipPath );
 		}
 
-		return makeStep( 'unzip', vars );
+		return result as StepLibraryStepDefinition;
 	}
 
 	private decompileRunSQL(nativeStep: any): StepLibraryStepDefinition | null {
-		return makeStep( 'runSQL', { sql: nativeStep.sql } );
+		return {
+			step: 'runSql',
+			sql: nativeStep.sql
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileImportWxr(nativeStep: any): StepLibraryStepDefinition | null {
-		return makeStep( 'importWxr', { file: nativeStep.file } );
+		return {
+			step: 'importWxr',
+			file: nativeStep.file
+		} as StepLibraryStepDefinition;
 	}
 
 	private translatePath( path: string ): string {

@@ -38,7 +38,7 @@ const stepCategories = {
 	'Themes': ['installTheme', 'githubThemeRelease'],
 	'Users': ['createUser', 'login'],
 	'Settings': ['setSiteName', 'setLandingPage', 'updateOption', 'runPhp'],
-	'Advanced': ['addFilter', 'cp', 'mkdir', 'mv', 'rm', 'rmdir', 'runWpInstallationWizard', 'writeFile']
+	'Advanced': ['addFilter', 'runWpInstallationWizard']
 };
 
 export function getWizardState(): WizardState {
