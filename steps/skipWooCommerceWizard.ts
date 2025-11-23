@@ -27,13 +27,13 @@ export const skipWooCommerceWizard: StepFunction<SkipWooCommerceWizardStep> = (s
 
 	if (blueprint) {
 		for ( const i in blueprint.steps ) {
-			if ( blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.url === 'woocommerce' ) {
+			if ( blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'woocommerce' ) {
 				hasWoocommercePlugin = true;
 			}
 		}
 	}
 	if ( ! hasWoocommercePlugin ) {
-		const installWooCommerceSteps = installPlugin({ step: 'installPlugin', url: 'woocommerce' }).toV1();
+		const installWooCommerceSteps = installPlugin({ step: 'installPlugin', vars: { url: 'woocommerce' } }).toV1();
 		steps = [...installWooCommerceSteps.steps, ...steps];
 	}
 	(steps as any).landingPage = '/wp-admin/admin.php?page=wc-admin';

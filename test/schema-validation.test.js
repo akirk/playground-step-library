@@ -32,7 +32,9 @@ describe('Blueprint Schema Validation', () => {
 			steps: [
 				{
 					step: 'installPlugin',
-					url: 'akismet'
+					vars: {
+						url: 'akismet'
+					}
 				}
 			]
 		};
@@ -51,11 +53,15 @@ describe('Blueprint Schema Validation', () => {
 			steps: [
 				{
 					step: 'installPlugin',
-					url: 'akismet'
+					vars: {
+						url: 'akismet'
+					}
 				},
 				{
 					step: 'installPlugin',
-					url: 'hello-dolly'
+					vars: {
+						url: 'hello-dolly'
+					}
 				}
 			]
 		};
@@ -74,12 +80,16 @@ describe('Blueprint Schema Validation', () => {
 			steps: [
 				{
 					step: 'installPlugin',
-					url: 'https://wordpress.org/plugins/akismet/'
+					vars: {
+						url: 'https://wordpress.org/plugins/akismet/'
+					}
 				},
 				{
 					step: 'setSiteName',
-					sitename: 'My Test Site',
-					tagline: 'Just testing'
+					vars: {
+						sitename: 'My Test Site',
+						tagline: 'Just testing'
+					}
 				},
 				{
 					step: 'runPHP',
@@ -87,7 +97,9 @@ describe('Blueprint Schema Validation', () => {
 				},
 				{
 					step: 'setLandingPage',
-					landingPage: '/wp-admin/'
+					vars: {
+						landingPage: '/wp-admin/'
+					}
 				}
 			]
 		};
@@ -106,13 +118,17 @@ describe('Blueprint Schema Validation', () => {
 			steps: [
 				{
 					step: 'login',
-					username: 'admin',
-					password: 'password'
+					vars: {
+						username: 'admin',
+						password: 'password'
+					}
 				},
 				{
 					step: 'setSiteOption',
-					name: 'permalink_structure',
-					value: '/%postname%/'
+					vars: {
+						name: 'permalink_structure',
+						value: '/%postname%/'
+					}
 				}
 			]
 		};
@@ -131,10 +147,12 @@ describe('Blueprint Schema Validation', () => {
 			steps: [
 				{
 					step: 'debug',
-					wpDebug: true,
-					wpDebugDisplay: true,
-					scriptDebug: true,
-					queryMonitor: false
+					vars: {
+						wpDebug: true,
+						wpDebugDisplay: true,
+						scriptDebug: true,
+						queryMonitor: false
+					}
 				}
 			]
 		};
@@ -153,8 +171,10 @@ describe('Blueprint Schema Validation', () => {
 			steps: [
 				{
 					step: 'installPlugin',
-					url: 'https://github.com/WordPress/gutenberg/pull/12345',
-					auth: true
+					vars: {
+						url: 'https://github.com/WordPress/gutenberg/pull/12345',
+						auth: true
+					}
 				}
 			]
 		};
@@ -173,8 +193,10 @@ describe('Blueprint Schema Validation', () => {
 			steps: [
 				{
 					step: 'addPage',
-					title: 'Test Page',
-					content: 'This is test content'
+					vars: {
+						title: 'Test Page',
+						content: 'This is test content'
+					}
 				}
 			]
 		};

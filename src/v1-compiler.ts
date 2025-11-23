@@ -168,13 +168,13 @@ class StepLibraryCompiler {
             // Instead, we use discriminated unions based on the properties that exist on the step object.
             // For steps that have both custom and builtin variants (like installPlugin), we check
             // for distinguishing properties:
-            // - Custom installPlugin: has 'url' property
-            // - Builtin installPlugin: has 'pluginData' property
+            // - Custom installPlugin (Step Library): has 'vars.url' property
+            // - Builtin installPlugin (native): has 'pluginData' property (flat)
             // This allows TypeScript to narrow the type and lets us decide whether to transform
             // the step using our custom functions or pass it through as a builtin step.
             // Use discriminated union logic to determine step type
             if (step.step === 'installPlugin') {
-                if ('url' in step) {
+                if (step.vars?.url) {
                     // Custom installPlugin step - transform it
                     customStepResult = this.executeCustomStep(step.step, step, inputData);
                 } else {
@@ -182,7 +182,7 @@ class StepLibraryCompiler {
                     customStepResult = { steps: [step as StepDefinition] };
                 }
             } else if (step.step === 'installTheme') {
-                if ('url' in step) {
+                if (step.vars?.url) {
                     // Custom installTheme step - transform it
                     customStepResult = this.executeCustomStep(step.step, step, inputData);
                 } else {
@@ -190,7 +190,7 @@ class StepLibraryCompiler {
                     customStepResult = { steps: [step as StepDefinition] };
                 }
             } else if (step.step === 'defineWpConfigConst') {
-                if ('name' in step && 'value' in step) {
+                if (step.vars?.name && step.vars?.value !== undefined) {
                     // Custom defineWpConfigConst step - transform it
                     customStepResult = this.executeCustomStep(step.step, step, inputData);
                 } else {
@@ -198,7 +198,7 @@ class StepLibraryCompiler {
                     customStepResult = { steps: [step as StepDefinition] };
                 }
             } else if (step.step === 'setSiteOptions') {
-                if ('name' in step && 'value' in step) {
+                if (step.vars?.name && step.vars?.value !== undefined) {
                     // Custom setSiteOptions step - transform it
                     customStepResult = this.executeCustomStep(step.step, step, inputData);
                 } else {
@@ -206,10 +206,17 @@ class StepLibraryCompiler {
                     customStepResult = { steps: [step as StepDefinition] };
                 }
             } else if (this.customSteps[step.step]) {
-                // For other custom steps (no builtin equivalent), always transform
-                customStepResult = this.executeCustomStep(step.step, step, inputData);
+                // Check if this is a builtin step wrapper being used in native flat format
+                const customStep = this.customSteps[step.step];
+                if (customStep.builtin && !step.vars) {
+                    // Builtin step in flat format - pass through as native
+                    customStepResult = { steps: [step as StepDefinition] };
+                } else {
+                    // Custom step with vars - transform it
+                    customStepResult = this.executeCustomStep(step.step, step, inputData);
+                }
             } else {
-                // Pure builtin step - pass through
+                // Pure builtin step (not in registry) - pass through
                 customStepResult = { steps: [step as StepDefinition] };
             }
 
@@ -270,6 +277,10 @@ class StepLibraryCompiler {
 
 				// Remove unnecessary whitespace
 				this.cleanupWhitespace(processedStep);
+
+				// Remove internal properties that shouldn't be in output
+				delete processedStep.stepIndex;
+				delete processedStep.vars;
 
 				// Add to output steps
 				outputData.steps!.push(processedStep);
@@ -368,9 +379,10 @@ class StepLibraryCompiler {
             if (this.customSteps[stepName]) {
                 const customStep = this.customSteps[stepName];
                 if (customStep.vars) {
-                    // Validate required variables
+                    // Validate required variables (check inside step.vars)
                     for (const varDef of customStep.vars) {
-                        if (varDef.required && !step.hasOwnProperty(varDef.name)) {
+                        const hasVar = step.vars && step.vars.hasOwnProperty(varDef.name);
+                        if (varDef.required && !hasVar) {
                             return {
                                 valid: false,
                                 error: `Step ${i} (${stepName}) is missing required variable: ${varDef.name}`

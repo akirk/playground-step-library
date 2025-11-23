@@ -40,8 +40,7 @@ export const createUser: StepFunction<CreateUserStep> = (step: CreateUserStep): 
 			};
 
 			if (step.vars?.login) {
-				result.steps!.push( { step: "login", vars: { username: username,
-					password: password } } );
+				result.steps!.push( { step: "login", username: username, password: password } as StepDefinition );
 				result.landingPage = '/wp-admin/';
 			}
 

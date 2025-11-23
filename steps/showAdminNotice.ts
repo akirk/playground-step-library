@@ -60,8 +60,11 @@ add_action('admin_footer', function() {
 
 	return muPlugin({
 		step: 'muPlugin',
-		name: `show-admin-notice-${step.stepIndex || 0}`,
-		code
+		stepIndex: step.stepIndex,
+		vars: {
+			name: `show-admin-notice-${step.stepIndex || 0}`,
+			code
+		}
 	});
 };
 

@@ -125,12 +125,11 @@ export class BlueprintDecompiler {
 			for ( const item of v2Blueprint.content ) {
 				if ( item.type === 'posts' && item.source ) {
 					const postType = item.source.post_type || 'post';
-					const step = postType === 'page' ? 'addPage' : 'addPost';
-					steps.push( {
-						step,
+					const stepName = postType === 'page' ? 'addPage' : 'addPost';
+					steps.push( makeStep( stepName, {
 						title: item.source.post_title || '',
 						content: item.source.post_content || ''
-					} );
+					} ) );
 				}
 			}
 		}
@@ -447,25 +446,19 @@ export class BlueprintDecompiler {
 			return makeStep( 'installPlugin', { url: pluginData.url, prs: false, permalink: false } );
 		}
 
-		// Handle literal/inline content
+		// Handle literal/inline content - pass through as native step
 		if ( resource === 'literal' ) {
-			return makeStep( 'installPlugin', { pluginData: pluginData,
-				prs: false,
-				permalink: false } );
+			return { step: 'installPlugin', pluginData } as StepLibraryStepDefinition;
 		}
 
-		// Handle VFS (virtual filesystem) paths
+		// Handle VFS (virtual filesystem) paths - pass through as native step
 		if ( resource === 'vfs' && pluginData.path ) {
-			return makeStep( 'installPlugin', { pluginData: pluginData,
-				prs: false,
-				permalink: false } );
+			return { step: 'installPlugin', pluginData } as StepLibraryStepDefinition;
 		}
 
-		// Handle core plugins (bundled with WordPress)
+		// Handle core plugins (bundled with WordPress) - pass through as native step
 		if ( resource === 'core-plugin' && pluginData.slug ) {
-			return makeStep( 'installPlugin', { pluginData: pluginData,
-				prs: false,
-				permalink: false } );
+			return { step: 'installPlugin', pluginData } as StepLibraryStepDefinition;
 		}
 
 		this.warnings.push(`Unknown plugin resource type: ${resource}`);
@@ -500,25 +493,19 @@ export class BlueprintDecompiler {
 			return makeStep( 'installTheme', { url: themeData.url, prs: false, permalink: false } );
 		}
 
-		// Handle literal/inline content
+		// Handle literal/inline content - pass through as native step
 		if ( resource === 'literal' ) {
-			return makeStep( 'installTheme', { themeData: themeData,
-				prs: false,
-				permalink: false } );
+			return { step: 'installTheme', themeData } as StepLibraryStepDefinition;
 		}
 
-		// Handle VFS (virtual filesystem) paths
+		// Handle VFS (virtual filesystem) paths - pass through as native step
 		if ( resource === 'vfs' && themeData.path ) {
-			return makeStep( 'installTheme', { themeData: themeData,
-				prs: false,
-				permalink: false } );
+			return { step: 'installTheme', themeData } as StepLibraryStepDefinition;
 		}
 
-		// Handle core themes (bundled with WordPress)
+		// Handle core themes (bundled with WordPress) - pass through as native step
 		if ( resource === 'core-theme' && themeData.slug ) {
-			return makeStep( 'installTheme', { themeData: themeData,
-				prs: false,
-				permalink: false } );
+			return { step: 'installTheme', themeData } as StepLibraryStepDefinition;
 		}
 
 		this.warnings.push(`Unknown theme resource type: ${resource}`);
@@ -663,11 +650,10 @@ export class BlueprintDecompiler {
 
 		const step = isPost ? 'addPost' : 'addPage';
 
-		return {
-			step,
+		return makeStep( step, {
 			title: titleMatch ? titleMatch[1] : '',
 			content: contentMatch ? contentMatch[1] : ''
-		};
+		});
 	}
 
 	private decompileWriteFile(nativeStep: any): StepLibraryStepDefinition | null {
