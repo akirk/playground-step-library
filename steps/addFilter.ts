@@ -2,9 +2,9 @@ import type { StepFunction, AddFilterStep, StepResult } from './types.js';
 import { muPlugin } from './muPlugin.js';
 
 export const addFilter: StepFunction<AddFilterStep> = (step: AddFilterStep): StepResult => {
-	let code = "add_filter( '" + step.filter + "', ";
+	let code = "add_filter( '" + step.vars?.filter + "', ";
 	// Automatically put code in a function if it is not already.
-	const codeText = step.code || '';
+	const codeText = step.vars?.code || '';
 	if (codeText.match(/^function\s*\(/i)) {
 		code += codeText;
 	} else if (
@@ -15,30 +15,33 @@ export const addFilter: StepFunction<AddFilterStep> = (step: AddFilterStep): Ste
 	} else {
 		code += codeText;
 	}
-	// if the step.code is a php function get the number of arguments
+	// if the step.vars?.code is a php function get the number of arguments
 	// and add them to the add_filter call
 	let m = code.match(/function\s*\((.*?)\)/i);
 	if (m && m[1]) {
 		let args = m[1].split(',').length;
 		if (args > 1) {
-			if (step.priority && step.priority > 0) {
-				code += ", " + step.priority;
+			if (step.vars?.priority && step.vars?.priority > 0) {
+				code += ", " + step.vars?.priority;
 			} else {
 				code += ", 10";
 			}
 			code += ", " + args;
-		} else if (step.priority && step.priority > 0 && step.priority != 10) {
-			code += ", " + step.priority;
+		} else if (step.vars?.priority && step.vars?.priority > 0 && step.vars?.priority != 10) {
+			code += ", " + step.vars?.priority;
 		}
-	} else if (step.priority && step.priority > 0 && step.priority != 10) {
-		code += ", " + step.priority;
+	} else if (step.vars?.priority && step.vars?.priority > 0 && step.vars?.priority != 10) {
+		code += ", " + step.vars?.priority;
 	}
 	code += " );";
 
 	return muPlugin({
 		step: 'muPlugin',
-		name: `addFilter-${step.stepIndex || 0}`,
-		code
+		stepIndex: step.stepIndex,
+		vars: {
+			name: `addFilter-${step.stepIndex || 0}`,
+			code
+		}
 	});
 };
 

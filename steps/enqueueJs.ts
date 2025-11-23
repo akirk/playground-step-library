@@ -3,12 +3,12 @@ import { muPlugin } from './muPlugin.js';
 import type { StepDefinition } from '@wp-playground/blueprints';
 
 export const enqueueJs: StepFunction<EnqueueJsStep> = (step: EnqueueJsStep): StepResult => {
-	const filename = step.filename || `custom-script-${step.stepIndex || 0}`;
+	const filename = step.vars?.filename || `custom-script-${step.stepIndex || 0}`;
 	const sanitizedFilename = filename.replace(/\.js$/, '');
 	const jsFilePath = `/wordpress/wp-content/mu-plugins/${sanitizedFilename}.js`;
 
-	const frontend = step.frontend !== false;
-	const wpAdmin = step.wpAdmin !== false;
+	const frontend = step.vars?.frontend !== false;
+	const wpAdmin = step.vars?.wpAdmin !== false;
 
 	let phpCode = '';
 	if (frontend) {
@@ -34,7 +34,7 @@ export const enqueueJs: StepFunction<EnqueueJsStep> = (step: EnqueueJsStep): Ste
 
 	return {
 		toV1() {
-			if (!step.js || !step.js.trim() || (!frontend && !wpAdmin)) {
+			if (!step.vars?.js || !step.vars?.js.trim() || (!frontend && !wpAdmin)) {
 				return { steps: [] };
 			}
 
@@ -45,7 +45,7 @@ export const enqueueJs: StepFunction<EnqueueJsStep> = (step: EnqueueJsStep): Ste
 					{
 						step: 'writeFile',
 						path: jsFilePath,
-						data: step.js
+						data: step.vars?.js
 					},
 					...(muSteps.steps || [])
 				]
@@ -53,7 +53,7 @@ export const enqueueJs: StepFunction<EnqueueJsStep> = (step: EnqueueJsStep): Ste
 		},
 
 		toV2() {
-			if (!step.js || !step.js.trim() || (!frontend && !wpAdmin)) {
+			if (!step.vars?.js || !step.vars?.js.trim() || (!frontend && !wpAdmin)) {
 				return { version: 2 };
 			}
 
@@ -66,7 +66,7 @@ export const enqueueJs: StepFunction<EnqueueJsStep> = (step: EnqueueJsStep): Ste
 					{
 						file: {
 							filename: `${sanitizedFilename}.js`,
-							content: step.js
+							content: step.vars?.js
 						}
 					}
 				]

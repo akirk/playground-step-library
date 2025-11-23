@@ -6,12 +6,12 @@ export const fakeHttpResponse: StepFunction<FakeHttpResponseStep> = (step: FakeH
 		toV1() {
 			const steps = [];
 
-			if ( step.url ) {
-				const url = step.url.toLowerCase().replace( /[^a-z0-9-_]+/gi, '-' ).replace( /-+$/g, '' );
+			if ( step.vars?.url ) {
+				const url = step.vars?.url.toLowerCase().replace( /[^a-z0-9-_]+/gi, '-' ).replace( /-+$/g, '' );
 				steps.push( {
 					"step": "writeFile",
 					"path": `wordpress/wp-content/mu-plugins/fake-http-response/${url}.txt`,
-					"data": step.response
+					"data": step.vars?.response
 				} );
 			}
 			let hasFakeHttpResponsePlugin = false;
@@ -63,11 +63,11 @@ add_filter(
 		},
 
 		toV2() {
-			if (!step.url) {
+			if (!step.vars?.url) {
 				return { version: 2 };
 			}
 
-			const url = step.url.toLowerCase().replace( /[^a-z0-9-_]+/gi, '-' ).replace( /-+$/g, '' );
+			const url = step.vars?.url.toLowerCase().replace( /[^a-z0-9-_]+/gi, '-' ).replace( /-+$/g, '' );
 
 			return {
 				version: 2,
@@ -104,7 +104,7 @@ add_filter(
 					{
 						file: {
 							filename: `fake-http-response/${url}.txt`,
-							content: step.response
+							content: step.vars?.response
 						}
 					}
 				]

@@ -5,7 +5,7 @@ import { v1ToV2Fallback } from './types.js';
 export const setLanguage: StepFunction<SetLanguageStep> = (step: SetLanguageStep): StepResult => {
 	return {
 		toV1() {
-	const lang = step.language;
+	const lang = step.vars?.language;
 	if (!lang) {
 		return [];
 	}

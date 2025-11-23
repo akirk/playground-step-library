@@ -2,8 +2,8 @@ import type { StepFunction, MuPluginStep, StepResult } from './types.js';
 import type { StepDefinition } from '@wp-playground/blueprints';
 
 export const muPlugin: StepFunction<MuPluginStep> = (step: MuPluginStep): StepResult => {
-	const code = '<?php ' + (step.code || '').replace(/<\?php/g, '');
-	const pluginName = step.name || 'mu-plugin';
+	const code = '<?php ' + (step.vars?.code || '').replace(/<\?php/g, '');
+	const pluginName = step.vars?.name || 'mu-plugin';
 
 	return {
 		toV1() {

@@ -113,23 +113,29 @@ export interface StepFunction<T extends BlueprintStep = BlueprintStep> {
     hidden?: boolean;
 }
 
-// Step-specific interfaces (flattened, no vars wrapper)
+// Step-specific interfaces (with vars wrapper)
 export interface AddPageStep extends BlueprintStep {
-    title?: string;
-    content?: string;
-    // Backward compatibility
-    postTitle?: string;
-    postContent?: string;
-    homepage?: boolean;
+	vars?: {
+	    title?: string;
+	    content?: string;
+	    // Backward compatibility
+	    postTitle?: string;
+	    postContent?: string;
+	    homepage?: boolean;
+	};
 }
 
 export interface SetSiteNameStep extends BlueprintStep {
-    sitename: string;
-    tagline: string;
+	vars?: {
+	    sitename: string;
+	    tagline: string;
+	};
 }
 
 export interface SetLanguageStep extends BlueprintStep {
-    language: string;
+	vars?: {
+	    language: string;
+	};
 }
 
 export interface SampleContentStep extends BlueprintStep {
@@ -137,20 +143,26 @@ export interface SampleContentStep extends BlueprintStep {
 }
 
 export interface CreateUserStep extends BlueprintStep {
-    username: string;
-    password: string;
-    role: string;
-    display_name?: string;
-    email?: string;
-    login?: boolean;
+	vars?: {
+	    username: string;
+	    password: string;
+	    role: string;
+	    display_name?: string;
+	    email?: string;
+	    login?: boolean;
+	};
 }
 
 export interface RunPHPStep extends BlueprintStep {
-    code: string;
+	vars?: {
+	    code: string;
+	};
 }
 
 export interface RunWpCliCommandStep extends BlueprintStep {
-    command: string;
+	vars?: {
+	    command: string;
+	};
 }
 
 export interface DeleteAllPostsStep extends BlueprintStep {
@@ -170,62 +182,84 @@ export interface DisableWelcomeGuidesStep extends BlueprintStep {
 }
 
 export interface RenameDefaultCategoryStep extends BlueprintStep {
-    categoryName: string;
-    categorySlug?: string;
+	vars?: {
+	    categoryName: string;
+	    categorySlug?: string;
+	};
 }
 
 export interface SetSiteOptionStep extends BlueprintStep {
-    name: string | string[];
-    value: string | string[];
+	vars?: {
+	    name: string | string[];
+	    value: string | string[];
+	};
 }
 
 export interface ChangeAdminColorSchemeStep extends BlueprintStep {
-    colorScheme: string;
+	vars?: {
+	    colorScheme: string;
+	};
 }
 
 export interface ShowAdminNoticeStep extends BlueprintStep {
-    text: string;
-    type?: string;
-    dismissible?: boolean;
+	vars?: {
+	    text: string;
+	    type?: string;
+	    dismissible?: boolean;
+	};
+
     stepIndex?: number;
+
 }
 
 export interface RemoveDashboardWidgetsStep extends BlueprintStep {
-    welcome?: boolean;
-    glance?: boolean;
-    events?: boolean;
-    quickpress?: boolean;
-    activity?: boolean;
-    sitehealth?: boolean;
+	vars?: {
+	    welcome?: boolean;
+	    glance?: boolean;
+	    events?: boolean;
+	    quickpress?: boolean;
+	    activity?: boolean;
+	    sitehealth?: boolean;
+	};
 }
 
 export interface FakeHttpResponseStep extends BlueprintStep {
-    url: string;
-    response: string;
+	vars?: {
+	    url: string;
+	    response: string;
+	};
 }
 
 export interface DefineWpConfigConstStep extends BlueprintStep {
-    name: string | string[];
-    value: any | any[];
+	vars?: {
+	    name: string | string[];
+	    value: any | any[];
+	};
 }
 
 export interface DoActionStep extends BlueprintStep {
-    action: string;
-    parameter1?: string;
-    parameter2?: string;
-    parameter3?: string;
-    parameter4?: string;
-    parameter5?: string;
+	vars?: {
+	    action: string;
+	    parameter1?: string;
+	    parameter2?: string;
+	    parameter3?: string;
+	    parameter4?: string;
+	    parameter5?: string;
+	};
 }
 
 export interface AddClientRoleStep extends BlueprintStep {
-    displayName: string;
+	vars?: {
+	    displayName: string;
+	};
 }
 
 export interface LoginStep extends BlueprintStep {
-    username: string;
-    password: string;
-    landingPage?: boolean;
+	vars?: {
+	    username: string;
+	    password: string;
+	    landingPage?: boolean;
+	};
 }
 
 export interface DontLoginStep extends BlueprintStep {
@@ -241,24 +275,28 @@ export interface InstallAdminerStep extends BlueprintStep {
 }
 
 export interface SetLandingPageStep extends BlueprintStep {
-    landingPage: string;
+	vars?: {
+	    landingPage: string;
+	};
 }
 
 export interface AddPostStep extends BlueprintStep {
-    title?: string;
-    content?: string;
-    date?: string;
-    type: string;
-    status?: string;
-    postId?: number;
-    landingPage?: boolean;
-    // Backward compatibility
-    postTitle?: string;
-    postContent?: string;
-    postDate?: string;
-    postType?: string;
-    postStatus?: string;
-    homepage?: boolean;
+	vars?: {
+	    title?: string;
+	    content?: string;
+	    date?: string;
+	    type: string;
+	    status?: string;
+	    postId?: number;
+	    landingPage?: boolean;
+	    // Backward compatibility
+	    postTitle?: string;
+	    postContent?: string;
+	    postDate?: string;
+	    postType?: string;
+	    postStatus?: string;
+	    homepage?: boolean;
+	};
 }
 
 export interface EnableMultisiteStep extends BlueprintStep {
@@ -266,8 +304,10 @@ export interface EnableMultisiteStep extends BlueprintStep {
 }
 
 export interface JetpackOfflineModeStep extends BlueprintStep {
-    blocks?: boolean;
-    subscriptions?: boolean;
+	vars?: {
+	    blocks?: boolean;
+	    subscriptions?: boolean;
+	};
 }
 
 export interface SetTT4HomepageStep extends BlueprintStep {
@@ -275,98 +315,132 @@ export interface SetTT4HomepageStep extends BlueprintStep {
 }
 
 export interface AddFilterStep extends BlueprintStep {
-    filter: string;
-    code: string;
-    priority?: number;
+	vars?: {
+	    filter: string;
+	    code: string;
+	    priority?: number;
+	};
+
     stepIndex?: number;
+
 }
 
 export interface GithubPluginStep extends BlueprintStep {
-    url: string;
-    prs?: boolean;
+	vars?: {
+	    url: string;
+	    prs?: boolean;
+	};
 }
 
 export interface GithubPluginReleaseStep extends BlueprintStep {
-    repo: string;
-    release: string;
-    filename: string;
+	vars?: {
+	    repo: string;
+	    release: string;
+	    filename: string;
+	};
 }
 
 export interface InstallPluginStep extends BlueprintStep {
-    url: string;
-    prs?: boolean;
+	vars?: {
+	    url: string;
+	    prs?: boolean;
+	};
 }
 
 export interface InstallThemeStep extends BlueprintStep {
-    url: string;
-    prs?: boolean;
+	vars?: {
+	    url: string;
+	    prs?: boolean;
+	};
 }
 
 export interface GithubThemeStep extends BlueprintStep {
-    url: string;
-    prs?: boolean;
+	vars?: {
+	    url: string;
+	    prs?: boolean;
+	};
 }
 
 export interface ImportWordPressComExportStep extends BlueprintStep {
-    url: string;
+	vars?: {
+	    url: string;
+	};
 }
 
 export interface ImportWxrStep extends BlueprintStep {
-    file: string;
+	vars?: {
+	    file: string;
+	};
 }
 
 export interface ImportWxrFromUrlStep extends BlueprintStep {
-    url: string;
+	vars?: {
+	    url: string;
+	};
 }
 
 export interface ImportFriendFeedsStep extends BlueprintStep {
-    opml: string;
+	vars?: {
+	    opml: string;
+	};
 }
 
 export interface AddMediaStep extends BlueprintStep {
-    downloadUrl: string;
+	vars?: {
+	    downloadUrl: string;
+	};
 }
 
 export interface AddProductStep extends BlueprintStep {
-    title?: string;
-    description?: string;
-    price?: string;
-    salePrice?: string;
-    sku?: string;
-    status?: string;
-    // Backward compatibility
-    productTitle?: string;
-    productDescription?: string;
-    productPrice?: string;
-    productSalePrice?: string;
-    productSku?: string;
-    productStatus?: string;
+	vars?: {
+	    title?: string;
+	    description?: string;
+	    price?: string;
+	    salePrice?: string;
+	    sku?: string;
+	    status?: string;
+	    // Backward compatibility
+	    productTitle?: string;
+	    productDescription?: string;
+	    productPrice?: string;
+	    productSalePrice?: string;
+	    productSku?: string;
+	    productStatus?: string;
+	};
 }
 
 export interface CustomPostTypeStep extends BlueprintStep {
-    slug: string;
-    name: string;
-    supports?: string[];
-    public?: boolean;
+	vars?: {
+	    slug: string;
+	    name: string;
+	    supports?: string[];
+	    public?: boolean;
+	};
 }
 
 export interface MuPluginStep extends BlueprintStep {
-    name: string;
-    code: string;
+	vars?: {
+	    name: string;
+	    code: string;
+	};
 }
 
 export interface EnqueueCssStep extends BlueprintStep {
-    filename: string;
-    css: string;
-    frontend?: boolean;
-    wpAdmin?: boolean;
+	vars?: {
+	    filename: string;
+	    css: string;
+	    frontend?: boolean;
+	    wpAdmin?: boolean;
+	};
 }
 
 export interface EnqueueJsStep extends BlueprintStep {
-    filename: string;
-    js: string;
-    frontend?: boolean;
-    wpAdmin?: boolean;
+	vars?: {
+	    filename: string;
+	    js: string;
+	    frontend?: boolean;
+	    wpAdmin?: boolean;
+	};
 }
 
 export interface BlueprintRecorderStep extends BlueprintStep {
@@ -378,10 +452,12 @@ export interface BlueprintExtractorStep extends BlueprintStep {
 }
 
 export interface GithubImportExportWxrStep extends BlueprintStep {
-    repo: string;
-    branch?: string;
-    filename?: string;
-    targetUrl?: string;
+	vars?: {
+	    repo: string;
+	    branch?: string;
+	    filename?: string;
+	    targetUrl?: string;
+	};
 }
 
 // Union of all step types including both builtin WP steps and custom Step Library steps
@@ -447,41 +523,53 @@ export interface StepLibraryBlueprintDeclaration extends Omit<WPBlueprintDeclara
 
 export type StepLibraryBlueprint = StepLibraryBlueprintDeclaration;
 export interface GenerateProductsStep extends BlueprintStep {
+	vars?: {
+		orders?: number;
+		customers?: number;
+		coupons?: number;
+		categories?: number;
+	};
+
 	count?: number;
-	orders?: number;
-	customers?: number;
-	coupons?: number;
-	categories?: number;
+
 }
 
 export interface BlockExamplesStep extends BlueprintStep {
-	blockNamespace?: string;
-	pluginSlug?: string;
-	postTitle?: string;
-	limit?: number;
-	postId?: number;
-	excludeCore?: boolean | string;
-	landingPage?: boolean;
+	vars?: {
+		blockNamespace?: string;
+		pluginSlug?: string;
+		postTitle?: string;
+		limit?: number;
+		postId?: number;
+		excludeCore?: boolean | string;
+		landingPage?: boolean;
+	};
 }
 export interface DebugStep extends BlueprintStep {
-	wpDebug?: boolean;
-	wpDebugDisplay?: boolean;
-	scriptDebug?: boolean;
-	queryMonitor?: boolean;
+	vars?: {
+		wpDebug?: boolean;
+		wpDebugDisplay?: boolean;
+		scriptDebug?: boolean;
+		queryMonitor?: boolean;
+	};
 }
 
 export interface AddTemplatePartStep extends BlueprintStep {
-	slug: string;
-	theme?: string;
-	content: string;
-	area?: 'header' | 'footer' | 'general';
-	title?: string;
+	vars?: {
+		slug: string;
+		theme?: string;
+		content: string;
+		area?: 'header' | 'footer' | 'general';
+		title?: string;
+	};
 }
 
 export interface AddTemplateStep extends BlueprintStep {
-	slug: string;
-	theme?: string;
-	content: string;
-	title?: string;
+	vars?: {
+		slug: string;
+		theme?: string;
+		content: string;
+		title?: string;
+	};
 }
 

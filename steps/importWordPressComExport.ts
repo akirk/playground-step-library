@@ -14,7 +14,7 @@ export const importWordPressComExport: StepFunction<ImportWordPressComExportStep
 			"step": "unzip",
 			"zipFile": {
 				"resource": "url",
-				"url": step.url
+				"url": step.vars?.url
 			},
 			"extractToPath": "/tmp"
 		},

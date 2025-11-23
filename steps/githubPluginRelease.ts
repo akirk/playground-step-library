@@ -8,13 +8,13 @@ export const githubPluginRelease: StepFunction<GithubPluginReleaseStep> = (step:
 
 	return {
 		toV1() {
-			const repoTest = repoPattern.exec( step.repo );
+			const repoTest = repoPattern.exec( step.vars?.repo );
 			if ( ! repoTest ) {
 				return { steps: [] };
 			}
 			const repo = repoTest[1] + "/" + repoTest[2];
-			const tag = step.release;
-			const filename = step.filename;
+			const tag = step.vars?.release;
+			const filename = step.vars?.filename;
 
 			return {
 				steps: [
@@ -36,13 +36,13 @@ export const githubPluginRelease: StepFunction<GithubPluginReleaseStep> = (step:
 		},
 
 		toV2(): BlueprintV2Declaration {
-			const repoTest = repoPattern.exec( step.repo );
+			const repoTest = repoPattern.exec( step.vars?.repo );
 			if ( ! repoTest ) {
 				return { version: 2 };
 			}
 			const repo = repoTest[1] + "/" + repoTest[2];
-			const tag = step.release;
-			const filename = step.filename;
+			const tag = step.vars?.release;
+			const filename = step.vars?.filename;
 			const url = `https://github.com/${repo}/releases/download/${tag}/${filename}`;
 
 			return {

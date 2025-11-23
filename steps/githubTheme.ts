@@ -6,7 +6,7 @@ import { v1ToV2Fallback } from './types.js';
 export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep): StepResult => {
 	return {
 		toV1() {
-	const urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.url );
+	const urlTest = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/.exec( step.vars?.url );
 	if ( ! urlTest ) {
 		return [];
 	}
@@ -45,7 +45,7 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 		}]
 	};
 
-	if ( step.prs ) {
+	if ( step.vars?.prs ) {
 		(result.steps![0] as any).queryParams = {
 			'gh-ensure-auth': 'yes',
 			'ghexport-repo-url': 'https://github.com/' + repo,

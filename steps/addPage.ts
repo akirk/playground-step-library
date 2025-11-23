@@ -2,8 +2,8 @@ import type { StepFunction, AddPageStep, StepResult } from './types.js';
 import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 export const addPage: StepFunction<AddPageStep> = (step: AddPageStep): StepResult => {
-	const title = step.title || step.postTitle || '';
-	const content = step.content || step.postContent || '';
+	const title = step.vars?.title || step.vars?.postTitle || '';
+	const content = step.vars?.content || step.vars?.postContent || '';
 
 	return {
 		toV1() {
@@ -22,7 +22,7 @@ if ( is_wp_error( $page_id ) ) {
 	error_log( 'addPage error: ' . $page_id->get_error_message() );
 }`;
 
-			if (step.homepage) {
+			if (step.vars?.homepage) {
 				code += "update_option( 'page_on_front', $page_id );";
 				code += "update_option( 'show_on_front', 'page' );";
 			}
@@ -54,7 +54,7 @@ if ( is_wp_error( $page_id ) ) {
 				}]
 			};
 
-			if (step.homepage) {
+			if (step.vars?.homepage) {
 				result.siteOptions = {
 					show_on_front: 'page'
 				};

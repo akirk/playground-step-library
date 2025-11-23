@@ -3,7 +3,7 @@ import type { StepDefinition } from '@wp-playground/blueprints';
 
 
 export const addMedia: StepFunction<AddMediaStep> = (step: AddMediaStep): StepResult => {
-	const downloadUrl = step.downloadUrl;
+	const downloadUrl = step.vars?.downloadUrl;
 
 	return {
 		toV1() {

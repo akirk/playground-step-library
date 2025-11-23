@@ -235,17 +235,18 @@ describe('Step Output Validation', () => {
    */
   function createStepInput(stepName, vars) {
     const stepInput = {
-      step: stepName
+      step: stepName,
+      vars: {}
     };
 
-    // Add required variables with sample values directly to stepInput (flattened structure)
+    // Add required variables with sample values in vars wrapper
     vars.forEach(varDef => {
       if (varDef.required) {
         if (varDef.samples && varDef.samples.length > 0) {
-          stepInput[varDef.name] = varDef.samples[0];
+          stepInput.vars[varDef.name] = varDef.samples[0];
         } else {
           // Provide sensible defaults based on variable name and type
-          stepInput[varDef.name] = getDefaultValueForVariable(varDef);
+          stepInput.vars[varDef.name] = getDefaultValueForVariable(varDef);
         }
       }
     });

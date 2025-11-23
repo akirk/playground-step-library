@@ -38,6 +38,13 @@ export interface DecompilerResult {
 	warnings: Array<string>;
 }
 
+/**
+ * Helper to create a step with vars wrapper
+ */
+function makeStep( stepName: string, vars: Record<string, any> ): StepLibraryStepDefinition {
+	return { step: stepName, vars } as StepLibraryStepDefinition;
+}
+
 export class BlueprintDecompiler {
 	private warnings: Array<string> = [];
 	private unmappedSteps: Array<any> = [];
@@ -63,11 +70,10 @@ export class BlueprintDecompiler {
 		if ( v2Blueprint.plugins && Array.isArray( v2Blueprint.plugins ) ) {
 			for ( const plugin of v2Blueprint.plugins ) {
 				if ( typeof plugin === 'string' ) {
-					steps.push( {
-						step: 'installPlugin',
+					steps.push( makeStep( 'installPlugin', {
 						url: `https://wordpress.org/plugins/${plugin}/`,
 						prs: false
-					} );
+					} ) );
 				} else if ( plugin && typeof plugin === 'object' ) {
 					const pluginStep = this.decompileV2Plugin( plugin );
 					if ( pluginStep ) {
@@ -81,11 +87,10 @@ export class BlueprintDecompiler {
 		if ( v2Blueprint.themes && Array.isArray( v2Blueprint.themes ) ) {
 			for ( const theme of v2Blueprint.themes ) {
 				if ( typeof theme === 'string' ) {
-					steps.push( {
-						step: 'installTheme',
+					steps.push( makeStep( 'installTheme', {
 						url: `https://wordpress.org/themes/${theme}/`,
 						prs: false
-					} );
+					} ) );
 				} else if ( theme && typeof theme === 'object' ) {
 					const themeStep = this.decompileV2Theme( theme );
 					if ( themeStep ) {
@@ -102,22 +107,16 @@ export class BlueprintDecompiler {
 			const blogdescription = opts.blogdescription;
 
 			if ( blogname !== undefined || blogdescription !== undefined ) {
-				steps.push( {
-					step: 'setSiteName',
-					sitename: blogname || '',
-					tagline: blogdescription || ''
-				} );
+				steps.push( makeStep( 'setSiteName', { sitename: blogname || '',
+					tagline: blogdescription || '' } ) );
 			}
 
 			for ( const [name, value] of Object.entries( opts ) ) {
 				if ( name === 'blogname' || name === 'blogdescription' ) {
 					continue;
 				}
-				steps.push( {
-					step: 'setSiteOption',
-					name: name,
-					value: value as string
-				} );
+				steps.push( makeStep( 'setSiteOption', { name: name,
+					value: value as string } ) );
 			}
 		}
 
@@ -126,12 +125,11 @@ export class BlueprintDecompiler {
 			for ( const item of v2Blueprint.content ) {
 				if ( item.type === 'posts' && item.source ) {
 					const postType = item.source.post_type || 'post';
-					const step = postType === 'page' ? 'addPage' : 'addPost';
-					steps.push( {
-						step,
+					const stepName = postType === 'page' ? 'addPage' : 'addPost';
+					steps.push( makeStep( stepName, {
 						title: item.source.post_title || '',
 						content: item.source.post_content || ''
-					} );
+					} ) );
 				}
 			}
 		}
@@ -139,12 +137,11 @@ export class BlueprintDecompiler {
 		// Handle users array
 		if ( v2Blueprint.users && Array.isArray( v2Blueprint.users ) ) {
 			for ( const user of v2Blueprint.users ) {
-				steps.push( {
-					step: 'createUser',
+				steps.push( makeStep( 'createUser', {
 					username: user.username,
 					email: user.email || `${user.username}@example.com`,
 					role: user.role || 'subscriber'
-				} );
+				} ) );
 			}
 		}
 
@@ -156,13 +153,10 @@ export class BlueprintDecompiler {
 			const scriptDebug = consts.SCRIPT_DEBUG === true;
 
 			if ( wpDebug || wpDebugDisplay || scriptDebug ) {
-				steps.push( {
-					step: 'debug',
-					wpDebug,
+				steps.push( makeStep( 'debug', { wpDebug,
 					wpDebugDisplay,
 					scriptDebug,
-					queryMonitor: false
-				} );
+					queryMonitor: false } ) );
 			}
 		}
 
@@ -172,38 +166,26 @@ export class BlueprintDecompiler {
 
 			if ( appOpts.login !== undefined ) {
 				if ( appOpts.login === true || ( typeof appOpts.login === 'object' && Object.keys( appOpts.login ).length === 0 ) ) {
-					steps.push( {
-						step: 'login',
-						username: 'admin',
+					steps.push( makeStep( 'login', { username: 'admin',
 						password: 'password',
-						landingPage: false
-					} );
+						landingPage: false } ) );
 				} else if ( typeof appOpts.login === 'object' ) {
-					steps.push( {
-						step: 'login',
-						username: appOpts.login.username || 'admin',
+					steps.push( makeStep( 'login', { username: appOpts.login.username || 'admin',
 						password: appOpts.login.password || 'password',
-						landingPage: false
-					} );
+						landingPage: false } ) );
 				}
 			}
 
 			if ( appOpts.landingPage ) {
-				steps.push( {
-					step: 'setLandingPage',
-					landingPage: appOpts.landingPage
-				} );
+				steps.push( makeStep( 'setLandingPage', { landingPage: appOpts.landingPage } ) );
 			}
 		}
 
 		// Handle muPlugins
 		if ( v2Blueprint.muPlugins && Array.isArray( v2Blueprint.muPlugins ) ) {
 			for ( const muPlugin of v2Blueprint.muPlugins ) {
-				steps.push( {
-					step: 'muPlugin',
-					name: muPlugin.name || 'mu-plugin',
-					code: muPlugin.code || ''
-				} );
+				steps.push( makeStep( 'muPlugin', { name: muPlugin.name || 'mu-plugin',
+					code: muPlugin.code || '' } ) );
 			}
 		}
 
@@ -237,20 +219,14 @@ export class BlueprintDecompiler {
 
 	private decompileV2Plugin( plugin: any ): StepLibraryStepDefinition | null {
 		if ( plugin.resource === 'wordpress.org/plugins' && plugin.slug ) {
-			return {
-				step: 'installPlugin',
+			return makeStep( 'installPlugin', {
 				url: `https://wordpress.org/plugins/${plugin.slug}/`,
 				prs: false
-			};
+			} );
 		}
 
 		if ( plugin.resource === 'url' && plugin.url ) {
-			return {
-				step: 'installPlugin',
-				url: plugin.url,
-				prs: false,
-				permalink: false
-			};
+			return makeStep( 'installPlugin', { url: plugin.url, prs: false, permalink: false } );
 		}
 
 		this.warnings.push( `Unknown V2 plugin resource type: ${plugin.resource}` );
@@ -259,20 +235,14 @@ export class BlueprintDecompiler {
 
 	private decompileV2Theme( theme: any ): StepLibraryStepDefinition | null {
 		if ( theme.resource === 'wordpress.org/themes' && theme.slug ) {
-			return {
-				step: 'installTheme',
+			return makeStep( 'installTheme', {
 				url: `https://wordpress.org/themes/${theme.slug}/`,
 				prs: false
-			};
+			} );
 		}
 
 		if ( theme.resource === 'url' && theme.url ) {
-			return {
-				step: 'installTheme',
-				url: theme.url,
-				prs: false,
-				permalink: false
-			};
+			return makeStep( 'installTheme', { url: theme.url, prs: false, permalink: false } );
 		}
 
 		this.warnings.push( `Unknown V2 theme resource type: ${theme.resource}` );
@@ -288,11 +258,10 @@ export class BlueprintDecompiler {
 		if (nativeBlueprint.plugins && Array.isArray(nativeBlueprint.plugins)) {
 			for (const plugin of nativeBlueprint.plugins) {
 				if (typeof plugin === 'string') {
-					steps.push({
-						step: 'installPlugin',
+					steps.push( makeStep( 'installPlugin', {
 						url: `https://wordpress.org/plugins/${plugin}/`,
 						prs: false
-					});
+					} ) );
 				} else if (plugin && typeof plugin === 'object') {
 					const pluginStep = this.decompileInstallPlugin({
 						step: 'installPlugin',
@@ -308,19 +277,13 @@ export class BlueprintDecompiler {
 
 		if (nativeBlueprint.login) {
 			if (nativeBlueprint.login === true) {
-				steps.push({
-					step: 'login',
-					username: 'admin',
+				steps.push( makeStep( 'login', { username: 'admin',
 					password: 'password',
-					landingPage: false
-				});
+					landingPage: false } ) );
 			} else if (typeof nativeBlueprint.login === 'object') {
-				steps.push({
-					step: 'login',
-					username: nativeBlueprint.login.username || 'admin',
+				steps.push( makeStep( 'login', { username: nativeBlueprint.login.username || 'admin',
 					password: nativeBlueprint.login.password || 'password',
-					landingPage: false
-				});
+					landingPage: false } ) );
 			}
 		}
 
@@ -349,21 +312,15 @@ export class BlueprintDecompiler {
 						const blogname = nativeBlueprint.siteOptions.blogname || '';
 						const blogdescription = nativeBlueprint.siteOptions.blogdescription || '';
 						if (blogname || blogdescription) {
-							steps.push({
-								step: 'setSiteName',
-								sitename: blogname,
-								tagline: blogdescription
-							});
+							steps.push( makeStep( 'setSiteName', { sitename: blogname,
+								tagline: blogdescription } ) );
 						}
 					}
 					continue;
 				}
 
-				steps.push({
-					step: 'setSiteOption',
-					name: name,
-					value: value as string
-				});
+				steps.push( makeStep( 'setSiteOption', { name: name,
+					value: value as string } ) );
 			}
 		}
 
@@ -374,21 +331,15 @@ export class BlueprintDecompiler {
 			const scriptDebug = consts.SCRIPT_DEBUG === true;
 
 			if (wpDebug || wpDebugDisplay || scriptDebug) {
-				steps.push({
-					step: 'debug',
-					wpDebug,
+				steps.push( makeStep( 'debug', { wpDebug,
 					wpDebugDisplay,
 					scriptDebug,
-					queryMonitor: false
-				});
+					queryMonitor: false } ) );
 			}
 		}
 
 		if (nativeBlueprint.landingPage) {
-			steps.push({
-				step: 'setLandingPage',
-				landingPage: nativeBlueprint.landingPage
-			});
+			steps.push( makeStep( 'setLandingPage', { landingPage: nativeBlueprint.landingPage } ) );
 		}
 
 		const confidence = this.calculateConfidence(steps.length, this.unmappedSteps.length);
@@ -472,11 +423,10 @@ export class BlueprintDecompiler {
 		const resource = pluginData.resource;
 
 		if (resource === 'wordpress.org/plugins' && pluginData.slug) {
-			return {
-				step: 'installPlugin',
+			return makeStep( 'installPlugin', {
 				url: `https://wordpress.org/plugins/${pluginData.slug}/`,
 				prs: false
-			};
+			} );
 		}
 
 		if (resource === 'git:directory' && pluginData.url) {
@@ -487,49 +437,28 @@ export class BlueprintDecompiler {
 			const downloadsMatch = pluginData.url.match(/^https?:\/\/downloads\.wordpress\.org\/plugin\/([^.]+)\..*\.zip$/);
 			if (downloadsMatch) {
 				const slug = downloadsMatch[1];
-				return {
-					step: 'installPlugin',
+				return makeStep( 'installPlugin', {
 					url: `https://wordpress.org/plugins/${slug}/`,
 					prs: false
-				};
+				} );
 			}
 
-			return {
-				step: 'installPlugin',
-				url: pluginData.url,
-				prs: false,
-				permalink: false
-			};
+			return makeStep( 'installPlugin', { url: pluginData.url, prs: false, permalink: false } );
 		}
 
-		// Handle literal/inline content
+		// Handle literal/inline content - pass through as native step
 		if ( resource === 'literal' ) {
-			return {
-				step: 'installPlugin',
-				pluginData: pluginData,
-				prs: false,
-				permalink: false
-			};
+			return { step: 'installPlugin', pluginData } as StepLibraryStepDefinition;
 		}
 
-		// Handle VFS (virtual filesystem) paths
+		// Handle VFS (virtual filesystem) paths - pass through as native step
 		if ( resource === 'vfs' && pluginData.path ) {
-			return {
-				step: 'installPlugin',
-				pluginData: pluginData,
-				prs: false,
-				permalink: false
-			};
+			return { step: 'installPlugin', pluginData } as StepLibraryStepDefinition;
 		}
 
-		// Handle core plugins (bundled with WordPress)
+		// Handle core plugins (bundled with WordPress) - pass through as native step
 		if ( resource === 'core-plugin' && pluginData.slug ) {
-			return {
-				step: 'installPlugin',
-				pluginData: pluginData,
-				prs: false,
-				permalink: false
-			};
+			return { step: 'installPlugin', pluginData } as StepLibraryStepDefinition;
 		}
 
 		this.warnings.push(`Unknown plugin resource type: ${resource}`);
@@ -541,11 +470,10 @@ export class BlueprintDecompiler {
 		const resource = themeData.resource;
 
 		if (resource === 'wordpress.org/themes' && themeData.slug) {
-			return {
-				step: 'installTheme',
+			return makeStep( 'installTheme', {
 				url: `https://wordpress.org/themes/${themeData.slug}/`,
 				prs: false
-			};
+			} );
 		}
 
 		if (resource === 'git:directory' && themeData.url) {
@@ -556,49 +484,28 @@ export class BlueprintDecompiler {
 			const downloadsMatch = themeData.url.match(/^https?:\/\/downloads\.wordpress\.org\/theme\/([^.]+)\..*\.zip$/);
 			if (downloadsMatch) {
 				const slug = downloadsMatch[1];
-				return {
-					step: 'installTheme',
+				return makeStep( 'installTheme', {
 					url: `https://wordpress.org/themes/${slug}/`,
 					prs: false
-				};
+				} );
 			}
 
-			return {
-				step: 'installTheme',
-				url: themeData.url,
-				prs: false,
-				permalink: false
-			};
+			return makeStep( 'installTheme', { url: themeData.url, prs: false, permalink: false } );
 		}
 
-		// Handle literal/inline content
+		// Handle literal/inline content - pass through as native step
 		if ( resource === 'literal' ) {
-			return {
-				step: 'installTheme',
-				themeData: themeData,
-				prs: false,
-				permalink: false
-			};
+			return { step: 'installTheme', themeData } as StepLibraryStepDefinition;
 		}
 
-		// Handle VFS (virtual filesystem) paths
+		// Handle VFS (virtual filesystem) paths - pass through as native step
 		if ( resource === 'vfs' && themeData.path ) {
-			return {
-				step: 'installTheme',
-				themeData: themeData,
-				prs: false,
-				permalink: false
-			};
+			return { step: 'installTheme', themeData } as StepLibraryStepDefinition;
 		}
 
-		// Handle core themes (bundled with WordPress)
+		// Handle core themes (bundled with WordPress) - pass through as native step
 		if ( resource === 'core-theme' && themeData.slug ) {
-			return {
-				step: 'installTheme',
-				themeData: themeData,
-				prs: false,
-				permalink: false
-			};
+			return { step: 'installTheme', themeData } as StepLibraryStepDefinition;
 		}
 
 		this.warnings.push(`Unknown theme resource type: ${resource}`);
@@ -620,14 +527,12 @@ export class BlueprintDecompiler {
 		const prMatch = ref.match( /refs\/pull\/(\d+)\// );
 		if ( prMatch ) {
 			const prNumber = prMatch[1];
-			const result: any = {
-				step: stepType,
+			return makeStep( stepType, {
 				url: `https://github.com/${owner}/${repo}/pull/${prNumber}`,
 				auth: true,
 				prs: false,
 				permalink: false
-			};
-			return result;
+			} );
 		}
 
 		// Check for branch reference (refs/heads/branch-name or just branch-name)
@@ -641,13 +546,11 @@ export class BlueprintDecompiler {
 				url = `https://github.com/${owner}/${repo}/tree/${branch}//${directory}`;
 			}
 
-			const result: any = {
-				step: stepType,
+			return makeStep( stepType, {
 				url: url,
 				prs: false,
 				permalink: false
-			};
-			return result;
+			} );
 		}
 
 		// Check for commit SHA (40 hex characters)
@@ -659,13 +562,11 @@ export class BlueprintDecompiler {
 				url = `https://github.com/${owner}/${repo}/tree/${ref}//${directory}`;
 			}
 
-			const result: any = {
-				step: stepType,
+			return makeStep( stepType, {
 				url: url,
 				prs: false,
 				permalink: false
-			};
-			return result;
+			} );
 		}
 
 		// Default: just use the repo URL
@@ -674,13 +575,11 @@ export class BlueprintDecompiler {
 			url = `https://github.com/${owner}/${repo}/tree/HEAD//${directory}`;
 		}
 
-		const result: any = {
-			step: stepType,
+		return makeStep( stepType, {
 			url: url,
 			prs: false,
 			permalink: false
-		};
-		return result;
+		} );
 	}
 
 	private decompileRunPHP(nativeStep: any): StepLibraryStepDefinition | null {
@@ -699,10 +598,7 @@ export class BlueprintDecompiler {
 			return this.decompileAddPageOrPost(code, caption);
 		}
 
-		return {
-			step: 'runPHP',
-			code: code
-		};
+		return makeStep( 'runPHP', { code: code } );
 	}
 
 	private decompileBlockExamples(code: string, caption: string): StepLibraryStepDefinition | null {
@@ -712,17 +608,14 @@ export class BlueprintDecompiler {
 		const excludeCoreMatch = code.match(/\$exclude_core\s*=\s*(true|false)/);
 		const postTitleMatch = code.match(/['"]post_title['"]\s*=>\s*['"]([^'"]+)['"]/);
 
-		const step: StepLibraryStepDefinition = {
-			step: 'blockExamples',
+		return makeStep( 'blockExamples', {
 			blockNamespace: blockNamespaceMatch ? blockNamespaceMatch[1] : '',
 			postTitle: postTitleMatch ? postTitleMatch[1] : 'Block Examples',
 			limit: limitMatch ? limitMatch[1] : '',
 			postId: postIdMatch ? postIdMatch[1] : '1000',
 			excludeCore: excludeCoreMatch ? excludeCoreMatch[1] === 'true' : false,
 			landingPage: caption.includes('landingPage') || code.includes('landingPage')
-		};
-
-		return step;
+		} );
 	}
 
 	private decompileImportFriendFeeds(code: string): StepLibraryStepDefinition | null {
@@ -741,10 +634,7 @@ export class BlueprintDecompiler {
 			feeds.push(`${match[1]} ${match[2]}`);
 		}
 
-		return {
-			step: 'importFriendFeeds',
-			opml: feeds.join('\n')
-		};
+		return makeStep( 'importFriendFeeds', { opml: feeds.join('\n') } );
 	}
 
 	private decompileAddPageOrPost(code: string, caption: string): StepLibraryStepDefinition | null {
@@ -760,11 +650,10 @@ export class BlueprintDecompiler {
 
 		const step = isPost ? 'addPost' : 'addPage';
 
-		return {
-			step,
+		return makeStep( step, {
 			title: titleMatch ? titleMatch[1] : '',
 			content: contentMatch ? contentMatch[1] : ''
-		};
+		});
 	}
 
 	private decompileWriteFile(nativeStep: any): StepLibraryStepDefinition | null {
@@ -781,11 +670,8 @@ export class BlueprintDecompiler {
 			const nameMatch = filename?.match(/^(.+?)(?:-\d+)?\.php$/);
 			const name = nameMatch ? nameMatch[1] : filename?.replace('.php', '') || 'my-plugin';
 
-			return {
-				step: 'muPlugin',
-				name,
-				code: data
-			};
+			return makeStep( 'muPlugin', { name,
+				code: data } );
 		}
 
 		this.warnings.push(`Could not decompile writeFile: ${path}`);
@@ -811,11 +697,8 @@ export class BlueprintDecompiler {
 			callback = callback.slice(1, -1);
 		}
 
-		return {
-			step: 'addFilter',
-			filter: filterName,
-			code: callback
-		};
+		return makeStep( 'addFilter', { filter: filterName,
+			code: callback } );
 	}
 
 	private decompileDefineWpConfigConsts(nativeStep: any, allSteps: any[], index: number): StepLibraryStepDefinition | null {
@@ -834,32 +717,23 @@ export class BlueprintDecompiler {
 			}
 		}
 
-		return {
-			step: 'debug',
-			wpDebug,
+		return makeStep( 'debug', { wpDebug,
 			wpDebugDisplay,
 			scriptDebug,
-			queryMonitor
-		};
+			queryMonitor } );
 	}
 
 	private decompileSetSiteOptions(nativeStep: any): StepLibraryStepDefinition | null {
 		const options = nativeStep.options || {};
 
 		if (options.blogname !== undefined && options.blogdescription !== undefined) {
-			return {
-				step: 'setSiteName',
-				sitename: options.blogname,
-				tagline: options.blogdescription
-			};
+			return makeStep( 'setSiteName', { sitename: options.blogname,
+				tagline: options.blogdescription } );
 		}
 
 		if (options.blogname !== undefined) {
-			return {
-				step: 'setSiteName',
-				sitename: options.blogname,
-				tagline: ''
-			};
+			return makeStep( 'setSiteName', { sitename: options.blogname,
+				tagline: '' } );
 		}
 
 		if (options.permalink_structure) {
@@ -877,22 +751,16 @@ export class BlueprintDecompiler {
 			return null;
 		}
 
-		return {
-			step: 'runWpCliCommand',
-			command: command
-		};
+		return makeStep( 'runWpCliCommand', { command: command } );
 	}
 
 	private decompileLogin(nativeStep: any): StepLibraryStepDefinition | null {
 		const username = nativeStep.username || 'admin';
 		const password = nativeStep.password || 'password';
 
-		return {
-			step: 'login',
-			username,
+		return makeStep( 'login', { username,
 			password,
-			landingPage: false
-		};
+			landingPage: false } );
 	}
 
 	private decompileActivatePlugin(nativeStep: any): StepLibraryStepDefinition | null {
@@ -900,14 +768,14 @@ export class BlueprintDecompiler {
 			step: 'activatePlugin',
 			pluginPath: nativeStep.pluginPath || '',
 			pluginName: nativeStep.pluginName
-		};
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileActivateTheme(nativeStep: any): StepLibraryStepDefinition | null {
 		return {
 			step: 'activateTheme',
 			themeFolderName: nativeStep.themeFolderName || nativeStep.themeDirectoryName || ''
-		};
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileCp(nativeStep: any): StepLibraryStepDefinition | null {
@@ -915,7 +783,7 @@ export class BlueprintDecompiler {
 			step: 'cp',
 			fromPath: this.translatePath( nativeStep.fromPath || '' ),
 			toPath: this.translatePath( nativeStep.toPath || '' )
-		};
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileMv(nativeStep: any): StepLibraryStepDefinition | null {
@@ -923,21 +791,21 @@ export class BlueprintDecompiler {
 			step: 'mv',
 			fromPath: this.translatePath( nativeStep.fromPath || '' ),
 			toPath: this.translatePath( nativeStep.toPath || '' )
-		};
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileRm(nativeStep: any): StepLibraryStepDefinition | null {
 		return {
 			step: 'rm',
 			path: this.translatePath( nativeStep.path || '' )
-		};
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileRmdir(nativeStep: any): StepLibraryStepDefinition | null {
 		return {
 			step: 'rmdir',
 			path: this.translatePath( nativeStep.path || '' )
-		};
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileMkdir(nativeStep: any): StepLibraryStepDefinition | null {
@@ -962,37 +830,37 @@ export class BlueprintDecompiler {
 		return {
 			step: 'mkdir',
 			path: this.translatePath( path )
-		};
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileUnzip(nativeStep: any): StepLibraryStepDefinition | null {
-		const step: any = {
+		const result: any = {
 			step: 'unzip',
 			extractToPath: this.translatePath( nativeStep.extractToPath || '' )
 		};
 
 		if ( nativeStep.zipFile ) {
-			step.zipFile = nativeStep.zipFile;
+			result.zipFile = nativeStep.zipFile;
 		}
 		if ( nativeStep.zipPath ) {
-			step.zipPath = this.translatePath( nativeStep.zipPath );
+			result.zipPath = this.translatePath( nativeStep.zipPath );
 		}
 
-		return step;
+		return result as StepLibraryStepDefinition;
 	}
 
 	private decompileRunSQL(nativeStep: any): StepLibraryStepDefinition | null {
 		return {
-			step: 'runSQL',
+			step: 'runSql',
 			sql: nativeStep.sql
-		};
+		} as StepLibraryStepDefinition;
 	}
 
 	private decompileImportWxr(nativeStep: any): StepLibraryStepDefinition | null {
 		return {
 			step: 'importWxr',
 			file: nativeStep.file
-		};
+		} as StepLibraryStepDefinition;
 	}
 
 	private translatePath( path: string ): string {

@@ -4,9 +4,9 @@ import type { InstallPluginStep } from './types.js';
 describe('installPlugin', () => {
     it('should install plugin from WordPress.org slug', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'hello-dolly'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -20,9 +20,9 @@ describe('installPlugin', () => {
 
     it('should install plugin from WordPress.org URL', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://wordpress.org/plugins/woocommerce'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -32,9 +32,9 @@ describe('installPlugin', () => {
 
     it('should install plugin from external HTTP URL', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://external-site.com/plugin.zip'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -44,9 +44,9 @@ describe('installPlugin', () => {
 
     it('should handle GitHub repository URLs', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/akirk/blueprint-recorder'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -63,9 +63,9 @@ describe('installPlugin', () => {
 
     it('should handle GitHub URLs without https prefix', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'akirk/blueprint-recorder'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -82,9 +82,9 @@ describe('installPlugin', () => {
 
     it('should handle GitHub release download URLs', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/user/repo/releases/download/v1.0.0/plugin.zip'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -94,9 +94,9 @@ describe('installPlugin', () => {
 
     it('should handle GitHub branch/directory URLs', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/Automattic/wordpress-activitypub/tree/trunk'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -113,9 +113,9 @@ describe('installPlugin', () => {
 
     it('should handle GitHub URLs with uppercase branch names', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/akirk/friends/tree/BRANCHNAME'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -132,9 +132,9 @@ describe('installPlugin', () => {
 
     it('should handle GitHub URLs with branch names containing slashes', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/akirk/friends/tree/feature/new-thing'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -151,9 +151,9 @@ describe('installPlugin', () => {
 
     it('should handle GitHub URLs with branch containing slash and directory using double-slash separator', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/akirk/friends/tree/feature/branch//some/directory'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -170,9 +170,9 @@ describe('installPlugin', () => {
 
     it('should handle GitHub URLs with branch names with trailing slash', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/akirk/friends/tree/feature/'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -189,9 +189,9 @@ describe('installPlugin', () => {
 
     it('should handle GitHub URLs with two-part branch names', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/akirk/friends/tree/feature/br'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -208,9 +208,9 @@ describe('installPlugin', () => {
 
     it('should handle GitHub URLs with two-part branch names with trailing slash', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/akirk/friends/tree/feature/br/'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -227,9 +227,9 @@ describe('installPlugin', () => {
 
     it('should handle GitHub URLs with simple branch and directory using double-slash', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/akirk/friends/tree/feature//br'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -246,9 +246,9 @@ describe('installPlugin', () => {
 
     it('should handle GitHub branch/directory URLs with subdirectory', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/WordPress/gutenberg/tree/trunk/packages/components'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -265,9 +265,9 @@ describe('installPlugin', () => {
 
     it('should handle GitHub PR URLs', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/akirk/friends/pull/559'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -284,10 +284,10 @@ describe('installPlugin', () => {
 
     it('should handle GitHub PR URLs with prs flag and add GitHub export parameters', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/akirk/friends/pull/559',
             prs: true
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -312,10 +312,10 @@ describe('installPlugin', () => {
 
     it('should handle GitHub repository URLs with prs flag', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://github.com/akirk/friends',
             prs: true
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -329,9 +329,9 @@ describe('installPlugin', () => {
 
     it('should install plugin without permalink structure', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'hello-dolly'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -341,9 +341,9 @@ describe('installPlugin', () => {
 
     it('should handle HTTP URLs with cors-proxy', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'http://external-site.com/plugin.zip'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -354,9 +354,9 @@ describe('installPlugin', () => {
 
     it('should extract slug from complex WordPress.org URLs', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: 'https://wordpress.org/plugins/friends/'
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 
@@ -383,9 +383,9 @@ describe('installPlugin', () => {
 
     it('should handle empty or malformed URLs gracefully', () => {
         const step: InstallPluginStep = {
-            step: 'installPlugin',
+            step: 'installPlugin', vars: {
             url: ''
-        };
+        } };
 
         const result = installPlugin(step).toV1();
 

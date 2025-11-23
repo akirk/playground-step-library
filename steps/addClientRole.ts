@@ -55,11 +55,8 @@ add_action(
 );
 `;
 
-	return muPlugin({
-		step: 'muPlugin',
-		name: 'add-client-role',
-		code
-	});
+	return muPlugin( { step: 'muPlugin', vars: { name: 'add-client-role',
+		code } } );
 };
 
 addClientRole.description = "Adds a role for clients with additional capabilities than editors, but not quite admin.";

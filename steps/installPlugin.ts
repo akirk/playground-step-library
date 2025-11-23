@@ -7,38 +7,32 @@ import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
 export const installPlugin: StepFunction<InstallPluginStep> = (step: InstallPluginStep): StepResult => {
 	// Parse GitHub release URL
 	const releasePattern = /\/releases\/download\/(?<version>[^\/]+)\/(?<asset>[^\/]+)$/;
-	const releaseMatch = step.url.match(releasePattern);
+	const releaseMatch = step.vars?.url.match(releasePattern);
 
 	// Check if it's a GitHub URL
-	const isGitHubUrl = step.url.match(/^(?:https:\/\/)?github\.com\//i) ||
-	                    (!step.url.includes('://') && step.url.match(/^[^\/]+\/[^\/]+/));
+	const isGitHubUrl = step.vars?.url.match(/^(?:https:\/\/)?github\.com\//i) ||
+	                    (!step.vars?.url.includes('://') && step.vars?.url.match(/^[^\/]+\/[^\/]+/));
 	const urlPattern = /^(?:https:\/\/)?(?:github\.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)/;
-	const urlTest = isGitHubUrl ? urlPattern.exec(step.url) : null;
+	const urlTest = isGitHubUrl ? urlPattern.exec(step.vars?.url) : null;
 
 	// Extract WordPress.org slug
-	let plugin = step.url;
+	let plugin = step.vars?.url;
 	const slugPattern = /^https:\/\/wordpress.org\/plugins\/(?<slug>[^\/]+)/;
-	const slugTest = slugPattern.exec(step.url);
+	const slugTest = slugPattern.exec(step.vars?.url);
 	if (slugTest) {
 		plugin = slugTest.groups!.slug;
 	}
 
 	// Delegate to GitHub handlers
 	if (urlTest && releaseMatch) {
-		return githubPluginRelease({
-			step: 'githubPluginRelease',
-			repo: urlTest.groups!.org + '/' + urlTest.groups!.repo,
+		return githubPluginRelease( { step: 'githubPluginRelease', vars: { repo: urlTest.groups!.org + '/' + urlTest.groups!.repo,
 			release: releaseMatch.groups!.version,
-			filename: releaseMatch.groups!.asset
-		});
+			filename: releaseMatch.groups!.asset } } );
 	}
 
 	if (urlTest) {
-		return githubPlugin({
-			step: 'githubPlugin',
-			url: step.url,
-			prs: step.prs
-		});
+		return githubPlugin( { step: 'githubPlugin', vars: { url: step.vars?.url,
+			prs: step.vars?.prs } } );
 	}
 
 	// WordPress.org plugins and direct URLs

@@ -28,16 +28,15 @@ export function cloneStepToBlueprint( stepName: string, container: HTMLElement )
  * Populate a step block with variable values
  */
 export function populateStepVariables( stepBlock: HTMLElement, stepData: StepData ): void {
-	for ( const key in stepData ) {
-		if ( key === 'step' || key === 'count' ) {
-			continue;
-		}
-		const input = stepBlock.querySelector( '[name="' + key + '"]' ) as HTMLInputElement | null;
-		if ( input ) {
-			if ( input.type === 'checkbox' ) {
-				input.checked = stepData[key];
-			} else {
-				input.value = stepData[key];
+	if ( stepData.vars ) {
+		for ( const key in stepData.vars ) {
+			const input = stepBlock.querySelector( '[name="' + key + '"]' ) as HTMLInputElement | null;
+			if ( input ) {
+				if ( input.type === 'checkbox' ) {
+					input.checked = stepData.vars[key];
+				} else {
+					input.value = stepData.vars[key];
+				}
 			}
 		}
 	}

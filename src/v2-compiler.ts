@@ -129,35 +129,22 @@ class StepLibraryCompilerV2 {
      * Get v2 fragments from a step
      */
     private getV2Fragments(step: BlueprintStep, inputData: any): BlueprintV2Declaration | null {
-        // Use discriminated union logic for steps that have both custom and builtin variants
-        // Custom variants have specific properties (like 'url'), builtin variants have resource data
-        if ( step.step === 'installPlugin' ) {
-            if ( !( 'url' in step ) ) {
-                // Builtin installPlugin with pluginData - pass through as-is
+        const stepFn = this.customSteps[step.step];
+
+        // If step has no `vars`, it's a native step - pass through directly
+        // Exception: steps with empty vars array (like dontLogin) have vars as undefined but ARE custom steps
+        // So check: if no vars AND (step not in registry OR step has other properties like pluginData)
+        if ( !step.vars ) {
+            const hasNativeProps = (step as any).pluginData || (step as any).themeData || (step as any).file;
+            if ( !stepFn || hasNativeProps ) {
+                // Strip internal properties and pass through as native step
+                const { stepIndex, ...nativeStep } = step as any;
                 return {
                     version: 2,
-                    additionalStepsAfterExecution: [step as StepDefinition]
-                } as BlueprintV2Declaration;
-            }
-        } else if ( step.step === 'installTheme' ) {
-            if ( !( 'url' in step ) ) {
-                // Builtin installTheme with themeData - pass through as-is
-                return {
-                    version: 2,
-                    additionalStepsAfterExecution: [step as StepDefinition]
-                } as BlueprintV2Declaration;
-            }
-        } else if ( step.step === 'importWxr' ) {
-            if ( !( 'url' in step ) ) {
-                // Builtin importWxr with file resource - pass through as-is
-                return {
-                    version: 2,
-                    additionalStepsAfterExecution: [step as StepDefinition]
+                    additionalStepsAfterExecution: [nativeStep as StepDefinition]
                 } as BlueprintV2Declaration;
             }
         }
-
-        const stepFn = this.customSteps[step.step];
 
         if (stepFn) {
             const result = stepFn(step, inputData);

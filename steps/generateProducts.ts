@@ -6,10 +6,10 @@ export const generateProducts: StepFunction<GenerateProductsStep> = (step: Gener
 	return {
 		toV1() {
 	const productCount = step.count || 10;
-	const orderCount = step.orders || 0;
-	const customerCount = step.customers || 0;
-	const couponCount = step.coupons || 0;
-	const categoryCount = step.categories || 0;
+	const orderCount = step.vars?.orders || 0;
+	const customerCount = step.vars?.customers || 0;
+	const couponCount = step.vars?.coupons || 0;
+	const categoryCount = step.vars?.categories || 0;
 
 	let code = `<?php 
 require_once '/wordpress/wp-load.php';
@@ -201,7 +201,7 @@ error_log( "Generated " . count( $term_ids ) . " product categories" );
 
 	// Install WooCommerce if not present
 	if (!hasWoocommercePlugin) {
-		const wooResult = installPlugin({ step: 'installPlugin', url: 'woocommerce', permalink: true }).toV1();
+		const wooResult = installPlugin( { step: 'installPlugin', vars: { url: 'woocommerce', permalink: true } } ).toV1();
 		steps = steps.concat(wooResult.steps);
 	}
 

@@ -4,9 +4,9 @@ import type { InstallThemeStep } from './types.js';
 describe('installTheme', () => {
     it('should install theme from WordPress.org slug', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: 'pendant'
-        };
+        } };
 
         const result = installTheme(step).toV1();
 
@@ -20,9 +20,9 @@ describe('installTheme', () => {
 
     it('should install theme from WordPress.org URL', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: 'https://wordpress.org/themes/twentytwentyfour'
-        };
+        } };
 
         const result = installTheme(step).toV1();
 
@@ -32,9 +32,9 @@ describe('installTheme', () => {
 
     it('should handle GitHub repository URLs', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: 'https://github.com/richtabor/kanso'
-        };
+        } };
 
         const result = installTheme(step).toV1();
 
@@ -44,9 +44,9 @@ describe('installTheme', () => {
 
     it('should handle GitHub URLs without https prefix', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: 'ndiego/nautilus'
-        };
+        } };
 
         const result = installTheme(step).toV1();
 
@@ -55,9 +55,9 @@ describe('installTheme', () => {
 
     it('should handle GitHub branch URLs', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: 'https://github.com/Automattic/themes/tree/trunk/aether'
-        };
+        } };
 
         const result = installTheme(step).toV1();
 
@@ -66,9 +66,9 @@ describe('installTheme', () => {
 
     it('should install theme from external HTTP URL', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: 'https://external-site.com/theme.zip'
-        };
+        } };
 
         const result = installTheme(step).toV1();
 
@@ -80,9 +80,9 @@ describe('installTheme', () => {
 
     it('should handle HTTP URLs with cors-proxy', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: 'http://external-site.com/theme.zip'
-        };
+        } };
 
         const result = installTheme(step).toV1();
 
@@ -93,9 +93,9 @@ describe('installTheme', () => {
 
     it('should return empty array when url is empty', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: ''
-        };
+        } };
 
         const result = installTheme(step).toV1();
 
@@ -104,9 +104,9 @@ describe('installTheme', () => {
 
     it('should extract slug from WordPress.org URLs with trailing slash', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: 'https://wordpress.org/themes/link-folio/'
-        };
+        } };
 
         const result = installTheme(step).toV1();
 
@@ -115,9 +115,9 @@ describe('installTheme', () => {
 
     it('should handle themes without protocol prefix correctly', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: 'simple-theme-name'
-        };
+        } };
 
         const result = installTheme(step).toV1();
 
@@ -146,9 +146,9 @@ describe('installTheme', () => {
 
     it('should return a valid WordPress Playground step', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: 'twentytwentyfour'
-        };
+        } };
 
         const result = installTheme(step).toV1();
 
@@ -165,9 +165,9 @@ describe('installTheme', () => {
 
     it('should output V2 themes array for WordPress.org theme', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: 'https://wordpress.org/themes/flavor/'
-        };
+        } };
 
         const result = installTheme(step).toV2();
 
@@ -179,9 +179,9 @@ describe('installTheme', () => {
 
     it('should output V2 themes array for theme slug', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: 'flavor'
-        };
+        } };
 
         const result = installTheme(step).toV2();
 
@@ -191,9 +191,9 @@ describe('installTheme', () => {
 
     it('should output empty V2 for empty url', () => {
         const step: InstallThemeStep = {
-            step: 'installTheme',
+            step: 'installTheme', vars: {
             url: ''
-        };
+        } };
 
         const result = installTheme(step).toV2();
 

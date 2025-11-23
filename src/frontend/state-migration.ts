@@ -3,7 +3,7 @@
  * Handles backward compatibility for blueprint state changes
  */
 
-import { CompressedState, StepConfig } from './blueprint-compiler';
+import { CompressedState } from './blueprint-compiler';
 
 /**
  * Migration rules for variable name changes across different step types
@@ -44,30 +44,30 @@ export function migrateState(state: CompressedState): CompressedState {
 
 	// Apply migrations to each step
 	state.steps = state.steps.map(function (step) {
-		if (!variableMigrations[step.step]) {
+		if (!step.vars || !variableMigrations[step.step]) {
 			return step;
 		}
 
 		const migrations = variableMigrations[step.step];
-		const migratedStep: StepConfig = { step: step.step };
-		if (step.count) {
-			migratedStep.count = step.count;
-		}
+		const migratedVars: Record<string, any> = {};
 
-		// Copy existing properties and apply migrations
-		Object.keys(step).filter(k => k !== 'step' && k !== 'count').forEach(function (varName) {
+		// Copy existing vars and apply migrations
+		Object.keys(step.vars).forEach(function (varName) {
 			if (migrations[varName]) {
 				// Migrate old variable name to new name
 				const newVarName = migrations[varName];
-				migratedStep[newVarName] = step[varName];
+				migratedVars[newVarName] = step.vars![varName];
 				console.info('Migrated variable "' + varName + '" to "' + newVarName + '" in step "' + step.step + '"');
 			} else {
 				// Keep existing variable
-				migratedStep[varName] = step[varName];
+				migratedVars[varName] = step.vars![varName];
 			}
 		});
 
-		return migratedStep;
+		return {
+			...step,
+			vars: migratedVars
+		};
 	});
 
 	return state;

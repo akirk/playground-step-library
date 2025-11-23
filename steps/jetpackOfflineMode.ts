@@ -4,10 +4,10 @@ import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playgro
 
 export const jetpackOfflineMode: StepFunction<JetpackOfflineModeStep> = (step: JetpackOfflineModeStep): StepResult => {
 	const jetpackModules: string[] = [];
-	if (step.blocks) {
+	if (step.vars?.blocks) {
 		jetpackModules.push('blocks');
 	}
-	if (step.subscriptions) {
+	if (step.vars?.subscriptions) {
 		jetpackModules.push('subscriptions');
 	}
 

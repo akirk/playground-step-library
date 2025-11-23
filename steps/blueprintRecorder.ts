@@ -4,8 +4,11 @@ import { githubPlugin } from './githubPlugin.js';
 export const blueprintRecorder: StepFunction<BlueprintRecorderStep> = (step: BlueprintRecorderStep): StepResult => {
 	return githubPlugin({
 		step: 'githubPlugin',
-		url: "https://github.com/akirk/blueprint-recorder",
-		branch: "main",
+		stepIndex: step.stepIndex,
+		vars: {
+			url: "https://github.com/akirk/blueprint-recorder",
+			branch: "main",
+		}
 	});
 };
 

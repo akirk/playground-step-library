@@ -4,9 +4,9 @@ import type { SetLanguageStep } from './types.js';
 describe('setLanguage', () => {
     it('should set language using locale mapping', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: 'de'
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -18,9 +18,9 @@ describe('setLanguage', () => {
 
     it('should map French correctly', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: 'fr'
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -29,9 +29,9 @@ describe('setLanguage', () => {
 
     it('should map Spanish correctly', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: 'es'
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -40,9 +40,9 @@ describe('setLanguage', () => {
 
     it('should map Italian correctly', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: 'it'
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -51,9 +51,9 @@ describe('setLanguage', () => {
 
     it('should map Japanese correctly', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: 'ja'
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -62,9 +62,9 @@ describe('setLanguage', () => {
 
     it('should map Polish correctly', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: 'pl'
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -73,9 +73,9 @@ describe('setLanguage', () => {
 
     it('should map Arabic correctly', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: 'ar'
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -84,9 +84,9 @@ describe('setLanguage', () => {
 
     it('should use original language when not in mapping', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: 'en_US'
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -95,9 +95,9 @@ describe('setLanguage', () => {
 
     it('should handle full locale codes directly', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: 'pt_BR'
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -106,9 +106,9 @@ describe('setLanguage', () => {
 
     it('should return empty array when language is missing', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: ''
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -117,9 +117,9 @@ describe('setLanguage', () => {
 
     it('should return empty array when language is empty string', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: ''
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -128,9 +128,9 @@ describe('setLanguage', () => {
 
     it('should return empty array when language is null', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: null as any
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -139,9 +139,9 @@ describe('setLanguage', () => {
 
     it('should return empty array when language is undefined', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: undefined as any
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -150,9 +150,9 @@ describe('setLanguage', () => {
 
     it('should handle custom locale formats', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: 'zh_CN'
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         
@@ -174,9 +174,9 @@ describe('setLanguage', () => {
 
     it('should return a valid WordPress Playground step', () => {
         const step: SetLanguageStep = {
-            step: 'setLanguage',
+            step: 'setLanguage', vars: {
             language: 'fr'
-        };
+        } };
         
         const result = setLanguage(step).toV1();
         

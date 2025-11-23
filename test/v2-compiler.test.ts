@@ -9,8 +9,10 @@ describe('compileV2', () => {
                 steps: [
                     {
                         step: 'addPage',
-                        title: 'About Us',
-                        content: '<p>Company information</p>'
+                        vars: {
+                            title: 'About Us',
+                            content: '<p>Company information</p>'
+                        }
                     }
                 ]
             };
@@ -40,9 +42,11 @@ describe('compileV2', () => {
                 steps: [
                     {
                         step: 'addPage',
-                        title: 'Home',
-                        content: '<p>Welcome</p>',
-                        homepage: true
+                        vars: {
+                            title: 'Home',
+                            content: '<p>Welcome</p>',
+                            homepage: true
+                        }
                     }
                 ]
             };
@@ -69,13 +73,17 @@ describe('compileV2', () => {
                 steps: [
                     {
                         step: 'addPage',
-                        title: 'About',
-                        content: '<p>About us</p>'
+                        vars: {
+                            title: 'About',
+                            content: '<p>About us</p>'
+                        }
                     },
                     {
                         step: 'addPage',
-                        title: 'Contact',
-                        content: '<p>Contact us</p>'
+                        vars: {
+                            title: 'Contact',
+                            content: '<p>Contact us</p>'
+                        }
                     }
                 ]
             };
@@ -115,8 +123,10 @@ describe('compileV2', () => {
                 steps: [
                     {
                         step: 'addPage',
-                        title: 'Test',
-                        content: '<p>Test</p>'
+                        vars: {
+                            title: 'Test',
+                            content: '<p>Test</p>'
+                        }
                     }
                 ]
             };
@@ -134,8 +144,10 @@ describe('compileV2', () => {
                 steps: [
                     {
                         step: 'addPage',
-                        title: 'About',
-                        content: '<p>About</p>'
+                        vars: {
+                            title: 'About',
+                            content: '<p>About</p>'
+                        }
                     }
                 ]
             };
@@ -152,8 +164,10 @@ describe('compileV2', () => {
                 steps: [
                     {
                         step: 'addPage',
-                        title: 'Test',
-                        content: '<p>Test</p>'
+                        vars: {
+                            title: 'Test',
+                            content: '<p>Test</p>'
+                        }
                     }
                 ]
             };
@@ -169,7 +183,9 @@ describe('compileV2', () => {
                 steps: [
                     {
                         step: 'setLandingPage',
-                        landingPage: '/wp-admin/themes.php'
+                        vars: {
+                            landingPage: '/wp-admin/themes.php'
+                        }
                     }
                 ]
             };
@@ -202,8 +218,10 @@ describe('compileV2', () => {
                 steps: [
                     {
                         step: 'addPage',
-                        title: 'Test',
-                        content: '<p>Test</p>'
+                        vars: {
+                            title: 'Test',
+                            content: '<p>Test</p>'
+                        }
                     }
                 ]
             };
@@ -228,8 +246,10 @@ describe('compileV2', () => {
                 steps: [
                     {
                         step: 'addPage',
-                        title: 'Test',
-                        content: '<p>Test</p>'
+                        vars: {
+                            title: 'Test',
+                            content: '<p>Test</p>'
+                        }
                     }
                 ]
             };
@@ -254,8 +274,10 @@ describe('compileV2', () => {
                 steps: [
                     {
                         step: 'addPage',
-                        title: 'Test',
-                        content: '<p>Test</p>'
+                        vars: {
+                            title: 'Test',
+                            content: '<p>Test</p>'
+                        }
                     }
                 ]
             });

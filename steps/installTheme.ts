@@ -6,20 +6,17 @@ import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
 export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeStep): StepResult => {
 	// Check if it's a GitHub URL
 	const githubPattern = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/;
-	const isGitHubUrl = githubPattern.test(step.url) && step.url.match(githubPattern);
+	const isGitHubUrl = githubPattern.test(step.vars?.url) && step.vars?.url.match(githubPattern);
 
 	if (isGitHubUrl) {
-		return githubTheme({
-			step: 'githubTheme',
-			url: step.url,
-			prs: step.prs
-		});
+		return githubTheme( { step: 'githubTheme', vars: { url: step.vars?.url,
+			prs: step.vars?.prs } } );
 	}
 
 	// Extract WordPress.org slug
-	let theme = step.url;
+	let theme = step.vars?.url;
 	const slugPattern = /^https:\/\/wordpress.org\/themes\/(?<slug>[^\/]+)/;
-	const slugMatch = step.url.match(slugPattern);
+	const slugMatch = step.vars?.url.match(slugPattern);
 	if (slugMatch && slugMatch.groups) {
 		theme = slugMatch.groups.slug;
 	}

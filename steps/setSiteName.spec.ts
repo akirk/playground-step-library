@@ -4,10 +4,10 @@ import type { SetSiteNameStep } from './types.js';
 describe('setSiteName', () => {
     it('should set site name and tagline', () => {
         const step: SetSiteNameStep = {
-            step: 'setSiteName',
+            step: 'setSiteName', vars: {
             sitename: 'My WordPress Site',
             tagline: 'Just another WordPress site'
-        };
+        } };
 
         const result = setSiteName(step).toV1();
 
@@ -21,10 +21,10 @@ describe('setSiteName', () => {
 
     it('should pass actual values to setSiteOptions', () => {
         const step: SetSiteNameStep = {
-            step: 'setSiteName',
+            step: 'setSiteName', vars: {
             sitename: 'Test Site',
             tagline: 'Testing playground'
-        };
+        } };
 
         const result = setSiteName(step).toV1();
 
@@ -34,10 +34,10 @@ describe('setSiteName', () => {
 
     it('should work with empty values', () => {
         const step: SetSiteNameStep = {
-            step: 'setSiteName',
+            step: 'setSiteName', vars: {
             sitename: '',
             tagline: ''
-        };
+        } };
 
         const result = setSiteName(step).toV1();
 
@@ -48,10 +48,10 @@ describe('setSiteName', () => {
 
     it('should work with special characters in values', () => {
         const step: SetSiteNameStep = {
-            step: 'setSiteName',
+            step: 'setSiteName', vars: {
             sitename: 'Site "Name" & More',
             tagline: 'A tagline with <HTML> & symbols'
-        };
+        } };
 
         const result = setSiteName(step).toV1();
 
@@ -61,10 +61,10 @@ describe('setSiteName', () => {
 
     it('should output correct V2 siteOptions', () => {
         const step: SetSiteNameStep = {
-            step: 'setSiteName',
+            step: 'setSiteName', vars: {
             sitename: 'V2 Site',
             tagline: 'V2 Tagline'
-        };
+        } };
 
         const result = setSiteName(step).toV2();
 
@@ -94,10 +94,10 @@ describe('setSiteName', () => {
 
     it('should return a valid WordPress Playground step', () => {
         const step: SetSiteNameStep = {
-            step: 'setSiteName',
+            step: 'setSiteName', vars: {
             sitename: 'WordPress Site',
             tagline: 'My awesome site'
-        };
+        } };
 
         const result = setSiteName(step).toV1();
 

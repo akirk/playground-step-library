@@ -7,8 +7,8 @@ import { encodeStringAsBase64, decodeBase64ToString } from './utils';
 
 export interface StepConfig {
 	step: string;
+	vars?: Record<string, any>;
 	count?: number;
-	[key: string]: any;
 }
 
 export interface CompressedState {
@@ -97,7 +97,8 @@ export function uncompressState(state: string): CompressedState {
  */
 export function extractStepDataFromElement(stepBlock: Element): StepConfig {
 	const step: StepConfig = {
-		step: (stepBlock as HTMLElement).dataset.step || ''
+		step: (stepBlock as HTMLElement).dataset.step || '',
+		vars: {}
 	};
 
 	stepBlock.querySelectorAll('input,select,textarea').forEach(function (input) {
@@ -108,23 +109,27 @@ export function extractStepDataFromElement(stepBlock: Element): StepConfig {
 			return;
 		}
 
-		if (typeof step[inputEl.name] !== 'undefined') {
-			if (!Array.isArray(step[inputEl.name])) {
-				step[inputEl.name] = [step[inputEl.name]];
+		if (typeof step.vars![inputEl.name] !== 'undefined') {
+			if (!Array.isArray(step.vars![inputEl.name])) {
+				step.vars![inputEl.name] = [step.vars![inputEl.name]];
 			}
 			if ((inputEl as HTMLInputElement).type === 'checkbox') {
-				step[inputEl.name].push((inputEl as HTMLInputElement).checked);
+				step.vars![inputEl.name].push((inputEl as HTMLInputElement).checked);
 			} else {
-				step[inputEl.name].push(inputEl.value);
+				step.vars![inputEl.name].push(inputEl.value);
 			}
 		} else {
 			if ((inputEl as HTMLInputElement).type === 'checkbox') {
-				step[inputEl.name] = (inputEl as HTMLInputElement).checked;
+				step.vars![inputEl.name] = (inputEl as HTMLInputElement).checked;
 			} else {
-				step[inputEl.name] = inputEl.value;
+				step.vars![inputEl.name] = inputEl.value;
 			}
 		}
 	});
+
+	if (!Object.keys(step.vars!).length) {
+		delete step.vars;
+	}
 
 	return step;
 }

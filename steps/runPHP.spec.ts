@@ -4,9 +4,9 @@ import type { RunPHPStep } from './types.js';
 describe('runPHP', () => {
     it('should create a runPHP step with the provided code', () => {
         const step: RunPHPStep = {
-            step: 'runPHP',
+            step: 'runPHP', vars: {
             code: '<?php echo "Hello World"; ?>'
-        };
+        } };
 
         const result = runPHP(step).toV1();
 
@@ -18,9 +18,9 @@ describe('runPHP', () => {
 
     it('should handle empty code', () => {
         const step: RunPHPStep = {
-            step: 'runPHP',
+            step: 'runPHP', vars: {
             code: ''
-        };
+        } };
         
         const result = runPHP(step).toV1();
         
@@ -36,9 +36,9 @@ foreach ($users as $user) {
 ?>`;
         
         const step: RunPHPStep = {
-            step: 'runPHP',
+            step: 'runPHP', vars: {
             code: code
-        };
+        } };
         
         const result = runPHP(step).toV1();
         
@@ -47,9 +47,9 @@ foreach ($users as $user) {
 
     it('should handle PHP code without opening/closing tags', () => {
         const step: RunPHPStep = {
-            step: 'runPHP',
+            step: 'runPHP', vars: {
             code: 'wp_insert_post(array("post_title" => "Test Post"));'
-        };
+        } };
         
         const result = runPHP(step).toV1();
         
@@ -58,9 +58,9 @@ foreach ($users as $user) {
 
     it('should handle PHP code with special characters', () => {
         const step: RunPHPStep = {
-            step: 'runPHP',
+            step: 'runPHP', vars: {
             code: '<?php echo "Hello \"World\" & \'PHP\'"; ?>'
-        };
+        } };
         
         const result = runPHP(step).toV1();
         
@@ -69,9 +69,9 @@ foreach ($users as $user) {
 
     it('should handle PHP code with WordPress functions', () => {
         const step: RunPHPStep = {
-            step: 'runPHP',
+            step: 'runPHP', vars: {
             code: '<?php update_option("blog_name", "My WordPress Site"); ?>'
-        };
+        } };
         
         const result = runPHP(step).toV1();
         
@@ -80,9 +80,9 @@ foreach ($users as $user) {
 
     it('should handle PHP code with HTML', () => {
         const step: RunPHPStep = {
-            step: 'runPHP',
+            step: 'runPHP', vars: {
             code: '<?php echo "<h1>Welcome to WordPress</h1>"; ?>'
-        };
+        } };
         
         const result = runPHP(step).toV1();
         
@@ -91,9 +91,9 @@ foreach ($users as $user) {
 
     it('should handle undefined code gracefully', () => {
         const step: RunPHPStep = {
-            step: 'runPHP',
+            step: 'runPHP', vars: {
             code: undefined as any
-        };
+        } };
         
         const result = runPHP(step).toV1();
         
@@ -102,9 +102,9 @@ foreach ($users as $user) {
 
     it('should handle null code', () => {
         const step: RunPHPStep = {
-            step: 'runPHP',
+            step: 'runPHP', vars: {
             code: null as any
-        };
+        } };
         
         const result = runPHP(step).toV1();
         
@@ -127,9 +127,9 @@ foreach ($users as $user) {
 
     it('should return a valid WordPress Playground step', () => {
         const step: RunPHPStep = {
-            step: 'runPHP',
+            step: 'runPHP', vars: {
             code: '<?php wp_insert_post(array("post_title" => "Test")); ?>'
-        };
+        } };
         
         const result = runPHP(step).toV1();
         

@@ -3,7 +3,7 @@ import PlaygroundStepLibrary from '../lib/src/index.js';
 
 describe('PlaygroundStepLibrary', () => {
   let compiler;
-  
+
   beforeEach(() => {
     compiler = new PlaygroundStepLibrary();
   });
@@ -23,7 +23,7 @@ describe('PlaygroundStepLibrary', () => {
       const steps = compiler.getAvailableSteps();
       const builtinSteps = Object.values(steps).filter(step => step.builtin).length;
       const customSteps = Object.values(steps).filter(step => !step.builtin).length;
-      
+
       expect(builtinSteps).toBeGreaterThan(0);
       expect(customSteps).toBeGreaterThan(0);
       expect(builtinSteps + customSteps).toBe(Object.keys(steps).length);
@@ -36,8 +36,10 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'setSiteName',
-            sitename: 'Test Site',
-            tagline: 'A test site'
+            vars: {
+              sitename: 'Test Site',
+              tagline: 'A test site'
+            }
           }
         ]
       };
@@ -54,8 +56,10 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'setSiteName',
-            sitename: 'Landing Page Test',
-            tagline: 'Testing landingPage preservation'
+            vars: {
+              sitename: 'Landing Page Test',
+              tagline: 'Testing landingPage preservation'
+            }
           }
         ]
       };
@@ -69,13 +73,17 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'setSiteName',
-            sitename: 'Multi Test',
-            tagline: 'Multiple steps test'
+            vars: {
+              sitename: 'Multi Test',
+              tagline: 'Multiple steps test'
+            }
           },
           {
             step: 'login',
-            username: 'admin',
-            password: 'password'
+            vars: {
+              username: 'admin',
+              password: 'password'
+            }
           }
         ]
       };
@@ -89,8 +97,10 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'setSiteName',
-            sitename: 'JSON Test',
-            tagline: 'JSON string test'
+            vars: {
+              sitename: 'JSON Test',
+              tagline: 'JSON string test'
+            }
           }
         ]
       };
@@ -105,8 +115,10 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'installPlugin',
-            url: 'https://github.com/akirk/friends/pull/559',
-            prs: true
+            vars: {
+              url: 'https://github.com/akirk/friends/pull/559',
+              prs: true
+            }
           }
         ]
       };
@@ -134,8 +146,10 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'setSiteName',
-            sitename: 'Test Site',
-            tagline: 'A test site'
+            vars: {
+              sitename: 'Test Site',
+              tagline: 'A test site'
+            }
           }
         ]
       };
@@ -156,8 +170,10 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'setSiteName',
-            sitename: 'Test Site',
-            tagline: 'A test site'
+            vars: {
+              sitename: 'Test Site',
+              tagline: 'A test site'
+            }
           }
         ]
       };
@@ -173,8 +189,10 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'setSiteName',
-            sitename: 'Version Test',
-            tagline: 'Testing version preservation'
+            vars: {
+              sitename: 'Version Test',
+              tagline: 'Testing version preservation'
+            }
           }
         ]
       };
@@ -197,8 +215,10 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'setSiteName',
-            sitename: 'WP Version Test',
-            tagline: 'Testing WP version only'
+            vars: {
+              sitename: 'WP Version Test',
+              tagline: 'Testing WP version only'
+            }
           }
         ]
       };
@@ -220,8 +240,10 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'setSiteName',
-            sitename: 'PHP Version Test',
-            tagline: 'Testing PHP version only'
+            vars: {
+              sitename: 'PHP Version Test',
+              tagline: 'Testing PHP version only'
+            }
           }
         ]
       };
@@ -243,8 +265,10 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'setSiteName',
-            sitename: 'Latest Version Test',
-            tagline: 'Testing latest versions'
+            vars: {
+              sitename: 'Latest Version Test',
+              tagline: 'Testing latest versions'
+            }
           }
         ]
       };
@@ -265,8 +289,10 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'setSiteName',
-            sitename: 'No Version Test',
-            tagline: 'Testing without versions'
+            vars: {
+              sitename: 'No Version Test',
+              tagline: 'Testing without versions'
+            }
           }
         ]
       };
@@ -280,7 +306,9 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'setSiteName',
-            sitename: 'WP Only Test'
+            vars: {
+              sitename: 'WP Only Test'
+            }
           }
         ]
       };
@@ -302,7 +330,9 @@ describe('PlaygroundStepLibrary', () => {
         steps: [
           {
             step: 'setSiteName',
-            sitename: 'PHP Only Test'
+            vars: {
+              sitename: 'PHP Only Test'
+            }
           }
         ]
       };

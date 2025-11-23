@@ -8,24 +8,24 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 		toV1() {
 	// modelled after https://github.com/carstingaxion/crud-the-docs-playground
 	// props @carstingaxion
-	const repoTest = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/.exec( step.repo );
+	const repoTest = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/.exec( step.vars?.repo );
 	if ( ! repoTest ) {
 		return [];
 	}
 	const repo = repoTest[1] + "/" + repoTest[2];
-	const branch = step.branch;
+	const branch = step.vars?.branch;
 	if ( branch && ! /^[a-z0-9_-]+$/.test( branch ) ) {
 		return [];
 	}
-	const filename = step.filename || "export.xml";
+	const filename = step.vars?.filename || "export.xml";
 
 	let steps: any[] = [];
 	const siteOptions: Record<string, string> = {
 		"wordpress_export_to_server__file": filename,
 		"wordpress_export_to_server__owner_repo_branch": repo + ( branch ? "/" + branch : "" ),
 	}
-	if ( step.targetUrl ) {
-		siteOptions["wordpress_export_to_server__export_home"] = step.targetUrl;
+	if ( step.vars?.targetUrl ) {
+		siteOptions["wordpress_export_to_server__export_home"] = step.vars?.targetUrl;
 	}
 	const deleteResult = deleteAllPosts({ step: 'deleteAllPosts' }).toV1();
 	steps = steps.concat(deleteResult.steps);

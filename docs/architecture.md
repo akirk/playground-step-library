@@ -72,29 +72,27 @@ Users can choose which output format they prefer via the web UI or programmatica
 ### Compilation Steps
 
 #### V1 Compiler (src/v1-compiler.ts)
-1. **Parse Input** - Parse JSON string or clone object, validate steps array exists
-2. **Merge Options** - Apply default options (landingPage, features) and merge with input
-3. **Process Steps** - For each step:
-   - Determine if custom step (has handler) or builtin (pass through)
-   - Execute step handler, call `.toV1()` if StepResult, or use array directly
-   - Merge blueprint-level properties (landingPage, features, login)
-4. **Variable Substitution** - Replace `${varName}` placeholders throughout output
-5. **Deduplicate** - Remove duplicate steps (configurable via PHP comments)
-6. **Cleanup** - Remove default values, clean whitespace
-7. **Output** - Return final blueprint with native steps array
+1. **Parse Input** - Validates blueprint structure and step definitions
+2. **Transform Steps** - Each custom step returns `BlueprintV1` or `BlueprintV2`
+3. **Convert to V1** - `BlueprintV2` fragments are converted to v1 steps via converters
+4. **Variable Substitution** - Variables are replaced throughout the transformed steps
+5. **Deduplication** - Identical steps are merged (configurable via strategies)
+6. **Output Generation** - Final blueprint with steps array
 
 #### V2 Compiler (src/v2-compiler.ts)
-1. **Parse Input** - Parse JSON string or clone object, validate steps array exists
-2. **Initialize** - Create base v2 blueprint with `version: 2`
-3. **Map Properties** - Convert top-level properties:
-   - `title` → `blueprintMeta.name`
-   - `preferredVersions` → `wordpressVersion`, `phpVersion`
-   - `landingPage`, `login` → `applicationOptions['wordpress-playground']`
-4. **Process Steps** - For each step:
-   - Execute step handler, call `.toV2()` to get schema fragments
-   - Merge fragments into v2 blueprint (arrays concatenate, objects merge)
-5. **Cleanup** - Remove empty arrays and objects
-6. **Output** - Return final v2 blueprint with declarative schema
+1. **Parse Input** - Validates blueprint structure
+2. **Transform Steps** - Each custom step returns `BlueprintV1` or `BlueprintV2`
+3. **Merge Fragments** - Collects and merges declarative fragments:
+   - `content` - Posts, pages, media items
+   - `users` - User accounts
+   - `plugins` - Plugin slugs (from wordpress.org) or installation steps
+   - `themes` - Theme slugs or installation steps
+   - `constants` - wp-config.php constants
+   - `siteOptions` - WordPress options
+   - `postTypes` - Custom post type definitions
+4. **Handle Imperative Steps** - V1 steps and `additionalSteps` go to `additionalStepsAfterExecution`
+5. **Extract Query Parameters** - Special Playground params extracted
+6. **Output Generation** - Final v2 blueprint with declarative schema
 
 ### Example Transformation
 

@@ -4,8 +4,8 @@ import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playgro
 
 export const setSiteOption: StepFunction<SetSiteOptionStep> = (step: SetSiteOptionStep): StepResult => {
 	// Parse once - handle both array and single values
-	const names = Array.isArray( step.name ) ? step.name : [step.name];
-	const values = Array.isArray( step.value ) ? step.value : [step.value];
+	const names = Array.isArray( step.vars?.name ) ? step.vars?.name : [step.vars?.name];
+	const values = Array.isArray( step.vars?.value ) ? step.vars?.value : [step.vars?.value];
 
 	// Build options object
 	const options: Record<string, any> = {};

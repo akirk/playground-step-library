@@ -9,31 +9,31 @@ export const login: StepFunction<LoginStep> = (step: LoginStep): StepResult => {
 				steps: [
 					{
 						"step": "login",
-						"username": step.username,
-						"password": step.password
+						"username": step.vars?.username,
+						"password": step.vars?.password
 					}
 				]
 			};
-			if (step.landingPage) {
+			if (step.vars?.landingPage) {
 				result.landingPage = '/wp-admin/';
 			}
 			return result;
 		},
 
 		toV2() {
-			const isDefault = step.username === 'admin' && step.password === 'password';
+			const isDefault = step.vars?.username === 'admin' && step.vars?.password === 'password';
 			const result: BlueprintV2Declaration = {
 				version: 2,
 				applicationOptions: {
 					'wordpress-playground': {
 						login: isDefault ? true : {
-							username: step.username,
-							password: step.password
+							username: step.vars?.username,
+							password: step.vars?.password
 						}
 					}
 				}
 			};
-			if (step.landingPage) {
+			if (step.vars?.landingPage) {
 				result.applicationOptions!['wordpress-playground'].landingPage = '/wp-admin/';
 			}
 			return result;

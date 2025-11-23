@@ -2,12 +2,12 @@ import type { StepFunction, AddPostStep, StepResult } from './types.js';
 import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 export const addPost: StepFunction<AddPostStep> = (step: AddPostStep): StepResult => {
-	const title = step.title || step.postTitle || '';
-	const content = step.content || step.postContent || '';
-	const postType = step.type || step.postType;
-	const postStatus = step.status || step.postStatus || 'publish';
-	const postId = (step.postId !== undefined && step.postId !== null && String(step.postId) !== '') ? Number(step.postId) : 0;
-	const dateValue = step.date || step.postDate;
+	const title = step.vars?.title || step.vars?.postTitle || '';
+	const content = step.vars?.content || step.vars?.postContent || '';
+	const postType = step.vars?.type || step.vars?.postType;
+	const postStatus = step.vars?.status || step.vars?.postStatus || 'publish';
+	const postId = (step.vars?.postId !== undefined && step.vars?.postId !== null && String(step.vars?.postId) !== '') ? Number(step.vars?.postId) : 0;
+	const dateValue = step.vars?.date || step.vars?.postDate;
 
 	return {
 		toV1() {
@@ -42,7 +42,7 @@ if ( is_wp_error( $page_id ) ) {
 	error_log( 'addPost error: ' . $page_id->get_error_message() );
 }`;
 
-			if (step.homepage) {
+			if (step.vars?.homepage) {
 				code += "update_option( 'page_on_front', $page_id );";
 				code += "update_option( 'show_on_front', 'page' );";
 			}
@@ -59,7 +59,7 @@ if ( is_wp_error( $page_id ) ) {
 				]
 			};
 
-			if (step.landingPage !== false && postId > 0) {
+			if (step.vars?.landingPage !== false && postId > 0) {
 				result.landingPage = `/wp-admin/post.php?post=${postId}&action=edit`;
 			}
 
@@ -93,7 +93,7 @@ if ( is_wp_error( $page_id ) ) {
 			};
 
 			// Handle homepage setting
-			if (step.homepage) {
+			if (step.vars?.homepage) {
 				result.siteOptions = {
 					show_on_front: 'page'
 				};
@@ -121,7 +121,7 @@ if ( ! empty( $pages ) ) {
 			}
 
 			// Handle landing page setting
-			if (step.landingPage !== false && postId > 0) {
+			if (step.vars?.landingPage !== false && postId > 0) {
 				result.applicationOptions = {
 					'wordpress-playground': {
 						landingPage: `/wp-admin/post.php?post=${postId}&action=edit`

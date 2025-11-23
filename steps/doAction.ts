@@ -23,7 +23,7 @@ export const doAction: StepFunction<DoActionStep> = (step: DoActionStep): StepRe
 		}
 	}
 
-	const code = "<?php do_action( '" + step.action + "'" + params.join(',') + " ); ?>";
+	const code = "<?php do_action( '" + step.vars?.action + "'" + params.join(',') + " ); ?>";
 
 	return {
 		toV1() {
@@ -33,7 +33,7 @@ export const doAction: StepFunction<DoActionStep> = (step: DoActionStep): StepRe
 						step: "runPHP",
 						code,
 						progress: {
-							caption: `doAction: ${step.action}`
+							caption: `doAction: ${step.vars?.action}`
 						}
 					}
 				]

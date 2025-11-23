@@ -17,8 +17,11 @@ add_action( 'enqueue_block_editor_assets', 'my_disable_welcome_guides', 20 );
 
 	return muPlugin({
 		step: 'muPlugin',
-		name: 'disable-welcome-guides',
-		code
+		stepIndex: step.stepIndex,
+		vars: {
+			name: 'disable-welcome-guides',
+			code
+		}
 	});
 };
 

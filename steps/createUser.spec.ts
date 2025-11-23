@@ -5,11 +5,11 @@ describe('createUser', () => {
     describe('toV1()', () => {
     it('should create a basic user', () => {
         const step: CreateUserStep = {
-            step: 'createUser',
+            step: 'createUser', vars: {
             username: 'testuser',
             password: 'testpass',
             role: 'editor'
-        };
+        } };
         
         const result = createUser(step).toV1();
         
@@ -23,12 +23,12 @@ describe('createUser', () => {
 
     it('should include display name when provided', () => {
         const step: CreateUserStep = {
-            step: 'createUser',
+            step: 'createUser', vars: {
             username: 'testuser',
             password: 'testpass',
             role: 'administrator',
             display_name: 'Test User'
-        };
+        } };
         
         const result = createUser(step).toV1();
         
@@ -37,12 +37,12 @@ describe('createUser', () => {
 
     it('should include email when provided', () => {
         const step: CreateUserStep = {
-            step: 'createUser',
+            step: 'createUser', vars: {
             username: 'testuser',
             password: 'testpass',
             role: 'subscriber',
             email: 'test@example.com'
-        };
+        } };
         
         const result = createUser(step).toV1();
         
@@ -51,13 +51,13 @@ describe('createUser', () => {
 
     it('should include both display name and email when provided', () => {
         const step: CreateUserStep = {
-            step: 'createUser',
+            step: 'createUser', vars: {
             username: 'testuser',
             password: 'testpass',
             role: 'author',
             display_name: 'Test Author',
             email: 'author@example.com'
-        };
+        } };
         
         const result = createUser(step).toV1();
         
@@ -67,12 +67,12 @@ describe('createUser', () => {
 
     it('should add login step when login is true', () => {
         const step: CreateUserStep = {
-            step: 'createUser',
+            step: 'createUser', vars: {
             username: 'testuser',
             password: 'testpass',
             role: 'administrator',
             login: true
-        };
+        } };
         
         const result = createUser(step).toV1();
         
@@ -86,12 +86,12 @@ describe('createUser', () => {
 
     it('should not add login step when login is false', () => {
         const step: CreateUserStep = {
-            step: 'createUser',
+            step: 'createUser', vars: {
             username: 'testuser',
             password: 'testpass',
             role: 'subscriber',
             login: false
-        };
+        } };
         
         const result = createUser(step).toV1();
         
@@ -102,10 +102,10 @@ describe('createUser', () => {
 
     it('should return empty blueprint when username is missing', () => {
         const step: CreateUserStep = {
-            step: 'createUser',
+            step: 'createUser', vars: {
             password: 'testpass',
             role: 'subscriber'
-        };
+        } };
 
         const result = createUser(step).toV1();
 
@@ -114,10 +114,10 @@ describe('createUser', () => {
 
     it('should return empty blueprint when password is missing', () => {
         const step: CreateUserStep = {
-            step: 'createUser',
+            step: 'createUser', vars: {
             username: 'testuser',
             role: 'subscriber'
-        };
+        } };
 
         const result = createUser(step).toV1();
 
@@ -126,10 +126,10 @@ describe('createUser', () => {
 
     it('should return empty blueprint when role is missing', () => {
         const step: CreateUserStep = {
-            step: 'createUser',
+            step: 'createUser', vars: {
             username: 'testuser',
             password: 'testpass'
-        };
+        } };
 
         const result = createUser(step).toV1();
 
@@ -138,11 +138,11 @@ describe('createUser', () => {
 
     it('should handle missing required fields', () => {
         const step: CreateUserStep = {
-            step: 'createUser',
+            step: 'createUser', vars: {
             username: '',
             password: '',
             role: ''
-        };
+        } };
 
         const result = createUser(step).toV1();
 
@@ -151,11 +151,11 @@ describe('createUser', () => {
 
     it('should handle undefined required fields', () => {
         const step: CreateUserStep = {
-            step: 'createUser',
+            step: 'createUser', vars: {
             username: undefined as any,
             password: undefined as any,
             role: undefined as any
-        };
+        } };
 
         const result = createUser(step).toV1();
 
@@ -164,11 +164,11 @@ describe('createUser', () => {
 
     it('should generate proper PHP code structure', () => {
         const step: CreateUserStep = {
-            step: 'createUser',
+            step: 'createUser', vars: {
             username: 'admin',
             password: 'secret',
             role: 'administrator'
-        };
+        } };
         
         const result = createUser(step).toV1();
         
