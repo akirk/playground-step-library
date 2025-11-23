@@ -55,7 +55,7 @@ login.vars = [
 	{
 		name: "password",
 		description: "Password",
-		required: true,
+		required: false,
 		samples: ["password"]
 	},
 	{

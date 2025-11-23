@@ -105,10 +105,12 @@ export function isPlaygroundDomain(hostname: string): boolean {
 
 /**
  * Detects and parses WordPress Playground URLs with blueprint in hash fragment
+ * Supports both URL-encoded JSON and base64-encoded JSON
  * @param url - The URL to analyze
+ * @param base64Decoder - Optional base64 decoder function (defaults to atob in browser)
  * @returns The parsed blueprint object or null if not a valid Playground URL
  */
-export function detectPlaygroundUrl(url: string): any {
+export function detectPlaygroundUrl(url: string, base64Decoder?: (str: string) => string): any {
 	if (!url || typeof url !== 'string') {
 		return null;
 	}
@@ -119,8 +121,27 @@ export function detectPlaygroundUrl(url: string): any {
 		const urlObj = new URL(trimmed);
 		if (isPlaygroundDomain(urlObj.hostname) && urlObj.hash && urlObj.hash.length > 1) {
 			const hashContent = urlObj.hash.substring(1);
-			const blueprintJson = decodeURIComponent(hashContent);
-			return JSON.parse(blueprintJson);
+
+			// Try URL-encoded JSON first (starts with %7B which is '{')
+			if (hashContent.startsWith('%7B') || hashContent.startsWith('{')) {
+				try {
+					const decoded = decodeURIComponent(hashContent);
+					return JSON.parse(decoded);
+				} catch (e) {
+					// Not URL-encoded JSON
+				}
+			}
+
+			// Try base64-encoded JSON
+			try {
+				const decode = base64Decoder || ((s: string) => atob(s));
+				const decoded = decode(hashContent);
+				if (decoded.startsWith('{')) {
+					return JSON.parse(decoded);
+				}
+			} catch (e) {
+				// Not valid base64
+			}
 		}
 	} catch (e) {
 		return null;

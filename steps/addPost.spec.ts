@@ -302,7 +302,7 @@ describe('addPost', () => {
 
         const typeVar = addPost.vars.find(v => v.name === 'type');
         expect(typeVar).toBeDefined();
-        expect(typeVar?.required).toBe(true);
+        expect(typeVar?.required).toBe(false);
         expect(typeVar?.regex).toBe('^[a-z][a-z0-9_]+$');
 
         const statusVar = addPost.vars.find(v => v.name === 'status');

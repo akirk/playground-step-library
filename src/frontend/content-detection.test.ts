@@ -8,6 +8,7 @@ import {
 	detectPlaygroundUrl,
 	detectPlaygroundQueryApiUrl,
 	detectBlueprintJson,
+	detectStepLibraryRedirectUrl,
 	normalizeWordPressUrl
 } from './content-detection';
 
@@ -262,6 +263,43 @@ describe('content-detection', () => {
 			const result = detectPlaygroundUrl(url);
 			expect(result).toEqual(blueprint);
 		});
+
+		it('should parse base64-encoded blueprint', () => {
+			const blueprint = { steps: [], landingPage: '/wp-admin/' };
+			const base64 = btoa(JSON.stringify(blueprint));
+			const url = `https://playground.wordpress.net/#${base64}`;
+
+			const result = detectPlaygroundUrl(url);
+			expect(result).toEqual(blueprint);
+		});
+
+		it('should parse base64-encoded blueprint with custom decoder', () => {
+			const blueprint = { steps: [{ step: 'login' }] };
+			const base64 = btoa(JSON.stringify(blueprint));
+			const url = `https://playground.wordpress.net/#${base64}`;
+
+			const customDecoder = (str: string) => atob(str);
+			const result = detectPlaygroundUrl(url, customDecoder);
+			expect(result).toEqual(blueprint);
+		});
+
+		it('should prefer URL-encoded over base64 when both could work', () => {
+			const blueprint = { steps: [] };
+			const encoded = encodeURIComponent(JSON.stringify(blueprint));
+			const url = `https://playground.wordpress.net/#${encoded}`;
+
+			const result = detectPlaygroundUrl(url);
+			expect(result).toEqual(blueprint);
+		});
+
+		it('should return null for invalid base64 in hash', () => {
+			expect(detectPlaygroundUrl('https://playground.wordpress.net/#not-valid-base64!!!')).toBe(null);
+		});
+
+		it('should return null for base64 that decodes to non-JSON', () => {
+			const base64 = btoa('just plain text');
+			expect(detectPlaygroundUrl(`https://playground.wordpress.net/#${base64}`)).toBe(null);
+		});
 	});
 
 	describe('detectPlaygroundQueryApiUrl', () => {
@@ -401,6 +439,81 @@ describe('content-detection', () => {
 			const json = JSON.stringify(blueprint);
 			const result = detectBlueprintJson(json);
 			expect(result).toEqual(blueprint);
+		});
+	});
+
+	describe('detectStepLibraryRedirectUrl', () => {
+		it('should parse single step URL', () => {
+			const url = 'https://example.com/?step[0]=installPlugin&url[0]=https://wordpress.org/plugins/akismet/';
+			const result = detectStepLibraryRedirectUrl(url);
+			expect(result).toEqual([
+				{ step: 'installPlugin', vars: { url: 'https://wordpress.org/plugins/akismet/' } }
+			]);
+		});
+
+		it('should parse multiple steps URL', () => {
+			const url = 'https://akirk.github.io/playground-step-library/?step[0]=installPlugin&url[0]=wordpress.org/plugins/litespeed-cache/&step[1]=setLandingPage&landingPage[1]=/wp-admin/admin.php?page=litespeed';
+			const result = detectStepLibraryRedirectUrl(url);
+			expect(result).toEqual([
+				{ step: 'installPlugin', vars: { url: 'wordpress.org/plugins/litespeed-cache/' } },
+				{ step: 'setLandingPage', vars: { landingPage: '/wp-admin/admin.php?page=litespeed' } }
+			]);
+		});
+
+		it('should parse steps with multiple vars', () => {
+			const url = 'https://example.com/?step[0]=login&username[0]=admin&password[0]=secret';
+			const result = detectStepLibraryRedirectUrl(url);
+			expect(result).toEqual([
+				{ step: 'login', vars: { username: 'admin', password: 'secret' } }
+			]);
+		});
+
+		it('should handle non-sequential indices', () => {
+			const url = 'https://example.com/?step[0]=first&step[2]=third&url[0]=a&url[2]=c';
+			const result = detectStepLibraryRedirectUrl(url);
+			expect(result).toEqual([
+				{ step: 'first', vars: { url: 'a' } },
+				{ step: 'third', vars: { url: 'c' } }
+			]);
+		});
+
+		it('should return null for URLs without step parameters', () => {
+			expect(detectStepLibraryRedirectUrl('https://example.com/?foo=bar')).toBe(null);
+			expect(detectStepLibraryRedirectUrl('https://example.com/')).toBe(null);
+		});
+
+		it('should return null for invalid URLs', () => {
+			expect(detectStepLibraryRedirectUrl('not a url')).toBe(null);
+		});
+
+		it('should return null for empty or null input', () => {
+			expect(detectStepLibraryRedirectUrl('')).toBe(null);
+			expect(detectStepLibraryRedirectUrl(null as any)).toBe(null);
+			expect(detectStepLibraryRedirectUrl(undefined as any)).toBe(null);
+		});
+
+		it('should handle URL-encoded values', () => {
+			const url = 'https://example.com/?step[0]=addPost&title[0]=Hello%20World&content[0]=Test%3Chtml%3E';
+			const result = detectStepLibraryRedirectUrl(url);
+			expect(result).toEqual([
+				{ step: 'addPost', vars: { title: 'Hello World', content: 'Test<html>' } }
+			]);
+		});
+
+		it('should return empty vars for steps without additional parameters', () => {
+			const url = 'https://example.com/?step[0]=login';
+			const result = detectStepLibraryRedirectUrl(url);
+			expect(result).toEqual([
+				{ step: 'login', vars: {} }
+			]);
+		});
+
+		it('should handle whitespace in URL', () => {
+			const url = '  https://example.com/?step[0]=login  ';
+			const result = detectStepLibraryRedirectUrl(url);
+			expect(result).toEqual([
+				{ step: 'login', vars: {} }
+			]);
 		});
 	});
 

@@ -4,7 +4,7 @@ import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playgro
 export const addPost: StepFunction<AddPostStep> = (step: AddPostStep): StepResult => {
 	const title = step.vars?.title || step.vars?.postTitle || '';
 	const content = step.vars?.content || step.vars?.postContent || '';
-	const postType = step.vars?.type || step.vars?.postType;
+	const postType = step.vars?.type || step.vars?.postType || 'post';
 	const postStatus = step.vars?.status || step.vars?.postStatus || 'publish';
 	const postId = (step.vars?.postId !== undefined && step.vars?.postId !== null && String(step.vars?.postId) !== '') ? Number(step.vars?.postId) : 0;
 	const dateValue = step.vars?.date || step.vars?.postDate;
@@ -159,7 +159,7 @@ addPost.vars = [
 	{
 		name: "type",
 		description: "The post type",
-		required: true,
+		required: false,
 		regex: '^[a-z][a-z0-9_]+$',
 		samples: ["post", "page", "custom"]
 	},

@@ -6,10 +6,11 @@
   "main": "lib/src/index.js",
   "types": "lib/src/index.d.ts",
   "bin": {
-    "playground-compile": "bin/cli.js"
+    "playground-compile": "bin/cli.js",
+    "playground-paste": "bin/paste.js"
   },
   "scripts": {
-    "build:lib": "tsc && node build.js",
+    "build:lib": "tsc && node scripts/build.js && node scripts/build-cli.js",
     "build:ui": "vite build",
     "build": "npm run build:lib && npm run docs:generate && npm run build:ui",
     "test": "vitest run",
