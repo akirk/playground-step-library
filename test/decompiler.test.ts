@@ -1111,6 +1111,53 @@ wp_insert_post( array(
 			expect((decompiled.steps[0] as any).vars?.title).toBe('Hello World');
 		});
 
+		it('should roundtrip addPost with double quotes in content', () => {
+			const original = {
+				steps: [
+					{ step: 'addPost', vars: { title: 'Test Post', content: '<!-- wp:paragraph {"align":"center"} --><p>Content</p><!-- /wp:paragraph -->' } }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('addPost');
+			expect((decompiled.steps[0] as any).vars?.content).toContain('{"align":"center"}');
+		});
+
+		it('should roundtrip addPost with escaped single quotes in content', () => {
+			const original = {
+				steps: [
+					{ step: 'addPost', vars: { title: "It's a test", content: "<p>This post's content has apostrophes</p>" } }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('addPost');
+			expect((decompiled.steps[0] as any).vars?.title).toBe("It's a test");
+			expect((decompiled.steps[0] as any).vars?.content).toContain("post's content");
+		});
+
+		it('should roundtrip addPost with unicode content', () => {
+			const original = {
+				steps: [
+					{ step: 'addPost', vars: { title: '日本の四季について', content: '<p>日本には美しい四季があります。</p>' } }
+				]
+			};
+
+			const compiled = compiler.compile(original);
+			const decompiled = decompiler.decompile(compiled);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('addPost');
+			expect((decompiled.steps[0] as any).vars?.title).toBe('日本の四季について');
+			expect((decompiled.steps[0] as any).vars?.content).toContain('日本には美しい四季があります');
+		});
+
 		it('should roundtrip muPlugin', () => {
 			const original = {
 				steps: [
@@ -1156,6 +1203,48 @@ wp_insert_post( array(
 			expect(decompiled.steps).toHaveLength(1);
 			expect(decompiled.steps[0].step).toBe('runWpCliCommand');
 			expect((decompiled.steps[0] as any).vars?.command).toBe('post list --format=json');
+		});
+
+		it('should decompile setSiteLanguage step', () => {
+			const nativeBlueprint = {
+				steps: [
+					{ step: 'setSiteLanguage', language: 'ja' }
+				]
+			};
+
+			const decompiled = decompiler.decompile(nativeBlueprint);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('setSiteLanguage');
+			expect((decompiled.steps[0] as any).vars?.language).toBe('ja');
+		});
+
+		it('should decompile landingPage= shorthand step', () => {
+			const nativeBlueprint = {
+				steps: [
+					{ step: 'landingPage=/' }
+				]
+			};
+
+			const decompiled = decompiler.decompile(nativeBlueprint);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('setLandingPage');
+			expect((decompiled.steps[0] as any).vars?.landingPage).toBe('/');
+		});
+
+		it('should decompile landingPage= shorthand with path', () => {
+			const nativeBlueprint = {
+				steps: [
+					{ step: 'landingPage=/wp-admin/options-general.php' }
+				]
+			};
+
+			const decompiled = decompiler.decompile(nativeBlueprint);
+
+			expect(decompiled.steps).toHaveLength(1);
+			expect(decompiled.steps[0].step).toBe('setLandingPage');
+			expect((decompiled.steps[0] as any).vars?.landingPage).toBe('/wp-admin/options-general.php');
 		});
 
 		it('should roundtrip complex blueprint with multiple steps', () => {

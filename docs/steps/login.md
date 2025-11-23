@@ -14,7 +14,7 @@ Login to the site.
 | Variable | Type | Required | Description |
 |----------|------|----------|-------------|
 | `username` | string | ✅ Yes | Username |
-| `password` | string | ✅ Yes | Password |
+| `password` | string | ❌ No | Password |
 | `landingPage` | boolean | ❌ No | Change landing page to wp-admin |
 
 
@@ -25,8 +25,7 @@ Login to the site.
     {
           "step": "login",
           "vars": {
-                "username": "admin",
-                "password": "password"
+                "username": "admin"
           }
     }
 ```

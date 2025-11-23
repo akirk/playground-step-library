@@ -16,7 +16,7 @@ Add a post with title, content, type, status, and date.
 | `title` | string | ✅ Yes | The title of the post |
 | `content` | textarea | ✅ Yes | The HTML content of the post |
 | `date` | string | ❌ No | The date of the post (optional) |
-| `type` | string | ✅ Yes | The post type |
+| `type` | string | ❌ No | The post type |
 | `status` | string | ❌ No | The post status |
 | `postId` | text | ❌ No | Post ID to use (optional) |
 | `landingPage` | boolean | ❌ No | Set landing page to the post editor (requires postId) |
@@ -31,8 +31,7 @@ Add a post with title, content, type, status, and date.
           "step": "addPost",
           "vars": {
                 "title": "Hello World",
-                "content": "<p>Hello World</p>",
-                "type": "post"
+                "content": "<p>Hello World</p>"
           }
     }
 ```

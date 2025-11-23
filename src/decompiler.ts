@@ -357,6 +357,12 @@ export class BlueprintDecompiler {
 			return null;
 		}
 
+		// Handle shorthand landing page format: "landingPage=/some/path"
+		if ( nativeStep.step.startsWith( 'landingPage=' ) ) {
+			const landingPage = nativeStep.step.substring( 'landingPage='.length );
+			return makeStep( 'setLandingPage', { landingPage } );
+		}
+
 		switch (nativeStep.step) {
 			case 'installPlugin':
 				return this.decompileInstallPlugin(nativeStep);
@@ -375,6 +381,9 @@ export class BlueprintDecompiler {
 
 			case 'setSiteOptions':
 				return this.decompileSetSiteOptions(nativeStep);
+
+			case 'setSiteLanguage':
+				return this.decompileSetSiteLanguage(nativeStep);
 
 			case 'login':
 				return this.decompileLogin(nativeStep);
@@ -638,11 +647,11 @@ export class BlueprintDecompiler {
 	}
 
 	private decompileAddPageOrPost(code: string, caption: string): StepLibraryStepDefinition | null {
-		const titleMatch = code.match(/['"]post_title['"]\s*=>\s*['"]([^'"]+)['"]/);
-		const contentMatch = code.match(/['"]post_content['"]\s*=>\s*['"]([^'"]+)['"]/);
-		const typeMatch = code.match(/['"]post_type['"]\s*=>\s*['"]([^'"]+)['"]/);
+		const title = this.extractPhpStringValue( code, 'post_title' );
+		const content = this.extractPhpStringValue( code, 'post_content' );
+		const postType = this.extractPhpStringValue( code, 'post_type' );
 
-		let isPost = typeMatch && typeMatch[1] === 'post';
+		let isPost = postType === 'post';
 
 		if ( !isPost && caption.startsWith( 'addPost:' ) ) {
 			isPost = true;
@@ -651,9 +660,37 @@ export class BlueprintDecompiler {
 		const step = isPost ? 'addPost' : 'addPage';
 
 		return makeStep( step, {
-			title: titleMatch ? titleMatch[1] : '',
-			content: contentMatch ? contentMatch[1] : ''
-		});
+			title: title || '',
+			content: content || ''
+		} );
+	}
+
+	/**
+	 * Extract a PHP string value from array syntax like 'key' => 'value' or "key" => "value"
+	 * Properly handles escaped quotes and mixed quote types within strings.
+	 */
+	private extractPhpStringValue( code: string, key: string ): string | null {
+		// Try single-quoted value: 'key' => 'value with "quotes" and \'escaped\' quotes'
+		const singleQuotedPattern = new RegExp(
+			`['"]${key}['"]\\s*=>\\s*'((?:[^'\\\\]|\\\\.)*)'`
+		);
+		const singleMatch = code.match( singleQuotedPattern );
+		if ( singleMatch ) {
+			// Unescape single quotes: \' -> '
+			return singleMatch[1].replace( /\\'/g, "'" );
+		}
+
+		// Try double-quoted value: "key" => "value with 'quotes' and \"escaped\" quotes"
+		const doubleQuotedPattern = new RegExp(
+			`['"]${key}['"]\\s*=>\\s*"((?:[^"\\\\]|\\\\.)*)"`
+		);
+		const doubleMatch = code.match( doubleQuotedPattern );
+		if ( doubleMatch ) {
+			// Unescape double quotes: \" -> "
+			return doubleMatch[1].replace( /\\"/g, '"' );
+		}
+
+		return null;
 	}
 
 	private decompileWriteFile(nativeStep: any): StepLibraryStepDefinition | null {
@@ -741,6 +778,17 @@ export class BlueprintDecompiler {
 		}
 
 		return null;
+	}
+
+	private decompileSetSiteLanguage(nativeStep: any): StepLibraryStepDefinition | null {
+		const language = nativeStep.language;
+
+		if ( !language ) {
+			this.warnings.push( 'setSiteLanguage step missing language' );
+			return null;
+		}
+
+		return makeStep( 'setSiteLanguage', { language } );
 	}
 
 	private decompileWpCli(nativeStep: any): StepLibraryStepDefinition | null {

@@ -469,8 +469,7 @@
           },
           "required": [
             "title",
-            "content",
-            "type"
+            "content"
           ],
           "additionalProperties": true
         }
@@ -1651,8 +1650,7 @@
             }
           },
           "required": [
-            "username",
-            "password"
+            "username"
           ],
           "additionalProperties": true
         }

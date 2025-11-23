@@ -300,6 +300,29 @@ describe('content-detection', () => {
 			const base64 = btoa('just plain text');
 			expect(detectPlaygroundUrl(`https://playground.wordpress.net/#${base64}`)).toBe(null);
 		});
+
+		it('should parse step-library URLs with base64 hash', () => {
+			const blueprint = {
+				steps: [
+					{ step: 'installPlugin', vars: { url: 'https://wordpress.org/plugins/autoptimize/', prs: false } },
+					{ step: 'setLandingPage', vars: { landingPage: '/wp-admin/options-general.php?page=autoptimize' } }
+				]
+			};
+			const base64 = btoa(JSON.stringify(blueprint));
+			const url = `https://akirk.github.io/playground-step-library/#${base64}`;
+
+			const result = detectPlaygroundUrl(url);
+			expect(result).toEqual(blueprint);
+		});
+
+		it('should parse localhost step-library URLs with base64 hash', () => {
+			const blueprint = { steps: [{ step: 'login', vars: {} }] };
+			const base64 = btoa(JSON.stringify(blueprint));
+			const url = `http://localhost:8127/#${base64}`;
+
+			const result = detectPlaygroundUrl(url);
+			expect(result).toEqual(blueprint);
+		});
 	});
 
 	describe('detectPlaygroundQueryApiUrl', () => {
@@ -455,7 +478,7 @@ describe('content-detection', () => {
 			const url = 'https://akirk.github.io/playground-step-library/?step[0]=installPlugin&url[0]=wordpress.org/plugins/litespeed-cache/&step[1]=setLandingPage&landingPage[1]=/wp-admin/admin.php?page=litespeed';
 			const result = detectStepLibraryRedirectUrl(url);
 			expect(result).toEqual([
-				{ step: 'installPlugin', vars: { url: 'wordpress.org/plugins/litespeed-cache/' } },
+				{ step: 'installPlugin', vars: { url: 'https://wordpress.org/plugins/litespeed-cache/' } },
 				{ step: 'setLandingPage', vars: { landingPage: '/wp-admin/admin.php?page=litespeed' } }
 			]);
 		});
@@ -513,6 +536,38 @@ describe('content-detection', () => {
 			const result = detectStepLibraryRedirectUrl(url);
 			expect(result).toEqual([
 				{ step: 'login', vars: {} }
+			]);
+		});
+
+		it('should normalize wordpress.org URLs without protocol', () => {
+			const url = 'https://example.com/?step[0]=installPlugin&url[0]=wordpress.org/plugins/akismet/';
+			const result = detectStepLibraryRedirectUrl(url);
+			expect(result).toEqual([
+				{ step: 'installPlugin', vars: { url: 'https://wordpress.org/plugins/akismet/' } }
+			]);
+		});
+
+		it('should normalize wordpress.org theme URLs without protocol', () => {
+			const url = 'https://example.com/?step[0]=installTheme&url[0]=wordpress.org/themes/flavor/';
+			const result = detectStepLibraryRedirectUrl(url);
+			expect(result).toEqual([
+				{ step: 'installTheme', vars: { url: 'https://wordpress.org/themes/flavor/' } }
+			]);
+		});
+
+		it('should normalize github.com URLs without protocol', () => {
+			const url = 'https://example.com/?step[0]=installPlugin&url[0]=github.com/user/repo';
+			const result = detectStepLibraryRedirectUrl(url);
+			expect(result).toEqual([
+				{ step: 'installPlugin', vars: { url: 'https://github.com/user/repo' } }
+			]);
+		});
+
+		it('should not modify URLs that already have protocol', () => {
+			const url = 'https://example.com/?step[0]=installPlugin&url[0]=https://wordpress.org/plugins/akismet/';
+			const result = detectStepLibraryRedirectUrl(url);
+			expect(result).toEqual([
+				{ step: 'installPlugin', vars: { url: 'https://wordpress.org/plugins/akismet/' } }
 			]);
 		});
 	});

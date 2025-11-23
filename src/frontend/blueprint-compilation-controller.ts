@@ -44,6 +44,9 @@ export class BlueprintCompilationController {
 			}
 		} else {
 			const jsonInput = getBlueprint();
+			if ( !jsonInput ) {
+				return;
+			}
 
 			// Prepare compilation options from UI elements
 			const compileOptions: CompileOptions = {

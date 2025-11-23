@@ -99,51 +99,64 @@ export function detectPhp(text: string): boolean {
  * @param hostname - The hostname to check
  * @returns true if hostname is playground.wordpress.net or 127.0.0.1, false otherwise
  */
-export function isPlaygroundDomain(hostname: string): boolean {
+export function isPlaygroundDomain( hostname: string ): boolean {
 	return hostname === 'playground.wordpress.net' || hostname === '127.0.0.1';
 }
 
 /**
- * Detects and parses WordPress Playground URLs with blueprint in hash fragment
+ * Checks if a URL is a Step Library URL (has blueprint in hash fragment)
+ * @param urlObj - The URL object to check
+ * @returns true if URL is a step-library URL with a hash, false otherwise
+ */
+function isStepLibraryUrl( urlObj: URL ): boolean {
+	return urlObj.pathname.includes( '/playground-step-library' ) ||
+		( urlObj.hostname === 'localhost' && urlObj.hash.length > 1 );
+}
+
+/**
+ * Detects and parses WordPress Playground or Step Library URLs with blueprint in hash fragment
  * Supports both URL-encoded JSON and base64-encoded JSON
  * @param url - The URL to analyze
  * @param base64Decoder - Optional base64 decoder function (defaults to atob in browser)
- * @returns The parsed blueprint object or null if not a valid Playground URL
+ * @returns The parsed blueprint object or null if not a valid Playground/Step Library URL
  */
-export function detectPlaygroundUrl(url: string, base64Decoder?: (str: string) => string): any {
-	if (!url || typeof url !== 'string') {
+export function detectPlaygroundUrl( url: string, base64Decoder?: ( str: string ) => string ): any {
+	if ( !url || typeof url !== 'string' ) {
 		return null;
 	}
 
 	const trimmed = url.trim();
 
 	try {
-		const urlObj = new URL(trimmed);
-		if (isPlaygroundDomain(urlObj.hostname) && urlObj.hash && urlObj.hash.length > 1) {
-			const hashContent = urlObj.hash.substring(1);
+		const urlObj = new URL( trimmed );
+		const hasValidHash = urlObj.hash && urlObj.hash.length > 1;
+		const isValidDomain = isPlaygroundDomain( urlObj.hostname ) || isStepLibraryUrl( urlObj );
+
+		if ( isValidDomain && hasValidHash ) {
+			const hashContent = urlObj.hash.substring( 1 );
 
 			// Try URL-encoded JSON first (starts with %7B which is '{')
-			if (hashContent.startsWith('%7B') || hashContent.startsWith('{')) {
+			if ( hashContent.startsWith( '%7B' ) || hashContent.startsWith( '{' ) ) {
 				try {
-					const decoded = decodeURIComponent(hashContent);
-					return JSON.parse(decoded);
-				} catch (e) {
+					const decoded = decodeURIComponent( hashContent );
+					return JSON.parse( decoded );
+				} catch ( e ) {
 					// Not URL-encoded JSON
 				}
 			}
 
 			// Try base64-encoded JSON
 			try {
-				const decode = base64Decoder || ((s: string) => atob(s));
-				const decoded = decode(hashContent);
-				if (decoded.startsWith('{')) {
-					return JSON.parse(decoded);
+				const decode = base64Decoder || ( ( s: string ) => atob( s ) );
+				const decoded = decode( hashContent );
+				if ( decoded.startsWith( '{' ) ) {
+					return JSON.parse( decoded );
 				}
-			} catch (e) {
+			} catch ( e ) {
 				// Not valid base64
 			}
 		}
-	} catch (e) {
+	} catch ( e ) {
 		return null;
 	}
 
@@ -356,7 +369,16 @@ export function detectStepLibraryRedirectUrl( url: string ): Array<{ step: strin
 
 			for ( const [paramName, values] of Object.entries( paramMap ) ) {
 				if ( paramName !== 'step' && values[idx] !== undefined ) {
-					vars[paramName] = values[idx];
+					let value = values[idx];
+					// Normalize URLs without protocol
+					if ( paramName === 'url' ) {
+						if ( /^wordpress\.org\/(plugins|themes)\//.test( value ) ) {
+							value = 'https://' + value;
+						} else if ( /^github\.com\//.test( value ) ) {
+							value = 'https://' + value;
+						}
+					}
+					vars[paramName] = value;
 				}
 			}
 

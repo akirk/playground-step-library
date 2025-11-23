@@ -15,6 +15,7 @@ async function buildCli() {
 
 	await build( {
 		configFile: false,
+		publicDir: false,
 		build: {
 			lib: {
 				entry: resolve( projectRoot, 'src/cli/paste.ts' ),

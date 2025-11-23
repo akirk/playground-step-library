@@ -5,6 +5,7 @@ logs/
 
 # Build artifacts
 lib/
+bin/paste.js
 steps/*.js
 steps/*.d.ts
 steps/*.js.map

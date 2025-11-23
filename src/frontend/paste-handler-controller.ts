@@ -29,8 +29,8 @@ import {
 	type StepInserterDependencies
 } from './step-inserter';
 import { toastService } from './toast-service';
-import { stepsRegistry } from '../steps-registry';
 import { BlueprintDecompiler } from '../decompiler';
+import { blueprintEventBus } from './blueprint-event-bus';
 
 export interface PasteHandlerControllerDependencies {
 	stepInserterDeps: StepInserterDependencies;
@@ -163,6 +163,7 @@ export class PasteHandlerController {
 					if (stepsData) {
 						const steps = stepsData.map(s => ({ step: s.step, vars: s.vars }));
 						this.deps.appendSteps({ steps });
+						blueprintEventBus.emit( 'blueprint:updated' );
 						const stepText = steps.length === 1 ? 'step' : `${steps.length} steps`;
 						toastService.showGlobal(`Added ${stepText} from pasted Step Library URL`);
 						addedAny = true;
@@ -295,20 +296,10 @@ export class PasteHandlerController {
 
 			const blueprintSteps = blueprintData.steps || [];
 
-			for (const step of blueprintSteps) {
-				if ( step.step && step.step in stepsRegistry ) {
-					// Use discriminated union logic for steps with both custom and native variants
-					// Custom variants use 'url', native uses resource data properties
-					if ( step.step === 'installPlugin' && !( 'url' in step ) ) {
-						nativeSteps.push( step );
-					} else if ( step.step === 'installTheme' && !( 'url' in step ) ) {
-						nativeSteps.push( step );
-					} else if ( step.step === 'importWxr' && !( 'url' in step ) ) {
-						// Custom importWxr uses 'url', native uses 'file' resource
-						nativeSteps.push( step );
-					} else {
-						customSteps.push( step );
-					}
+			for ( const step of blueprintSteps ) {
+				// Steps with 'vars' property are step-library format (custom steps)
+				if ( step.vars ) {
+					customSteps.push( step );
 				} else {
 					nativeSteps.push( step );
 				}
@@ -353,6 +344,7 @@ export class PasteHandlerController {
 			};
 
 			this.deps.appendSteps(stepConfig);
+			blueprintEventBus.emit( 'blueprint:updated' );
 
 			if (unmappedSteps.length === 0 && warnings.length === 0) {
 				toastService.showGlobal('Playground blueprint loaded successfully!');
