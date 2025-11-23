@@ -68,7 +68,7 @@ Add code for a plugin.
   "muPlugins": [
     {
       "file": {
-        "filename": "my-plugin.php",
+        "filename": "my-plugin-0.php",
         "content": "<?php "
       }
     }

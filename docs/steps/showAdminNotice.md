@@ -70,7 +70,7 @@ Show an admin notice in the dashboard.
   "muPlugins": [
     {
       "file": {
-        "filename": "show-admin-notice.php",
+        "filename": "show-admin-notice-0.php",
         "content": "<?php \nadd_action(\n\t'admin_notices',\n\tfunction() {\n\t\t\n\t\techo '<div class=\"notice notice-undefined\" id=\"custom-admin-notice-0\"><p>' . esc_html( '' ) . '</p></div>';\n\t}\n);"
       }
     }
