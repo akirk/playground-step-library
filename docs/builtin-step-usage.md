@@ -46,7 +46,7 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `installPlugin`
 
-**Used by 9 steps:**
+**Used by 10 steps:**
 
 - ⚡ [`addProduct`](steps/addProduct.md) - Add a WooCommerce product (will install WooCommerce if not present)
 - ⚡ [`blueprintExtractor`](steps/blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
@@ -55,17 +55,19 @@ This page shows which custom steps compile to each built-in WordPress Playground
 - ⚡ [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
 - ⚡ [`githubPlugin`](steps/githubPlugin.md) - Install a plugin from a Github repository.
 - ⚡ [`githubPluginRelease`](steps/githubPluginRelease.md) - Install a specific plugin release from a Github repository.
-- 🔧 [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Github (branches, releases, PRs).
+- ⚡ [`gitPlugin`](steps/gitPlugin.md) - Install a plugin from a Git repository (GitHub, GitLab, Codeberg, etc.).
+- 🔧 [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
 - ⚡ [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 
 ---
 
 ## `installTheme`
 
-**Used by 2 steps:**
+**Used by 3 steps:**
 
 - ⚡ [`githubTheme`](steps/githubTheme.md) - Install a theme from a Github repository.
-- 🔧 [`installTheme`](steps/installTheme.md) - Install a theme via WordPress.org or Github.
+- ⚡ [`gitTheme`](steps/gitTheme.md) - Install a theme from a Git repository (GitHub, GitLab, Codeberg, etc.).
+- 🔧 [`installTheme`](steps/installTheme.md) - Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
 
 ---
 

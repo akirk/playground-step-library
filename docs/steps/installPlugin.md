@@ -1,6 +1,6 @@
 # `installPlugin` Step
 
-Install a plugin via WordPress.org or Github (branches, releases, PRs).
+Install a plugin via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
 
 **[View Source](../../steps/installPlugin.ts)**
 
@@ -14,7 +14,7 @@ Install a plugin via WordPress.org or Github (branches, releases, PRs).
 | Variable | Type | Required | Description |
 |----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of the plugin or WordPress.org slug. |
-| `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
+| `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
 
 
 ## Examples

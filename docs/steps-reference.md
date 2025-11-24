@@ -792,6 +792,58 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`gitPlugin`](steps/gitPlugin.md)
+
+**Type**: Custom Step
+**Description**: Install a plugin from a Git repository (GitHub, GitLab, Codeberg, etc.).
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `url` | string | ✅ Yes | Git URL of the plugin (supports GitHub, GitLab, Codeberg, and other git hosts). |
+| `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "gitPlugin",
+          "vars": {
+                "url": "https://github.com/akirk/blueprint-recorder",
+                "prs": false
+          }
+    }
+```
+
+
+---
+
+## [`gitTheme`](steps/gitTheme.md)
+
+**Type**: Custom Step
+**Description**: Install a theme from a Git repository (GitHub, GitLab, Codeberg, etc.).
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `url` | string | ✅ Yes | Git URL of the theme (supports GitHub, GitLab, Codeberg, and other git hosts). |
+| `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "gitTheme",
+          "vars": {
+                "url": "https://github.com/richtabor/kanso",
+                "prs": false
+          }
+    }
+```
+
+
+---
+
 ## [`importFriendFeeds`](steps/importFriendFeeds.md)
 
 **Type**: Custom Step
@@ -921,12 +973,12 @@ This document provides detailed information about all available steps, including
 ## [`installPlugin`](steps/installPlugin.md)
 
 **Type**: Built-in Step
-**Description**: Install a plugin via WordPress.org or Github (branches, releases, PRs).
+**Description**: Install a plugin via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
 
 | Variable | Type | Required | Description |
 |----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of the plugin or WordPress.org slug. |
-| `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
+| `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
 
 
 ### Example Usage
@@ -947,12 +999,12 @@ This document provides detailed information about all available steps, including
 ## [`installTheme`](steps/installTheme.md)
 
 **Type**: Built-in Step
-**Description**: Install a theme via WordPress.org or Github.
+**Description**: Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
 
 | Variable | Type | Required | Description |
 |----------|------|----------|-------------|
-| `url` | string | ✅ Yes | URL of the theme or WordPress.org slug |
-| `prs` | boolean | ❌ No | Add support for submitting Github Requests. |
+| `url` | string | ✅ Yes | URL of the theme or WordPress.org slug. |
+| `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
 
 
 ### Example Usage

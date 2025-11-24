@@ -1,6 +1,6 @@
 # `installTheme` Step
 
-Install a theme via WordPress.org or Github.
+Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
 
 **[View Source](../../steps/installTheme.ts)**
 
@@ -13,8 +13,8 @@ Install a theme via WordPress.org or Github.
 
 | Variable | Type | Required | Description |
 |----------|------|----------|-------------|
-| `url` | string | ✅ Yes | URL of the theme or WordPress.org slug |
-| `prs` | boolean | ❌ No | Add support for submitting Github Requests. |
+| `url` | string | ✅ Yes | URL of the theme or WordPress.org slug. |
+| `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
 
 
 ## Examples

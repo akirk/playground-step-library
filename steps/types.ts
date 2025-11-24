@@ -362,6 +362,20 @@ export interface GithubThemeStep extends BlueprintStep {
 	};
 }
 
+export interface GitPluginStep extends BlueprintStep {
+	vars?: {
+	    url: string;
+	    prs?: boolean;
+	};
+}
+
+export interface GitThemeStep extends BlueprintStep {
+	vars?: {
+	    url: string;
+	    prs?: boolean;
+	};
+}
+
 export interface ImportWordPressComExportStep extends BlueprintStep {
 	vars?: {
 	    url: string;
@@ -500,6 +514,8 @@ export type StepLibraryStepDefinition =
 	InstallPluginStep |
 	InstallThemeStep |
 	GithubThemeStep |
+	GitPluginStep |
+	GitThemeStep |
 	ImportWordPressComExportStep |
 	ImportWxrStep |
 	ImportWxrFromUrlStep |

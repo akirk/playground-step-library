@@ -1,18 +1,16 @@
-import { githubTheme } from './githubTheme.js';
-import type { StepFunction, InstallThemeStep , StepResult } from './types.js';
+import { gitTheme } from './gitTheme.js';
+import { detectGitProvider } from './gitProviders.js';
+import type { StepFunction, InstallThemeStep, StepResult } from './types.js';
 import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
 export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeStep): StepResult => {
 	const url = step.vars?.url || '';
 
-	// Check if it's a GitHub URL
-	const githubPattern = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/;
-	const isGitHubUrl = githubPattern.test(url) && url.match(githubPattern);
-
-	if (isGitHubUrl) {
-		return githubTheme( { step: 'githubTheme', vars: { url: url,
-			prs: step.vars?.prs } } );
+	// Check if it's a git provider URL
+	const gitInfo = detectGitProvider(url);
+	if (gitInfo) {
+		return gitTheme({ step: 'gitTheme', vars: { url: url, prs: step.vars?.prs } });
 	}
 
 	// Extract WordPress.org slug
@@ -66,23 +64,29 @@ export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeS
 	};
 };
 
-installTheme.description = "Install a theme via WordPress.org or Github.";
+installTheme.description = 'Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).';
 installTheme.builtin = true;
 installTheme.vars = [
 	{
-		name: "url",
-		description: "URL of the theme or WordPress.org slug",
+		name: 'url',
+		description: 'URL of the theme or WordPress.org slug.',
 		required: true,
-		samples: ["pendant", "https://github.com/richtabor/kanso", "ndiego/nautilus", "https://github.com/Automattic/themes/tree/trunk/aether", "link-folio"]
+		samples: [
+			'pendant',
+			'https://github.com/richtabor/kanso',
+			'https://github.com/Automattic/themes/tree/trunk/aether',
+			'https://codeberg.org/cranca/boo-theme',
+			'link-folio',
+		],
 	},
 	{
-		name: "prs",
-		description: "Add support for submitting Github Requests.",
+		name: 'prs',
+		description: 'Add support for submitting Pull Requests (GitHub only).',
 		show: function (step: any) {
-		const url = step.querySelector('input[name=url]')?.value;
-		return url && url.match(/^https:\/\/github.com\//);
+			const url = step.querySelector('input[name=url]')?.value;
+			return url && url.match(/^(?:https:\/\/)?github\.com\//i);
 		},
-		type: "boolean",
-		samples: ["false", "true"]
-	}
+		type: 'boolean',
+		samples: ['false', 'true'],
+	},
 ];

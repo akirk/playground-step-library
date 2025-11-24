@@ -4,9 +4,9 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 📊 Overview
 
-- **Total Steps**: 52
+- **Total Steps**: 54
 - **Built-in Steps**: 8
-- **Custom Steps**: 44
+- **Custom Steps**: 46
 
 ## 🚀 Quick Start
 
@@ -35,8 +35,8 @@ const compiled = compiler.compile(blueprint);
 Built-in steps are core WordPress Playground steps that are enhanced with additional functionality.
 
 - [`importWxr`](steps/importWxr.md) - Import a WXR from a URL.
-- [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Github (branches, releases, PRs).
-- [`installTheme`](steps/installTheme.md) - Install a theme via WordPress.org or Github.
+- [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
+- [`installTheme`](steps/installTheme.md) - Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
 - [`runPHP`](steps/runPHP.md) - Run code in the context of WordPress.
 - [`enableMultisite`](steps/enableMultisite.md) - Enable WordPress Multisite functionality.
 - [`login`](steps/login.md) - Login to the site.
@@ -72,6 +72,8 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`githubPlugin`](steps/githubPlugin.md) - Install a plugin from a Github repository.
 - [`githubPluginRelease`](steps/githubPluginRelease.md) - Install a specific plugin release from a Github repository.
 - [`githubTheme`](steps/githubTheme.md) - Install a theme from a Github repository.
+- [`gitPlugin`](steps/gitPlugin.md) - Install a plugin from a Git repository (GitHub, GitLab, Codeberg, etc.).
+- [`gitTheme`](steps/gitTheme.md) - Install a theme from a Git repository (GitHub, GitLab, Codeberg, etc.).
 - [`generateProducts`](steps/generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 - [`importFriendFeeds`](steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.
 - [`importWordPressComExport`](steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
@@ -96,7 +98,6 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 Many steps can reference and use other steps. For example:
 - `addProduct` automatically calls `installPlugin` to install WooCommerce
 - `importFriendFeeds` calls `installPlugin` to install the Friends plugin
-- `addFilter` uses `muPlugin` to create the filter
 
 ## 📖 Detailed Documentation
 

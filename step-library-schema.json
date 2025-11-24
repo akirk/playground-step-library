@@ -125,6 +125,12 @@
             "$ref": "#/definitions/githubTheme"
           },
           {
+            "$ref": "#/definitions/gitPlugin"
+          },
+          {
+            "$ref": "#/definitions/gitTheme"
+          },
+          {
             "$ref": "#/definitions/generateProducts"
           },
           {
@@ -239,7 +245,7 @@
             },
             "prs": {
               "type": "boolean",
-              "description": "Add support for submitting GitHub Pull Requests."
+              "description": "Add support for submitting Pull Requests (GitHub only)."
             }
           },
           "required": [
@@ -251,7 +257,7 @@
       "required": [
         "step"
       ],
-      "description": "Install a plugin via WordPress.org or Github (branches, releases, PRs)."
+      "description": "Install a plugin via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.)."
     },
     "installTheme": {
       "type": "object",
@@ -264,11 +270,11 @@
           "properties": {
             "url": {
               "type": "string",
-              "description": "URL of the theme or WordPress.org slug"
+              "description": "URL of the theme or WordPress.org slug."
             },
             "prs": {
               "type": "boolean",
-              "description": "Add support for submitting Github Requests."
+              "description": "Add support for submitting Pull Requests (GitHub only)."
             }
           },
           "required": [
@@ -280,7 +286,7 @@
       "required": [
         "step"
       ],
-      "description": "Install a theme via WordPress.org or Github."
+      "description": "Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.)."
     },
     "runPHP": {
       "type": "object",
@@ -1158,6 +1164,64 @@
         "step"
       ],
       "description": "Install a theme from a Github repository."
+    },
+    "gitPlugin": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "gitPlugin"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "Git URL of the plugin (supports GitHub, GitLab, Codeberg, and other git hosts)."
+            },
+            "prs": {
+              "type": "boolean",
+              "description": "Add support for submitting Pull Requests (GitHub only)."
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Install a plugin from a Git repository (GitHub, GitLab, Codeberg, etc.)."
+    },
+    "gitTheme": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "gitTheme"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "Git URL of the theme (supports GitHub, GitLab, Codeberg, and other git hosts)."
+            },
+            "prs": {
+              "type": "boolean",
+              "description": "Add support for submitting Pull Requests (GitHub only)."
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Install a theme from a Git repository (GitHub, GitLab, Codeberg, etc.)."
     },
     "generateProducts": {
       "type": "object",

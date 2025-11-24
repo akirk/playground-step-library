@@ -3,9 +3,9 @@
 Browse detailed documentation for each WordPress Playground step.
 
 ## 📊 Quick Stats
-- **52** total steps
+- **54** total steps
 - **8** built-in steps  
-- **44** custom steps
+- **46** custom steps
 
 ## 🔧 Built-in Steps
 Enhanced core WordPress Playground steps with additional functionality.
@@ -13,8 +13,8 @@ Enhanced core WordPress Playground steps with additional functionality.
 - [`defineWpConfigConst`](./defineWpConfigConst.md) - Define a wp-config PHP constant.
 - [`enableMultisite`](./enableMultisite.md) - Enable WordPress Multisite functionality.
 - [`importWxr`](./importWxr.md) - Import a WXR from a URL.
-- [`installPlugin`](./installPlugin.md) - Install a plugin via WordPress.org or Github (branches, releases, PRs).
-- [`installTheme`](./installTheme.md) - Install a theme via WordPress.org or Github.
+- [`installPlugin`](./installPlugin.md) - Install a plugin via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
+- [`installTheme`](./installTheme.md) - Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
 - [`login`](./login.md) - Login to the site.
 - [`runPHP`](./runPHP.md) - Run code in the context of WordPress.
 - [`setSiteOption`](./setSiteOption.md) - Set a site option.
@@ -49,6 +49,8 @@ Extended functionality beyond core WordPress Playground capabilities.
 - [`githubPlugin`](./githubPlugin.md) - Install a plugin from a Github repository.
 - [`githubPluginRelease`](./githubPluginRelease.md) - Install a specific plugin release from a Github repository.
 - [`githubTheme`](./githubTheme.md) - Install a theme from a Github repository.
+- [`gitPlugin`](./gitPlugin.md) - Install a plugin from a Git repository (GitHub, GitLab, Codeberg, etc.).
+- [`gitTheme`](./gitTheme.md) - Install a theme from a Git repository (GitHub, GitLab, Codeberg, etc.).
 - [`importFriendFeeds`](./importFriendFeeds.md) - Add subscriptions to the Friends plugin.
 - [`importWordPressComExport`](./importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
 - [`installAdminer`](./installAdminer.md) - Install Adminer with auto login link.

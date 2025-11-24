@@ -30,6 +30,8 @@ import { installPlugin } from '../steps/installPlugin.js';
 import { skipWooCommerceWizard } from '../steps/skipWooCommerceWizard.js';
 import { jetpackOfflineMode } from '../steps/jetpackOfflineMode.js';
 import { githubTheme } from '../steps/githubTheme.js';
+import { gitPlugin } from '../steps/gitPlugin.js';
+import { gitTheme } from '../steps/gitTheme.js';
 import { installTheme } from '../steps/installTheme.js';
 import { importWordPressComExport } from '../steps/importWordPressComExport.js';
 import { importFriendFeeds } from '../steps/importFriendFeeds.js';
@@ -88,6 +90,8 @@ export const stepsRegistry = {
     githubPlugin,
     githubPluginRelease,
     githubTheme,
+    gitPlugin,
+    gitTheme,
     generateProducts,
     importFriendFeeds,
     importWordPressComExport,
