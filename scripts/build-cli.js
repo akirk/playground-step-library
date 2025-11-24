@@ -18,9 +18,9 @@ async function buildCli() {
 		publicDir: false,
 		build: {
 			lib: {
-				entry: resolve( projectRoot, 'src/cli/paste.ts' ),
+				entry: resolve( projectRoot, 'src/cli/import.ts' ),
 				formats: ['es'],
-				fileName: () => 'paste.js'
+				fileName: () => 'import.js'
 			},
 			outDir: 'bin',
 			emptyOutDir: false,

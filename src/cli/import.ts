@@ -332,13 +332,13 @@ function processPaste( text: string ): StepLibraryOutput | null {
 
 function showHelp(): void {
 	console.log( `
-Playground Step Library - Paste Handler CLI
+Step Library Import CLI
 
-Detects content type from input and outputs step-library format JSON.
+Detects content type from input and imports to step-library format JSON.
 
 Usage:
-  playground-paste [options] [input-file]
-  echo "content" | playground-paste
+  step-library-import [options] [input-file]
+  echo "content" | step-library-import
 
 Options:
   -o, --output <file>     Output file (default: stdout)
@@ -361,10 +361,10 @@ Supported Content Types:
   - WordPress admin URLs (creates setLandingPage step)
 
 Examples:
-  echo "<?php echo 'Hello';" | playground-paste -p
-  echo "https://wordpress.org/plugins/akismet/" | playground-paste
-  echo "wp plugin activate akismet" | playground-paste
-  playground-paste blueprint.json -o steps.json
+  echo "<?php echo 'Hello';" | step-library-import -p
+  echo "https://wordpress.org/plugins/akismet/" | step-library-import
+  echo "wp plugin activate akismet" | step-library-import
+  step-library-import blueprint.json -o steps.json
 ` );
 }
 

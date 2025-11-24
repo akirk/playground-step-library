@@ -39,30 +39,30 @@ cat blueprint.json | node bin/cli.js v2 -p
 node bin/cli.js v2 blueprint.json -o compiled.json
 ```
 
-Run `node bin/cli.js --help` for all options.
+After installing the package, this is available as `step-library-compile` (or run directly with `node bin/cli.js --help`).
 
-### Paste CLI
+### Import CLI
 
-The paste CLI (`bin/paste.js`) provides the same content detection as the [Smart Paste Handlers](tips.md#smart-paste-handlers) in the UI, but for command-line use.
+The import CLI provides the same content detection as the [Smart Paste Handlers](tips.md#smart-paste-handlers) in the UI, but for command-line use.
 
 ```bash
 # Process from stdin
-echo "<?php echo 'Hello';" | node bin/paste.js
+echo "<?php echo 'Hello';" | step-library-import
 
 # Process a file
-node bin/paste.js blueprint.json
+step-library-import blueprint.json
 
 # Pretty print output
-echo "https://wordpress.org/plugins/akismet/" | node bin/paste.js -p
+echo "https://wordpress.org/plugins/akismet/" | step-library-import -p
 
 # Save to file
-node bin/paste.js input.txt -o steps.json
+step-library-import input.txt -o steps.json
 
-# Detect content type only (no conversion)
-echo "wp plugin activate akismet" | node bin/paste.js -t
+# Detect content type only
+echo "wp plugin activate akismet" | step-library-import -t
 ```
 
-Run `node bin/paste.js --help` for all options.
+After installing the package, this is available as `step-library-import` (or run directly with `node bin/import.js --help`).
 
 ## Usage
 

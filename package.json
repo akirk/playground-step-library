@@ -6,8 +6,8 @@
   "main": "lib/src/index.js",
   "types": "lib/src/index.d.ts",
   "bin": {
-    "playground-compile": "bin/cli.js",
-    "playground-paste": "bin/paste.js"
+    "step-library-compile": "bin/cli.js",
+    "step-library-import": "bin/import.js"
   },
   "scripts": {
     "build:lib": "tsc && node scripts/build.js && node scripts/build-cli.js",
