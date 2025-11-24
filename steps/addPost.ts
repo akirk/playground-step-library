@@ -63,6 +63,10 @@ if ( is_wp_error( $page_id ) ) {
 				result.landingPage = `/wp-admin/post.php?post=${postId}&action=edit`;
 			}
 
+			if (step.vars?.frontendLandingPage && postId > 0) {
+				result.landingPage = `/?p=${postId}`;
+			}
+
 			return result;
 		},
 
@@ -129,6 +133,14 @@ if ( ! empty( $pages ) ) {
 				};
 			}
 
+			if (step.vars?.frontendLandingPage && postId > 0) {
+				result.applicationOptions = {
+					'wordpress-playground': {
+						landingPage: `/?p=${postId}`
+					}
+				};
+			}
+
 			return result;
 		}
 	};
@@ -179,6 +191,13 @@ addPost.vars = [
 	{
 		name: "landingPage",
 		description: "Set landing page to the post editor (requires postId)",
+		type: "boolean",
+		required: false,
+		samples: ["false", "true"]
+	},
+	{
+		name: "frontendLandingPage",
+		description: "Set landing page to the post on the frontend (requires postId)",
 		type: "boolean",
 		required: false,
 		samples: ["false", "true"]

@@ -427,8 +427,10 @@ Some steps support variable substitution with `${variableName}`:
 ```json
 {
   "step": "runPHP",
-  "code": "<?php echo '${message}'; ?>",
-  "message": "Hello World"
+  "vars": {
+    "code": "<?php echo '${message}'; ?>",
+    "message": "Hello World"
+  }
 }
 ```
 

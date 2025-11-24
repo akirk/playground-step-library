@@ -289,6 +289,7 @@ export interface AddPostStep extends BlueprintStep {
 	    status?: string;
 	    postId?: number;
 	    landingPage?: boolean;
+	    frontendLandingPage?: boolean;
 	    // Backward compatibility
 	    postTitle?: string;
 	    postContent?: string;

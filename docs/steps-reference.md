@@ -122,6 +122,7 @@ This document provides detailed information about all available steps, including
 | `status` | string | ❌ No | The post status |
 | `postId` | text | ❌ No | Post ID to use (optional) |
 | `landingPage` | boolean | ❌ No | Set landing page to the post editor (requires postId) |
+| `frontendLandingPage` | boolean | ❌ No | Set landing page to the post on the frontend (requires postId) |
 | `registerPostType` | button | ❌ No | Register custom post type if needed |
 
 
@@ -138,6 +139,7 @@ This document provides detailed information about all available steps, including
                 "status": "publish",
                 "postId": "1000",
                 "landingPage": false,
+                "frontendLandingPage": false,
                 "registerPostType": "example-value"
           }
     }

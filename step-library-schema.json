@@ -462,6 +462,10 @@
               "type": "boolean",
               "description": "Set landing page to the post editor (requires postId)"
             },
+            "frontendLandingPage": {
+              "type": "boolean",
+              "description": "Set landing page to the post on the frontend (requires postId)"
+            },
             "registerPostType": {
               "type": "string",
               "description": "Register custom post type if needed"

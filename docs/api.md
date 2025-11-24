@@ -16,27 +16,27 @@ The compiler CLI supports multiple output formats and operations:
 
 ```bash
 # Compile to v1 format (default)
-node bin/cli.js v1 blueprint.json -p
-node bin/cli.js blueprint.json -p          # v1 is the default
+node bin/cli.js v1 steps.json -p
+node bin/cli.js steps.json -p              # v1 is the default
 
 # Compile to v2 format
-node bin/cli.js v2 blueprint.json -p
+node bin/cli.js v2 steps.json -p
 
 # Transpile a native v1 blueprint to v2 format
 node bin/cli.js transpile native-v1.json -p
 
 # Validate a blueprint
-node bin/cli.js validate blueprint.json
+node bin/cli.js validate steps.json
 
 # List available custom steps
 node bin/cli.js steps
 node bin/cli.js steps -p                   # Human-readable format
 
 # Read from stdin
-cat blueprint.json | node bin/cli.js v2 -p
+cat steps.json | node bin/cli.js v2 -p
 
 # Save to file
-node bin/cli.js v2 blueprint.json -o compiled.json
+node bin/cli.js v2 steps.json -o compiled.json
 ```
 
 After installing the package, this is available as `step-library-compile` (or run directly with `node bin/cli.js --help`).
@@ -50,7 +50,7 @@ The import CLI provides the same content detection as the [Smart Paste Handlers]
 echo "<?php echo 'Hello';" | step-library-import
 
 # Process a file
-step-library-import blueprint.json
+step-library-import steps.json
 
 # Pretty print output
 echo "https://wordpress.org/plugins/akismet/" | step-library-import -p
@@ -111,16 +111,21 @@ const blueprint = {
 
 const compiledBlueprint = compiler.compile(blueprint);
 console.log(JSON.stringify(compiledBlueprint, null, 2));
+// {
+//   "steps": [
+//     { "step": "setSiteOptions", "options": { "blogname": "My Site", "blogdescription": "A WordPress site" } },
+//     { "step": "runPHP", "code": "<?php require_once...", "progress": { "caption": "addPage: Welcome" } }
+//   ]
+// }
 
 // Validate a blueprint
 const validation = compiler.validateBlueprint(blueprint);
-if (!validation.valid) {
-    console.error('Validation error:', validation.error);
-}
+// { valid: true }
 
 // Get available custom steps
 const steps = compiler.getAvailableSteps();
 console.log('Available steps:', Object.keys(steps));
+// ['addPage', 'addPost', 'addMedia', 'installPlugin', 'setSiteName', ...]
 ```
 
 ## Step Library Blueprint Format

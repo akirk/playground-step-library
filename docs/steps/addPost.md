@@ -20,6 +20,7 @@ Add a post with title, content, type, status, and date.
 | `status` | string | ❌ No | The post status |
 | `postId` | text | ❌ No | Post ID to use (optional) |
 | `landingPage` | boolean | ❌ No | Set landing page to the post editor (requires postId) |
+| `frontendLandingPage` | boolean | ❌ No | Set landing page to the post on the frontend (requires postId) |
 | `registerPostType` | button | ❌ No | Register custom post type if needed |
 
 
@@ -48,6 +49,7 @@ Add a post with title, content, type, status, and date.
                 "status": "draft",
                 "postId": "1000",
                 "landingPage": true,
+                "frontendLandingPage": true,
                 "registerPostType": "example-value"
           }
     }
@@ -108,6 +110,7 @@ const blueprint = {
                 "status": "publish",
                 "postId": "1000",
                 "landingPage": false,
+                "frontendLandingPage": false,
                 "registerPostType": "example-value"
           }
     }
