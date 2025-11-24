@@ -23,7 +23,7 @@ node bin/cli.js steps.json -p              # v1 is the default
 node bin/cli.js v2 steps.json -p
 
 # Transpile a native v1 blueprint to v2 format
-node bin/cli.js transpile native-v1.json -p
+node bin/cli.js transpile blueprint-v1.json -o blueprint-v2.json
 
 # Validate a blueprint
 node bin/cli.js validate steps.json

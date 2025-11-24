@@ -416,6 +416,18 @@ function parseArgs( args: string[] ): CliOptions {
 	return options;
 }
 
+/**
+ * Read all data from stdin asynchronously
+ */
+function readStdin(): Promise<string> {
+	return new Promise( ( resolve, reject ) => {
+		const chunks: Buffer[] = [];
+		process.stdin.on( 'data', ( chunk ) => chunks.push( chunk ) );
+		process.stdin.on( 'end', () => resolve( Buffer.concat( chunks ).toString( 'utf8' ) ) );
+		process.stdin.on( 'error', reject );
+	} );
+}
+
 async function main(): Promise<void> {
 	const args = process.argv.slice( 2 );
 	const options = parseArgs( args );
@@ -429,7 +441,7 @@ async function main(): Promise<void> {
 	try {
 		if ( options.input ) {
 			if ( options.input === '-' ) {
-				input = fs.readFileSync( 0, 'utf8' );
+				input = await readStdin();
 			} else {
 				const inputPath = path.resolve( options.input );
 				if ( !fs.existsSync( inputPath ) ) {
@@ -443,7 +455,7 @@ async function main(): Promise<void> {
 				console.error( 'Error: No input provided. Use --help for usage information.' );
 				process.exit( 1 );
 			}
-			input = fs.readFileSync( 0, 'utf8' );
+			input = await readStdin();
 		}
 	} catch ( error: any ) {
 		console.error( `Error reading input: ${error.message}` );
