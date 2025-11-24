@@ -14,27 +14,27 @@ add_action(
 			return;
 		}
 
-		if ( ${step?.welcome} ) {
+		if ( ${step.vars?.welcome} ) {
 			remove_action( 'welcome_panel', 'wp_welcome_panel' );
 		}
 		$default_widgets = array();
-		if ( ${step?.glance} ) {
+		if ( ${step.vars?.glance} ) {
 			$default_widgets['dashboard_right_now'] = 'normal';
 		}
-		if ( ${step?.events} ) {
+		if ( ${step.vars?.events} ) {
 			$default_widgets['dashboard_primary'] = 'side';
 		}
-		if ( ${step?.quickpress} ) {
+		if ( ${step.vars?.quickpress} ) {
 			$default_widgets['dashboard_quick_press'] = 'side';
 		}
-		if ( ${step?.activity} ) {
+		if ( ${step.vars?.activity} ) {
 			$default_widgets['dashboard_activity'] = 'normal';
 		}
 		foreach ( $default_widgets as $widget_id => $context ) {
 			remove_meta_box( $widget_id, $screen_id, $context );
 		}
 
-		if ( ${step?.sitehealth} ) {
+		if ( ${step.vars?.sitehealth} ) {
 			// Remove Site Health unless there are critical issues or recommendations.
 			if ( isset( $wp_meta_boxes[ $screen_id ]['normal']['core']['dashboard_site_health'] ) ) {
 				$get_issues = get_transient( 'health-check-site-status-result' );

@@ -13,7 +13,7 @@ add_action(
 			return;
 		}
 
-		$display_name    = '${step?.displayName}';
+		$display_name    = '${step.vars?.displayName}';
 		$additional_caps = array(
 			'update_core',
 			'update_plugins',

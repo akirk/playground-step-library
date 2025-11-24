@@ -2,10 +2,10 @@ import type { StepFunction, ShowAdminNoticeStep, StepResult } from './types.js';
 import { muPlugin } from './muPlugin.js';
 
 export const showAdminNotice: StepFunction<ShowAdminNoticeStep> = (step: ShowAdminNoticeStep): StepResult => {
-	const dismissible = step?.dismissible ? ' is-dismissible' : '';
-	const text = (step?.text || '').replace(/'/g, "\\'");
+	const dismissible = step.vars?.dismissible ? ' is-dismissible' : '';
+	const text = (step.vars?.text || '').replace(/'/g, "\\'");
 
-	const dismissible_php = step?.dismissible ? `$dismissed = get_user_option( 'dismissed_expose_blueprint_notice-${step?.stepIndex}', get_current_user_id() );
+	const dismissible_php = step.vars?.dismissible ? `$dismissed = get_user_option( 'dismissed_expose_blueprint_notice-${step?.stepIndex}', get_current_user_id() );
 
 		if ( $dismissed ) {
 			return;
@@ -16,11 +16,11 @@ add_action(
 	'admin_notices',
 	function() {
 		${dismissible_php}
-		echo '<div class="notice notice-${step?.type}${dismissible}" id="custom-admin-notice-${step?.stepIndex}"><p>' . esc_html( '${text}' ) . '</p></div>';
+		echo '<div class="notice notice-${step.vars?.type}${dismissible}" id="custom-admin-notice-${step?.stepIndex}"><p>' . esc_html( '${text}' ) . '</p></div>';
 	}
 );`;
 
-	if (step?.dismissible) {
+	if (step.vars?.dismissible) {
 		code += `
 add_action('wp_ajax_dismiss_custom-admin-notice-${step?.stepIndex}', function() {
 	check_ajax_referer('custom-admin-notice-${step?.stepIndex}', 'nonce');

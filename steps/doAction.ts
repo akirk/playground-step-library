@@ -4,7 +4,7 @@ import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 
 
 export const doAction: StepFunction<DoActionStep> = (step: DoActionStep): StepResult => {
-	if (!step?.action) {
+	if (!step.vars?.action) {
 		return {
 			toV1() {
 				return { steps: [] };
@@ -17,9 +17,9 @@ export const doAction: StepFunction<DoActionStep> = (step: DoActionStep): StepRe
 
 	const params = [''];
 	for (let i = 1; i <= 5; i++) {
-		const paramKey = `parameter${i}` as keyof DoActionStep;
-		if (step[paramKey]) {
-			params.push("'" + step[paramKey] + "'");
+		const paramKey = `parameter${i}` as keyof typeof step.vars;
+		if (step.vars?.[paramKey]) {
+			params.push("'" + step.vars[paramKey] + "'");
 		}
 	}
 
