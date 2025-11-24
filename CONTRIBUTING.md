@@ -99,7 +99,9 @@ Now, you can use a step like this (which is incompatible with WordPress Playgrou
 ```json
 {
   "step": "helloWorldLogger",
-  "text": "Hello from WordPress Playground Step Library!"
+  "vars": {
+    "text": "Hello from WordPress Playground Step Library!"
+  }
 }
 ```
 

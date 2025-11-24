@@ -382,12 +382,7 @@ Click the **magic wand icon** to enable **Wizard Mode**:
 
 ## Examples Library
 
-Click **"Examples"** dropdown to load pre-built blueprints:
-
-- **Basic** - Simple site setups
-- **Advanced** - Complex configurations
-- **Blog Setup** - Content-focused sites
-- **E-commerce** - WooCommerce demos
+Click **"Examples"** dropdown to load pre-built blueprints.
 
 **Pro Tip:** Load an example close to what you want, then modify it!
 
@@ -498,32 +493,7 @@ Make sure:
 - The filter box doesn't have focus
 - You're pasting supported content (PHP/HTML/URLs)
 
-## Best Practices
-
-### For Sharing
-
-1. **Add a blueprint title** - Makes it recognizable
-2. **Test in preview mode** - Verify it works
-3. **Save to My Blueprints** - Don't lose your work
-4. **Use descriptive step names** - Help others understand
-
-### For Development
-
-1. **Start simple** - Add steps incrementally
-2. **Test frequently** - Use preview mode
-3. **Save checkpoints** - Use My Blueprints as versions
-4. **Document your intent** - Use titles and step names
-
-### For Performance
-
-1. **Combine related operations** - Use multi-step commands
-2. **Avoid duplicate installations** - Check what's included
-3. **Use minimal content** - Don't import huge datasets
-4. **Leverage defaults** - Don't specify everything
-
-## Quick Reference
-
-### Common Workflows
+## Common Workflows
 
 These workflows show which steps to add to your blueprint for common use cases.
 
@@ -556,10 +526,6 @@ These workflows show which steps to add to your blueprint for common use cases.
 ### Step Library is Drag-Friendly
 
 You can drag steps from the library to the blueprint area!
-
-### Double-Click to Expand
-
-Double-click a step in your blueprint to expand/collapse details.
 
 ### URL Auto-Detection
 
