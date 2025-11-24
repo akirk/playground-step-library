@@ -60,57 +60,76 @@ export class PasteHandlerController {
 	 * NOTE: When modifying paste handlers, update the "Smart Paste Handlers" section in docs/tips.md
 	 */
 	private async handlePaste(event: ClipboardEvent): Promise<void> {
-		const pastedText = event.clipboardData?.getData('text');
-		if (!pastedText) return;
+		const clipboardData = event.clipboardData;
+		if ( !clipboardData ) return;
 
-		const urls = pastedText.split('\n').map(line => line.trim()).filter(line => line);
+		const clipboardContents: Record<string, string> = {};
+		for ( const type of clipboardData.types ) {
+			const data = clipboardData.getData( type );
+			if ( data ) {
+				clipboardContents[type] = data;
+			}
+		}
+
+		const pastedText = clipboardContents['text/plain'] || clipboardContents['text'] || '';
+		const pastedHtml = clipboardContents['text/html'] || '';
+
+		if ( !pastedText && !pastedHtml ) return;
+
+		const urls = pastedText.split( '\n' ).map( line => line.trim() ).filter( line => line );
 
 		// Detect content type (in priority order)
 		type ContentType = 'playgroundUrl' | 'playgroundQueryApi' | 'stepLibraryRedirect' | 'stepJson' | 'blueprintJson' | 'php' | 'html' | 'wpCli' | 'css' | 'js' | 'url' | 'wpAdminUrl';
 		let detectedType: ContentType | null = null;
 		let wpCliCommands: string[] | null = null;
+		let htmlContent = '';
 
 		// Check URL-based content types first
-		for (const url of urls) {
-			if (detectPlaygroundUrl(url)) {
+		for ( const url of urls ) {
+			if ( detectPlaygroundUrl( url ) ) {
 				detectedType = 'playgroundUrl';
 				break;
 			}
-			if (detectPlaygroundQueryApiUrl(url)) {
+			if ( detectPlaygroundQueryApiUrl( url ) ) {
 				detectedType = 'playgroundQueryApi';
 				break;
 			}
-			if (detectStepLibraryRedirectUrl(url)) {
+			if ( detectStepLibraryRedirectUrl( url ) ) {
 				detectedType = 'stepLibraryRedirect';
 				break;
 			}
-			if (detectWpAdminUrl(url)) {
+			if ( detectWpAdminUrl( url ) ) {
 				detectedType = 'wpAdminUrl';
 				break;
 			}
-			if (detectUrlType(url)) {
+			if ( detectUrlType( url ) ) {
 				detectedType = 'url';
 				break;
 			}
 		}
 
 		// Check text-based content types if no URL type found
-		if (!detectedType) {
-			if (detectBlueprintJson(pastedText)) {
+		if ( !detectedType ) {
+			if ( detectBlueprintJson( pastedText ) ) {
 				detectedType = 'blueprintJson';
-			} else if (detectStepJson(pastedText)) {
+			} else if ( detectStepJson( pastedText ) ) {
 				detectedType = 'stepJson';
-			} else if (detectPhp(pastedText)) {
+			} else if ( detectPhp( pastedText ) ) {
 				detectedType = 'php';
-			} else if (detectHtml(pastedText)) {
+			} else if ( pastedHtml && detectHtml( pastedHtml ) ) {
+				// Prefer text/html clipboard type for HTML detection
 				detectedType = 'html';
+				htmlContent = pastedHtml;
+			} else if ( detectHtml( pastedText ) ) {
+				detectedType = 'html';
+				htmlContent = pastedText;
 			} else {
-				wpCliCommands = detectWpCli(pastedText);
-				if (wpCliCommands) {
+				wpCliCommands = detectWpCli( pastedText );
+				if ( wpCliCommands ) {
 					detectedType = 'wpCli';
-				} else if (detectCss(pastedText)) {
+				} else if ( detectCss( pastedText ) ) {
 					detectedType = 'css';
-				} else if (detectJs(pastedText)) {
+				} else if ( detectJs( pastedText ) ) {
 					detectedType = 'js';
 				}
 			}
@@ -202,8 +221,8 @@ export class PasteHandlerController {
 				break;
 
 			case 'html':
-				if (addPostStepFromHtml(pastedText, this.deps.stepInserterDeps)) {
-					toastService.showGlobal('Added post step from pasted HTML content');
+				if ( addPostStepFromHtml( htmlContent, this.deps.stepInserterDeps ) ) {
+					toastService.showGlobal( 'Added post step from pasted HTML content' );
 					addedAny = true;
 				}
 				break;
