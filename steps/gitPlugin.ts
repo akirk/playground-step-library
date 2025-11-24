@@ -106,11 +106,11 @@ export const gitPlugin: StepFunction<GitPluginStep> = ( step: GitPluginStep ): S
 	};
 };
 
-gitPlugin.description = 'Install a plugin from a Git repository (GitHub, GitLab, Codeberg, etc.).';
+gitPlugin.description = 'Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).';
 gitPlugin.vars = [
 	{
 		name: 'url',
-		description: 'Git URL of the plugin (supports GitHub, GitLab, Codeberg, and other git hosts).',
+		description: 'Git URL of the plugin (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts).',
 		required: true,
 		samples: [
 			'https://github.com/akirk/blueprint-recorder',

@@ -65,7 +65,7 @@ export const installPlugin: StepFunction<InstallPluginStep> = ( step: InstallPlu
 	};
 };
 
-installPlugin.description = 'Install a plugin via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).';
+installPlugin.description = 'Install a plugin via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).';
 installPlugin.builtin = true;
 installPlugin.vars = [
 	{

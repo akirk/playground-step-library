@@ -64,7 +64,7 @@ export const installTheme: StepFunction<InstallThemeStep> = (step: InstallThemeS
 	};
 };
 
-installTheme.description = 'Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).';
+installTheme.description = 'Install a theme via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).';
 installTheme.builtin = true;
 installTheme.vars = [
 	{

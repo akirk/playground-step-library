@@ -364,7 +364,7 @@ describe('installPlugin', () => {
     });
 
     it('should have correct metadata', () => {
-        expect(installPlugin.description).toBe('Install a plugin via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).');
+        expect(installPlugin.description).toBe('Install a plugin via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).');
         expect(installPlugin.builtin).toBe(true);
         expect(Array.isArray(installPlugin.vars)).toBe(true);
         expect(installPlugin.vars).toHaveLength(2);

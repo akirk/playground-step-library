@@ -74,11 +74,11 @@ export const gitTheme: StepFunction<GitThemeStep> = ( step: GitThemeStep ): Step
 	};
 };
 
-gitTheme.description = 'Install a theme from a Git repository (GitHub, GitLab, Codeberg, etc.).';
+gitTheme.description = 'Install a theme from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).';
 gitTheme.vars = [
 	{
 		name: 'url',
-		description: 'Git URL of the theme (supports GitHub, GitLab, Codeberg, and other git hosts).',
+		description: 'Git URL of the theme (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts).',
 		required: true,
 		samples: [
 			'https://github.com/richtabor/kanso',

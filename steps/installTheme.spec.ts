@@ -126,7 +126,7 @@ describe('installTheme', () => {
     });
 
     it('should have correct metadata', () => {
-        expect(installTheme.description).toBe('Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).');
+        expect(installTheme.description).toBe('Install a theme via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).');
         expect(installTheme.builtin).toBe(true);
         expect(Array.isArray(installTheme.vars)).toBe(true);
         expect(installTheme.vars).toHaveLength(2);

@@ -36,6 +36,15 @@ export const gitProviders: Record<string, GitProvider> = {
 			`https://gitlab.com/${repo}/-/releases/${tag}/downloads/${filename}`,
 		requiresGitSuffix: true,
 	},
+	bitbucket: {
+		name: 'Bitbucket',
+		domains: ['bitbucket.org'],
+		branchPathPrefix: '/src/',
+		prPath: '/pull-requests/',
+		prRefFormat: ( prNumber ) => `refs/pull-requests/${prNumber}/from`,
+		releaseUrlFormat: ( repo, tag, filename ) =>
+			`https://bitbucket.org/${repo}/downloads/${filename}`,
+	},
 	codeberg: {
 		name: 'Codeberg',
 		domains: ['codeberg.org'],

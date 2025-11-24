@@ -286,21 +286,6 @@ https://akirk.github.io/playground-step-library/#BASE64_ENCODED_BLUEPRINT
 
 The URL automatically updates as you build your blueprint. Just **copy the URL** to share!
 
-### Blueprint Settings in URL
-
-You can manually craft URLs with specific settings:
-
-```
-https://akirk.github.io/playground-step-library/#{"steps":[...],"wp":"6.7","php":"8.3"}
-```
-
-Supported params:
-- `wp` - WordPress version
-- `php` - PHP version
-- `mode` - Display mode
-- `storage` - Storage type
-- `networking` - Enable networking (true/false)
-
 ## UI Component Tips
 
 ### Blueprint Settings
@@ -344,7 +329,7 @@ Click the **"Mine"** bookmark icon to open your saved blueprints.
 
 Click the **three dots** next to "Launch in Playground" for more options:
 
-- **Share Step Library URL** - Link that opens the blueprint in Step Library
+- **Share Step Library URL** - Link that opens the steps in Step Library
 - **Copy Redirect URL** - Compact URL that redirects to Playground
 - **Download Blueprint** - Save as .json file
 - **Copy Blueprint JSON** - Raw JSON to clipboard
@@ -354,7 +339,7 @@ Click the **three dots** next to "Launch in Playground" for more options:
 
 | Option | Use Case |
 |--------|----------|
-| Share Step Library URL | Let others edit/remix your blueprint |
+| Share Step Library URL | Let others edit/remix your steps |
 | Redirect URL | Share on social media (character limits) |
 | Download Blueprint | Store locally or commit to git |
 | Copy Blueprint JSON | Paste into documentation |
