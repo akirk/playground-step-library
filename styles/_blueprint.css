@@ -4,7 +4,7 @@ body.blueprint-drop-active {
 }
 
 body.blueprint-drop-active::before {
-  content: 'Drop blueprint file to import';
+  content: 'Drop blueprint or wp-env.json to import';
   position: fixed;
   top: 0;
   left: 0;

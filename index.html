@@ -466,6 +466,17 @@
 		</div>
 	</dialog>
 
+	<dialog id="wpenv-unresolved-dialog">
+		<h2>Unresolved Local Paths</h2>
+		<p>The wp-env.json contains local paths that cannot be automatically resolved. Please provide URLs for the following:</p>
+		<div id="wpenv-unresolved-items"></div>
+		<div class="dialog-buttons">
+			<button id="wpenv-unresolved-import" class="primary">Import</button>
+			<button id="wpenv-unresolved-skip">Skip These</button>
+			<button id="wpenv-unresolved-cancel">Cancel</button>
+		</div>
+	</dialog>
+
 	<div id="global-toast" style="display: none;">
 		<span id="global-toast-message"></span>
 		<button id="global-toast-undo" style="display: none;">Undo</button>

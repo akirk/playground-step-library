@@ -188,6 +188,42 @@ export function detectPlaygroundQueryApiUrl(url: string): boolean {
 }
 
 /**
+ * Detects and parses wp-env.json configuration files
+ * Validates that the JSON contains wp-env properties but NOT blueprint properties
+ * @param text - The text to analyze
+ * @returns The parsed wp-env config or null if not a valid wp-env.json
+ */
+export function detectWpEnvJson( text: string ): any {
+	if ( !text || typeof text !== 'string' ) {
+		return null;
+	}
+
+	const trimmed = text.trim();
+
+	if ( !trimmed.startsWith( '{' ) || !trimmed.endsWith( '}' ) ) {
+		return null;
+	}
+
+	try {
+		const parsed = JSON.parse( trimmed );
+		if ( parsed && typeof parsed === 'object' ) {
+			const wpEnvProps = [ 'plugins', 'themes', 'config', 'mappings', 'core', 'phpVersion', 'port', 'env', 'lifecycleScripts' ];
+			const hasAnyWpEnvProp = wpEnvProps.some( prop => prop in parsed );
+
+			const blueprintProps = [ 'steps', 'landingPage', 'preferredVersions', 'features', 'siteOptions', 'login', 'phpExtensionBundles' ];
+			const hasAnyBlueprintProp = blueprintProps.some( prop => prop in parsed );
+
+			if ( hasAnyWpEnvProp && !hasAnyBlueprintProp ) {
+				return parsed;
+			}
+		}
+		return null;
+	} catch ( e ) {
+		return null;
+	}
+}
+
+/**
  * Detects and parses WordPress Playground blueprint JSON strings
  * Validates that the JSON contains at least one blueprint property
  * (steps, landingPage, preferredVersions, features, siteOptions, login, plugins, constants, phpExtensionBundles)

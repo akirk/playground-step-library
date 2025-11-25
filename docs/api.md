@@ -43,7 +43,7 @@ After installing the package, this is available as `step-library-compile` (or ru
 
 ### Import CLI
 
-The import CLI provides the same content detection as the [Smart Paste Handlers](tips.md#smart-paste-handlers) in the UI, but for command-line use.
+The import CLI provides the same content detection as the [Importers](importers.md) in the UI, but for command-line use.
 
 ```bash
 # Process from stdin
@@ -51,6 +51,9 @@ echo "<?php echo 'Hello';" | step-library-import
 
 # Process a file
 step-library-import steps.json
+
+# Import a wp-env.json file
+step-library-import .wp-env.json -p
 
 # Pretty print output
 echo "https://wordpress.org/plugins/akismet/" | step-library-import -p
@@ -63,6 +66,44 @@ echo "wp plugin activate akismet" | step-library-import -t
 ```
 
 After installing the package, this is available as `step-library-import` (or run directly with `node bin/import.js --help`).
+
+### wp-env.json Support
+
+The import CLI and UI both support importing [wp-env](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/) configuration files. This allows you to convert your existing local development setup to a Playground blueprint.
+
+**Supported wp-env.json properties:**
+
+| Property | Conversion |
+|----------|------------|
+| `core` | WordPress version (extracted from URL or GitHub ref like `#6.4`) |
+| `phpVersion` | PHP version |
+| `plugins` | `installPlugin` steps (WordPress.org slugs, GitHub URLs, full URLs) |
+| `themes` | `installTheme` steps |
+| `config` | `defineWpConfigConst` steps |
+| `multisite` | `enableMultisite` step |
+| `lifecycleScripts.afterSetup` | `runWpCliCommand` step (if starts with `wp `) |
+| `env.development` / `env.tests` | Merged with root config |
+
+**Properties that generate warnings (not convertible):**
+
+- `mappings` - File mappings (local paths)
+- `lifecycleScripts.afterStart`, `afterClean` - Shell scripts
+- Local plugin/theme paths (`.`, `./path`) - Prompts for URL resolution in UI
+
+**Example:**
+
+```bash
+# Convert wp-env.json to step library format
+step-library-import .wp-env.json -p
+
+# Output:
+# {
+#   "steps": [
+#     { "step": "installPlugin", "vars": { "url": "woocommerce" } },
+#     { "step": "defineWpConfigConst", "vars": { "name": "WP_DEBUG", "value": "true" } }
+#   ]
+# }
+```
 
 ## Usage
 

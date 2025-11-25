@@ -11,12 +11,14 @@ import {
 	detectPlaygroundUrl,
 	detectPlaygroundQueryApiUrl,
 	detectBlueprintJson,
+	detectWpEnvJson,
 	detectCss,
 	detectJs,
 	detectWpCli,
 	detectStepJson,
 	detectStepLibraryRedirectUrl
 } from './content-detection';
+import { wpEnvToSteps } from './wpenv-importer';
 import { parsePlaygroundQueryApi, shouldUseMuPlugin } from './playground-integration';
 import {
 	addStepFromUrl,
@@ -79,7 +81,7 @@ export class PasteHandlerController {
 		const urls = pastedText.split( '\n' ).map( line => line.trim() ).filter( line => line );
 
 		// Detect content type (in priority order)
-		type ContentType = 'playgroundUrl' | 'playgroundQueryApi' | 'stepLibraryRedirect' | 'stepJson' | 'blueprintJson' | 'php' | 'html' | 'wpCli' | 'css' | 'js' | 'url' | 'wpAdminUrl';
+		type ContentType = 'playgroundUrl' | 'playgroundQueryApi' | 'stepLibraryRedirect' | 'stepJson' | 'blueprintJson' | 'wpEnvJson' | 'php' | 'html' | 'wpCli' | 'css' | 'js' | 'url' | 'wpAdminUrl';
 		let detectedType: ContentType | null = null;
 		let wpCliCommands: string[] | null = null;
 		let htmlContent = '';
@@ -112,6 +114,8 @@ export class PasteHandlerController {
 		if ( !detectedType ) {
 			if ( detectBlueprintJson( pastedText ) ) {
 				detectedType = 'blueprintJson';
+			} else if ( detectWpEnvJson( pastedText ) ) {
+				detectedType = 'wpEnvJson';
 			} else if ( detectStepJson( pastedText ) ) {
 				detectedType = 'stepJson';
 			} else if ( detectPhp( pastedText ) ) {
@@ -207,6 +211,26 @@ export class PasteHandlerController {
 				if (blueprintData) {
 					if (await this.handlePlaygroundBlueprint(blueprintData)) {
 						addedAny = true;
+					}
+				}
+				break;
+			}
+
+			case 'wpEnvJson': {
+				const wpEnvConfig = detectWpEnvJson( pastedText );
+				if ( wpEnvConfig ) {
+					const result = wpEnvToSteps( wpEnvConfig );
+					if ( result.steps.length > 0 ) {
+						this.deps.appendSteps( { steps: result.steps } );
+						blueprintEventBus.emit( 'blueprint:updated' );
+						const stepText = result.steps.length === 1 ? 'step' : `${result.steps.length} steps`;
+						toastService.showGlobal( `Added ${stepText} from wp-env.json` );
+						addedAny = true;
+					}
+					if ( result.warnings.length > 0 ) {
+						for ( const warning of result.warnings ) {
+							toastService.showGlobal( warning, { duration: 5000 } );
+						}
 					}
 				}
 				break;

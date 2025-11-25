@@ -5,16 +5,8 @@ Power user tips for getting the most out of the WordPress Playground Step Librar
 ## Quick Navigation
 
 ### 🎯 Smart Features
-- [**Smart Paste Handlers**](#smart-paste-handlers) - Auto-detect PHP, HTML, CSS, JavaScript, and URLs to create steps
-  - [Paste PHP Code](#paste-php-code) - Auto-creates muPlugin or runPHP steps
-  - [Paste HTML](#paste-html-content) - Auto-creates addPost steps with title extraction
-  - [Paste CSS](#paste-css) - Auto-creates enqueueCSS steps
-  - [Paste JavaScript](#paste-javascript) - Auto-creates enqueueJS steps
-  - [Paste URLs](#paste-urls) - Auto-creates install plugins/themes steps from WordPress.org or GitHub
-  - [Paste Multiple URLs](#paste-multiple-urls) - Add multiple steps to install plugins
-  - [Paste wp-admin URLs](#paste-wp-admin-urls) - Sets the landing page
-  - [Paste Playground URLs](#paste-playground-urls) - Add multiple steps from a Playground URL
-  - [Paste Blueprint JSON](#paste-blueprint-json) - Add multiple steps from a blueprint JSON
+- [**Paste**](#paste) - Auto-create steps from pasted content
+- [**Drop Files**](#drop-files) - Import blueprint or wp-env.json files
 
 ### ⌨️ Productivity
 - [**Keyboard Shortcuts**](#keyboard-shortcuts) - Speed up your workflow
@@ -44,190 +36,31 @@ Power user tips for getting the most out of the WordPress Playground Step Librar
 
 ---
 
-## Smart Paste Handlers
+## Paste
 
-The Step Library has **intelligent paste detection** that automatically creates steps from pasted content.
+Paste content anywhere in the UI (outside of text inputs) to automatically create steps. Supported content types:
 
-### Paste PHP Code
+- **PHP** - Creates `muPlugin` (for hooks) or `runPHP` step
+- **HTML** - Creates `addPost` step with extracted title
+- **CSS** - Creates `enqueueCSS` step
+- **JavaScript** - Creates `enqueueJS` step
+- **URLs** - Creates `installPlugin`/`installTheme` from WordPress.org or GitHub URLs
+- **Playground URLs** - Decompiles blueprint from URL
+- **Blueprint JSON** - Decompiles native blueprint
+- **wp-env.json** - Converts to multiple steps + settings
 
-Just copy PHP code and paste anywhere in the Step Library UI. It will automatically:
+See [Importers](importers.md) for detailed examples and supported formats.
 
-1. **Detect if it's a plugin** (has hooks like `add_action`, `add_filter`)
-2. **Create an `muPlugin` step** for plugins
-3. **Create a `runPHP` step** for simple scripts
-4. **Auto-name it** as "pasted-plugin" (you can rename it)
+## Drop Files
 
-**Example:**
-```php
-add_action('wp_footer', function() {
-    echo '<p>Hello from my plugin!</p>';
-});
-```
+Drag and drop `.json` files onto the Step Library to import them:
 
-Paste this → **Automatically creates `muPlugin` step**
+- **Blueprint files** - Decompiled into Step Library format
+- **wp-env.json** - Converted to steps (prompts for local path resolution)
 
-**What counts as a plugin?**
-- Contains `add_action` or `add_filter`
-- Contains `add_shortcode`
-- Contains `register_post_type` or `register_taxonomy`
-- Contains `add_menu_page` or `add_submenu_page`
+Both PHP and WordPress versions are extracted and set automatically when available.
 
-### Paste HTML Content
-
-Paste HTML content to automatically create a **page or post**:
-
-```html
-<h1>Welcome to My Site</h1>
-<p>This is an example page.</p>
-```
-
-Paste this → **Automatically creates `addPost` step** with:
-- Title extracted from first `<h1>` or `<h2>`
-- Content set to the HTML
-- Type set to "page"
-
-### Paste CSS
-
-Paste CSS code to automatically enqueue custom styles:
-
-```css
-body {
-    background-color: #f0f0f0;
-}
-.custom-class {
-    color: #333;
-}
-```
-
-Paste this → **Automatically creates `enqueueCSS` step** with your styles
-
-### Paste JavaScript
-
-Paste JavaScript code to automatically enqueue custom scripts:
-
-```javascript
-console.log('Hello from custom script!');
-document.addEventListener('DOMContentLoaded', function() {
-    // Your code here
-});
-```
-
-Paste this → **Automatically creates `enqueueJS` step** with your script
-
-### Paste URLs
-
-Paste WordPress.org or GitHub plugin/theme URLs to automatically create install steps:
-
-**WordPress.org plugins:**
-```
-https://wordpress.org/plugins/hello-dolly/
-```
-
-**GitHub repositories:**
-```
-https://github.com/akirk/friends
-https://github.com/Automattic/wordpress-activitypub/tree/trunk
-```
-
-**GitHub Pull Requests:**
-```
-https://github.com/akirk/friends/pull/559
-```
-
-The Step Library will:
-1. Detect if it's a plugin or theme URL
-2. Create the appropriate `installPlugin` or `installTheme` step
-3. Pre-fill all the fields
-
-### Paste Multiple URLs
-
-Paste a list of URLs (one per line):
-
-```
-https://wordpress.org/plugins/friends/
-https://wordpress.org/plugins/activitypub/
-https://github.com/akirk/enable-mastodon-apps
-```
-
-Creates multiple install steps automatically!
-
-### Paste wp-admin URLs
-
-Paste a WordPress admin URL to set the landing page:
-
-```
-https://playground.wordpress.net/wp-admin/post-new.php
-```
-
-Or paste just the path (which you can copy directly from the Playground URL bar):
-
-```
-/wp-admin/post-new.php
-```
-
-The Step Library extracts the path and sets it as the landing page.
-
-### Paste Playground URLs
-
-Paste any WordPress Playground URL to add multiple steps from the blueprint:
-
-**Playground hash URLs:**
-```
-https://playground.wordpress.net/#{"steps":[...]}
-```
-
-**Playground Query API URLs:**
-```
-https://playground.wordpress.net/?plugin=woocommerce&wp=6.7&login=yes
-https://playground.wordpress.net/?plugin=friends&theme=twentytwentyfour
-```
-
-The Step Library will:
-1. Detect the Playground URL format
-2. Extract and parse the blueprint
-3. Automatically decompile native steps into custom steps
-4. Load the steps into your editor
-
-**Learn more:**
-- [Query API Documentation](https://wordpress.github.io/wordpress-playground/developers/apis/query-api)
-- [Blueprint Data Format](https://wordpress.github.io/wordpress-playground/blueprints/data-format)
-
-### Paste Blueprint JSON
-
-Paste blueprint JSON directly to add multiple steps from the blueprint:
-
-**Example:**
-```json
-{
-  "steps": [
-    { "step": "login" }
-  ],
-  "landingPage": "/wp-admin/",
-  "preferredVersions": {
-    "php": "8.0",
-    "wp": "6.4"
-  }
-}
-```
-
-The Step Library will:
-1. Detect that it's a valid blueprint JSON object
-2. Automatically parse and validate it
-3. Decompile native steps into custom steps
-4. Load the steps into your editor
-
-**Valid blueprint properties:**
-- `steps` - Array of step objects
-- `landingPage` - Where to navigate after loading
-- `preferredVersions` - PHP/WordPress versions
-- `features` - Feature flags (networking, etc.)
-- `siteOptions` - WordPress site options
-- `login` - Auto-login configuration
-- `plugins` - List of plugins to install
-- `constants` - PHP constants to define
-- `phpExtensionBundles` - PHP extensions
-
-**Pro Tip:** This is perfect for copying blueprints from documentation or sharing raw JSON!
+See [Importers](importers.md) for details on wp-env.json conversion.
 
 ## Keyboard Shortcuts
 

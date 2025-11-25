@@ -17,6 +17,7 @@ This document explains how the WordPress Playground Step Library works internall
 - [**When to Create Custom vs Built-in Steps**](#when-to-create-custom-vs-built-in-steps) - Decision guide
 
 ### ⚙️ Advanced Features
+- [**Import Pipeline**](#import-pipeline) - Content detection and conversion flow
 - [**Deduplication Strategies**](#deduplication-strategies) - Managing duplicate steps
 - [**File Organization**](#file-organization) - Project structure
 
@@ -295,6 +296,130 @@ toV2(): BlueprintV2Declaration {
   };
 }
 ```
+
+## Import Pipeline
+
+The Step Library includes an import pipeline that detects various content types and converts them to blueprint steps. This powers three input methods: paste, file drop, and CLI.
+
+### Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Input Methods                           │
+├─────────────────┬─────────────────┬─────────────────────────┤
+│  Paste Handler  │  File Drop      │  CLI (bin/import.js)    │
+│  (paste-handler │  Controller     │                         │
+│   -controller)  │  (file-drop-    │                         │
+│                 │   controller)   │                         │
+└────────┬────────┴────────┬────────┴────────────┬────────────┘
+         │                 │                     │
+         └────────────────┬┴─────────────────────┘
+                          │
+                          ▼
+         ┌────────────────────────────────────┐
+         │      Content Detection             │
+         │      (content-detection.ts)        │
+         │                                    │
+         │  detectContentType(text) →         │
+         │    'php' | 'html' | 'css' | 'js'   │
+         │    'url' | 'playground-url'        │
+         │    'blueprint' | 'wp-env' | null   │
+         └────────────────┬───────────────────┘
+                          │
+                          ▼
+         ┌────────────────────────────────────┐
+         │      Content Converters            │
+         ├────────────────────────────────────┤
+         │  phpToStep()      → muPlugin/runPHP│
+         │  htmlToStep()     → addPost        │
+         │  cssToStep()      → enqueueCSS     │
+         │  jsToStep()       → enqueueJS      │
+         │  urlToStep()      → installPlugin/ │
+         │                     installTheme   │
+         │  wpEnvToSteps()   → multiple steps │
+         │  decompiler       → multiple steps │
+         └────────────────┬───────────────────┘
+                          │
+                          ▼
+         ┌────────────────────────────────────┐
+         │      Step Library Blueprint        │
+         │      { steps: [...] }              │
+         └────────────────────────────────────┘
+```
+
+### Content Detection (`content-detection.ts`)
+
+The `detectContentType()` function analyzes text to determine its type:
+
+| Content Type | Detection Logic |
+|--------------|-----------------|
+| `php` | Starts with `<?php` or contains PHP patterns |
+| `html` | Contains HTML tags like `<div>`, `<p>`, `<h1>` |
+| `css` | Contains CSS selectors and properties |
+| `js` | Contains JavaScript patterns |
+| `url` | WordPress.org or GitHub plugin/theme URLs |
+| `playground-url` | `playground.wordpress.net` URLs |
+| `blueprint` | JSON with `steps`, `landingPage`, etc. |
+| `wp-env` | JSON with `plugins`, `themes`, `config`, etc. |
+
+### Paste Handler (`paste-handler-controller.ts`)
+
+Handles clipboard paste events in the UI:
+
+1. Intercepts paste events on `document`
+2. Ignores paste when focus is in text inputs
+3. Calls `detectContentType()` on pasted text
+4. Routes to appropriate converter
+5. Adds resulting steps to the blueprint
+
+### File Drop Controller (`file-drop-controller.ts`)
+
+Handles drag-and-drop of JSON files:
+
+1. Shows drop overlay on dragover
+2. Accepts `.json` files only
+3. Detects if blueprint or wp-env.json
+4. For wp-env.json: prompts for unresolved local paths
+5. Calls decompiler for blueprints
+6. Sets PHP/WordPress versions if specified
+
+### wp-env Importer (`wpenv-importer.ts`)
+
+Converts wp-env.json configuration to steps:
+
+```typescript
+interface WpEnvImportResult {
+  steps: WpEnvStepData[];      // Converted steps
+  warnings: string[];           // Skipped features
+  unresolvedPlugins: string[];  // Local paths needing URLs
+  unresolvedThemes: string[];   // Local paths needing URLs
+  phpVersion?: string;          // Extracted PHP version
+  wpVersion?: string;           // Extracted WordPress version
+}
+```
+
+Supported conversions:
+- `plugins` → `installPlugin` steps
+- `themes` → `installTheme` steps
+- `config` → `defineWpConfigConst` steps
+- `multisite: true` → `enableMultisite` step
+- `phpVersion` → PHP version setting
+- `core` → WordPress version (extracted from URL/ref)
+
+### CLI Import (`bin/import.js`)
+
+Command-line interface using the same detection logic:
+
+```bash
+# Detect and convert
+echo "<?php add_action(...);" | step-library-import -p
+
+# Detect type only
+step-library-import .wp-env.json -t
+# Output: wp-env
+```
+
+See [Importers Documentation](importers.md) for user-facing details.
 
 ## Deduplication Strategies
 
