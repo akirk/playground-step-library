@@ -33,6 +33,7 @@ import {
 import { toastService } from './toast-service';
 import { BlueprintDecompiler } from '../decompiler';
 import { blueprintEventBus } from './blueprint-event-bus';
+import { showUnresolvedDialog } from './wpenv-unresolved-dialog';
 
 export interface PasteHandlerControllerDependencies {
 	stepInserterDeps: StepInserterDependencies;
@@ -112,10 +113,10 @@ export class PasteHandlerController {
 
 		// Check text-based content types if no URL type found
 		if ( !detectedType ) {
-			if ( detectBlueprintJson( pastedText ) ) {
-				detectedType = 'blueprintJson';
-			} else if ( detectWpEnvJson( pastedText ) ) {
+			if ( detectWpEnvJson( pastedText ) ) {
 				detectedType = 'wpEnvJson';
+			} else if ( detectBlueprintJson( pastedText ) ) {
+				detectedType = 'blueprintJson';
 			} else if ( detectStepJson( pastedText ) ) {
 				detectedType = 'stepJson';
 			} else if ( detectPhp( pastedText ) ) {
@@ -220,6 +221,18 @@ export class PasteHandlerController {
 				const wpEnvConfig = detectWpEnvJson( pastedText );
 				if ( wpEnvConfig ) {
 					const result = wpEnvToSteps( wpEnvConfig );
+
+					// Show dialog for unresolved local paths
+					if ( result.unresolvedPlugins.length > 0 || result.unresolvedThemes.length > 0 ) {
+						const resolvedSteps = await showUnresolvedDialog( result.unresolvedPlugins, result.unresolvedThemes );
+						if ( resolvedSteps === null ) {
+							break; // User cancelled
+						}
+						result.steps.unshift( ...resolvedSteps );
+						// Remove local path warnings since we handled them
+						result.warnings = result.warnings.filter( w => !w.includes( 'Local plugin path' ) && !w.includes( 'Local theme path' ) );
+					}
+
 					if ( result.steps.length > 0 ) {
 						this.deps.appendSteps( { steps: result.steps } );
 						blueprintEventBus.emit( 'blueprint:updated' );

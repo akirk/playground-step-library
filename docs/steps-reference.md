@@ -795,11 +795,11 @@ This document provides detailed information about all available steps, including
 ## [`gitPlugin`](steps/gitPlugin.md)
 
 **Type**: Custom Step
-**Description**: Install a plugin from a Git repository (GitHub, GitLab, Codeberg, etc.).
+**Description**: Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 
 | Variable | Type | Required | Description |
 |----------|------|----------|-------------|
-| `url` | string | ✅ Yes | Git URL of the plugin (supports GitHub, GitLab, Codeberg, and other git hosts). |
+| `url` | string | ✅ Yes | Git URL of the plugin (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts). |
 | `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
 
 
@@ -821,11 +821,11 @@ This document provides detailed information about all available steps, including
 ## [`gitTheme`](steps/gitTheme.md)
 
 **Type**: Custom Step
-**Description**: Install a theme from a Git repository (GitHub, GitLab, Codeberg, etc.).
+**Description**: Install a theme from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 
 | Variable | Type | Required | Description |
 |----------|------|----------|-------------|
-| `url` | string | ✅ Yes | Git URL of the theme (supports GitHub, GitLab, Codeberg, and other git hosts). |
+| `url` | string | ✅ Yes | Git URL of the theme (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts). |
 | `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
 
 
@@ -973,7 +973,7 @@ This document provides detailed information about all available steps, including
 ## [`installPlugin`](steps/installPlugin.md)
 
 **Type**: Built-in Step
-**Description**: Install a plugin via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
+**Description**: Install a plugin via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 
 | Variable | Type | Required | Description |
 |----------|------|----------|-------------|
@@ -999,7 +999,7 @@ This document provides detailed information about all available steps, including
 ## [`installTheme`](steps/installTheme.md)
 
 **Type**: Built-in Step
-**Description**: Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
+**Description**: Install a theme via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 
 | Variable | Type | Required | Description |
 |----------|------|----------|-------------|

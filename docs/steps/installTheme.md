@@ -1,6 +1,6 @@
 # `installTheme` Step
 
-Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
+Install a theme via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 
 **[View Source](../../steps/installTheme.ts)**
 

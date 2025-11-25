@@ -207,7 +207,7 @@ export function detectWpEnvJson( text: string ): any {
 	try {
 		const parsed = JSON.parse( trimmed );
 		if ( parsed && typeof parsed === 'object' ) {
-			const wpEnvProps = [ 'plugins', 'themes', 'config', 'mappings', 'core', 'phpVersion', 'port', 'env', 'lifecycleScripts' ];
+			const wpEnvProps = [ 'plugins', 'themes', 'config', 'mappings', 'core', 'phpVersion', 'port', 'env', 'lifecycleScripts', 'multisite', 'testsPort' ];
 			const hasAnyWpEnvProp = wpEnvProps.some( prop => prop in parsed );
 
 			const blueprintProps = [ 'steps', 'landingPage', 'preferredVersions', 'features', 'siteOptions', 'login', 'phpExtensionBundles' ];

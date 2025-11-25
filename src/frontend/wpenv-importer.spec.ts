@@ -75,6 +75,31 @@ describe( 'wpenv-importer', () => {
 			expect( result ).toBeNull();
 		} );
 
+		it( 'should detect wp-env.json with lifecycleScripts and env', () => {
+			const wpEnv = {
+				plugins: [ '.' ],
+				phpVersion: '8.2',
+				config: {
+					WP_DEBUG: true,
+					WP_DEBUG_LOG: true,
+					SCRIPT_DEBUG: true
+				},
+				lifecycleScripts: {
+					afterStart: 'wp-env run cli wp plugin install query-monitor --activate'
+				},
+				env: {
+					tests: {
+						phpVersion: '8.4',
+						core: 'WordPress/WordPress#6.8'
+					}
+				}
+			};
+			const result = detectWpEnvJson( JSON.stringify( wpEnv ) );
+			expect( result ).not.toBeNull();
+			expect( result.phpVersion ).toBe( '8.2' );
+			expect( result.lifecycleScripts?.afterStart ).toBe( 'wp-env run cli wp plugin install query-monitor --activate' );
+		} );
+
 		it( 'should detect config with wp-env properties', () => {
 			const config = JSON.stringify( {
 				core: 'https://wordpress.org/wordpress-latest.zip',

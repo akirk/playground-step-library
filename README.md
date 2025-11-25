@@ -92,8 +92,8 @@ This library provides **54** total steps (8 built-in enhanced steps + 46 custom 
 - [`defineWpConfigConst`](docs/steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
 - [`enableMultisite`](docs/steps/enableMultisite.md) - Enable WordPress Multisite functionality.
 - [`importWxr`](docs/steps/importWxr.md) - Import a WXR from a URL.
-- [`installPlugin`](docs/steps/installPlugin.md) - Install a plugin via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
-- [`installTheme`](docs/steps/installTheme.md) - Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
+- [`installPlugin`](docs/steps/installPlugin.md) - Install a plugin via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).
+- [`installTheme`](docs/steps/installTheme.md) - Install a theme via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 - [`login`](docs/steps/login.md) - Login to the site.
 - [`runPHP`](docs/steps/runPHP.md) - Run code in the context of WordPress.
 - [`setSiteOption`](docs/steps/setSiteOption.md) - Set a site option.
@@ -126,8 +126,8 @@ This library provides **54** total steps (8 built-in enhanced steps + 46 custom 
 - [`githubPlugin`](docs/steps/githubPlugin.md) - Install a plugin from a Github repository.
 - [`githubPluginRelease`](docs/steps/githubPluginRelease.md) - Install a specific plugin release from a Github repository.
 - [`githubTheme`](docs/steps/githubTheme.md) - Install a theme from a Github repository.
-- [`gitPlugin`](docs/steps/gitPlugin.md) - Install a plugin from a Git repository (GitHub, GitLab, Codeberg, etc.).
-- [`gitTheme`](docs/steps/gitTheme.md) - Install a theme from a Git repository (GitHub, GitLab, Codeberg, etc.).
+- [`gitPlugin`](docs/steps/gitPlugin.md) - Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).
+- [`gitTheme`](docs/steps/gitTheme.md) - Install a theme from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 - [`importFriendFeeds`](docs/steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.
 - [`importWordPressComExport`](docs/steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
 - [`installAdminer`](docs/steps/installAdminer.md) - Install Adminer with auto login link.

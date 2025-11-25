@@ -257,7 +257,7 @@
       "required": [
         "step"
       ],
-      "description": "Install a plugin via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.)."
+      "description": "Install a plugin via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.)."
     },
     "installTheme": {
       "type": "object",
@@ -286,7 +286,7 @@
       "required": [
         "step"
       ],
-      "description": "Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.)."
+      "description": "Install a theme via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.)."
     },
     "runPHP": {
       "type": "object",
@@ -1176,7 +1176,7 @@
           "properties": {
             "url": {
               "type": "string",
-              "description": "Git URL of the plugin (supports GitHub, GitLab, Codeberg, and other git hosts)."
+              "description": "Git URL of the plugin (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts)."
             },
             "prs": {
               "type": "boolean",
@@ -1192,7 +1192,7 @@
       "required": [
         "step"
       ],
-      "description": "Install a plugin from a Git repository (GitHub, GitLab, Codeberg, etc.)."
+      "description": "Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.)."
     },
     "gitTheme": {
       "type": "object",
@@ -1205,7 +1205,7 @@
           "properties": {
             "url": {
               "type": "string",
-              "description": "Git URL of the theme (supports GitHub, GitLab, Codeberg, and other git hosts)."
+              "description": "Git URL of the theme (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts)."
             },
             "prs": {
               "type": "boolean",
@@ -1221,7 +1221,7 @@
       "required": [
         "step"
       ],
-      "description": "Install a theme from a Git repository (GitHub, GitLab, Codeberg, etc.)."
+      "description": "Install a theme from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.)."
     },
     "generateProducts": {
       "type": "object",

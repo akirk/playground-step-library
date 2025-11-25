@@ -1,6 +1,6 @@
 # `gitPlugin` Step
 
-Install a plugin from a Git repository (GitHub, GitLab, Codeberg, etc.).
+Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 
 **[View Source](../../steps/gitPlugin.ts)**
 
@@ -13,7 +13,7 @@ Install a plugin from a Git repository (GitHub, GitLab, Codeberg, etc.).
 
 | Variable | Type | Required | Description |
 |----------|------|----------|-------------|
-| `url` | string | ✅ Yes | Git URL of the plugin (supports GitHub, GitLab, Codeberg, and other git hosts). |
+| `url` | string | ✅ Yes | Git URL of the plugin (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts). |
 | `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
 
 

@@ -35,8 +35,8 @@ const compiled = compiler.compile(blueprint);
 Built-in steps are core WordPress Playground steps that are enhanced with additional functionality.
 
 - [`importWxr`](steps/importWxr.md) - Import a WXR from a URL.
-- [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
-- [`installTheme`](steps/installTheme.md) - Install a theme via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
+- [`installPlugin`](steps/installPlugin.md) - Install a plugin via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).
+- [`installTheme`](steps/installTheme.md) - Install a theme via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 - [`runPHP`](steps/runPHP.md) - Run code in the context of WordPress.
 - [`enableMultisite`](steps/enableMultisite.md) - Enable WordPress Multisite functionality.
 - [`login`](steps/login.md) - Login to the site.
@@ -72,8 +72,8 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`githubPlugin`](steps/githubPlugin.md) - Install a plugin from a Github repository.
 - [`githubPluginRelease`](steps/githubPluginRelease.md) - Install a specific plugin release from a Github repository.
 - [`githubTheme`](steps/githubTheme.md) - Install a theme from a Github repository.
-- [`gitPlugin`](steps/gitPlugin.md) - Install a plugin from a Git repository (GitHub, GitLab, Codeberg, etc.).
-- [`gitTheme`](steps/gitTheme.md) - Install a theme from a Git repository (GitHub, GitLab, Codeberg, etc.).
+- [`gitPlugin`](steps/gitPlugin.md) - Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).
+- [`gitTheme`](steps/gitTheme.md) - Install a theme from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 - [`generateProducts`](steps/generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 - [`importFriendFeeds`](steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.
 - [`importWordPressComExport`](steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)

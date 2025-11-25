@@ -7,6 +7,7 @@ import { BlueprintDecompiler } from '../decompiler';
 import { detectWpEnvJson } from './content-detection';
 import { wpEnvToSteps } from './wpenv-importer';
 import { toastService } from './toast-service';
+import { showUnresolvedDialog } from './wpenv-unresolved-dialog';
 import type { StepConfig } from './types';
 
 export interface FileDropControllerDependencies {
@@ -173,7 +174,7 @@ export class FileDropController {
 
 		// If there are unresolved plugins/themes, show dialog to let user provide URLs
 		if (result.unresolvedPlugins.length > 0 || result.unresolvedThemes.length > 0) {
-			const resolvedSteps = await this.showUnresolvedDialog(result.unresolvedPlugins, result.unresolvedThemes);
+			const resolvedSteps = await showUnresolvedDialog(result.unresolvedPlugins, result.unresolvedThemes);
 			if (resolvedSteps === null) {
 				return; // User cancelled
 			}
@@ -225,109 +226,4 @@ export class FileDropController {
 		}
 	}
 
-	private showUnresolvedDialog(
-		unresolvedPlugins: string[],
-		unresolvedThemes: string[]
-	): Promise<Array<{ step: 'installPlugin' | 'installTheme'; vars: { url: string } }> | null> {
-		return new Promise((resolve) => {
-			const dialog = document.getElementById('wpenv-unresolved-dialog') as HTMLDialogElement;
-			const itemsContainer = document.getElementById('wpenv-unresolved-items')!;
-			const importBtn = document.getElementById('wpenv-unresolved-import')!;
-			const skipBtn = document.getElementById('wpenv-unresolved-skip')!;
-			const cancelBtn = document.getElementById('wpenv-unresolved-cancel')!;
-
-			// Clear previous content
-			while (itemsContainer.firstChild) {
-				itemsContainer.removeChild(itemsContainer.firstChild);
-			}
-
-			const inputs: Array<{ type: 'plugin' | 'theme'; path: string; input: HTMLInputElement }> = [];
-
-			const handleInputKeydown = ( e: KeyboardEvent ) => {
-				if ( e.key === 'Enter' ) {
-					e.preventDefault();
-					e.stopPropagation();
-					importBtn.click();
-				}
-			};
-
-			for (const path of unresolvedPlugins) {
-				const label = document.createElement('label');
-				const strong = document.createElement('strong');
-				strong.textContent = 'Plugin: ';
-				label.appendChild(strong);
-				const code = document.createElement('code');
-				code.textContent = 'plugins: [ "' + path + '" ]';
-				label.appendChild(code);
-				label.appendChild(document.createElement('br'));
-				const input = document.createElement('input');
-				input.type = 'text';
-				input.placeholder = 'Enter plugin URL or WordPress.org slug (leave empty to skip)';
-				input.style.width = '100%';
-				input.style.marginBottom = '10px';
-				input.addEventListener( 'keydown', handleInputKeydown );
-				label.appendChild(input);
-				itemsContainer.appendChild(label);
-				inputs.push({ type: 'plugin', path, input });
-			}
-
-			for (const path of unresolvedThemes) {
-				const label = document.createElement('label');
-				const strong = document.createElement('strong');
-				strong.textContent = 'Theme: ';
-				label.appendChild(strong);
-				const code = document.createElement('code');
-				code.textContent = 'themes: [ "' + path + '" ]';
-				label.appendChild(code);
-				label.appendChild(document.createElement('br'));
-				const input = document.createElement('input');
-				input.type = 'text';
-				input.placeholder = 'Enter theme URL or WordPress.org slug (leave empty to skip)';
-				input.style.width = '100%';
-				input.style.marginBottom = '10px';
-				input.addEventListener( 'keydown', handleInputKeydown );
-				label.appendChild(input);
-				itemsContainer.appendChild(label);
-				inputs.push({ type: 'theme', path, input });
-			}
-
-			const cleanup = () => {
-				importBtn.removeEventListener('click', onImport);
-				skipBtn.removeEventListener('click', onSkip);
-				cancelBtn.removeEventListener('click', onCancel);
-				dialog.close();
-			};
-
-			const onImport = () => {
-				const steps: Array<{ step: 'installPlugin' | 'installTheme'; vars: { url: string } }> = [];
-				for (const { type, input } of inputs) {
-					const url = input.value.trim();
-					if (url) {
-						steps.push({
-							step: type === 'plugin' ? 'installPlugin' : 'installTheme',
-							vars: { url }
-						});
-					}
-				}
-				cleanup();
-				resolve(steps);
-			};
-
-			const onSkip = () => {
-				cleanup();
-				resolve([]);
-			};
-
-			const onCancel = () => {
-				cleanup();
-				resolve(null);
-			};
-
-			importBtn.addEventListener('click', onImport);
-			skipBtn.addEventListener('click', onSkip);
-			cancelBtn.addEventListener('click', onCancel);
-
-			dialog.showModal();
-		});
-	}
 }

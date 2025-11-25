@@ -1,6 +1,6 @@
 # `installPlugin` Step
 
-Install a plugin via WordPress.org or Git (GitHub, GitLab, Codeberg, etc.).
+Install a plugin via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 
 **[View Source](../../steps/installPlugin.ts)**
 
