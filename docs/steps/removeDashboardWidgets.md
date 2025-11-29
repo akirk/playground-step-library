@@ -2,7 +2,7 @@
 
 Remove widgets from the wp-admin dashboard.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=removeDashboardWidgets)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=removeDashboardWidgets)**
 
 [View Source](../../steps/removeDashboardWidgets.ts) to understand how this step is implemented.
 

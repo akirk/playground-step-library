@@ -2,7 +2,7 @@
 
 Add a page with title and content.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=addPage)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=addPage)**
 
 [View Source](../../steps/addPage.ts) to understand how this step is implemented.
 

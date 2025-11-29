@@ -2,7 +2,7 @@
 
 Install a theme via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=installTheme)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=installTheme)**
 
 [View Source](../../steps/installTheme.ts) to understand how this step is implemented.
 

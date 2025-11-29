@@ -2,7 +2,7 @@
 
 Run code in the context of WordPress.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=runPHP)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=runPHP)**
 
 [View Source](../../steps/runPHP.ts) to understand how this step is implemented.
 

@@ -2,7 +2,7 @@
 
 Change the default "Uncategorized".
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=renameDefaultCategory)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=renameDefaultCategory)**
 
 [View Source](../../steps/renameDefaultCategory.ts) to understand how this step is implemented.
 

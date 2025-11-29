@@ -2,7 +2,7 @@
 
 Install a plugin from a Github repository.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=githubPlugin)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=githubPlugin)**
 
 [View Source](../../steps/githubPlugin.ts) to understand how this step is implemented.
 

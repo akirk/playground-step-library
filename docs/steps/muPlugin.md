@@ -2,7 +2,7 @@
 
 Add code for a plugin.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=muPlugin)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=muPlugin)**
 
 [View Source](../../steps/muPlugin.ts) to understand how this step is implemented.
 

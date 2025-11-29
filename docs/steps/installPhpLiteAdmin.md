@@ -2,7 +2,7 @@
 
 Provide phpLiteAdmin. Password: admin
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=installPhpLiteAdmin)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=installPhpLiteAdmin)**
 
 [View Source](../../steps/installPhpLiteAdmin.ts) to understand how this step is implemented.
 

@@ -2,7 +2,7 @@
 
 Inserts sample pages to the site.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=sampleContent)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=sampleContent)**
 
 [View Source](../../steps/sampleContent.ts) to understand how this step is implemented.
 

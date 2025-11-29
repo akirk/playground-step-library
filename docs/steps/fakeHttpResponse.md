@@ -2,7 +2,7 @@
 
 Fake a wp_remote_request() response.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=fakeHttpResponse)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=fakeHttpResponse)**
 
 [View Source](../../steps/fakeHttpResponse.ts) to understand how this step is implemented.
 

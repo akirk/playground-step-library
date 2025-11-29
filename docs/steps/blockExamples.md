@@ -2,7 +2,7 @@
 
 Creates a post with all block examples from registered blocks
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=blockExamples)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=blockExamples)**
 
 [View Source](../../steps/blockExamples.ts) to understand how this step is implemented.
 

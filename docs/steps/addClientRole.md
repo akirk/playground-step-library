@@ -2,7 +2,7 @@
 
 Adds a role for clients with additional capabilities than editors, but not quite admin.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=addClientRole)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=addClientRole)**
 
 [View Source](../../steps/addClientRole.ts) to understand how this step is implemented.
 

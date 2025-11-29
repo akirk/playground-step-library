@@ -2,7 +2,7 @@
 
 Delete all posts, pages, attachments, revisions and menu items.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=deleteAllPosts)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=deleteAllPosts)**
 
 [View Source](../../steps/deleteAllPosts.ts) to understand how this step is implemented.
 

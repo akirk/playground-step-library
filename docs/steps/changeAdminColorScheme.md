@@ -2,7 +2,7 @@
 
 Useful to combine with a login step.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=changeAdminColorScheme)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=changeAdminColorScheme)**
 
 [View Source](../../steps/changeAdminColorScheme.ts) to understand how this step is implemented.
 

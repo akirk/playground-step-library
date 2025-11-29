@@ -2,7 +2,7 @@
 
 Import a WXR from a URL.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=importWxr)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=importWxr)**
 
 [View Source](../../steps/importWxr.ts) to understand how this step is implemented.
 

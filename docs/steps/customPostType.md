@@ -2,7 +2,7 @@
 
 Register a custom post type.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=customPostType)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=customPostType)**
 
 [View Source](../../steps/customPostType.ts) to understand how this step is implemented.
 

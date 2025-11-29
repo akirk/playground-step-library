@@ -2,7 +2,7 @@
 
 Set the WordPress site language.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=setLanguage)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=setLanguage)**
 
 [View Source](../../steps/setLanguage.ts) to understand how this step is implemented.
 

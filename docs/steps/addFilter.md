@@ -2,7 +2,7 @@
 
 Easily add a filtered value.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=addFilter)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=addFilter)**
 
 [View Source](../../steps/addFilter.ts) to understand how this step is implemented.
 

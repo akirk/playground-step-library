@@ -2,7 +2,7 @@
 
 Generate a new blueprint after modifying the WordPress.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=blueprintExtractor)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=blueprintExtractor)**
 
 [View Source](../../steps/blueprintExtractor.ts) to understand how this step is implemented.
 

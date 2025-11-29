@@ -2,7 +2,7 @@
 
 Start Jetpack in Offline mode.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=jetpackOfflineMode)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=jetpackOfflineMode)**
 
 [View Source](../../steps/jetpackOfflineMode.ts) to understand how this step is implemented.
 

@@ -2,7 +2,7 @@
 
 Install phEditor. Password: admin
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=installPhEditor)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=installPhEditor)**
 
 [View Source](../../steps/installPhEditor.ts) to understand how this step is implemented.
 

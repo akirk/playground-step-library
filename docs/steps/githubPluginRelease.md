@@ -2,7 +2,7 @@
 
 Install a specific plugin release from a Github repository.
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=githubPluginRelease)**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=githubPluginRelease)**
 
 [View Source](../../steps/githubPluginRelease.ts) to understand how this step is implemented.
 

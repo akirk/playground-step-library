@@ -319,7 +319,7 @@ This document provides detailed information about all available steps, including
 
 ${stepInfo.description || 'No description available.'}
 
-> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=${stepName})**
+🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=${stepName})**
 
 [View Source](../../steps/${stepName}.ts) to understand how this step is implemented.
 
