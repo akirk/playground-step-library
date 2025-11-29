@@ -2,7 +2,9 @@
 
 Define a wp-config PHP constant.
 
-**[View Source](../../steps/defineWpConfigConst.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=defineWpConfigConst)**
+
+[View Source](../../steps/defineWpConfigConst.ts) to understand how this step is implemented.
 
 ## Type
 🔧 **Built-in Step**

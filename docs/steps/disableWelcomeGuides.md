@@ -2,7 +2,9 @@
 
 Disable the welcome guides in the site editor.
 
-**[View Source](../../steps/disableWelcomeGuides.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=disableWelcomeGuides)**
+
+[View Source](../../steps/disableWelcomeGuides.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

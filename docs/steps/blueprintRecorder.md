@@ -2,7 +2,9 @@
 
 Record steps made and compile a new blueprint.
 
-**[View Source](../../steps/blueprintRecorder.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=blueprintRecorder)**
+
+[View Source](../../steps/blueprintRecorder.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

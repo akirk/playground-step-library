@@ -2,7 +2,9 @@
 
 Add a WooCommerce product (will install WooCommerce if not present)
 
-**[View Source](../../steps/addProduct.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=addProduct)**
+
+[View Source](../../steps/addProduct.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

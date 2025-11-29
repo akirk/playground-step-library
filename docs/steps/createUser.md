@@ -2,7 +2,9 @@
 
 Create a new user.
 
-**[View Source](../../steps/createUser.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=createUser)**
+
+[View Source](../../steps/createUser.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

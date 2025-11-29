@@ -2,7 +2,9 @@
 
 Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 
-**[View Source](../../steps/gitPlugin.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=gitPlugin)**
+
+[View Source](../../steps/gitPlugin.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

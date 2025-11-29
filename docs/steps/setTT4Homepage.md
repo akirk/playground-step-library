@@ -2,7 +2,9 @@
 
 Set the homepage for the twentytwentyfour theme.
 
-**[View Source](../../steps/setTT4Homepage.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=setTT4Homepage)**
+
+[View Source](../../steps/setTT4Homepage.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

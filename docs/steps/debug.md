@@ -2,7 +2,9 @@
 
 Configure WordPress debug settings and optionally install Query Monitor plugin.
 
-**[View Source](../../steps/debug.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=debug)**
+
+[View Source](../../steps/debug.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

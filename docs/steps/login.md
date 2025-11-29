@@ -2,7 +2,9 @@
 
 Login to the site.
 
-**[View Source](../../steps/login.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=login)**
+
+[View Source](../../steps/login.ts) to understand how this step is implemented.
 
 ## Type
 🔧 **Built-in Step**

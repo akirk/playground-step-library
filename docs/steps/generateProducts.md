@@ -2,7 +2,9 @@
 
 Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 
-**[View Source](../../steps/generateProducts.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=generateProducts)**
+
+[View Source](../../steps/generateProducts.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

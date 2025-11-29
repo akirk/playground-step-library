@@ -2,7 +2,9 @@
 
 Add a post with title, content, type, status, and date.
 
-**[View Source](../../steps/addPost.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=addPost)**
+
+[View Source](../../steps/addPost.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

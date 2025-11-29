@@ -2,7 +2,9 @@
 
 When running WooCommerce, don't show the wizard.
 
-**[View Source](../../steps/skipWooCommerceWizard.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=skipWooCommerceWizard)**
+
+[View Source](../../steps/skipWooCommerceWizard.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

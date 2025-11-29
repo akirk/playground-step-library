@@ -2,7 +2,9 @@
 
 Run a wp-cli command.
 
-**[View Source](../../steps/runWpCliCommand.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=runWpCliCommand)**
+
+[View Source](../../steps/runWpCliCommand.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

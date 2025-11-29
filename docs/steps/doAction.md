@@ -2,7 +2,9 @@
 
 Execute a custom action.
 
-**[View Source](../../steps/doAction.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=doAction)**
+
+[View Source](../../steps/doAction.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

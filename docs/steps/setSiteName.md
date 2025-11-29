@@ -2,7 +2,9 @@
 
 Set the site name and tagline.
 
-**[View Source](../../steps/setSiteName.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=setSiteName)**
+
+[View Source](../../steps/setSiteName.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

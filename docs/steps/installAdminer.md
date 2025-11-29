@@ -2,7 +2,9 @@
 
 Install Adminer with auto login link.
 
-**[View Source](../../steps/installAdminer.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=installAdminer)**
+
+[View Source](../../steps/installAdminer.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

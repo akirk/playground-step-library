@@ -2,7 +2,9 @@
 
 Import a WordPress.com export file (WXR in a ZIP)
 
-**[View Source](../../steps/importWordPressComExport.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=importWordPressComExport)**
+
+[View Source](../../steps/importWordPressComExport.ts) to understand how this step is implemented.
 
 ## Type
 ⚡ **Custom Step**

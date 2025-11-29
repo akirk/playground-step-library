@@ -2,7 +2,9 @@
 
 Install a plugin via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 
-**[View Source](../../steps/installPlugin.ts)**
+> 🚀 **[Use this step in the Step Library Web UI](https://akirk.github.io/playground-step-library/?step[0]=installPlugin)**
+
+[View Source](../../steps/installPlugin.ts) to understand how this step is implemented.
 
 ## Type
 🔧 **Built-in Step**
