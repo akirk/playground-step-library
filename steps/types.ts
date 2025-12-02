@@ -215,7 +215,7 @@ export interface RenameDefaultCategoryStep extends BlueprintStep {
 export interface SetSiteOptionStep extends BlueprintStep {
 	vars?: {
 	    name: string | string[];
-	    value: string | string[];
+	    value: unknown;
 	};
 }
 
