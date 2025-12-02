@@ -26,11 +26,20 @@ h1 {
   font-size: clamp(var(--font-size-3xl), 5vw, var(--font-size-5xl));
   margin: 0;
   line-height: var(--line-height-tight);
-  background: linear-gradient(135deg, var(--primary-600), var(--primary-800));
+  background: linear-gradient(
+    135deg,
+    light-dark(var(--primary-600), var(--primary-300)),
+    light-dark(var(--primary-800), var(--primary-400))
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: -0.025em;
+}
+
+h1::selection {
+  -webkit-text-fill-color: var(--inverted-text-color);
+  background: var(--primary-600);
 }
 
 a:any-link {

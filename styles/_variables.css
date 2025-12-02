@@ -76,8 +76,8 @@ body.dialog-open {
   --inverted-text-color: light-dark(var(--gray-100), var(--gray-900));
 
   /* Component Colors */
-  --link-color: var(--primary-600);
-  --link-hover: var(--primary-700);
+  --link-color: light-dark(var(--primary-600), var(--primary-300));
+  --link-hover: light-dark(var(--primary-700), var(--primary-400));
   --border-color: light-dark(var(--gray-200), var(--gray-700));
   --border-subtle: light-dark(var(--gray-100), var(--gray-800));
   --shadow-sm: light-dark(0 1px 2px 0 rgb(0 0 0 / 0.05), 0 1px 2px 0 rgb(0 0 0 / 0.3));
