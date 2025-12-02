@@ -5,23 +5,23 @@ import { v1ToV2Fallback } from './types.js';
 export const importWordPressComExport: StepFunction<ImportWordPressComExportStep> = (step: ImportWordPressComExportStep): StepResult => {
 	return {
 		toV1() {
-	return [
-		{
-			"step": "mkdir",
-			"path": "/tmp/"
-		},
-		{
-			"step": "unzip",
-			"zipFile": {
-				"resource": "url",
-				"url": step.vars?.url
-			},
-			"extractToPath": "/tmp"
-		},
-		{
-			"step": "runPHP",
-			"code": `
-<?php
+			return {
+				steps: [
+					{
+						step: "mkdir" as const,
+						path: "/tmp/"
+					},
+					{
+						step: "unzip" as const,
+						zipFile: {
+							resource: "url" as const,
+							url: step.vars?.url || ''
+						},
+						extractToPath: "/tmp"
+					},
+					{
+						step: "runPHP" as const,
+						code: `<?php
 $iterator = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( '/tmp/' ) );
 foreach ( $iterator as $file ) {
 	if ( ! $file->isFile() || 'xml' !== $file->getExtension() ) continue;
@@ -29,19 +29,20 @@ foreach ( $iterator as $file ) {
 	exit;
 }
 `
-		},
-		{
-			"step": "importWxr",
-			"file": {
-				"resource": "vfs",
-				"path": "/tmp/export.xml"
-			}
-		}
-	];
+					},
+					{
+						step: "importWxr" as const,
+						file: {
+							resource: "vfs" as const,
+							path: "/tmp/export.xml"
+						}
+					}
+				]
+			};
 		},
 
 		toV2() {
-			return v1ToV2Fallback(this.toV1());
+			return v1ToV2Fallback( this.toV1() );
 		}
 	};
 };

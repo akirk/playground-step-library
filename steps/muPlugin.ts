@@ -28,10 +28,8 @@ export const muPlugin: StepFunction<MuPluginStep> = (step: MuPluginStep): StepRe
 				version: 2,
 				muPlugins: [
 					{
-						file: {
-							filename: `${pluginName}-${step.stepIndex || 0}.php`,
-							content: code
-						}
+						filename: `${pluginName}-${step.stepIndex || 0}.php`,
+						content: code
 					}
 				]
 			};

@@ -41,8 +41,8 @@ export interface StepVariable {
 }
 
 export interface StepResult {
-    toV1(): BlueprintV1Declaration | any[] | any;
-    toV2(): BlueprintV2Declaration | any;
+    toV1(): BlueprintV1Declaration;
+    toV2(): BlueprintV2Declaration;
 }
 
 /**

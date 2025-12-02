@@ -27,16 +27,19 @@ export const debug: StepFunction<DebugStep> = (step: DebugStep, blueprint: any):
 
 			steps.push( { step: 'defineWpConfigConsts', consts: consts } );
 
-			if (queryMonitor) {
+			if ( queryMonitor ) {
 				let hasQueryMonitorPlugin = false;
-				for (const i in blueprint.steps) {
-					if (blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'query-monitor') {
+				for ( const i in blueprint.steps ) {
+					if ( blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'query-monitor' ) {
 						hasQueryMonitorPlugin = true;
 					}
 				}
-				if (!hasQueryMonitorPlugin) {
-					const queryMonitor = installPlugin( { step: 'installPlugin', vars: { url: 'query-monitor' } } ).toV1();
-					if (queryMonitor.steps) steps.push(...queryMonitor.steps);
+				if ( !hasQueryMonitorPlugin ) {
+					const qmResult = installPlugin( { step: 'installPlugin', vars: { url: 'query-monitor' } } ).toV1();
+					if ( qmResult.steps ) {
+						const qmSteps = qmResult.steps.filter( ( s ): s is StepDefinition => !!s && typeof s === 'object' );
+						steps.push( ...qmSteps );
+					}
 				}
 			}
 

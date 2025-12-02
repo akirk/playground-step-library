@@ -11,12 +11,12 @@ export const githubImportExportWxr: StepFunction<GithubImportExportWxrStep> = (s
 	const repoRegex = /(?:https:\/\/github.com\/)?([^\/]+)\/([^\/]+)/;
 	const repoTest = repoRegex.test( step.vars?.repo || '' ) ? ( step.vars?.repo || '' ).match( repoRegex ) : null;
 	if ( ! repoTest ) {
-		return [];
+		return { steps: [] };
 	}
 	const repo = repoTest[1] + "/" + repoTest[2];
 	const branch = step.vars?.branch;
 	if ( branch && ! /^[a-z0-9_-]+$/.test( branch ) ) {
-		return [];
+		return { steps: [] };
 	}
 	const filename = step.vars?.filename || "export.xml";
 

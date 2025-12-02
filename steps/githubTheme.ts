@@ -9,12 +9,12 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 	const urlPattern = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/;
 	const urlTest = (step.vars?.url || '').match( urlPattern );
 	if ( ! urlTest ) {
-		return [];
+		return { steps: [] };
 	}
 	const repo = urlTest.groups!.org + "/" + urlTest.groups!.repo;
 	const branch = urlTest.groups!.branch;
 	if ( branch && ! /^[a-z0-9_-]+$/.test( branch ) ) {
-		return [];
+		return { steps: [] };
 	}
 	const repoUrl = `https://github.com/${repo}`;
 	const directory = ( urlTest.groups!.directory || "" ).replace( /\/+$/, '' ).replace( /^\/+/, '' );

@@ -4,44 +4,35 @@ import { v1ToV2Fallback } from './types.js';
 export const sampleContent: StepFunction<SampleContentStep> = (): StepResult => {
 	return {
 		toV1() {
-    const steps = [
-        {
-            "step": "runPHP",
-            "code": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Hello Sample Content', 'post_status' => 'publish')); ?>",
-            "progress": {
-                "caption": "Creating sample content (1/5)"
-            }
-        },
-        {
-            "step": "runPHP",
-            "code": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Second Sample Content', 'post_status' => 'publish')); ?>",
-            "progress": {
-                "caption": "Creating sample content (2/5)"
-            }
-        },
-        {
-            "step": "runPHP",
-            "code": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Third Sample Content', 'post_status' => 'publish')); ?>",
-            "progress": {
-                "caption": "Creating sample content (3/5)"
-            }
-        },
-        {
-            "step": "runPHP",
-            "code": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Fourth Sample Content', 'post_status' => 'publish')); ?>",
-            "progress": {
-                "caption": "Creating sample content (4/5)"
-            }
-        },
-        {
-            "step": "runPHP",
-            "code": "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Fifth Sample Content', 'post_status' => 'publish')); ?>",
-            "progress": {
-                "caption": "Creating sample content (5/5)"
-            }
-        }
-    ];
-    return { steps };
+    return {
+		steps: [
+			{
+				step: "runPHP" as const,
+				code: "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Hello Sample Content', 'post_status' => 'publish')); ?>",
+				progress: { caption: "Creating sample content (1/5)" }
+			},
+			{
+				step: "runPHP" as const,
+				code: "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Second Sample Content', 'post_status' => 'publish')); ?>",
+				progress: { caption: "Creating sample content (2/5)" }
+			},
+			{
+				step: "runPHP" as const,
+				code: "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Third Sample Content', 'post_status' => 'publish')); ?>",
+				progress: { caption: "Creating sample content (3/5)" }
+			},
+			{
+				step: "runPHP" as const,
+				code: "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Fourth Sample Content', 'post_status' => 'publish')); ?>",
+				progress: { caption: "Creating sample content (4/5)" }
+			},
+			{
+				step: "runPHP" as const,
+				code: "<?php require_once '/wordpress/wp-load.php'; wp_insert_post(array('post_title' => 'Fifth Sample Content', 'post_status' => 'publish')); ?>",
+				progress: { caption: "Creating sample content (5/5)" }
+			}
+		]
+	};
 		},
 
 		toV2() {

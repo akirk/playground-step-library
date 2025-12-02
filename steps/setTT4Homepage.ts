@@ -43,8 +43,8 @@ export const setTT4Homepage: StepFunction<SetTT4HomepageStep> = ( step: SetTT4Ho
 
 			const v1Result = templateResult.toV1();
 
-			if ( v1Result.steps && v1Result.steps[0] ) {
-				v1Result.steps[0].progress = {
+			if ( v1Result.steps && v1Result.steps[0] && typeof v1Result.steps[0] === 'object' ) {
+				( v1Result.steps[0] as { progress?: { caption: string } } ).progress = {
 					caption: 'Setting up Twenty Twenty-Four homepage'
 				};
 			}

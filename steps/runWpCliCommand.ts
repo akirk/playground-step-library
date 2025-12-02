@@ -8,8 +8,8 @@ export const runWpCliCommand: StepFunction<RunWpCliCommandStep> = (step: RunWpCl
 			return {
 				steps: [
 					{
-						step: 'wp-cli',
-						command: step.vars?.command
+						step: 'wp-cli' as const,
+						command: step.vars?.command || ''
 					}
 				]
 			};

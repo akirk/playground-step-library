@@ -8,8 +8,8 @@ export const runPHP: StepFunction<RunPHPStep> = (step: RunPHPStep): StepResult =
 			return {
 				steps: [
 					{
-						"step": "runPHP",
-						code: step.vars?.code
+						step: "runPHP" as const,
+						code: step.vars?.code || ''
 					}
 				]
 			};

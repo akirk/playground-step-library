@@ -6,8 +6,8 @@ export const setLanguage: StepFunction<SetLanguageStep> = (step: SetLanguageStep
 	return {
 		toV1() {
 	const lang = step.vars?.language;
-	if (!lang) {
-		return [];
+	if ( !lang ) {
+		return { steps: [] };
 	}
 	const localeMapping: Record<string, string> = {
 		"de": "de_DE",
@@ -20,13 +20,14 @@ export const setLanguage: StepFunction<SetLanguageStep> = (step: SetLanguageStep
 	};
 	const wp_locale = localeMapping[lang] || lang;
 
-	const steps = [
-		{
-			step: 'setSiteLanguage',
-			language: wp_locale,
-		}
-	];
-	return { steps };
+	return {
+		steps: [
+			{
+				step: 'setSiteLanguage' as const,
+				language: wp_locale,
+			}
+		]
+	};
 		},
 
 		toV2() {

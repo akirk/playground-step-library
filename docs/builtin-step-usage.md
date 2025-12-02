@@ -11,6 +11,7 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 - [`defineWpConfigConsts`](#definewpconfigconsts)
 - [`enableMultisite`](#enablemultisite)
+- [`importWxr`](#importwxr)
 - [`installPlugin`](#installplugin)
 - [`installTheme`](#installtheme)
 - [`login`](#login)
@@ -41,6 +42,14 @@ This page shows which custom steps compile to each built-in WordPress Playground
 **Used by 1 step:**
 
 - 🔧 [`enableMultisite`](steps/enableMultisite.md) - Enable WordPress Multisite functionality.
+
+---
+
+## `importWxr`
+
+**Used by 1 step:**
+
+- ⚡ [`importWordPressComExport`](steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
 
 ---
 
@@ -82,7 +91,7 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `mkdir`
 
-**Used by 13 steps:**
+**Used by 14 steps:**
 
 - ⚡ [`addClientRole`](steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
 - ⚡ [`addFilter`](steps/addFilter.md) - Easily add a filtered value.
@@ -90,6 +99,7 @@ This page shows which custom steps compile to each built-in WordPress Playground
 - ⚡ [`customPostType`](steps/customPostType.md) - Register a custom post type.
 - ⚡ [`disableWelcomeGuides`](steps/disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - ⚡ [`fakeHttpResponse`](steps/fakeHttpResponse.md) - Fake a wp_remote_request() response.
+- ⚡ [`importWordPressComExport`](steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
 - ⚡ [`installAdminer`](steps/installAdminer.md) - Install Adminer with auto login link.
 - ⚡ [`installPhEditor`](steps/installPhEditor.md) - Install phEditor. Password: admin
 - ⚡ [`installPhpLiteAdmin`](steps/installPhpLiteAdmin.md) - Provide phpLiteAdmin. Password: admin
@@ -102,7 +112,7 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `runPHP`
 
-**Used by 16 steps:**
+**Used by 17 steps:**
 
 - ⚡ [`addMedia`](steps/addMedia.md) - Add files to the media library.
 - ⚡ [`addPage`](steps/addPage.md) - Add a page with title and content.
@@ -116,6 +126,7 @@ This page shows which custom steps compile to each built-in WordPress Playground
 - ⚡ [`generateProducts`](steps/generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 - ⚡ [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
 - ⚡ [`importFriendFeeds`](steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.
+- ⚡ [`importWordPressComExport`](steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
 - 🔧 [`runPHP`](steps/runPHP.md) - Run code in the context of WordPress.
 - ⚡ [`sampleContent`](steps/sampleContent.md) - Inserts sample pages to the site.
 - ⚡ [`setTT4Homepage`](steps/setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
@@ -143,9 +154,10 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `unzip`
 
-**Used by 2 steps:**
+**Used by 3 steps:**
 
 - ⚡ [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
+- ⚡ [`importWordPressComExport`](steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
 - ⚡ [`installPhEditor`](steps/installPhEditor.md) - Install phEditor. Password: admin
 
 ---

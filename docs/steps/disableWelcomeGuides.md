@@ -51,10 +51,8 @@ Disable the welcome guides in the site editor.
   "version": 2,
   "muPlugins": [
     {
-      "file": {
-        "filename": "disable-welcome-guides-0.php",
-        "content": "<?php \nfunction my_disable_welcome_guides() {\n\twp_add_inline_script( 'wp-data', \"window.onload = function() {\n\t\twindow.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuide', false );\n\t\twindow.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuideStyles', false );\n\t\twindow.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuidePage', false );\n\t\twindow.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuideTemplate', false );\n}\" );\n}\n\nadd_action( 'enqueue_block_editor_assets', 'my_disable_welcome_guides', 20 );\n"
-      }
+      "filename": "disable-welcome-guides-0.php",
+      "content": "<?php \nfunction my_disable_welcome_guides() {\n\twp_add_inline_script( 'wp-data', \"window.onload = function() {\n\t\twindow.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuide', false );\n\t\twindow.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuideStyles', false );\n\t\twindow.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuidePage', false );\n\t\twindow.wp.data.dispatch( 'core/preferences' ).set( 'core/edit-site', 'welcomeGuideTemplate', false );\n}\" );\n}\n\nadd_action( 'enqueue_block_editor_assets', 'my_disable_welcome_guides', 20 );\n"
     }
   ]
 }

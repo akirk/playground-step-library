@@ -53,7 +53,7 @@ export const enqueueJs: StepFunction<EnqueueJsStep> = (step: EnqueueJsStep): Ste
 		},
 
 		toV2() {
-			if (!step.vars?.js || !step.vars?.js.trim() || (!frontend && !wpAdmin)) {
+			if ( !step.vars?.js || !step.vars?.js.trim() || ( !frontend && !wpAdmin ) ) {
 				return { version: 2 };
 			}
 
@@ -62,12 +62,10 @@ export const enqueueJs: StepFunction<EnqueueJsStep> = (step: EnqueueJsStep): Ste
 			return {
 				version: 2,
 				muPlugins: [
-					...(muV2.muPlugins || []),
+					...( muV2.muPlugins || [] ),
 					{
-						file: {
-							filename: `${sanitizedFilename}.js`,
-							content: step.vars?.js
-						}
+						filename: `${sanitizedFilename}.js`,
+						content: step.vars?.js
 					}
 				]
 			};

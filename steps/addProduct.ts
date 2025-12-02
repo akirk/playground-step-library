@@ -77,15 +77,16 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 
 			let steps: StepDefinition[] = [];
 			let hasWoocommercePlugin = false;
-			for (const i in blueprint.steps) {
-				if (blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'woocommerce') {
+			for ( const i in blueprint.steps ) {
+				if ( blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'woocommerce' ) {
 					hasWoocommercePlugin = true;
 				}
 			}
-			if (!hasWoocommercePlugin) {
+			if ( !hasWoocommercePlugin ) {
 				const wooResult = installPlugin( { step: 'installPlugin', vars: { url: 'woocommerce' } } ).toV1();
-				if (wooResult.steps) {
-					steps = wooResult.steps.concat(steps);
+				if ( wooResult.steps ) {
+					const wooSteps = wooResult.steps.filter( ( s ): s is StepDefinition => !!s && typeof s === 'object' );
+					steps = wooSteps.concat( steps );
 				}
 			}
 

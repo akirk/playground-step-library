@@ -30,6 +30,7 @@ When running WooCommerce, don't show the wizard.
 
 ```json
 {
+  "landingPage": "/wp-admin/admin.php?page=wc-admin",
   "steps": [
     {
       "step": "installPlugin",
@@ -96,7 +97,12 @@ When running WooCommerce, don't show the wizard.
       "path": "/wordpress/wp-content/mu-plugins/no-more-wizards.php",
       "data": "<?php require '/wordpress/wp-load.php'; add_filter( 'woocommerce_prevent_automatic_wizard_redirect', '__return_true' );"
     }
-  ]
+  ],
+  "applicationOptions": {
+    "wordpress-playground": {
+      "landingPage": "/wp-admin/admin.php?page=wc-admin"
+    }
+  }
 }
 ```
 

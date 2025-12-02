@@ -72,10 +72,8 @@ Easily add a filtered value.
   "version": 2,
   "muPlugins": [
     {
-      "file": {
-        "filename": "addFilter-0.php",
-        "content": "<?php add_filter( 'init', '__return_false' );"
-      }
+      "filename": "addFilter-0.php",
+      "content": "<?php add_filter( 'init', '__return_false' );"
     }
   ]
 }

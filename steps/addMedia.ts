@@ -1,4 +1,5 @@
 import type { StepFunction, AddMediaStep, StepResult } from './types.js';
+import { v1ToV2Fallback } from './types.js';
 import type { StepDefinition } from '@wp-playground/blueprints';
 
 
@@ -7,8 +8,8 @@ export const addMedia: StepFunction<AddMediaStep> = (step: AddMediaStep): StepRe
 
 	return {
 		toV1() {
-			if (!downloadUrl || !downloadUrl.match(/^https?:/)) {
-				return {};
+			if ( !downloadUrl || !downloadUrl.match( /^https?:/ ) ) {
+				return { steps: [] };
 			}
 
 			const steps: StepDefinition[] = [
@@ -77,27 +78,22 @@ foreach ( $iterator as $filename ) {
 		},
 
 		toV2() {
-			if (!downloadUrl || !downloadUrl.match(/^https?:/)) {
+			if ( !downloadUrl || !downloadUrl.match( /^https?:/ ) ) {
 				return { version: 2 };
 			}
 
 			// V2 media array - much simpler than v1!
 			// For single files, just add the URL
 			// For zips, v2 doesn't support them directly yet, so fallback to v1 logic
-			if (downloadUrl.match(/\.zip$/)) {
+			if ( downloadUrl.match( /\.zip$/ ) ) {
 				// Zip files need the complex v1 logic in additionalStepsAfterExecution
-				const v1Result = this.toV1();
-				return {
-					version: 2,
-					additionalStepsAfterExecution: v1Result.steps || []
-				};
-			} else {
-				// Single file - use v2 media array
-				return {
-					version: 2,
-					media: [downloadUrl]
-				};
+				return v1ToV2Fallback( this.toV1() );
 			}
+			// Single file - use v2 media array
+			return {
+				version: 2,
+				media: [downloadUrl as `https://${string}`]
+			};
 		}
 	};
 };

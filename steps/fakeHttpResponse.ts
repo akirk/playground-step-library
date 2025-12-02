@@ -4,19 +4,19 @@ import type { StepFunction, FakeHttpResponseStep, StepResult } from './types.js'
 export const fakeHttpResponse: StepFunction<FakeHttpResponseStep> = (step: FakeHttpResponseStep, blueprint?: any): StepResult => {
 	return {
 		toV1() {
-			const steps = [];
+			const steps: Array<{ step: "writeFile"; path: string; data: string } | { step: "mkdir"; path: string }> = [];
 
 			if ( step.vars?.url ) {
 				const url = step.vars?.url.toLowerCase().replace( /[^a-z0-9-_]+/gi, '-' ).replace( /-+$/g, '' );
 				steps.push( {
-					"step": "writeFile",
-					"path": `wordpress/wp-content/mu-plugins/fake-http-response/${url}.txt`,
-					"data": step.vars?.response
+					step: "writeFile" as const,
+					path: `wordpress/wp-content/mu-plugins/fake-http-response/${url}.txt`,
+					data: step.vars?.response || ''
 				} );
 			}
 			let hasFakeHttpResponsePlugin = false;
 			const fakeHttpResponsePluginPath = 'wordpress/wp-content/mu-plugins/fake-http-response.php';
-			if (blueprint) {
+			if ( blueprint ) {
 				for ( const i in blueprint.steps ) {
 					if ( blueprint.steps[i].step === 'writeFile' && blueprint.steps[i].path === fakeHttpResponsePluginPath ) {
 						hasFakeHttpResponsePlugin = true;
@@ -26,9 +26,9 @@ export const fakeHttpResponse: StepFunction<FakeHttpResponseStep> = (step: FakeH
 			}
 			if ( ! hasFakeHttpResponsePlugin ) {
 				steps.unshift( {
-					"step": "writeFile",
-					"path": fakeHttpResponsePluginPath,
-					"data": `<?php
+					step: "writeFile" as const,
+					path: fakeHttpResponsePluginPath,
+					data: `<?php
 add_filter(
 	'pre_http_request',
 	function ( $preempt, $request, $url ) {
@@ -55,15 +55,15 @@ add_filter(
 				} );
 
 				steps.unshift( {
-					"step": "mkdir",
-					"path": "/wordpress/wp-content/mu-plugins/fake-http-response",
+					step: "mkdir" as const,
+					path: "/wordpress/wp-content/mu-plugins/fake-http-response",
 				} );
 			}
 			return { steps };
 		},
 
 		toV2() {
-			if (!step.vars?.url) {
+			if ( !step.vars?.url ) {
 				return { version: 2 };
 			}
 
@@ -73,9 +73,8 @@ add_filter(
 				version: 2,
 				muPlugins: [
 					{
-						file: {
-							filename: 'fake-http-response.php',
-							content: `<?php
+						filename: 'fake-http-response.php',
+						content: `<?php
 add_filter(
 	'pre_http_request',
 	function ( $preempt, $request, $url ) {
@@ -99,13 +98,10 @@ add_filter(
 	10,
 	3
 );`
-						}
 					},
 					{
-						file: {
-							filename: `fake-http-response/${url}.txt`,
-							content: step.vars?.response
-						}
+						filename: `fake-http-response/${url}.txt`,
+						content: step.vars?.response || ''
 					}
 				]
 			};
