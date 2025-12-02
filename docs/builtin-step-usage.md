@@ -112,7 +112,7 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `runPHP`
 
-**Used by 17 steps:**
+**Used by 16 steps:**
 
 - ⚡ [`addMedia`](steps/addMedia.md) - Add files to the media library.
 - ⚡ [`addPage`](steps/addPage.md) - Add a page with title and content.
@@ -130,7 +130,6 @@ This page shows which custom steps compile to each built-in WordPress Playground
 - 🔧 [`runPHP`](steps/runPHP.md) - Run code in the context of WordPress.
 - ⚡ [`sampleContent`](steps/sampleContent.md) - Inserts sample pages to the site.
 - ⚡ [`setTT4Homepage`](steps/setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
-- ⚡ [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 
 ---
 
@@ -144,11 +143,12 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `setSiteOptions`
 
-**Used by 3 steps:**
+**Used by 4 steps:**
 
 - ⚡ [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
 - ⚡ [`jetpackOfflineMode`](steps/jetpackOfflineMode.md) - Start Jetpack in Offline mode.
 - ⚡ [`setSiteName`](steps/setSiteName.md) - Set the site name and tagline.
+- ⚡ [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 
 ---
 
