@@ -4,12 +4,13 @@ import type {
     StepFunction,
     BlueprintStep,
     StepLibraryBlueprint,
-    StepResult
+    StepResult,
+    CompilationContext
 } from '../steps/types.js';
 import type { Blueprint, StepDefinition, BlueprintV1Declaration } from '@wp-playground/blueprints';
 
 interface CustomStepDefinition {
-    (step: BlueprintStep, inputData?: any): StepResult;
+    ( step: BlueprintStep, context?: CompilationContext ): StepResult;
     description?: string;
     vars?: StepVariable[];
     builtin?: boolean;
@@ -64,10 +65,37 @@ class StepLibraryCompiler {
     }
 
     /**
+     * Create a compilation context for step functions
+     */
+    private createContext( inputData: StepLibraryBlueprint ): CompilationContext {
+        const validSteps = ( inputData.steps || [] ).filter(
+            ( s ): s is BlueprintStep => !!s && typeof s === 'object'
+        );
+        return {
+            setQueryParams: ( params: Record<string, string> ) => {
+                Object.assign( this.lastQueryParams, params );
+            },
+            getSteps: () => validSteps,
+            hasStep: ( stepName: string, matcher?: Record<string, unknown> ) => {
+                return validSteps.some( s => {
+                    if ( s.step !== stepName ) return false;
+                    if ( !matcher ) return true;
+                    for ( const key in matcher ) {
+                        const stepValue = key === 'url' ? s.vars?.url : ( s as Record<string, unknown> )[key];
+                        if ( stepValue !== matcher[key] ) return false;
+                    }
+                    return true;
+                } );
+            }
+        };
+    }
+
+    /**
      * Execute a custom step and return its v1 compilation result
      */
-    private executeCustomStep(stepName: string, step: BlueprintStep, inputData: any): BlueprintV1Declaration {
-        const result = this.customSteps[stepName](step, inputData);
+    private executeCustomStep( stepName: string, step: BlueprintStep, inputData: StepLibraryBlueprint ): BlueprintV1Declaration {
+        const context = this.createContext( inputData );
+        const result = this.customSteps[stepName]( step, context );
         return result.toV1();
     }
 
@@ -244,14 +272,6 @@ class StepLibraryCompiler {
 					if (step.progress.weight !== undefined) {
 						processedStep.progress.weight = step.progress.weight;
 					}
-				}
-
-				// Extract and store query params, then remove them from the step
-				if (typeof processedStep.queryParams === 'object') {
-					for (const key in processedStep.queryParams) {
-						this.lastQueryParams[key] = processedStep.queryParams[key];
-					}
-					delete processedStep.queryParams;
 				}
 
 				// Variable substitution

@@ -1,9 +1,9 @@
-import type { StepFunction, GithubPluginStep, StepResult } from './types.js';
+import type { StepFunction, GithubPluginStep, StepResult, CompilationContext } from './types.js';
 import { v1ToV2Fallback } from './types.js';
 import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 
 
-export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginStep): StepResult => {
+export const githubPlugin: StepFunction<GithubPluginStep> = ( step: GithubPluginStep, context?: CompilationContext ): StepResult => {
 	return {
 		toV1() {
 			// Parse PR URLs
@@ -88,8 +88,8 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 				}]
 			};
 
-			if (step.vars?.prs) {
-				(result.steps![0] as any).queryParams = {
+			if ( step.vars?.prs ) {
+				context?.setQueryParams( {
 					'gh-ensure-auth': 'yes',
 					'ghexport-repo-url': repoUrl,
 					'ghexport-content-type': 'plugin',
@@ -97,7 +97,7 @@ export const githubPlugin: StepFunction<GithubPluginStep> = (step: GithubPluginS
 					'ghexport-playground-root': `/wordpress/wp-content/plugins/${repoInfo!.groups!.repo}`,
 					'ghexport-pr-action': 'create',
 					'ghexport-allow-include-zip': 'no',
-				};
+				} );
 			}
 
 			return result;

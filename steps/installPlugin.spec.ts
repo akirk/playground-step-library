@@ -1,5 +1,21 @@
 import { installPlugin } from './installPlugin.js';
-import type { InstallPluginStep } from './types.js';
+import type { InstallPluginStep, CompilationContext } from './types.js';
+
+function createMockContext(): CompilationContext & { queryParams: Record<string, string> } {
+    const queryParams: Record<string, string> = {};
+    return {
+        queryParams,
+        setQueryParams( params: Record<string, string> ) {
+            Object.assign( queryParams, params );
+        },
+        getSteps() {
+            return [];
+        },
+        hasStep() {
+            return false;
+        }
+    };
+}
 
 describe('installPlugin', () => {
     it('should install plugin from WordPress.org slug', () => {
@@ -289,7 +305,8 @@ describe('installPlugin', () => {
             prs: true
         } };
 
-        const result = installPlugin(step).toV1();
+        const context = createMockContext();
+        const result = installPlugin( step, context ).toV1();
 
         expect(Array.isArray(result.steps)).toBe(true);
         expect(result.steps).toHaveLength(1);
@@ -300,14 +317,13 @@ describe('installPlugin', () => {
         expect(result.steps[0].pluginData.refType).toBe('refname');
         expect(result.steps[0].pluginData.path).toBeUndefined();
         expect(result.steps[0].options.activate).toBe(true);
-        expect(result.steps[0].queryParams).toBeDefined();
-        expect(result.steps[0].queryParams['gh-ensure-auth']).toBe('yes');
-        expect(result.steps[0].queryParams['ghexport-repo-url']).toBe('https://github.com/akirk/friends');
-        expect(result.steps[0].queryParams['ghexport-content-type']).toBe('plugin');
-        expect(result.steps[0].queryParams['ghexport-plugin']).toBe('friends');
-        expect(result.steps[0].queryParams['ghexport-playground-root']).toBe('/wordpress/wp-content/plugins/friends');
-        expect(result.steps[0].queryParams['ghexport-pr-action']).toBe('create');
-        expect(result.steps[0].queryParams['ghexport-allow-include-zip']).toBe('no');
+        expect(context.queryParams['gh-ensure-auth']).toBe('yes');
+        expect(context.queryParams['ghexport-repo-url']).toBe('https://github.com/akirk/friends');
+        expect(context.queryParams['ghexport-content-type']).toBe('plugin');
+        expect(context.queryParams['ghexport-plugin']).toBe('friends');
+        expect(context.queryParams['ghexport-playground-root']).toBe('/wordpress/wp-content/plugins/friends');
+        expect(context.queryParams['ghexport-pr-action']).toBe('create');
+        expect(context.queryParams['ghexport-allow-include-zip']).toBe('no');
     });
 
     it('should handle GitHub repository URLs with prs flag', () => {
@@ -317,14 +333,14 @@ describe('installPlugin', () => {
             prs: true
         } };
 
-        const result = installPlugin(step).toV1();
+        const context = createMockContext();
+        const result = installPlugin( step, context ).toV1();
 
         expect(Array.isArray(result.steps)).toBe(true);
         expect(result.steps).toHaveLength(1);
-        expect(result.steps[0].queryParams).toBeDefined();
-        expect(result.steps[0].queryParams['gh-ensure-auth']).toBe('yes');
-        expect(result.steps[0].queryParams['ghexport-repo-url']).toBe('https://github.com/akirk/friends');
-        expect(result.steps[0].queryParams['ghexport-content-type']).toBe('plugin');
+        expect(context.queryParams['gh-ensure-auth']).toBe('yes');
+        expect(context.queryParams['ghexport-repo-url']).toBe('https://github.com/akirk/friends');
+        expect(context.queryParams['ghexport-content-type']).toBe('plugin');
     });
 
     it('should install plugin without permalink structure', () => {

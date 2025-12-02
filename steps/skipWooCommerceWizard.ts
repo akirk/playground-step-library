@@ -1,8 +1,8 @@
 import { installPlugin } from './installPlugin.js';
-import type { StepFunction, SkipWooCommerceWizardStep , StepResult } from './types.js';
+import type { StepFunction, SkipWooCommerceWizardStep, StepResult, CompilationContext } from './types.js';
 import { v1ToV2Fallback } from './types.js';
 
-export const skipWooCommerceWizard: StepFunction<SkipWooCommerceWizardStep> = (step: SkipWooCommerceWizardStep, blueprint?: any): StepResult => {
+export const skipWooCommerceWizard: StepFunction<SkipWooCommerceWizardStep> = ( step: SkipWooCommerceWizardStep, context?: CompilationContext ): StepResult => {
 	return {
 		toV1() {
 	let steps: Array<{ step: "runPHP"; code: string; progress?: { caption: string } } | { step: "mkdir"; path: string } | { step: "writeFile"; path: string; data: string }> = [
@@ -23,16 +23,8 @@ export const skipWooCommerceWizard: StepFunction<SkipWooCommerceWizardStep> = (s
 			data: "<?php require '/wordpress/wp-load.php'; add_filter( 'woocommerce_prevent_automatic_wizard_redirect', '__return_true' );"
 		}
 	];
-	let hasWoocommercePlugin = false;
-
-	if ( blueprint ) {
-		for ( const i in blueprint.steps ) {
-			if ( blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'woocommerce' ) {
-				hasWoocommercePlugin = true;
-			}
-		}
-	}
-	if ( ! hasWoocommercePlugin ) {
+	const hasWoocommercePlugin = context?.hasStep( 'installPlugin', { url: 'woocommerce' } ) ?? false;
+	if ( !hasWoocommercePlugin ) {
 		const installWooCommerceSteps = installPlugin( { step: 'installPlugin', vars: { url: 'woocommerce' } } ).toV1();
 		if ( installWooCommerceSteps.steps ) {
 			steps = [...( installWooCommerceSteps.steps.filter( ( s ): s is NonNullable<typeof s> => !!s ) as typeof steps ), ...steps];

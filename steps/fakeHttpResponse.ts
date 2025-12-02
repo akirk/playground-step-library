@@ -1,7 +1,7 @@
-import type { StepFunction, FakeHttpResponseStep, StepResult } from './types.js';
+import type { StepFunction, FakeHttpResponseStep, StepResult, CompilationContext } from './types.js';
 
 
-export const fakeHttpResponse: StepFunction<FakeHttpResponseStep> = (step: FakeHttpResponseStep, blueprint?: any): StepResult => {
+export const fakeHttpResponse: StepFunction<FakeHttpResponseStep> = ( step: FakeHttpResponseStep, context?: CompilationContext ): StepResult => {
 	return {
 		toV1() {
 			const steps: Array<{ step: "writeFile"; path: string; data: string } | { step: "mkdir"; path: string }> = [];
@@ -14,17 +14,9 @@ export const fakeHttpResponse: StepFunction<FakeHttpResponseStep> = (step: FakeH
 					data: step.vars?.response || ''
 				} );
 			}
-			let hasFakeHttpResponsePlugin = false;
 			const fakeHttpResponsePluginPath = 'wordpress/wp-content/mu-plugins/fake-http-response.php';
-			if ( blueprint ) {
-				for ( const i in blueprint.steps ) {
-					if ( blueprint.steps[i].step === 'writeFile' && blueprint.steps[i].path === fakeHttpResponsePluginPath ) {
-						hasFakeHttpResponsePlugin = true;
-						break;
-					}
-				}
-			}
-			if ( ! hasFakeHttpResponsePlugin ) {
+			const hasFakeHttpResponsePlugin = context?.hasStep( 'writeFile', { path: fakeHttpResponsePluginPath } ) ?? false;
+			if ( !hasFakeHttpResponsePlugin ) {
 				steps.unshift( {
 					step: "writeFile" as const,
 					path: fakeHttpResponsePluginPath,

@@ -1,8 +1,8 @@
-import type { StepFunction, GenerateProductsStep , StepResult } from './types.js';
+import type { StepFunction, GenerateProductsStep, StepResult, CompilationContext } from './types.js';
 import { v1ToV2Fallback } from './types.js';
 import { installPlugin } from './installPlugin.js';
 
-export const generateProducts: StepFunction<GenerateProductsStep> = (step: GenerateProductsStep, blueprint: any): StepResult => {
+export const generateProducts: StepFunction<GenerateProductsStep> = ( step: GenerateProductsStep, context?: CompilationContext ): StepResult => {
 	return {
 		toV1() {
 	const productCount = step.count || 10;
@@ -188,21 +188,13 @@ error_log( "Generated " . count( $term_ids ) . " product categories" );
 	let steps: any[] = [];
 
 	// Check if WooCommerce is already installed
-	let hasWoocommercePlugin = false;
-	let hasSmoothGeneratorPlugin = false;
-	for (const i in blueprint.steps) {
-		if (blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'woocommerce') {
-			hasWoocommercePlugin = true;
-		}
-		if (blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'https://github.com/woocommerce/wc-smooth-generator/releases/download/1.2.2/wc-smooth-generator.zip') {
-			hasSmoothGeneratorPlugin = true;
-		}
-	}
+	const hasWoocommercePlugin = context?.hasStep( 'installPlugin', { url: 'woocommerce' } ) ?? false;
+	const hasSmoothGeneratorPlugin = context?.hasStep( 'installPlugin', { url: 'https://github.com/woocommerce/wc-smooth-generator/releases/download/1.2.2/wc-smooth-generator.zip' } ) ?? false;
 
 	// Install WooCommerce if not present
-	if (!hasWoocommercePlugin) {
+	if ( !hasWoocommercePlugin ) {
 		const wooResult = installPlugin( { step: 'installPlugin', vars: { url: 'woocommerce' } } ).toV1();
-		steps = steps.concat(wooResult.steps);
+		steps = steps.concat( wooResult.steps );
 	}
 
 	// Install WC Smooth Generator plugin if not present

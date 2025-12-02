@@ -1,6 +1,24 @@
 import { describe, it, expect } from 'vitest';
 import { addProduct } from './addProduct.js';
-import type { AddProductStep } from './types.js';
+import type { AddProductStep, CompilationContext } from './types.js';
+
+function createMockContext( steps: any[] = [] ): CompilationContext {
+    return {
+        setQueryParams() {},
+        getSteps() { return steps; },
+        hasStep( stepName: string, matcher?: Record<string, unknown> ) {
+            return steps.some( s => {
+                if ( s.step !== stepName ) return false;
+                if ( !matcher ) return true;
+                for ( const key in matcher ) {
+                    const stepValue = key === 'url' ? s.vars?.url : s[key];
+                    if ( stepValue !== matcher[key] ) return false;
+                }
+                return true;
+            } );
+        }
+    };
+}
 
 describe('addProduct', () => {
     describe('toV1()', () => {
@@ -12,7 +30,7 @@ describe('addProduct', () => {
             price: '29.99'
         } };
 
-        const result = addProduct(step, { steps: [] }).toV1();
+        const result = addProduct( step, createMockContext() ).toV1();
 
         expect(Array.isArray(result.steps)).toBe(true);
         expect(result.steps.length).toBeGreaterThanOrEqual(1);
@@ -34,7 +52,7 @@ describe('addProduct', () => {
             productPrice: '29.99'
         } };
 
-        const result = addProduct(step, { steps: [] }).toV1();
+        const result = addProduct( step, createMockContext() ).toV1();
 
         const phpStep = result.steps?.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain("'post_title'   => 'Test Product'");
@@ -55,7 +73,7 @@ describe('addProduct', () => {
             productSalePrice: '25.99'
         } };
 
-        const result = addProduct(step, { steps: [] }).toV1();
+        const result = addProduct( step, createMockContext() ).toV1();
 
         const phpStep = result.steps?.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain("'post_title'   => 'New Title'");
@@ -74,7 +92,7 @@ describe('addProduct', () => {
             salePrice: '80.00'
         } };
 
-        const result = addProduct(step, { steps: [] }).toV1();
+        const result = addProduct( step, createMockContext() ).toV1();
 
         const phpStep = result.steps?.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain('$regular_price = floatval(\'100.00\')');
@@ -93,7 +111,7 @@ describe('addProduct', () => {
             salePrice: '60.00' // Higher than regular price
         } };
 
-        const result = addProduct(step, { steps: [] }).toV1();
+        const result = addProduct( step, createMockContext() ).toV1();
 
         const phpStep = result.steps?.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain("'_regular_price', '50.00'");
@@ -114,7 +132,7 @@ describe('addProduct', () => {
             status: 'draft'
         } };
 
-        const result = addProduct(step, { steps: [] }).toV1();
+        const result = addProduct( step, createMockContext() ).toV1();
 
         const phpStep = result.steps?.find(r => r.step === 'runPHP');
         expect(phpStep?.code).toContain("'post_status'  => 'draft'");
@@ -129,8 +147,7 @@ describe('addProduct', () => {
             price: '10.00'
         } };
 
-        const blueprint = { steps: [] }; // No WooCommerce plugin
-        const result = addProduct(step, blueprint).toV1();
+        const result = addProduct( step, createMockContext() ).toV1();
 
         // Should include installPlugin step for WooCommerce
         const installStep = result.steps?.find(r => r.step === 'installPlugin');
@@ -145,12 +162,10 @@ describe('addProduct', () => {
             price: '10.00'
         } };
 
-        const blueprint = {
-            steps: [
-                { step: 'installPlugin', vars: { url: 'woocommerce' } }
-            ]
-        };
-        const result = addProduct(step, blueprint).toV1();
+        const existingSteps = [
+            { step: 'installPlugin', vars: { url: 'woocommerce' } }
+        ];
+        const result = addProduct( step, createMockContext( existingSteps ) ).toV1();
 
         // Should not include additional installPlugin step
         const installSteps = result.steps?.filter(r => r.step === 'installPlugin');

@@ -1,9 +1,9 @@
-import type { StepFunction, GitPluginStep, StepResult } from './types.js';
+import type { StepFunction, GitPluginStep, StepResult, CompilationContext } from './types.js';
 import { v1ToV2Fallback } from './types.js';
 import { parseGitUrl, parseReleaseUrl } from './gitProviders.js';
 import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 
-export const gitPlugin: StepFunction<GitPluginStep> = ( step: GitPluginStep ): StepResult => {
+export const gitPlugin: StepFunction<GitPluginStep> = ( step: GitPluginStep, context?: CompilationContext ): StepResult => {
 	return {
 		toV1() {
 			const url = step.vars?.url || '';
@@ -86,7 +86,7 @@ export const gitPlugin: StepFunction<GitPluginStep> = ( step: GitPluginStep ): S
 			};
 
 			if ( step.vars?.prs && provider.supportsPlaygroundExport ) {
-				( result.steps![0] as any ).queryParams = {
+				context?.setQueryParams( {
 					'gh-ensure-auth': 'yes',
 					'ghexport-repo-url': repoUrl,
 					'ghexport-content-type': 'plugin',
@@ -94,7 +94,7 @@ export const gitPlugin: StepFunction<GitPluginStep> = ( step: GitPluginStep ): S
 					'ghexport-playground-root': `/wordpress/wp-content/plugins/${repo}`,
 					'ghexport-pr-action': 'create',
 					'ghexport-allow-include-zip': 'no',
-				};
+				} );
 			}
 
 			return result;

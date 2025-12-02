@@ -102,8 +102,32 @@ export function v1ToV2Fallback(v1Result: BlueprintV1Declaration): BlueprintV2Dec
     return result;
 }
 
+/**
+ * Context passed to step functions during compilation.
+ * Provides access to compilation state and methods to influence the output.
+ */
+export interface CompilationContext {
+    /**
+     * Set query parameters to be added to the WordPress Playground URL.
+     * These are extracted during compilation and not included in the final blueprint.
+     * Used for GitHub export integration (gh-ensure-auth, ghexport-* params).
+     */
+    setQueryParams( params: Record<string, string> ): void;
+
+    /**
+     * Get all steps in the current blueprint being compiled.
+     */
+    getSteps(): BlueprintStep[];
+
+    /**
+     * Check if a step with the given name exists in the blueprint.
+     * Optionally match against step properties (e.g., vars).
+     */
+    hasStep( stepName: string, matcher?: Record<string, unknown> ): boolean;
+}
+
 export interface StepFunction<T extends BlueprintStep = BlueprintStep> {
-    (step: T, blueprint?: any): StepResult;
+    ( step: T, context?: CompilationContext ): StepResult;
     description?: string;
     vars?: StepVariable[];
     builtin?: boolean;

@@ -1,9 +1,9 @@
-import type { StepFunction, GithubThemeStep, StepResult } from './types.js';
+import type { StepFunction, GithubThemeStep, StepResult, CompilationContext } from './types.js';
 import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 import { v1ToV2Fallback } from './types.js';
 
 
-export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep): StepResult => {
+export const githubTheme: StepFunction<GithubThemeStep> = ( step: GithubThemeStep, context?: CompilationContext ): StepResult => {
 	return {
 		toV1() {
 	const urlPattern = /^(?:https:\/\/github.com\/)?(?<org>[^\/]+)\/(?<repo>[^\/]+)(\/tree\/(?<branch>[^\/]+)(?<directory>(?:\/[^\/]+)*))?/;
@@ -47,7 +47,7 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 	};
 
 	if ( step.vars?.prs ) {
-		(result.steps![0] as any).queryParams = {
+		context?.setQueryParams( {
 			'gh-ensure-auth': 'yes',
 			'ghexport-repo-url': 'https://github.com/' + repo,
 			'ghexport-content-type': 'theme',
@@ -55,7 +55,7 @@ export const githubTheme: StepFunction<GithubThemeStep> = (step: GithubThemeStep
 			'ghexport-playground-root': '/wordpress/wp-content/themes/' + urlTest.groups!.repo,
 			'ghexport-pr-action': 'create',
 			'ghexport-allow-include-zip': 'no',
-		};
+		} );
 	}
 
 	return result;

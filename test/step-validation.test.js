@@ -2,6 +2,20 @@ import { describe, it, expect } from 'vitest';
 import PlaygroundStepLibrary from '../lib/src/index.js';
 import { stepsRegistry } from '../lib/src/steps-registry.js';
 
+function createMockContext() {
+    return {
+        setQueryParams( params ) {
+            // No-op for tests
+        },
+        getSteps() {
+            return [];
+        },
+        hasStep() {
+            return false;
+        }
+    };
+}
+
 // Valid WordPress Playground step types based on @wp-playground/blueprints
 const VALID_STEP_TYPES = [
   'activatePlugin',
@@ -162,11 +176,11 @@ describe('Step Output Validation', () => {
         
         // Create a minimal valid input based on the step's variable requirements
         const stepInput = createStepInput(stepName, steps[stepName].vars);
-        
-        // Create a mock blueprint for steps that need it
-        const mockBlueprint = { steps: [] };
-        
-        const result = stepFunction(stepInput, mockBlueprint);
+
+        // Create a mock context for steps that need it
+        const mockContext = createMockContext();
+
+        const result = stepFunction(stepInput, mockContext);
         validateStepOutput(result, stepName);
       });
     });
@@ -220,11 +234,11 @@ describe('Step Output Validation', () => {
         
         // Create a minimal valid input based on the step's variable requirements
         const stepInput = createStepInput(stepName, steps[stepName].vars);
-        
-        // Create a mock blueprint for steps that need it
-        const mockBlueprint = { steps: [] };
-        
-        const result = stepFunction(stepInput, mockBlueprint);
+
+        // Create a mock context for steps that need it
+        const mockContext = createMockContext();
+
+        const result = stepFunction(stepInput, mockContext);
         validateStepOutput(result, stepName);
       });
     });

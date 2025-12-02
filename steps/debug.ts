@@ -1,9 +1,9 @@
-import type { StepFunction, DebugStep, StepResult } from './types.js';
+import type { StepFunction, DebugStep, StepResult, CompilationContext } from './types.js';
 import { v1ToV2Fallback } from './types.js';
 import { installPlugin } from './installPlugin.js';
-import type { StepDefinition, BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
+import type { StepDefinition, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
-export const debug: StepFunction<DebugStep> = (step: DebugStep, blueprint: any): StepResult => {
+export const debug: StepFunction<DebugStep> = ( step: DebugStep, context?: CompilationContext ): StepResult => {
 	return {
 		toV1() {
 			const wpDebug = step.vars?.wpDebug !== false;
@@ -17,23 +17,18 @@ export const debug: StepFunction<DebugStep> = (step: DebugStep, blueprint: any):
 				WP_DEBUG: wpDebug
 			};
 
-			if (wpDebug) {
+			if ( wpDebug ) {
 				consts.WP_DEBUG_DISPLAY = wpDebugDisplay;
 			}
 
-			if (scriptDebug) {
+			if ( scriptDebug ) {
 				consts.SCRIPT_DEBUG = true;
 			}
 
 			steps.push( { step: 'defineWpConfigConsts', consts: consts } );
 
 			if ( queryMonitor ) {
-				let hasQueryMonitorPlugin = false;
-				for ( const i in blueprint.steps ) {
-					if ( blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'query-monitor' ) {
-						hasQueryMonitorPlugin = true;
-					}
-				}
+				const hasQueryMonitorPlugin = context?.hasStep( 'installPlugin', { url: 'query-monitor' } ) ?? false;
 				if ( !hasQueryMonitorPlugin ) {
 					const qmResult = installPlugin( { step: 'installPlugin', vars: { url: 'query-monitor' } } ).toV1();
 					if ( qmResult.steps ) {

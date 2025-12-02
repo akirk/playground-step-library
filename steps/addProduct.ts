@@ -1,9 +1,9 @@
-import type { StepFunction, AddProductStep, StepResult } from './types.js';
+import type { StepFunction, AddProductStep, StepResult, CompilationContext } from './types.js';
 import { installPlugin } from './installPlugin.js';
 import type { StepDefinition, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
-export const addProduct: StepFunction<AddProductStep> = (step: AddProductStep, blueprint: any): StepResult => {
+export const addProduct: StepFunction<AddProductStep> = ( step: AddProductStep, context?: CompilationContext ): StepResult => {
 	const title = step.vars?.title || step.vars?.productTitle || '';
 	const description = step.vars?.description || step.vars?.productDescription || '';
 	const productPrice = step.vars?.price || step.vars?.productPrice || '';
@@ -76,12 +76,7 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 }`;
 
 			let steps: StepDefinition[] = [];
-			let hasWoocommercePlugin = false;
-			for ( const i in blueprint.steps ) {
-				if ( blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'woocommerce' ) {
-					hasWoocommercePlugin = true;
-				}
-			}
+			const hasWoocommercePlugin = context?.hasStep( 'installPlugin', { url: 'woocommerce' } ) ?? false;
 			if ( !hasWoocommercePlugin ) {
 				const wooResult = installPlugin( { step: 'installPlugin', vars: { url: 'woocommerce' } } ).toV1();
 				if ( wooResult.steps ) {
@@ -103,14 +98,7 @@ if ( $product_id && ! is_wp_error( $product_id ) ) {`;
 
 		toV2() {
 			// Check if WooCommerce is already in the blueprint
-			let hasWoocommercePlugin = false;
-			if (blueprint && blueprint.steps) {
-				for (const i in blueprint.steps) {
-					if (blueprint.steps[i].step === 'installPlugin' && blueprint.steps[i]?.vars?.url === 'woocommerce') {
-						hasWoocommercePlugin = true;
-					}
-				}
-			}
+			const hasWoocommercePlugin = context?.hasStep( 'installPlugin', { url: 'woocommerce' } ) ?? false;
 
 			const result: BlueprintV2Declaration = {
 				version: 2

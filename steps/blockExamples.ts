@@ -1,8 +1,8 @@
-import type { StepFunction, BlockExamplesStep, StepResult } from './types.js';
+import type { StepFunction, BlockExamplesStep, StepResult, CompilationContext } from './types.js';
 import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 import { v1ToV2Fallback } from './types.js';
 
-export const blockExamples: StepFunction<BlockExamplesStep> = (step: BlockExamplesStep, blueprint?: any): StepResult => {
+export const blockExamples: StepFunction<BlockExamplesStep> = ( step: BlockExamplesStep, context?: CompilationContext ): StepResult => {
 	return {
 		toV1() {
 			const blockNamespace = (step.vars?.blockNamespace || '').replace(/'/g, "\\'");

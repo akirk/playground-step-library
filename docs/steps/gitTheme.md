@@ -67,39 +67,6 @@ Install a theme from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.
 }
 ```
 
-### Blueprint V2
-
-```json
-{
-  "version": 2,
-  "additionalStepsAfterExecution": [
-    {
-      "step": "installTheme",
-      "themeData": {
-        "resource": "git:directory",
-        "url": "https://github.com/richtabor/kanso",
-        "ref": "HEAD"
-      },
-      "options": {
-        "activate": true
-      },
-      "progress": {
-        "caption": "Installing theme from GitHub: richtabor/kanso"
-      },
-      "queryParams": {
-        "gh-ensure-auth": "yes",
-        "ghexport-repo-url": "https://github.com/richtabor/kanso",
-        "ghexport-content-type": "theme",
-        "ghexport-theme": "kanso",
-        "ghexport-playground-root": "/wordpress/wp-content/themes/kanso",
-        "ghexport-pr-action": "create",
-        "ghexport-allow-include-zip": "no"
-      }
-    }
-  ]
-}
-```
-
 ## Usage with Library
 
 ```javascript

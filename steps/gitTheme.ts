@@ -1,9 +1,9 @@
-import type { StepFunction, GitThemeStep, StepResult } from './types.js';
+import type { StepFunction, GitThemeStep, StepResult, CompilationContext } from './types.js';
 import { v1ToV2Fallback } from './types.js';
 import { parseGitUrl } from './gitProviders.js';
 import type { BlueprintV1Declaration } from '@wp-playground/blueprints';
 
-export const gitTheme: StepFunction<GitThemeStep> = ( step: GitThemeStep ): StepResult => {
+export const gitTheme: StepFunction<GitThemeStep> = ( step: GitThemeStep, context?: CompilationContext ): StepResult => {
 	return {
 		toV1() {
 			const url = step.vars?.url || '';
@@ -54,7 +54,7 @@ export const gitTheme: StepFunction<GitThemeStep> = ( step: GitThemeStep ): Step
 			};
 
 			if ( step.vars?.prs && provider.supportsPlaygroundExport ) {
-				( result.steps![0] as any ).queryParams = {
+				context?.setQueryParams( {
 					'gh-ensure-auth': 'yes',
 					'ghexport-repo-url': repoUrl,
 					'ghexport-content-type': 'theme',
@@ -62,7 +62,7 @@ export const gitTheme: StepFunction<GitThemeStep> = ( step: GitThemeStep ): Step
 					'ghexport-playground-root': `/wordpress/wp-content/themes/${repo}`,
 					'ghexport-pr-action': 'create',
 					'ghexport-allow-include-zip': 'no',
-				};
+				} );
 			}
 
 			return result;

@@ -1,16 +1,16 @@
 import { gitPlugin } from './gitPlugin.js';
 import { detectGitProvider } from './gitProviders.js';
-import type { StepFunction, InstallPluginStep, StepResult } from './types.js';
+import type { StepFunction, InstallPluginStep, StepResult, CompilationContext } from './types.js';
 import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 
-export const installPlugin: StepFunction<InstallPluginStep> = ( step: InstallPluginStep ): StepResult => {
+export const installPlugin: StepFunction<InstallPluginStep> = ( step: InstallPluginStep, context?: CompilationContext ): StepResult => {
 	const url = step.vars?.url || '';
 
 	// Check if it's a git provider URL
 	const gitInfo = detectGitProvider( url );
 	if ( gitInfo ) {
-		return gitPlugin( { step: 'gitPlugin', vars: { url: url, prs: step.vars?.prs } } );
+		return gitPlugin( { step: 'gitPlugin', vars: { url: url, prs: step.vars?.prs } }, context );
 	}
 
 	// Extract WordPress.org slug
