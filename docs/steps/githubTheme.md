@@ -67,6 +67,30 @@ Install a theme from a Github repository.
 }
 ```
 
+### Blueprint V2
+
+```json
+{
+  "version": 2,
+  "additionalStepsAfterExecution": [
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "git:directory",
+        "url": "https://github.com/richtabor/kanso",
+        "ref": "HEAD"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing theme from GitHub: richtabor/kanso"
+      }
+    }
+  ]
+}
+```
+
 ## Usage with Library
 
 ```javascript

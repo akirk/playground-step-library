@@ -110,6 +110,74 @@ Provide useful additional info.
 }
 ```
 
+### Blueprint V2
+
+```json
+{
+  "version": 2,
+  "additionalStepsAfterExecution": [
+    {
+      "step": "runPHP",
+      "code": {
+        "filename": "code.php",
+        "content": "\n<?php require_once '/wordpress/wp-load.php';\nforeach ( array( 'post', 'page', 'attachment', 'revision', 'nav_menu_item' ) as $post_type ) {\n$posts = get_posts( array('posts_per_page' => -1, 'post_type' => $post_type ) );\nforeach ($posts as $post) wp_delete_post($post->ID, true);\n}\n"
+      },
+      "progress": {
+        "caption": "Deleting all posts and pages"
+      }
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "wordpress_export_to_server__file": "GatherPress-demo-data-2024.xml",
+        "wordpress_export_to_server__owner_repo_branch": "carstingaxion/gatherpress-demo-data/main",
+        "wordpress_export_to_server__export_home": "https://gatherpress.test"
+      }
+    },
+    {
+      "step": "defineWpConfigConsts",
+      "consts": {
+        "UPLOADS": "wp-content/carstingaxion-gatherpress-demo-data-main"
+      }
+    },
+    {
+      "step": "unzip",
+      "zipFile": {
+        "resource": "git:directory",
+        "url": "https://github.com/carstingaxion/gatherpress-demo-data",
+        "ref": "main",
+        "refType": "branch"
+      },
+      "extractToPath": "/wordpress/wp-content"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/wordpress-export-to-server.php",
+      "data": {
+        "resource": "url",
+        "url": "https://raw.githubusercontent.com/carstingaxion/wordpress-export-to-server/main/wordpress-export-to-server.php"
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginZipFile": {
+        "resource": "git:directory",
+        "url": "https://github.com/humanmade/WordPress-Importer",
+        "ref": "master",
+        "refType": "branch"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": {
+        "filename": "code.php",
+        "content": "<?php require '/wordpress/wp-load.php';\n\t\t$path = realpath( '/wordpress/wp-content/gatherpress-demo-data-main/GatherPress-demo-data-2024.xml' );\n\t\t$logger = new WP_Importer_Logger_CLI();\n\t\t$logger->min_level = 'info';\n\t\t$options = array( 'fetch_attachments' => false, 'default_author' => 1 );\n\t\t$importer = new WXR_Importer( $options );\n\t\t$importer->set_logger( $logger );\n\t\t$result = $importer->import( $path );\n\t\t"
+      }
+    }
+  ]
+}
+```
+
 ## Usage with Library
 
 ```javascript

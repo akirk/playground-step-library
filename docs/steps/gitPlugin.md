@@ -67,6 +67,30 @@ Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc
 }
 ```
 
+### Blueprint V2
+
+```json
+{
+  "version": 2,
+  "additionalStepsAfterExecution": [
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "git:directory",
+        "url": "https://github.com/akirk/blueprint-recorder",
+        "ref": "HEAD"
+      },
+      "options": {
+        "activate": true
+      },
+      "progress": {
+        "caption": "Installing plugin from GitHub: akirk/blueprint-recorder"
+      }
+    }
+  ]
+}
+```
+
 ## Usage with Library
 
 ```javascript

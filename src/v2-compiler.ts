@@ -3,12 +3,13 @@ import type {
     StepVariable,
     BlueprintStep,
     StepLibraryBlueprint,
-    StepResult
+    StepResult,
+    CompilationContext
 } from '../steps/types.js';
 import type { StepDefinition, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 interface CustomStepDefinition {
-    (step: BlueprintStep, inputData?: any): StepResult;
+    ( step: BlueprintStep, context?: CompilationContext ): StepResult;
     description?: string;
     vars?: StepVariable[];
     builtin?: boolean;
@@ -48,6 +49,32 @@ class StepLibraryCompilerV2 {
 
     getLastQueryParams(): Record<string, string> {
         return this.lastQueryParams;
+    }
+
+    /**
+     * Create a compilation context for step functions
+     */
+    private createContext( inputData: StepLibraryBlueprint ): CompilationContext {
+        const validSteps = ( inputData.steps || [] ).filter(
+            ( s ): s is BlueprintStep => !!s && typeof s === 'object'
+        );
+        return {
+            setQueryParams: ( params: Record<string, string> ) => {
+                Object.assign( this.lastQueryParams, params );
+            },
+            getSteps: () => validSteps,
+            hasStep: ( stepName: string, matcher?: Record<string, unknown> ) => {
+                return validSteps.some( s => {
+                    if ( s.step !== stepName ) return false;
+                    if ( !matcher ) return true;
+                    for ( const key in matcher ) {
+                        const stepValue = key === 'url' ? s.vars?.url : ( s as Record<string, unknown> )[key];
+                        if ( stepValue !== matcher[key] ) return false;
+                    }
+                    return true;
+                } );
+            }
+        };
     }
 
     /**
@@ -128,7 +155,7 @@ class StepLibraryCompilerV2 {
     /**
      * Get v2 fragments from a step
      */
-    private getV2Fragments(step: BlueprintStep, inputData: any): BlueprintV2Declaration | null {
+    private getV2Fragments( step: BlueprintStep, inputData: StepLibraryBlueprint ): BlueprintV2Declaration | null {
         const stepFn = this.customSteps[step.step];
 
         // If step has no `vars`, it's a native step - pass through directly
@@ -146,8 +173,9 @@ class StepLibraryCompilerV2 {
             }
         }
 
-        if (stepFn) {
-            const result = stepFn(step, inputData);
+        if ( stepFn ) {
+            const context = this.createContext( inputData );
+            const result = stepFn( step, context );
             return result.toV2();
         }
 
