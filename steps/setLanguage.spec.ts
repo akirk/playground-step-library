@@ -104,48 +104,48 @@ describe('setLanguage', () => {
         expect(result.steps[0].language).toBe('pt_BR');
     });
 
-    it('should return empty array when language is missing', () => {
+    it('should return empty steps when language is missing', () => {
         const step: SetLanguageStep = {
             step: 'setLanguage', vars: {
             language: ''
         } };
-        
+
         const result = setLanguage(step).toV1();
-        
-        expect(result).toEqual([]);
+
+        expect(result).toEqual({ steps: [] });
     });
 
-    it('should return empty array when language is empty string', () => {
+    it('should return empty steps when language is empty string', () => {
         const step: SetLanguageStep = {
             step: 'setLanguage', vars: {
             language: ''
         } };
-        
+
         const result = setLanguage(step).toV1();
-        
-        expect(result).toEqual([]);
+
+        expect(result).toEqual({ steps: [] });
     });
 
-    it('should return empty array when language is null', () => {
+    it('should return empty steps when language is null', () => {
         const step: SetLanguageStep = {
             step: 'setLanguage', vars: {
             language: null as any
         } };
-        
+
         const result = setLanguage(step).toV1();
-        
-        expect(result).toEqual([]);
+
+        expect(result).toEqual({ steps: [] });
     });
 
-    it('should return empty array when language is undefined', () => {
+    it('should return empty steps when language is undefined', () => {
         const step: SetLanguageStep = {
             step: 'setLanguage', vars: {
             language: undefined as any
         } };
-        
+
         const result = setLanguage(step).toV1();
-        
-        expect(result).toEqual([]);
+
+        expect(result).toEqual({ steps: [] });
     });
 
     it('should handle custom locale formats', () => {

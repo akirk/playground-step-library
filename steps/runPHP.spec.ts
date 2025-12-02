@@ -94,10 +94,10 @@ foreach ($users as $user) {
             step: 'runPHP', vars: {
             code: undefined as any
         } };
-        
+
         const result = runPHP(step).toV1();
-        
-        expect(result.steps[0].code).toBeUndefined();
+
+        expect(result.steps[0].code).toBe('');
     });
 
     it('should handle null code', () => {
@@ -105,10 +105,10 @@ foreach ($users as $user) {
             step: 'runPHP', vars: {
             code: null as any
         } };
-        
+
         const result = runPHP(step).toV1();
-        
-        expect(result.steps[0].code).toBeNull();
+
+        expect(result.steps[0].code).toBe('');
     });
 
     it('should have correct metadata', () => {
