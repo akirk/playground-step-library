@@ -613,4 +613,5 @@ export interface AddTemplateStep extends BlueprintStep {
 		title?: string;
 	};
 }
+export interface EnableIntlStep extends BlueprintStep {}
 

@@ -195,6 +195,9 @@
           },
           {
             "$ref": "#/definitions/defineWpConfigConst"
+          },
+          {
+            "$ref": "#/definitions/enableIntl"
           }
         ]
       }
@@ -1783,6 +1786,23 @@
         "step"
       ],
       "description": "Define a wp-config PHP constant."
+    },
+    "enableIntl": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "enableIntl"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Enable PHP Intl extension support."
     }
   }
 }

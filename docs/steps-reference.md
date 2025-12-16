@@ -546,6 +546,24 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`enableIntl`](steps/enableIntl.md)
+
+**Type**: Custom Step
+**Description**: Enable PHP Intl extension support.
+
+*No variables defined.*
+
+### Example Usage
+
+```json
+    {
+          "step": "enableIntl"
+    }
+```
+
+
+---
+
 ## [`enableMultisite`](steps/enableMultisite.md)
 
 **Type**: Built-in Step

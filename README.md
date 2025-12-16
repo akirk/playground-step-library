@@ -86,7 +86,7 @@ const result = compiler.transpile(nativeV1Blueprint);
 See the **[Programmatic API Documentation](docs/api.md)** for full details on CLI usage, methods, and examples.
 ## Custom Steps
 
-This library provides **54** total steps (8 built-in enhanced steps + 46 custom steps):
+This library provides **55** total steps (8 built-in enhanced steps + 47 custom steps):
 
 ### Built-in Enhanced Steps
 - [`defineWpConfigConst`](docs/steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
@@ -118,6 +118,7 @@ This library provides **54** total steps (8 built-in enhanced steps + 46 custom 
 - [`disableWelcomeGuides`](docs/steps/disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - [`doAction`](docs/steps/doAction.md) - Execute a custom action.
 - [`dontLogin`](docs/steps/dontLogin.md) - Prevent automatic login (Playground logs in as admin by default).
+- [`enableIntl`](docs/steps/enableIntl.md) - Enable PHP Intl extension support.
 - [`enqueueCss`](docs/steps/enqueueCss.md) - Enqueue custom CSS on frontend and/or admin.
 - [`enqueueJs`](docs/steps/enqueueJs.md) - Enqueue custom JavaScript on frontend and/or admin.
 - [`fakeHttpResponse`](docs/steps/fakeHttpResponse.md) - Fake a wp_remote_request() response.

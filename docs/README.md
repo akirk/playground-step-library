@@ -4,9 +4,9 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 📊 Overview
 
-- **Total Steps**: 54
+- **Total Steps**: 55
 - **Built-in Steps**: 8
-- **Custom Steps**: 46
+- **Custom Steps**: 47
 
 ## 🚀 Quick Start
 
@@ -92,6 +92,7 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`setTT4Homepage`](steps/setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
 - [`showAdminNotice`](steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
+- [`enableIntl`](steps/enableIntl.md) - Enable PHP Intl extension support.
 
 ## 🔗 Cross-References
 

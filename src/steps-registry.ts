@@ -53,6 +53,7 @@ import { blockExamples } from '../steps/blockExamples.js';
 import { debug } from '../steps/debug.js';
 import { addTemplate } from '../steps/addTemplate.js';
 import { addTemplatePart } from '../steps/addTemplatePart.js';
+import { enableIntl } from '../steps/enableIntl.js';
 
 /**
  * Registry of all available steps using ES6 object property shorthand
@@ -114,4 +115,5 @@ export const stepsRegistry = {
     login,
     setSiteOption,
     defineWpConfigConst,
+    enableIntl,
 };

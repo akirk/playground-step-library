@@ -308,7 +308,7 @@ addEventListener('DOMContentLoaded', function () {
 		const target = event.target as HTMLElement | null;
 		if ( !target ) return;
 
-		if ( target.id === 'mode' || target.id === 'preview-mode' || target.id === 'exclude-meta' || target.id === 'wp-version' || target.id === 'php-version' ) {
+		if ( target.id === 'mode' || target.id === 'preview-mode' || target.id === 'exclude-meta' || target.id === 'wp-version' || target.id === 'php-version' || target.id === 'encoding-format' ) {
 			blueprintEventBus.emit( 'blueprint:updated' );
 			return;
 		}

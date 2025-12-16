@@ -3,9 +3,9 @@
 Browse detailed documentation for each WordPress Playground step.
 
 ## 📊 Quick Stats
-- **54** total steps
+- **55** total steps
 - **8** built-in steps  
-- **46** custom steps
+- **47** custom steps
 
 ## 🔧 Built-in Steps
 Enhanced core WordPress Playground steps with additional functionality.
@@ -41,6 +41,7 @@ Extended functionality beyond core WordPress Playground capabilities.
 - [`disableWelcomeGuides`](./disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - [`doAction`](./doAction.md) - Execute a custom action.
 - [`dontLogin`](./dontLogin.md) - Prevent automatic login (Playground logs in as admin by default).
+- [`enableIntl`](./enableIntl.md) - Enable PHP Intl extension support.
 - [`enqueueCss`](./enqueueCss.md) - Enqueue custom CSS on frontend and/or admin.
 - [`enqueueJs`](./enqueueJs.md) - Enqueue custom JavaScript on frontend and/or admin.
 - [`fakeHttpResponse`](./fakeHttpResponse.md) - Fake a wp_remote_request() response.
