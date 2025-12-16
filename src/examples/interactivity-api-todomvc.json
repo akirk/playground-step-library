@@ -13,11 +13,9 @@
 			}
 		},
 		{
-			"step": "githubPluginRelease",
+			"step": "installPlugin",
 			"vars": {
-				"repo": "ryanwelcher/interactivity-api-todomvc",
-				"release": "v0.1.3",
-				"filename": "to-do-mvc.zip"
+				"url": "https://github.com/ryanwelcher/interactivity-api-todomvc/releases/download/v0.1.3/to-do-mvc.zip"
 			}
 		},
 		{
