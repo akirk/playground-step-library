@@ -202,10 +202,9 @@ describe('playground-integration', () => {
 			expect(result.steps).toHaveLength(1);
 		});
 
-		it('should return null for invalid URL format', () => {
+		it('should throw for invalid URL format', () => {
 			const url = 'not-a-valid-url';
-			const result = parsePlaygroundQueryApi(url);
-			expect(result).toBe(null);
+			expect(() => parsePlaygroundQueryApi(url)).toThrow();
 			expect(consoleErrorSpy).toHaveBeenCalled();
 		});
 
@@ -250,6 +249,55 @@ describe('playground-integration', () => {
 			const result = parsePlaygroundQueryApi(url);
 			expect(result.steps).toHaveLength(1);
 			expect(result.steps[0].pluginData.slug).toBe('');
+		});
+
+		describe('blueprint-url parameter', () => {
+			it('should parse valid blueprint-url with base64 data', () => {
+				const blueprint = { steps: [{ step: 'login' }] };
+				const base64 = btoa(JSON.stringify(blueprint));
+				const url = `https://playground.wordpress.net/?blueprint-url=data:application/json;base64,${base64}`;
+				const result = parsePlaygroundQueryApi(url);
+				expect(result.steps).toHaveLength(1);
+				expect(result.steps[0].step).toBe('login');
+			});
+
+			it('should parse blueprint-url with complex blueprint', () => {
+				const blueprint = {
+					preferredVersions: { wp: '6.4', php: '8.0' },
+					steps: [
+						{ step: 'installPlugin', pluginData: { resource: 'wordpress.org/plugins', slug: 'akismet' } },
+						{ step: 'installTheme', themeData: { resource: 'wordpress.org/themes', slug: 'twentytwentyfour' } }
+					],
+					landingPage: '/wp-admin/'
+				};
+				const base64 = btoa(JSON.stringify(blueprint));
+				const url = `https://playground.wordpress.net/?blueprint-url=data:application/json;base64,${base64}`;
+				const result = parsePlaygroundQueryApi(url);
+				expect(result.preferredVersions).toEqual({ wp: '6.4', php: '8.0' });
+				expect(result.steps).toHaveLength(2);
+				expect(result.landingPage).toBe('/wp-admin/');
+			});
+
+			it('should throw for invalid base64 in blueprint-url', () => {
+				const url = 'https://playground.wordpress.net/?blueprint-url=data:application/json;base64,!!!invalid-base64!!!';
+				expect(() => parsePlaygroundQueryApi(url)).toThrow('Invalid base64 in blueprint data');
+			});
+
+			it('should throw for invalid JSON in blueprint-url', () => {
+				const base64 = btoa('{ not valid json }');
+				const url = `https://playground.wordpress.net/?blueprint-url=data:application/json;base64,${base64}`;
+				expect(() => parsePlaygroundQueryApi(url)).toThrow(/Invalid JSON in blueprint/);
+			});
+
+			it('should throw for non-data URL in blueprint-url', () => {
+				const url = 'https://playground.wordpress.net/?blueprint-url=https://example.com/blueprint.json';
+				expect(() => parsePlaygroundQueryApi(url)).toThrow('Invalid blueprint-url format');
+			});
+
+			it('should throw for data URL without base64 encoding', () => {
+				const url = 'https://playground.wordpress.net/?blueprint-url=data:application/json,{"steps":[]}';
+				expect(() => parsePlaygroundQueryApi(url)).toThrow('Invalid blueprint-url format');
+			});
 		});
 	});
 

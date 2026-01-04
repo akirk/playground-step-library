@@ -178,18 +178,20 @@ export class PasteHandlerController {
 				console.log( '[handlePaste] Processing playgroundQueryApi' );
 				for (const url of urls) {
 					console.log( '[handlePaste] Parsing query API URL:', url.substring( 0, 100 ) );
-					const result = parsePlaygroundQueryApi(url);
-					console.log( '[handlePaste] parsePlaygroundQueryApi result:', result );
-					if (result.error) {
-						toastService.showGlobal('Failed to parse Playground URL', { duration: 5000, moreInfo: result.error });
+					try {
+						const blueprintData = parsePlaygroundQueryApi(url);
+						console.log( '[handlePaste] parsePlaygroundQueryApi result:', blueprintData );
+						if (blueprintData) {
+							if (await this.handlePlaygroundBlueprint(blueprintData)) {
+								addedAny = true;
+							}
+							break;
+						}
+					} catch (e) {
+						const errorMsg = e instanceof Error ? e.message : String(e);
+						toastService.showGlobal('Failed to parse Playground URL', { duration: 5000, moreInfo: errorMsg });
 						event.preventDefault();
 						return;
-					}
-					if (result.blueprint) {
-						if (await this.handlePlaygroundBlueprint(result.blueprint)) {
-							addedAny = true;
-						}
-						break;
 					}
 				}
 				break;

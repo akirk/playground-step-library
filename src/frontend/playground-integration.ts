@@ -5,20 +5,15 @@
 
 import { isPlaygroundDomain } from './content-detection';
 
-export interface ParseResult {
-	blueprint: any | null;
-	error?: string;
-}
-
-export function parsePlaygroundQueryApi( url: string ): ParseResult {
+export function parsePlaygroundQueryApi( url: string ): any {
 	if (!url || typeof url !== 'string') {
-		return { blueprint: null };
+		return null;
 	}
 
 	try {
 		const urlObj = new URL(url.trim());
 		if (!isPlaygroundDomain(urlObj.hostname)) {
-			return { blueprint: null };
+			return null;
 		}
 
 		const params = urlObj.searchParams;
@@ -32,37 +27,31 @@ export function parsePlaygroundQueryApi( url: string ): ParseResult {
 				// Parse data URL: data:application/json;base64,<base64-data>
 				const dataUrlMatch = blueprintUrl.match( /^data:[^;]+;base64,(.+)$/ );
 				if ( dataUrlMatch ) {
+					const base64Data = dataUrlMatch[1];
+					console.log( '[parsePlaygroundQueryApi] Base64 data length:', base64Data.length );
+					let decoded: string;
 					try {
-						const base64Data = dataUrlMatch[1];
-						console.log( '[parsePlaygroundQueryApi] Base64 data length:', base64Data.length );
-						let decoded: string;
-						try {
-							decoded = atob( base64Data );
-						} catch ( e ) {
-							console.error( '[parsePlaygroundQueryApi] Base64 decode failed:', e );
-							return { blueprint: null, error: 'Invalid base64 in blueprint data' };
-						}
-						console.log( '[parsePlaygroundQueryApi] Decoded length:', decoded.length );
-						let parsed: any;
-						try {
-							parsed = JSON.parse( decoded );
-						} catch ( e ) {
-							const errorMsg = e instanceof Error ? e.message : String( e );
-							console.error( '[parsePlaygroundQueryApi] JSON parse failed:', e );
-							return { blueprint: null, error: `Invalid JSON in blueprint: ${errorMsg}` };
-						}
-						console.log( '[parsePlaygroundQueryApi] Parsed blueprint from data URL, steps:', parsed.steps?.length );
-						return { blueprint: parsed };
+						decoded = atob( base64Data );
+					} catch ( e ) {
+						console.error( '[parsePlaygroundQueryApi] Base64 decode failed:', e );
+						throw new Error( 'Invalid base64 in blueprint data' );
+					}
+					console.log( '[parsePlaygroundQueryApi] Decoded length:', decoded.length );
+					let parsed: any;
+					try {
+						parsed = JSON.parse( decoded );
 					} catch ( e ) {
 						const errorMsg = e instanceof Error ? e.message : String( e );
-						console.error( '[parsePlaygroundQueryApi] Failed to parse blueprint-url data URL:', e );
-						return { blueprint: null, error: errorMsg };
+						console.error( '[parsePlaygroundQueryApi] JSON parse failed:', e );
+						throw new Error( `Invalid JSON in blueprint: ${errorMsg}` );
 					}
+					console.log( '[parsePlaygroundQueryApi] Parsed blueprint from data URL, steps:', parsed.steps?.length );
+					return parsed;
 				}
 			}
 			// blueprint-url param exists but couldn't be parsed - don't fall through to query param parsing
 			console.log( '[parsePlaygroundQueryApi] blueprint-url param present but not a valid data URL' );
-			return { blueprint: null, error: 'Invalid blueprint-url format' };
+			throw new Error( 'Invalid blueprint-url format' );
 		}
 
 		const blueprint: any = {};
@@ -147,11 +136,10 @@ export function parsePlaygroundQueryApi( url: string ): ParseResult {
 			blueprint.siteOptions.WPLANG = params.get('language');
 		}
 
-		return { blueprint };
+		return blueprint;
 	} catch (e) {
-		const errorMsg = e instanceof Error ? e.message : String( e );
 		console.error('Error parsing Query API URL:', e);
-		return { blueprint: null, error: errorMsg };
+		throw e;
 	}
 }
 
