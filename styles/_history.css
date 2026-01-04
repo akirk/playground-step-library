@@ -453,12 +453,19 @@
 
 #global-toast-message {
   display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-1);
   font-weight: 500;
 }
 
-#global-toast-message::before {
+#global-toast-message .toast-message-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+#global-toast-message .toast-message-row::before {
   content: '✓';
   display: inline-flex;
   align-items: center;
@@ -468,6 +475,33 @@
   background: rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-full);
   font-weight: bold;
+  flex-shrink: 0;
+}
+
+#global-toast-message > details {
+  font-weight: normal;
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+#global-toast-message > details > summary {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+#global-toast-message > details > summary:hover {
+  opacity: 1;
+}
+
+#global-toast-message > details > span {
+  display: block;
+  margin-top: var(--spacing-1);
+  padding: var(--spacing-2);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-sm);
+  word-break: break-word;
+  white-space: normal;
+  max-width: 400px;
 }
 
 #global-toast-undo {

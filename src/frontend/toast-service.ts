@@ -8,6 +8,7 @@ export interface ToastOptions {
 	showUndo?: boolean;
 	undoCallback?: () => void;
 	undoLabel?: string;
+	moreInfo?: string;
 }
 
 class ToastService {
@@ -25,7 +26,35 @@ class ToastService {
 
 		if (!toast || !toastMessage || !undoBtn) return;
 
-		toastMessage.textContent = message;
+		// Clear previous content
+		toastMessage.innerHTML = '';
+
+		// Create message row with checkmark
+		const messageRow = document.createElement( 'span' );
+		messageRow.className = 'toast-message-row';
+		messageRow.textContent = message;
+		toastMessage.appendChild( messageRow );
+
+		// Add details/summary for moreInfo if provided
+		if ( options.moreInfo ) {
+			const details = document.createElement( 'details' );
+			const summary = document.createElement( 'summary' );
+			summary.textContent = 'Details';
+			const content = document.createElement( 'span' );
+			content.textContent = options.moreInfo;
+			details.appendChild( summary );
+			details.appendChild( content );
+			toastMessage.appendChild( details );
+
+			// Cancel auto-hide when details is opened
+			details.addEventListener( 'toggle', () => {
+				if ( details.open && this.deleteUndoTimeout ) {
+					clearTimeout( this.deleteUndoTimeout );
+					this.deleteUndoTimeout = null;
+				}
+			} );
+		}
+
 		undoBtn.style.display = 'none';
 		toast.style.display = 'flex';
 

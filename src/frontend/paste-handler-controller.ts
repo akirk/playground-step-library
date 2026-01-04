@@ -88,12 +88,17 @@ export class PasteHandlerController {
 		let htmlContent = '';
 
 		// Check URL-based content types first
+		console.log( '[handlePaste] Checking', urls.length, 'URLs' );
 		for ( const url of urls ) {
-			if ( detectPlaygroundUrl( url ) ) {
+			console.log( '[handlePaste] Checking URL:', url.substring( 0, 100 ) + '...' );
+			const playgroundResult = detectPlaygroundUrl( url );
+			if ( playgroundResult ) {
+				console.log( '[handlePaste] Detected as playgroundUrl' );
 				detectedType = 'playgroundUrl';
 				break;
 			}
 			if ( detectPlaygroundQueryApiUrl( url ) ) {
+				console.log( '[handlePaste] Detected as playgroundQueryApi' );
 				detectedType = 'playgroundQueryApi';
 				break;
 			}
@@ -170,10 +175,18 @@ export class PasteHandlerController {
 				break;
 
 			case 'playgroundQueryApi':
+				console.log( '[handlePaste] Processing playgroundQueryApi' );
 				for (const url of urls) {
-					const blueprintData = parsePlaygroundQueryApi(url);
-					if (blueprintData) {
-						if (await this.handlePlaygroundBlueprint(blueprintData)) {
+					console.log( '[handlePaste] Parsing query API URL:', url.substring( 0, 100 ) );
+					const result = parsePlaygroundQueryApi(url);
+					console.log( '[handlePaste] parsePlaygroundQueryApi result:', result );
+					if (result.error) {
+						toastService.showGlobal('Failed to parse Playground URL', { duration: 5000, moreInfo: result.error });
+						event.preventDefault();
+						return;
+					}
+					if (result.blueprint) {
+						if (await this.handlePlaygroundBlueprint(result.blueprint)) {
 							addedAny = true;
 						}
 						break;
@@ -327,7 +340,9 @@ export class PasteHandlerController {
 	 * Handle playground blueprint by checking for custom steps first, then decompiling native steps
 	 */
 	private async handlePlaygroundBlueprint(blueprintData: any): Promise<boolean> {
+		console.log( '[handlePlaygroundBlueprint] Called with:', blueprintData );
 		if (!blueprintData) {
+			console.log( '[handlePlaygroundBlueprint] No blueprint data, returning false' );
 			return false;
 		}
 
@@ -399,6 +414,7 @@ export class PasteHandlerController {
 				})
 			};
 
+			console.log( '[handlePlaygroundBlueprint] Appending steps:', stepConfig );
 			this.deps.appendSteps(stepConfig);
 
 			if (blueprintData.meta?.title) {
@@ -410,7 +426,9 @@ export class PasteHandlerController {
 
 			blueprintEventBus.emit( 'blueprint:updated' );
 
-			if (unmappedSteps.length === 0 && warnings.length === 0) {
+			if (allSteps.length === 0) {
+				toastService.showGlobal('No steps found in Playground URL', { duration: 5000 });
+			} else if (unmappedSteps.length === 0 && warnings.length === 0) {
 				toastService.showGlobal('Playground blueprint loaded successfully!');
 			} else if (unmappedSteps.length > 0) {
 				const stepTypes = unmappedSteps

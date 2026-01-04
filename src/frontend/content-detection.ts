@@ -122,44 +122,65 @@ function isStepLibraryUrl( urlObj: URL ): boolean {
  */
 export function detectPlaygroundUrl( url: string, base64Decoder?: ( str: string ) => string ): any {
 	if ( !url || typeof url !== 'string' ) {
+		console.log( '[detectPlaygroundUrl] Invalid input:', { url, type: typeof url } );
 		return null;
 	}
 
 	const trimmed = url.trim();
+	console.log( '[detectPlaygroundUrl] Processing URL, length:', trimmed.length );
 
 	try {
 		const urlObj = new URL( trimmed );
 		const hasValidHash = urlObj.hash && urlObj.hash.length > 1;
 		const isValidDomain = isPlaygroundDomain( urlObj.hostname ) || isStepLibraryUrl( urlObj );
 
+		console.log( '[detectPlaygroundUrl] URL parsed:', {
+			hostname: urlObj.hostname,
+			isValidDomain,
+			hasValidHash,
+			hashLength: urlObj.hash?.length
+		} );
+
 		if ( isValidDomain && hasValidHash ) {
 			const hashContent = urlObj.hash.substring( 1 );
+			console.log( '[detectPlaygroundUrl] Hash content length:', hashContent.length, 'starts with:', hashContent.substring( 0, 20 ) );
 
 			// Try URL-encoded JSON first (starts with %7B which is '{')
 			if ( hashContent.startsWith( '%7B' ) || hashContent.startsWith( '{' ) ) {
 				try {
 					const decoded = decodeURIComponent( hashContent );
-					return JSON.parse( decoded );
+					console.log( '[detectPlaygroundUrl] URL-decoded successfully, length:', decoded.length );
+					const parsed = JSON.parse( decoded );
+					console.log( '[detectPlaygroundUrl] JSON parsed successfully, steps:', parsed.steps?.length );
+					return parsed;
 				} catch ( e ) {
-					// Not URL-encoded JSON
+					console.log( '[detectPlaygroundUrl] URL-decode/parse failed:', e );
 				}
 			}
 
 			// Try base64-encoded JSON
 			try {
 				const decode = base64Decoder || ( ( s: string ) => atob( s ) );
+				console.log( '[detectPlaygroundUrl] Trying base64 decode...' );
 				const decoded = decode( hashContent );
+				console.log( '[detectPlaygroundUrl] Base64 decoded, length:', decoded.length, 'starts with:', decoded.substring( 0, 20 ) );
 				if ( decoded.startsWith( '{' ) ) {
-					return JSON.parse( decoded );
+					const parsed = JSON.parse( decoded );
+					console.log( '[detectPlaygroundUrl] JSON parsed successfully, steps:', parsed.steps?.length );
+					return parsed;
+				} else {
+					console.log( '[detectPlaygroundUrl] Decoded content does not start with {' );
 				}
 			} catch ( e ) {
-				// Not valid base64
+				console.log( '[detectPlaygroundUrl] Base64 decode/parse failed:', e );
 			}
 		}
 	} catch ( e ) {
+		console.log( '[detectPlaygroundUrl] URL parsing failed:', e );
 		return null;
 	}
 
+	console.log( '[detectPlaygroundUrl] No valid blueprint found, returning null' );
 	return null;
 }
 
