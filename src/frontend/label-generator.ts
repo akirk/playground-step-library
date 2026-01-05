@@ -3,6 +3,23 @@
  * Generates smart labels for blueprints based on their content
  */
 
+import { parseGitUrl } from '../../steps/gitProviders';
+
+/**
+ * Extract a display name from a URL or slug.
+ * For git URLs, extracts the repository name.
+ * For other URLs, extracts the last path segment.
+ */
+function extractNameFromUrl(url: string): string {
+	const gitParsed = parseGitUrl(url);
+	if (gitParsed) {
+		return gitParsed.repo.replace(/-/g, ' ');
+	}
+
+	const parts = url.split('/').filter(p => p.trim());
+	return parts[parts.length - 1].replace(/\.zip$/, '').replace(/-/g, ' ');
+}
+
 /**
  * Generate a descriptive label from step blocks in the blueprint
  */
@@ -24,9 +41,7 @@ export function generateLabel(): string {
 					(block.querySelector('[name="slug"]') as HTMLInputElement)?.value ||
 					(block.querySelector('[name="url"]') as HTMLInputElement)?.value;
 				if (pluginSlug && pluginSlug.trim()) {
-					const parts = pluginSlug.split('/').filter(p => p.trim());
-					const name = parts[parts.length - 1].replace(/\.zip$/, '').replace(/-/g, ' ');
-					plugins.push(name);
+					plugins.push(extractNameFromUrl(pluginSlug));
 				} else {
 					otherSteps.add(stepType);
 				}
@@ -35,9 +50,7 @@ export function generateLabel(): string {
 					(block.querySelector('[name="slug"]') as HTMLInputElement)?.value ||
 					(block.querySelector('[name="url"]') as HTMLInputElement)?.value;
 				if (themeSlug && themeSlug.trim()) {
-					const parts = themeSlug.split('/').filter(p => p.trim());
-					const name = parts[parts.length - 1].replace(/\.zip$/, '').replace(/-/g, ' ');
-					themes.push(name);
+					themes.push(extractNameFromUrl(themeSlug));
 				} else {
 					otherSteps.add(stepType);
 				}
