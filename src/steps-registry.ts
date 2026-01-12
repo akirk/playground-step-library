@@ -54,6 +54,7 @@ import { debug } from '../steps/debug.js';
 import { addTemplate } from '../steps/addTemplate.js';
 import { addTemplatePart } from '../steps/addTemplatePart.js';
 import { enableIntl } from '../steps/enableIntl.js';
+import { siteHealthImport } from '../steps/siteHealthImport.js';
 
 // Native Playground steps (hidden, auto-generated)
 import { activatePlugin } from '../steps/activatePlugin.js';
@@ -135,6 +136,7 @@ export const stepsRegistry = {
     setSiteOption,
     defineWpConfigConst,
     enableIntl,
+    siteHealthImport,
 
     // Native Playground steps (hidden)
     activatePlugin,
