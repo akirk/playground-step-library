@@ -24,6 +24,185 @@ interface PluginInfo {
 	author: string | null;
 }
 
+interface ThemeInfo {
+	name: string | null;
+	version: string | null;
+	path: string | null;
+}
+
+/**
+ * Derive a WordPress slug from a plugin or theme name.
+ */
+function deriveSlugFromName(name: string): string {
+	return name
+		.split(':')[0]
+		.trim()
+		.toLowerCase()
+		.replace(/\s+/g, '-')
+		.replace(/[^a-z0-9-]/g, '')
+		.replace(/-+/g, '-')
+		.replace(/^-|-$/g, '');
+}
+
+/**
+ * Clean site health content by stripping leading backticks.
+ */
+function cleanSiteHealthContent(content: string): string {
+	const trimmed = content.trim();
+	return trimmed.startsWith('`') ? trimmed.slice(1).trim() : trimmed;
+}
+
+/**
+ * Parse site health content into sections.
+ * Returns a map of section name to array of lines.
+ */
+function parseSections(content: string): Map<string, string[]> {
+	const sections = new Map<string, string[]>();
+	const cleanContent = cleanSiteHealthContent(content);
+	const parts = cleanContent.split(/^###\s+/m);
+
+	for (const part of parts) {
+		if (!part.trim()) continue;
+
+		const lines = part.split('\n');
+		const sectionNameRaw = lines[0].trim().replace(/\s*###\s*$/, '');
+		const sectionName = sectionNameRaw.split(' ')[0];
+
+		sections.set(sectionName, lines.slice(1));
+	}
+
+	return sections;
+}
+
+/**
+ * Parse theme info from wp-active-theme section lines.
+ */
+function parseThemeFromLines(lines: string[]): ThemeInfo {
+	const info: ThemeInfo = { name: null, version: null, path: null };
+
+	for (const line of lines) {
+		const match = line.match(/^(\w+):\s*(.+)$/);
+		if (!match) continue;
+
+		const key = match[1];
+		const value = match[2].trim();
+
+		if (key === 'name') {
+			const slugMatch = value.match(/\(([^)]+)\)$/);
+			info.name = slugMatch ? slugMatch[1] : value;
+		} else if (key === 'version') {
+			info.version = value;
+		} else if (key === 'theme_path') {
+			const pathMatch = value.match(/\/([^/]+)\/?$/);
+			if (pathMatch) info.path = pathMatch[1];
+		}
+	}
+
+	return info;
+}
+
+/**
+ * Derive theme slug from theme info.
+ */
+function deriveThemeSlug(info: ThemeInfo): string | null {
+	if (info.name && info.name === info.name.toLowerCase() && !info.name.includes(' ')) {
+		return info.name;
+	}
+	if (info.path) {
+		return info.path;
+	}
+	if (info.name) {
+		return info.name.toLowerCase().replace(/\s+/g, '-');
+	}
+	return null;
+}
+
+/**
+ * Parse a plugin info from a wp-plugins-active line.
+ */
+function parsePluginFromLine(line: string): PluginInfo | null {
+	if (!line.trim()) return null;
+
+	const versionIndex = line.indexOf('version:');
+	if (versionIndex === -1) return null;
+
+	const pluginNamePart = line.substring(0, versionIndex).trim();
+	const pluginName = pluginNamePart.replace(/\s*:\s*$/, '');
+
+	const versionPart = line.substring(versionIndex + 'version:'.length).trim();
+	const versionMatch = versionPart.match(/^([^,]+)/);
+	if (!versionMatch) return null;
+
+	const pluginVersion = versionMatch[1].trim();
+
+	let pluginAuthor: string | null = null;
+	const authorIndex = line.indexOf('author:');
+	if (authorIndex !== -1) {
+		const authorPart = line.substring(authorIndex + 'author:'.length).trim();
+		const updatesMatch = authorPart.match(/^(.+?)(?:,\s*(?:Updates|Auto-updates))/);
+		pluginAuthor = updatesMatch ? updatesMatch[1].trim() : authorPart.trim();
+	}
+
+	return { name: pluginName, version: pluginVersion, author: pluginAuthor };
+}
+
+/**
+ * Parse plugins from wp-plugins-active section lines.
+ */
+function parsePluginsFromLines(lines: string[]): PluginInfo[] {
+	const plugins: PluginInfo[] = [];
+	for (const line of lines) {
+		const plugin = parsePluginFromLine(line);
+		if (plugin) plugins.push(plugin);
+	}
+	return plugins;
+}
+
+interface SyncParsedData {
+	theme: string | null;
+	plugins: string[];
+}
+
+/**
+ * Synchronous parsing of site health content for theme and plugin slugs.
+ * Used by toV1() and toV2() which cannot be async.
+ */
+function parseSiteHealthSync(
+	content: string,
+	options: { installTheme: boolean; installPlugins: boolean }
+): SyncParsedData {
+	const result: SyncParsedData = { theme: null, plugins: [] };
+
+	if (!content.trim()) {
+		return result;
+	}
+
+	const sections = parseSections(content);
+
+	if (options.installTheme) {
+		const themeLines = sections.get('wp-active-theme');
+		if (themeLines) {
+			const themeInfo = parseThemeFromLines(themeLines);
+			result.theme = deriveThemeSlug(themeInfo);
+		}
+	}
+
+	if (options.installPlugins) {
+		const pluginLines = sections.get('wp-plugins-active');
+		if (pluginLines) {
+			const pluginInfos = parsePluginsFromLines(pluginLines);
+			for (const plugin of pluginInfos) {
+				const slug = deriveSlugFromName(plugin.name);
+				if (slug) {
+					result.plugins.push(slug);
+				}
+			}
+		}
+	}
+
+	return result;
+}
+
 /**
  * Query WordPress.org plugins update-check API to map plugin names to slugs.
  * Uses the update-check API which accepts plugin metadata (Name, Author, Version)
@@ -94,22 +273,9 @@ async function mapPluginNamesToSlugs(plugins: PluginInfo[]): Promise<Map<string,
 	const unmappedPlugins = plugins.filter((plugin) => !nameToSlug.has(plugin.name));
 
 	if (unmappedPlugins.length > 0) {
-		const candidateSlugs: { plugin: PluginInfo; slug: string }[] = [];
-
-		for (const plugin of unmappedPlugins) {
-			const candidateSlug = plugin.name
-				.split(':')[0]
-				.trim()
-				.toLowerCase()
-				.replace(/\s+/g, '-')
-				.replace(/[^a-z0-9-]/g, '')
-				.replace(/-+/g, '-')
-				.replace(/^-|-$/g, '');
-
-			if (candidateSlug) {
-				candidateSlugs.push({ plugin, slug: candidateSlug });
-			}
-		}
+		const candidateSlugs = unmappedPlugins
+			.map((plugin) => ({ plugin, slug: deriveSlugFromName(plugin.name) }))
+			.filter(({ slug }) => slug);
 
 		// Verify each candidate slug exists on WordPress.org
 		const verificationPromises = candidateSlugs.map(async ({ plugin, slug }) => {
@@ -163,145 +329,70 @@ async function parseSiteHealthContent(content: string): Promise<ParsedSiteHealth
 		options: {},
 	};
 
-	const pluginNames: PluginInfo[] = [];
+	const sections = parseSections(content);
 
-	// Handle leading backtick if present (strip it)
-	const cleanContent = content.trim().startsWith('`') ? content.trim().slice(1).trim() : content;
-	const sections = cleanContent.split(/^###\s+/m);
+	// Parse wp-core section
+	const coreLines = sections.get('wp-core');
+	if (coreLines) {
+		for (const line of coreLines) {
+			const match = line.match(/^(\w+):\s*(.+)$/);
+			if (match) {
+				const key = match[1];
+				const value = match[2].trim();
 
-	for (const section of sections) {
-		if (!section.trim()) continue;
-
-		const lines = section.split('\n');
-		const sectionNameRaw = lines[0].trim().replace(/\s*###\s*$/, '');
-		// Extract base section name (remove count in parentheses like "(11)")
-		const sectionName = sectionNameRaw.split(' ')[0];
-
-		// Parse wp-core section
-		if (sectionName === 'wp-core') {
-			for (const line of lines.slice(1)) {
-				const match = line.match(/^(\w+):\s*(.+)$/);
-				if (match) {
-					const key = match[1];
-					const value = match[2].trim();
-
-					if (key === 'version') {
-						data.wpVersion = value;
-					} else if (key === 'permalink') {
-						data.options.permalink_structure = value;
-					} else if (key === 'blog_public') {
-						data.options.blog_public = value === '1' ? '1' : '0';
-					} else if (key === 'default_comment_status') {
-						data.options.default_comment_status = value;
-					}
+				if (key === 'version') {
+					data.wpVersion = value;
+				} else if (key === 'permalink') {
+					data.options.permalink_structure = value;
+				} else if (key === 'blog_public') {
+					data.options.blog_public = value === '1' ? '1' : '0';
+				} else if (key === 'default_comment_status') {
+					data.options.default_comment_status = value;
 				}
-			}
-		}
-
-		// Parse wp-server section
-		if (sectionName === 'wp-server') {
-			for (const line of lines.slice(1)) {
-				const match = line.match(/^php_version:\s*(.+)$/);
-				if (match) {
-					const versionStr = match[1].trim();
-					const versionMatch = versionStr.match(/^(\d+\.\d+)/);
-					if (versionMatch) {
-						data.phpVersion = versionMatch[1];
-					}
-				}
-			}
-		}
-
-		// Parse wp-active-theme section
-		if (sectionName === 'wp-active-theme') {
-			let themeName: string | null = null;
-			let themeVersion: string | null = null;
-			let themePath: string | null = null;
-
-			for (const line of lines.slice(1)) {
-				const match = line.match(/^(\w+):\s*(.+)$/);
-				if (match) {
-					const key = match[1];
-					const value = match[2].trim();
-
-					if (key === 'name') {
-						const slugMatch = value.match(/\(([^)]+)\)$/);
-						if (slugMatch) {
-							themeName = slugMatch[1];
-						} else {
-							themeName = value;
-						}
-					} else if (key === 'version') {
-						themeVersion = value;
-					} else if (key === 'theme_path') {
-						const pathMatch = value.match(/\/([^/]+)\/?$/);
-						if (pathMatch) {
-							themePath = pathMatch[1];
-						}
-					}
-				}
-			}
-
-			// Determine theme slug
-			let themeSlug: string | null = null;
-			if (themeName && themeName === themeName.toLowerCase() && !themeName.includes(' ')) {
-				themeSlug = themeName;
-			} else if (themePath) {
-				themeSlug = themePath;
-			} else if (themeName) {
-				themeSlug = themeName.toLowerCase().replace(/\s+/g, '-');
-			}
-
-			if (themeSlug) {
-				data.theme = themeVersion ? `${themeSlug}@${themeVersion}` : themeSlug;
-			}
-		}
-
-		// Parse wp-plugins-active section
-		if (sectionName === 'wp-plugins-active') {
-			for (const line of lines.slice(1)) {
-				if (!line.trim()) continue;
-
-				// Format: "Plugin Name: version: X.Y.Z, author: ..." or "Plugin Name: Subtitle: version: X.Y.Z, ..."
-				const versionIndex = line.indexOf('version:');
-				if (versionIndex === -1) continue;
-
-				const pluginNamePart = line.substring(0, versionIndex).trim();
-				const pluginName = pluginNamePart.replace(/\s*:\s*$/, '');
-
-				const versionPart = line.substring(versionIndex + 'version:'.length).trim();
-				const versionMatch = versionPart.match(/^([^,]+)/);
-				if (!versionMatch) continue;
-
-				const pluginVersion = versionMatch[1].trim();
-
-				// Extract author
-				let pluginAuthor: string | null = null;
-				const authorIndex = line.indexOf('author:');
-				if (authorIndex !== -1) {
-					const authorPart = line.substring(authorIndex + 'author:'.length).trim();
-					const updatesMatch = authorPart.match(/^(.+?)(?:,\s*(?:Updates|Auto-updates))/);
-					if (updatesMatch) {
-						pluginAuthor = updatesMatch[1].trim();
-					} else {
-						pluginAuthor = authorPart.trim();
-					}
-				}
-
-				pluginNames.push({ name: pluginName, version: pluginVersion, author: pluginAuthor });
 			}
 		}
 	}
 
-	// Query WordPress.org update-check API to map plugin names to slugs
-	if (pluginNames.length > 0) {
-		const pluginNameToSlug = await mapPluginNamesToSlugs(pluginNames);
+	// Parse wp-server section
+	const serverLines = sections.get('wp-server');
+	if (serverLines) {
+		for (const line of serverLines) {
+			const match = line.match(/^php_version:\s*(.+)$/);
+			if (match) {
+				const versionStr = match[1].trim();
+				const versionMatch = versionStr.match(/^(\d+\.\d+)/);
+				if (versionMatch) {
+					data.phpVersion = versionMatch[1];
+				}
+			}
+		}
+	}
 
-		for (const plugin of pluginNames) {
-			const slug = pluginNameToSlug.get(plugin.name) ||
-				plugin.name.split(':')[0].trim().toLowerCase().replace(/\s+/g, '-');
-			const pluginSpec = plugin.version ? `${slug}@${plugin.version}` : slug;
-			data.plugins.push(pluginSpec);
+	// Parse wp-active-theme section
+	const themeLines = sections.get('wp-active-theme');
+	if (themeLines) {
+		const themeInfo = parseThemeFromLines(themeLines);
+		const themeSlug = deriveThemeSlug(themeInfo);
+		if (themeSlug) {
+			data.theme = themeInfo.version ? `${themeSlug}@${themeInfo.version}` : themeSlug;
+		}
+	}
+
+	// Parse wp-plugins-active section
+	const pluginLines = sections.get('wp-plugins-active');
+	if (pluginLines) {
+		const pluginInfos = parsePluginsFromLines(pluginLines);
+
+		if (pluginInfos.length > 0) {
+			const pluginNameToSlug = await mapPluginNamesToSlugs(pluginInfos);
+
+			for (const plugin of pluginInfos) {
+				const slug = pluginNameToSlug.get(plugin.name);
+				if (slug) {
+					const pluginSpec = plugin.version ? `${slug}@${plugin.version}` : slug;
+					data.plugins.push(pluginSpec);
+				}
+			}
 		}
 	}
 
@@ -317,98 +408,13 @@ export const siteHealthImport: StepFunction<SiteHealthImportStep> = (step: SiteH
 	// Store the content for parsing at runtime via PHP.
 	return {
 		toV1() {
-			if (!siteHealthContent.trim()) {
-				return { steps: [] };
-			}
+			const { theme, plugins } = parseSiteHealthSync(siteHealthContent, {
+				installTheme,
+				installPlugins,
+			});
 
-			// Parse the site health content synchronously for blueprint generation
-			// Note: This simplified version doesn't do the async API lookup for plugin slugs
-			// The full implementation would need to be done at runtime
 			const steps: any[] = [];
 
-			// Parse the content inline (simplified synchronous parsing)
-			const cleanContent = siteHealthContent.trim().startsWith('`')
-				? siteHealthContent.trim().slice(1).trim()
-				: siteHealthContent;
-			const sections = cleanContent.split(/^###\s+/m);
-
-			let theme: string | null = null;
-			const plugins: string[] = [];
-
-			for (const section of sections) {
-				if (!section.trim()) continue;
-
-				const lines = section.split('\n');
-				const sectionNameRaw = lines[0].trim().replace(/\s*###\s*$/, '');
-				const sectionName = sectionNameRaw.split(' ')[0];
-
-				// Parse wp-active-theme section
-				if (sectionName === 'wp-active-theme' && installTheme) {
-					let themeName: string | null = null;
-					let themeVersion: string | null = null;
-					let themePath: string | null = null;
-
-					for (const line of lines.slice(1)) {
-						const match = line.match(/^(\w+):\s*(.+)$/);
-						if (match) {
-							const key = match[1];
-							const value = match[2].trim();
-
-							if (key === 'name') {
-								const slugMatch = value.match(/\(([^)]+)\)$/);
-								themeName = slugMatch ? slugMatch[1] : value;
-							} else if (key === 'version') {
-								themeVersion = value;
-							} else if (key === 'theme_path') {
-								const pathMatch = value.match(/\/([^/]+)\/?$/);
-								if (pathMatch) themePath = pathMatch[1];
-							}
-						}
-					}
-
-					let themeSlug: string | null = null;
-					if (themeName && themeName === themeName.toLowerCase() && !themeName.includes(' ')) {
-						themeSlug = themeName;
-					} else if (themePath) {
-						themeSlug = themePath;
-					} else if (themeName) {
-						themeSlug = themeName.toLowerCase().replace(/\s+/g, '-');
-					}
-
-					if (themeSlug) {
-						theme = themeSlug;
-					}
-				}
-
-				// Parse wp-plugins-active section
-				if (sectionName === 'wp-plugins-active' && installPlugins) {
-					for (const line of lines.slice(1)) {
-						if (!line.trim()) continue;
-
-						const versionIndex = line.indexOf('version:');
-						if (versionIndex === -1) continue;
-
-						const pluginNamePart = line.substring(0, versionIndex).trim();
-						const pluginName = pluginNamePart.replace(/\s*:\s*$/, '');
-
-						// Derive slug from name (simplified - full version uses API lookup)
-						const slug = pluginName
-							.split(':')[0]
-							.trim()
-							.toLowerCase()
-							.replace(/\s+/g, '-')
-							.replace(/[^a-z0-9-]/g, '')
-							.replace(/-+/g, '-')
-							.replace(/^-|-$/g, '');
-
-						if (slug) {
-							plugins.push(slug);
-						}
-					}
-				}
-			}
-
-			// Add theme installation step
 			if (theme) {
 				steps.push({
 					step: 'installTheme',
@@ -425,7 +431,6 @@ export const siteHealthImport: StepFunction<SiteHealthImportStep> = (step: SiteH
 				});
 			}
 
-			// Add plugin installation steps
 			for (const plugin of plugins) {
 				steps.push({
 					step: 'installPlugin',
@@ -446,80 +451,10 @@ export const siteHealthImport: StepFunction<SiteHealthImportStep> = (step: SiteH
 		},
 
 		toV2(): BlueprintV2Declaration {
-			if (!siteHealthContent.trim()) {
-				return { version: 2 };
-			}
-
-			// Parse for v2 blueprint format
-			const cleanContent = siteHealthContent.trim().startsWith('`')
-				? siteHealthContent.trim().slice(1).trim()
-				: siteHealthContent;
-			const sections = cleanContent.split(/^###\s+/m);
-
-			let theme: string | null = null;
-			const plugins: string[] = [];
-
-			for (const section of sections) {
-				if (!section.trim()) continue;
-
-				const lines = section.split('\n');
-				const sectionNameRaw = lines[0].trim().replace(/\s*###\s*$/, '');
-				const sectionName = sectionNameRaw.split(' ')[0];
-
-				if (sectionName === 'wp-active-theme' && installTheme) {
-					let themeName: string | null = null;
-					let themePath: string | null = null;
-
-					for (const line of lines.slice(1)) {
-						const match = line.match(/^(\w+):\s*(.+)$/);
-						if (match) {
-							const key = match[1];
-							const value = match[2].trim();
-
-							if (key === 'name') {
-								const slugMatch = value.match(/\(([^)]+)\)$/);
-								themeName = slugMatch ? slugMatch[1] : value;
-							} else if (key === 'theme_path') {
-								const pathMatch = value.match(/\/([^/]+)\/?$/);
-								if (pathMatch) themePath = pathMatch[1];
-							}
-						}
-					}
-
-					if (themeName && themeName === themeName.toLowerCase() && !themeName.includes(' ')) {
-						theme = themeName;
-					} else if (themePath) {
-						theme = themePath;
-					} else if (themeName) {
-						theme = themeName.toLowerCase().replace(/\s+/g, '-');
-					}
-				}
-
-				if (sectionName === 'wp-plugins-active' && installPlugins) {
-					for (const line of lines.slice(1)) {
-						if (!line.trim()) continue;
-
-						const versionIndex = line.indexOf('version:');
-						if (versionIndex === -1) continue;
-
-						const pluginNamePart = line.substring(0, versionIndex).trim();
-						const pluginName = pluginNamePart.replace(/\s*:\s*$/, '');
-
-						const slug = pluginName
-							.split(':')[0]
-							.trim()
-							.toLowerCase()
-							.replace(/\s+/g, '-')
-							.replace(/[^a-z0-9-]/g, '')
-							.replace(/-+/g, '-')
-							.replace(/^-|-$/g, '');
-
-						if (slug) {
-							plugins.push(slug);
-						}
-					}
-				}
-			}
+			const { theme, plugins } = parseSiteHealthSync(siteHealthContent, {
+				installTheme,
+				installPlugins,
+			});
 
 			const result: BlueprintV2Declaration = { version: 2 };
 
