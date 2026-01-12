@@ -17,6 +17,7 @@ Install a plugin via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, 
 |----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of the plugin or WordPress.org slug. |
 | `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
+| `pluginSlug` | string | ❌ No | Plugin slug (folder name in wp-content/plugins). |
 
 
 ## Examples
@@ -37,7 +38,8 @@ Install a plugin via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, 
           "step": "installPlugin",
           "vars": {
                 "url": "https://wordpress.org/plugins/friends",
-                "prs": true
+                "prs": true,
+                "pluginSlug": "my-plugin"
           }
     }
 ```
@@ -86,7 +88,8 @@ const blueprint = {
           "step": "installPlugin",
           "vars": {
                 "url": "hello-dolly",
-                "prs": false
+                "prs": false,
+                "pluginSlug": "my-plugin"
           }
     }
   ]
