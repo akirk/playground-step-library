@@ -1392,6 +1392,34 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`siteHealthImport`](steps/siteHealthImport.md)
+
+**Type**: Custom Step
+**Description**: Import site configuration from WordPress Site Health info (Tools → Site Health → Info → Copy site info to clipboard).
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `siteHealth` | textarea | ✅ Yes | Paste the Site Health info text here. Go to Tools → Site Health → Info tab, then click "Copy site info to clipboard". |
+| `installPlugins` | boolean | ❌ No | Install the plugins listed in the Site Health info. |
+| `installTheme` | boolean | ❌ No | Install and activate the theme listed in the Site Health info. |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "siteHealthImport",
+          "vars": {
+                "siteHealth": "example-value",
+                "installPlugins": true,
+                "installTheme": true
+          }
+    }
+```
+
+
+---
+
 ## [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md)
 
 **Type**: Custom Step
