@@ -114,6 +114,7 @@
 							<label>Playground <select id="playground">
 									<option value="playground.wordpress.net">playground.wordpress.net</option>
 									<option value="http://127.0.0.1:5400/website-server">http://127.0.0.1:5400/website-server</option>
+									<option value="__manage_custom__">Manage custom playgrounds...</option>
 								</select></label>
 							<label>Blueprint encoding <select id="encoding-format">
 									<option value="auto">Auto (hash or base64)</option>
@@ -504,6 +505,16 @@
 		</div>
 		<div class="dialog-buttons">
 			<button id="ai-instructions-copy" class="primary">Copy to Clipboard</button>
+		</div>
+	</dialog>
+	<dialog id="manage-playgrounds-dialog">
+		<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+			<h2 style="margin: 0;">Manage Custom Playgrounds</h2>
+			<button id="manage-playgrounds-close" class="dialog-close-btn" style="position: static;">✕</button>
+		</div>
+		<div id="custom-playgrounds-list" style="min-width: 300px;"></div>
+		<div class="dialog-buttons" style="margin-top: 16px;">
+			<button id="add-custom-playground" class="primary">+ Add New</button>
 		</div>
 	</dialog>
 </body>

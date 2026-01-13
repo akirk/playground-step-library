@@ -10,6 +10,7 @@ import * as blueprintCompiler from './blueprint-compiler';
 import * as blueprintUI from './blueprint-ui';
 import { type BlueprintUIDependencies } from './blueprint-ui';
 import * as customStepsModule from './custom-steps';
+import * as customPlaygrounds from './custom-playgrounds';
 import * as domUtils from './dom-utils';
 import * as myBlueprints from './my-blueprints';
 import * as urlController from './url-controller';
@@ -1114,6 +1115,102 @@ addEventListener('DOMContentLoaded', function () {
 	const pasteHandlerController = new PasteHandlerController(pasteHandlerControllerDeps);
 
 	// History controller methods are now accessed directly via the historyController instance
+
+	// Initialize custom playgrounds
+	const playgroundSelect = document.getElementById('playground') as HTMLSelectElement;
+	const managePlaygroundsDialog = document.getElementById('manage-playgrounds-dialog') as HTMLDialogElement;
+	const customPlaygroundsList = document.getElementById('custom-playgrounds-list');
+	let previousPlaygroundValue = playgroundSelect?.value || 'playground.wordpress.net';
+
+	const renderPlaygroundsList = () => {
+		if (!customPlaygroundsList) return;
+		const playgrounds = customPlaygrounds.getCustomPlaygrounds();
+		customPlaygroundsList.textContent = '';
+
+		if (playgrounds.length === 0) {
+			const emptyMsg = document.createElement('p');
+			emptyMsg.style.cssText = 'color: var(--text-muted); margin: 16px 0;';
+			emptyMsg.textContent = 'No custom playgrounds added yet.';
+			customPlaygroundsList.appendChild(emptyMsg);
+			return;
+		}
+
+		playgrounds.forEach(p => {
+			const row = document.createElement('div');
+			row.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 8px; border-bottom: 1px solid var(--border-subtle);';
+
+			const info = document.createElement('div');
+			info.style.cssText = 'flex: 1; min-width: 0;';
+
+			const nameEl = document.createElement('div');
+			nameEl.style.fontWeight = '500';
+			nameEl.textContent = p.name;
+			info.appendChild(nameEl);
+
+			if (p.name !== p.url) {
+				const urlEl = document.createElement('div');
+				urlEl.style.cssText = 'font-size: 12px; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis;';
+				urlEl.textContent = p.url;
+				info.appendChild(urlEl);
+			}
+
+			const removeBtn = document.createElement('button');
+			removeBtn.type = 'button';
+			removeBtn.style.cssText = 'padding: 4px 8px; font-size: 12px;';
+			removeBtn.textContent = 'Remove';
+			removeBtn.addEventListener('click', () => {
+				customPlaygrounds.removeCustomPlayground(p.url);
+				customPlaygrounds.populatePlaygroundSelect(playgroundSelect);
+				renderPlaygroundsList();
+				if (playgroundSelect.value === p.url) {
+					playgroundSelect.value = 'playground.wordpress.net';
+					previousPlaygroundValue = playgroundSelect.value;
+					transformJson();
+				}
+			});
+
+			row.appendChild(info);
+			row.appendChild(removeBtn);
+			customPlaygroundsList.appendChild(row);
+		});
+	};
+
+	if (playgroundSelect) {
+		customPlaygrounds.populatePlaygroundSelect(playgroundSelect);
+
+		playgroundSelect.addEventListener('change', () => {
+			if (playgroundSelect.value === '__manage_custom__') {
+				playgroundSelect.value = previousPlaygroundValue;
+				renderPlaygroundsList();
+				managePlaygroundsDialog?.showModal();
+			} else {
+				previousPlaygroundValue = playgroundSelect.value;
+				transformJson();
+			}
+		});
+	}
+
+	if (managePlaygroundsDialog) {
+		document.getElementById('manage-playgrounds-close')?.addEventListener('click', () => {
+			managePlaygroundsDialog.close();
+		});
+
+		document.getElementById('add-custom-playground')?.addEventListener('click', () => {
+			const url = prompt('Enter custom playground URL:');
+			if (url && url.trim()) {
+				const name = prompt('Enter a name for this playground (optional):', url.trim());
+				customPlaygrounds.addCustomPlayground(url.trim(), name || undefined);
+				customPlaygrounds.populatePlaygroundSelect(playgroundSelect);
+				renderPlaygroundsList();
+			}
+		});
+
+		managePlaygroundsDialog.addEventListener('click', (e) => {
+			if (e.target === managePlaygroundsDialog) {
+				managePlaygroundsDialog.close();
+			}
+		});
+	}
 
 	// Initialize empty blueprint if no steps are present
 	if (blueprintSteps.querySelectorAll('.step').length === 0) {
