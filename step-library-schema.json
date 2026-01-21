@@ -198,6 +198,57 @@
           },
           {
             "$ref": "#/definitions/enableIntl"
+          },
+          {
+            "$ref": "#/definitions/activatePlugin"
+          },
+          {
+            "$ref": "#/definitions/activateTheme"
+          },
+          {
+            "$ref": "#/definitions/cp"
+          },
+          {
+            "$ref": "#/definitions/defineSiteUrl"
+          },
+          {
+            "$ref": "#/definitions/importThemeStarterContent"
+          },
+          {
+            "$ref": "#/definitions/importWordPressFiles"
+          },
+          {
+            "$ref": "#/definitions/mkdir"
+          },
+          {
+            "$ref": "#/definitions/mv"
+          },
+          {
+            "$ref": "#/definitions/request"
+          },
+          {
+            "$ref": "#/definitions/resetData"
+          },
+          {
+            "$ref": "#/definitions/rm"
+          },
+          {
+            "$ref": "#/definitions/rmdir"
+          },
+          {
+            "$ref": "#/definitions/runSql"
+          },
+          {
+            "$ref": "#/definitions/runWpInstallationWizard"
+          },
+          {
+            "$ref": "#/definitions/unzip"
+          },
+          {
+            "$ref": "#/definitions/writeFile"
+          },
+          {
+            "$ref": "#/definitions/writeFiles"
           }
         ]
       }
@@ -1803,6 +1854,438 @@
         "step"
       ],
       "description": "Enable PHP Intl extension support."
+    },
+    "activatePlugin": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "activatePlugin"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "pluginPath": {
+              "type": "string",
+              "description": "Path to the plugin directory as absolute path"
+            },
+            "pluginName": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "pluginPath"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Path to the plugin directory as absolute path."
+    },
+    "activateTheme": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "activateTheme"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "themeFolderName": {
+              "type": "string",
+              "description": "The name of the theme folder inside wp-content/themes/"
+            }
+          },
+          "required": [
+            "themeFolderName"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "The name of the theme folder inside wp-content/themes/."
+    },
+    "cp": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "cp"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "fromPath": {
+              "type": "string"
+            },
+            "toPath": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "fromPath",
+            "toPath"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Source path."
+    },
+    "defineSiteUrl": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "defineSiteUrl"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "siteUrl": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "siteUrl"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Changes the site URL of the WordPress installation."
+    },
+    "importThemeStarterContent": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "importThemeStarterContent"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "themeSlug": {
+              "type": "string",
+              "description": "The name of the theme to import content from."
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "The step identifier."
+    },
+    "importWordPressFiles": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "importWordPressFiles"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "wordPressFilesZip": {
+              "type": "string",
+              "description": "The zip file containing the top-level WordPress files and"
+            },
+            "pathInZip": {
+              "type": "string",
+              "description": "The path inside the zip file where the WordPress files are."
+            }
+          },
+          "required": [
+            "wordPressFilesZip"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "The zip file containing the top-level WordPress files and."
+    },
+    "mkdir": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "mkdir"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "The path of the directory you want to create."
+    },
+    "mv": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "mv"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "fromPath": {
+              "type": "string"
+            },
+            "toPath": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "fromPath",
+            "toPath"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Source path."
+    },
+    "request": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "request"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "request": {
+              "type": "string",
+              "description": "Request details (See"
+            }
+          },
+          "required": [
+            "request"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Request details (See."
+    },
+    "resetData": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "resetData"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Deletes WordPress posts and comments and sets the auto increment sequence."
+    },
+    "rm": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "rm"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "The path to remove."
+    },
+    "rmdir": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "rmdir"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "The path to remove."
+    },
+    "runSql": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "runSql"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "sql": {
+              "type": "string",
+              "description": "The SQL to run. Each non-empty line must contain a valid SQL query."
+            }
+          },
+          "required": [
+            "sql"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "The step identifier."
+    },
+    "runWpInstallationWizard": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "runWpInstallationWizard"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "options": {
+              "type": "string",
+              "description": "Installation options (adminUsername, adminPassword)"
+            }
+          },
+          "required": [
+            "options"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Installs WordPress."
+    },
+    "unzip": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "unzip"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "zipFile": {
+              "type": "string"
+            },
+            "extractToPath": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "extractToPath"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "The zip file to extract."
+    },
+    "writeFile": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "writeFile"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "data": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "data"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "The path of the file to write to."
+    },
+    "writeFiles": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "writeFiles"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "writeToPath": {
+              "type": "string"
+            },
+            "filesTree": {
+              "type": "string",
+              "description": "The 'filesTree' defines the directory structure, supporting 'literal:directory' or"
+            }
+          },
+          "required": [
+            "writeToPath",
+            "filesTree"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "The path of the file to write to."
     }
   }
 }

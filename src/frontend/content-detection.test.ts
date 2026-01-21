@@ -463,6 +463,83 @@ describe('content-detection', () => {
 			const result = detectBlueprintJson(json);
 			expect(result).toEqual(blueprint);
 		});
+
+		it('should parse JavaScript object literal with unquoted keys', () => {
+			const jsLiteral = `{
+				steps: [],
+				landingPage: "/wp-admin/"
+			}`;
+			const result = detectBlueprintJson(jsLiteral);
+			expect(result).toEqual({ steps: [], landingPage: '/wp-admin/' });
+		});
+
+		it('should parse JavaScript object literal with single-quoted strings', () => {
+			const jsLiteral = `{
+				steps: [],
+				landingPage: '/wp-admin/'
+			}`;
+			const result = detectBlueprintJson(jsLiteral);
+			expect(result).toEqual({ steps: [], landingPage: '/wp-admin/' });
+		});
+
+		it('should parse JavaScript object literal with trailing commas', () => {
+			const jsLiteral = `{
+				steps: [
+					{ step: 'login', },
+				],
+				landingPage: '/wp-admin/',
+			}`;
+			const result = detectBlueprintJson(jsLiteral);
+			expect(result).toEqual({
+				steps: [{ step: 'login' }],
+				landingPage: '/wp-admin/'
+			});
+		});
+
+		it('should parse complex JavaScript object literal', () => {
+			const jsLiteral = `{
+				landingPage: '/crm/welcome',
+				steps: [
+					{
+						step: 'unzip',
+						zipFile: {
+							resource: 'url',
+							url: 'https://example.com/test.zip',
+						},
+						extractToPath: '/wordpress/wp-content/plugins',
+					},
+					{
+						step: 'activatePlugin',
+						pluginPath: 'my-plugin/my-plugin.php',
+					},
+				],
+			}`;
+			const result = detectBlueprintJson(jsLiteral);
+			expect(result).toEqual({
+				landingPage: '/crm/welcome',
+				steps: [
+					{
+						step: 'unzip',
+						zipFile: {
+							resource: 'url',
+							url: 'https://example.com/test.zip'
+						},
+						extractToPath: '/wordpress/wp-content/plugins'
+					},
+					{
+						step: 'activatePlugin',
+						pluginPath: 'my-plugin/my-plugin.php'
+					}
+				]
+			});
+		});
+
+		it('should prefer valid JSON over JS object literal conversion', () => {
+			const blueprint = { steps: [], landingPage: '/wp-admin/' };
+			const json = JSON.stringify(blueprint);
+			const result = detectBlueprintJson(json);
+			expect(result).toEqual(blueprint);
+		});
 	});
 
 	describe('detectStepLibraryRedirectUrl', () => {

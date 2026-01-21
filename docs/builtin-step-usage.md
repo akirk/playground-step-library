@@ -9,20 +9,66 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## Table of Contents
 
+- [`activatePlugin`](#activateplugin)
+- [`activateTheme`](#activatetheme)
+- [`cp`](#cp)
+- [`defineSiteUrl`](#definesiteurl)
 - [`defineWpConfigConsts`](#definewpconfigconsts)
 - [`enableMultisite`](#enablemultisite)
+- [`importThemeStarterContent`](#importthemestartercontent)
+- [`importWordPressFiles`](#importwordpressfiles)
 - [`importWxr`](#importwxr)
 - [`installPlugin`](#installplugin)
 - [`installTheme`](#installtheme)
 - [`login`](#login)
 - [`mkdir`](#mkdir)
+- [`mv`](#mv)
+- [`request`](#request)
+- [`resetData`](#resetdata)
+- [`rm`](#rm)
+- [`rmdir`](#rmdir)
 - [`runPHP`](#runphp)
+- [`runSql`](#runsql)
+- [`runWpInstallationWizard`](#runwpinstallationwizard)
 - [`setSiteLanguage`](#setsitelanguage)
 - [`setSiteOptions`](#setsiteoptions)
 - [`unzip`](#unzip)
 - [`updateUserMeta`](#updateusermeta)
 - [`wp-cli`](#wp-cli)
 - [`writeFile`](#writefile)
+- [`writeFiles`](#writefiles)
+
+---
+
+## `activatePlugin`
+
+**Used by 1 step:**
+
+- ⚡ [`activatePlugin`](steps/activatePlugin.md) - Path to the plugin directory as absolute path.
+
+---
+
+## `activateTheme`
+
+**Used by 1 step:**
+
+- ⚡ [`activateTheme`](steps/activateTheme.md) - The name of the theme folder inside wp-content/themes/.
+
+---
+
+## `cp`
+
+**Used by 1 step:**
+
+- ⚡ [`cp`](steps/cp.md) - Source path.
+
+---
+
+## `defineSiteUrl`
+
+**Used by 1 step:**
+
+- ⚡ [`defineSiteUrl`](steps/defineSiteUrl.md) - Changes the site URL of the WordPress installation.
 
 ---
 
@@ -42,6 +88,22 @@ This page shows which custom steps compile to each built-in WordPress Playground
 **Used by 1 step:**
 
 - 🔧 [`enableMultisite`](steps/enableMultisite.md) - Enable WordPress Multisite functionality.
+
+---
+
+## `importThemeStarterContent`
+
+**Used by 1 step:**
+
+- ⚡ [`importThemeStarterContent`](steps/importThemeStarterContent.md) - The step identifier.
+
+---
+
+## `importWordPressFiles`
+
+**Used by 1 step:**
+
+- ⚡ [`importWordPressFiles`](steps/importWordPressFiles.md) - The zip file containing the top-level WordPress files and.
 
 ---
 
@@ -91,7 +153,7 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `mkdir`
 
-**Used by 14 steps:**
+**Used by 15 steps:**
 
 - ⚡ [`addClientRole`](steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
 - ⚡ [`addFilter`](steps/addFilter.md) - Easily add a filtered value.
@@ -103,10 +165,51 @@ This page shows which custom steps compile to each built-in WordPress Playground
 - ⚡ [`installAdminer`](steps/installAdminer.md) - Install Adminer with auto login link.
 - ⚡ [`installPhEditor`](steps/installPhEditor.md) - Install phEditor. Password: admin
 - ⚡ [`installPhpLiteAdmin`](steps/installPhpLiteAdmin.md) - Provide phpLiteAdmin. Password: admin
+- ⚡ [`mkdir`](steps/mkdir.md) - The path of the directory you want to create.
 - ⚡ [`muPlugin`](steps/muPlugin.md) - Add code for a plugin.
 - ⚡ [`removeDashboardWidgets`](steps/removeDashboardWidgets.md) - Remove widgets from the wp-admin dashboard.
 - ⚡ [`showAdminNotice`](steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - ⚡ [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
+
+---
+
+## `mv`
+
+**Used by 1 step:**
+
+- ⚡ [`mv`](steps/mv.md) - Source path.
+
+---
+
+## `request`
+
+**Used by 1 step:**
+
+- ⚡ [`request`](steps/request.md) - Request details (See.
+
+---
+
+## `resetData`
+
+**Used by 1 step:**
+
+- ⚡ [`resetData`](steps/resetData.md) - Deletes WordPress posts and comments and sets the auto increment sequence.
+
+---
+
+## `rm`
+
+**Used by 1 step:**
+
+- ⚡ [`rm`](steps/rm.md) - The path to remove.
+
+---
+
+## `rmdir`
+
+**Used by 1 step:**
+
+- ⚡ [`rmdir`](steps/rmdir.md) - The path to remove.
 
 ---
 
@@ -133,6 +236,22 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ---
 
+## `runSql`
+
+**Used by 1 step:**
+
+- ⚡ [`runSql`](steps/runSql.md) - The step identifier.
+
+---
+
+## `runWpInstallationWizard`
+
+**Used by 1 step:**
+
+- ⚡ [`runWpInstallationWizard`](steps/runWpInstallationWizard.md) - Installs WordPress.
+
+---
+
 ## `setSiteLanguage`
 
 **Used by 1 step:**
@@ -154,11 +273,12 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `unzip`
 
-**Used by 3 steps:**
+**Used by 4 steps:**
 
 - ⚡ [`githubImportExportWxr`](steps/githubImportExportWxr.md) - Provide useful additional info.
 - ⚡ [`importWordPressComExport`](steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
 - ⚡ [`installPhEditor`](steps/installPhEditor.md) - Install phEditor. Password: admin
+- ⚡ [`unzip`](steps/unzip.md) - The zip file to extract.
 
 ---
 
@@ -180,7 +300,7 @@ This page shows which custom steps compile to each built-in WordPress Playground
 
 ## `writeFile`
 
-**Used by 14 steps:**
+**Used by 15 steps:**
 
 - ⚡ [`addClientRole`](steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
 - ⚡ [`addFilter`](steps/addFilter.md) - Easily add a filtered value.
@@ -196,6 +316,15 @@ This page shows which custom steps compile to each built-in WordPress Playground
 - ⚡ [`removeDashboardWidgets`](steps/removeDashboardWidgets.md) - Remove widgets from the wp-admin dashboard.
 - ⚡ [`showAdminNotice`](steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - ⚡ [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
+- ⚡ [`writeFile`](steps/writeFile.md) - The path of the file to write to.
+
+---
+
+## `writeFiles`
+
+**Used by 1 step:**
+
+- ⚡ [`writeFiles`](steps/writeFiles.md) - The path of the file to write to.
 
 ---
 

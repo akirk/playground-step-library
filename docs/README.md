@@ -4,9 +4,9 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 📊 Overview
 
-- **Total Steps**: 55
+- **Total Steps**: 72
 - **Built-in Steps**: 8
-- **Custom Steps**: 47
+- **Custom Steps**: 64
 
 ## 🚀 Quick Start
 
@@ -93,6 +93,23 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`showAdminNotice`](steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 - [`enableIntl`](steps/enableIntl.md) - Enable PHP Intl extension support.
+- [`activatePlugin`](steps/activatePlugin.md) - Path to the plugin directory as absolute path.
+- [`activateTheme`](steps/activateTheme.md) - The name of the theme folder inside wp-content/themes/.
+- [`cp`](steps/cp.md) - Source path.
+- [`defineSiteUrl`](steps/defineSiteUrl.md) - Changes the site URL of the WordPress installation.
+- [`importThemeStarterContent`](steps/importThemeStarterContent.md) - The step identifier.
+- [`importWordPressFiles`](steps/importWordPressFiles.md) - The zip file containing the top-level WordPress files and.
+- [`mkdir`](steps/mkdir.md) - The path of the directory you want to create.
+- [`mv`](steps/mv.md) - Source path.
+- [`request`](steps/request.md) - Request details (See.
+- [`resetData`](steps/resetData.md) - Deletes WordPress posts and comments and sets the auto increment sequence.
+- [`rm`](steps/rm.md) - The path to remove.
+- [`rmdir`](steps/rmdir.md) - The path to remove.
+- [`runSql`](steps/runSql.md) - The step identifier.
+- [`runWpInstallationWizard`](steps/runWpInstallationWizard.md) - Installs WordPress.
+- [`unzip`](steps/unzip.md) - The zip file to extract.
+- [`writeFile`](steps/writeFile.md) - The path of the file to write to.
+- [`writeFiles`](steps/writeFiles.md) - The path of the file to write to.
 
 ## 🔗 Cross-References
 

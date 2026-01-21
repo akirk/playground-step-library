@@ -16,6 +16,8 @@ import type {
 	FileReference
 } from '@wp-playground/blueprints';
 
+export type { FileReference };
+
 export interface BlueprintStep {
     step: string;
     progress?: {

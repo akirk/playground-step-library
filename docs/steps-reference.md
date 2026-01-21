@@ -4,6 +4,56 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`activatePlugin`](steps/activatePlugin.md)
+
+**Type**: Custom Step
+**Description**: Path to the plugin directory as absolute path.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `pluginPath` | string | ✅ Yes | Path to the plugin directory as absolute path |
+| `pluginName` | string | ❌ No | No description |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "activatePlugin",
+          "vars": {
+                "pluginPath": "/example/path",
+                "pluginName": "example-name"
+          }
+    }
+```
+
+
+---
+
+## [`activateTheme`](steps/activateTheme.md)
+
+**Type**: Custom Step
+**Description**: The name of the theme folder inside wp-content/themes/.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `themeFolderName` | string | ✅ Yes | The name of the theme folder inside wp-content/themes/ |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "activateTheme",
+          "vars": {
+                "themeFolderName": "example-name"
+          }
+    }
+```
+
+
+---
+
 ## [`addClientRole`](steps/addClientRole.md)
 
 **Type**: Custom Step
@@ -338,6 +388,32 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`cp`](steps/cp.md)
+
+**Type**: Custom Step
+**Description**: Source path.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `fromPath` | string | ✅ Yes | No description |
+| `toPath` | string | ✅ Yes | No description |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "cp",
+          "vars": {
+                "fromPath": "/example/path",
+                "toPath": "/example/path"
+          }
+    }
+```
+
+
+---
+
 ## [`createUser`](steps/createUser.md)
 
 **Type**: Custom Step
@@ -425,6 +501,30 @@ This document provides detailed information about all available steps, including
                 "wpDebugDisplay": false,
                 "scriptDebug": false,
                 "queryMonitor": false
+          }
+    }
+```
+
+
+---
+
+## [`defineSiteUrl`](steps/defineSiteUrl.md)
+
+**Type**: Custom Step
+**Description**: Changes the site URL of the WordPress installation.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `siteUrl` | string | ✅ Yes | No description |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "defineSiteUrl",
+          "vars": {
+                "siteUrl": "https://example.com"
           }
     }
 ```
@@ -886,6 +986,30 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`importThemeStarterContent`](steps/importThemeStarterContent.md)
+
+**Type**: Custom Step
+**Description**: The step identifier.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `themeSlug` | string | ❌ No | The name of the theme to import content from. |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "importThemeStarterContent",
+          "vars": {
+                "themeSlug": "example-value"
+          }
+    }
+```
+
+
+---
+
 ## [`importWordPressComExport`](steps/importWordPressComExport.md)
 
 **Type**: Custom Step
@@ -903,6 +1027,32 @@ This document provides detailed information about all available steps, including
           "step": "importWordPressComExport",
           "vars": {
                 "url": "https://example.com"
+          }
+    }
+```
+
+
+---
+
+## [`importWordPressFiles`](steps/importWordPressFiles.md)
+
+**Type**: Custom Step
+**Description**: The zip file containing the top-level WordPress files and.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `wordPressFilesZip` | string | ✅ Yes | The zip file containing the top-level WordPress files and |
+| `pathInZip` | string | ❌ No | The path inside the zip file where the WordPress files are. |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "importWordPressFiles",
+          "vars": {
+                "wordPressFilesZip": "example-value",
+                "pathInZip": "/example/path"
           }
     }
 ```
@@ -1094,6 +1244,30 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`mkdir`](steps/mkdir.md)
+
+**Type**: Custom Step
+**Description**: The path of the directory you want to create.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `path` | string | ✅ Yes | No description |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "mkdir",
+          "vars": {
+                "path": "/example/path"
+          }
+    }
+```
+
+
+---
+
 ## [`muPlugin`](steps/muPlugin.md)
 
 **Type**: Custom Step
@@ -1113,6 +1287,32 @@ This document provides detailed information about all available steps, including
           "vars": {
                 "name": "my-plugin",
                 "code": "<?php echo \"Hello World\"; ?>"
+          }
+    }
+```
+
+
+---
+
+## [`mv`](steps/mv.md)
+
+**Type**: Custom Step
+**Description**: Source path.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `fromPath` | string | ✅ Yes | No description |
+| `toPath` | string | ✅ Yes | No description |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "mv",
+          "vars": {
+                "fromPath": "/example/path",
+                "toPath": "/example/path"
           }
     }
 ```
@@ -1180,6 +1380,96 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`request`](steps/request.md)
+
+**Type**: Custom Step
+**Description**: Request details (See.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `request` | string | ✅ Yes | Request details (See |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "request",
+          "vars": {
+                "request": "example-value"
+          }
+    }
+```
+
+
+---
+
+## [`resetData`](steps/resetData.md)
+
+**Type**: Custom Step
+**Description**: Deletes WordPress posts and comments and sets the auto increment sequence.
+
+*No variables defined.*
+
+### Example Usage
+
+```json
+    {
+          "step": "resetData"
+    }
+```
+
+
+---
+
+## [`rm`](steps/rm.md)
+
+**Type**: Custom Step
+**Description**: The path to remove.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `path` | string | ✅ Yes | No description |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "rm",
+          "vars": {
+                "path": "/example/path"
+          }
+    }
+```
+
+
+---
+
+## [`rmdir`](steps/rmdir.md)
+
+**Type**: Custom Step
+**Description**: The path to remove.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `path` | string | ✅ Yes | No description |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "rmdir",
+          "vars": {
+                "path": "/example/path"
+          }
+    }
+```
+
+
+---
+
 ## [`runPHP`](steps/runPHP.md)
 
 **Type**: Built-in Step
@@ -1204,6 +1494,30 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`runSql`](steps/runSql.md)
+
+**Type**: Custom Step
+**Description**: The step identifier.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `sql` | string | ✅ Yes | The SQL to run. Each non-empty line must contain a valid SQL query. |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "runSql",
+          "vars": {
+                "sql": "example-value"
+          }
+    }
+```
+
+
+---
+
 ## [`runWpCliCommand`](steps/runWpCliCommand.md)
 
 **Type**: Custom Step
@@ -1221,6 +1535,30 @@ This document provides detailed information about all available steps, including
           "step": "runWpCliCommand",
           "vars": {
                 "command": "example-value"
+          }
+    }
+```
+
+
+---
+
+## [`runWpInstallationWizard`](steps/runWpInstallationWizard.md)
+
+**Type**: Custom Step
+**Description**: Installs WordPress.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `options` | string | ✅ Yes | Installation options (adminUsername, adminPassword) |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "runWpInstallationWizard",
+          "vars": {
+                "options": "example-value"
           }
     }
 ```
@@ -1404,6 +1742,84 @@ This document provides detailed information about all available steps, including
 ```json
     {
           "step": "skipWooCommerceWizard"
+    }
+```
+
+
+---
+
+## [`unzip`](steps/unzip.md)
+
+**Type**: Custom Step
+**Description**: The zip file to extract.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `zipFile` | string | ❌ No | No description |
+| `extractToPath` | string | ✅ Yes | No description |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "unzip",
+          "vars": {
+                "zipFile": "example-value",
+                "extractToPath": "/example/path"
+          }
+    }
+```
+
+
+---
+
+## [`writeFile`](steps/writeFile.md)
+
+**Type**: Custom Step
+**Description**: The path of the file to write to.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `path` | string | ✅ Yes | No description |
+| `data` | string | ✅ Yes | No description |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "writeFile",
+          "vars": {
+                "path": "/example/path",
+                "data": "example-value"
+          }
+    }
+```
+
+
+---
+
+## [`writeFiles`](steps/writeFiles.md)
+
+**Type**: Custom Step
+**Description**: The path of the file to write to.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `writeToPath` | string | ✅ Yes | No description |
+| `filesTree` | string | ✅ Yes | The 'filesTree' defines the directory structure, supporting 'literal:directory' or |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "writeFiles",
+          "vars": {
+                "writeToPath": "/example/path",
+                "filesTree": "example-value"
+          }
     }
 ```
 

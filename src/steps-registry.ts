@@ -55,6 +55,25 @@ import { addTemplate } from '../steps/addTemplate.js';
 import { addTemplatePart } from '../steps/addTemplatePart.js';
 import { enableIntl } from '../steps/enableIntl.js';
 
+// Native Playground steps (hidden, auto-generated)
+import { activatePlugin } from '../steps/activatePlugin.js';
+import { activateTheme } from '../steps/activateTheme.js';
+import { cp } from '../steps/cp.js';
+import { defineSiteUrl } from '../steps/defineSiteUrl.js';
+import { importThemeStarterContent } from '../steps/importThemeStarterContent.js';
+import { importWordPressFiles } from '../steps/importWordpressFiles.js';
+import { mkdir } from '../steps/mkdir.js';
+import { mv } from '../steps/mv.js';
+import { request } from '../steps/request.js';
+import { resetData } from '../steps/resetData.js';
+import { rm } from '../steps/rm.js';
+import { rmdir } from '../steps/rmdir.js';
+import { runSql } from '../steps/runSql.js';
+import { runWpInstallationWizard } from '../steps/runWpInstallationWizard.js';
+import { unzip } from '../steps/unzip.js';
+import { writeFile } from '../steps/writeFile.js';
+import { writeFiles } from '../steps/writeFiles.js';
+
 /**
  * Registry of all available steps using ES6 object property shorthand
  * This eliminates the need to name each step twice
@@ -116,4 +135,23 @@ export const stepsRegistry = {
     setSiteOption,
     defineWpConfigConst,
     enableIntl,
+
+    // Native Playground steps (hidden)
+    activatePlugin,
+    activateTheme,
+    cp,
+    defineSiteUrl,
+    importThemeStarterContent,
+    importWordPressFiles,
+    mkdir,
+    mv,
+    request,
+    resetData,
+    rm,
+    rmdir,
+    runSql,
+    runWpInstallationWizard,
+    unzip,
+    writeFile,
+    writeFiles,
 };

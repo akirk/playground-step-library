@@ -86,7 +86,7 @@ const result = compiler.transpile(nativeV1Blueprint);
 See the **[Programmatic API Documentation](docs/api.md)** for full details on CLI usage, methods, and examples.
 ## Custom Steps
 
-This library provides **55** total steps (8 built-in enhanced steps + 47 custom steps):
+This library provides **72** total steps (8 built-in enhanced steps + 64 custom steps):
 
 ### Built-in Enhanced Steps
 - [`defineWpConfigConst`](docs/steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
@@ -99,6 +99,8 @@ This library provides **55** total steps (8 built-in enhanced steps + 47 custom 
 - [`setSiteOption`](docs/steps/setSiteOption.md) - Set a site option.
 
 ### Custom Steps
+- [`activatePlugin`](docs/steps/activatePlugin.md) - Path to the plugin directory as absolute path.
+- [`activateTheme`](docs/steps/activateTheme.md) - The name of the theme folder inside wp-content/themes/.
 - [`addClientRole`](docs/steps/addClientRole.md) - Adds a role for clients with additional capabilities than editors, but not quite admin.
 - [`addFilter`](docs/steps/addFilter.md) - Easily add a filtered value.
 - [`addMedia`](docs/steps/addMedia.md) - Add files to the media library.
@@ -111,9 +113,11 @@ This library provides **55** total steps (8 built-in enhanced steps + 47 custom 
 - [`blueprintExtractor`](docs/steps/blueprintExtractor.md) - Generate a new blueprint after modifying the WordPress.
 - [`blueprintRecorder`](docs/steps/blueprintRecorder.md) - Record steps made and compile a new blueprint.
 - [`changeAdminColorScheme`](docs/steps/changeAdminColorScheme.md) - Useful to combine with a login step.
+- [`cp`](docs/steps/cp.md) - Source path.
 - [`createUser`](docs/steps/createUser.md) - Create a new user.
 - [`customPostType`](docs/steps/customPostType.md) - Register a custom post type.
 - [`debug`](docs/steps/debug.md) - Configure WordPress debug settings and optionally install Query Monitor plugin.
+- [`defineSiteUrl`](docs/steps/defineSiteUrl.md) - Changes the site URL of the WordPress installation.
 - [`deleteAllPosts`](docs/steps/deleteAllPosts.md) - Delete all posts, pages, attachments, revisions and menu items.
 - [`disableWelcomeGuides`](docs/steps/disableWelcomeGuides.md) - Disable the welcome guides in the site editor.
 - [`doAction`](docs/steps/doAction.md) - Execute a custom action.
@@ -130,15 +134,25 @@ This library provides **55** total steps (8 built-in enhanced steps + 47 custom 
 - [`gitPlugin`](docs/steps/gitPlugin.md) - Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 - [`gitTheme`](docs/steps/gitTheme.md) - Install a theme from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 - [`importFriendFeeds`](docs/steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.
+- [`importThemeStarterContent`](docs/steps/importThemeStarterContent.md) - The step identifier.
 - [`importWordPressComExport`](docs/steps/importWordPressComExport.md) - Import a WordPress.com export file (WXR in a ZIP)
+- [`importWordPressFiles`](docs/steps/importWordPressFiles.md) - The zip file containing the top-level WordPress files and.
 - [`installAdminer`](docs/steps/installAdminer.md) - Install Adminer with auto login link.
 - [`installPhEditor`](docs/steps/installPhEditor.md) - Install phEditor. Password: admin
 - [`installPhpLiteAdmin`](docs/steps/installPhpLiteAdmin.md) - Provide phpLiteAdmin. Password: admin
 - [`jetpackOfflineMode`](docs/steps/jetpackOfflineMode.md) - Start Jetpack in Offline mode.
+- [`mkdir`](docs/steps/mkdir.md) - The path of the directory you want to create.
 - [`muPlugin`](docs/steps/muPlugin.md) - Add code for a plugin.
+- [`mv`](docs/steps/mv.md) - Source path.
 - [`removeDashboardWidgets`](docs/steps/removeDashboardWidgets.md) - Remove widgets from the wp-admin dashboard.
 - [`renameDefaultCategory`](docs/steps/renameDefaultCategory.md) - Change the default "Uncategorized".
+- [`request`](docs/steps/request.md) - Request details (See.
+- [`resetData`](docs/steps/resetData.md) - Deletes WordPress posts and comments and sets the auto increment sequence.
+- [`rm`](docs/steps/rm.md) - The path to remove.
+- [`rmdir`](docs/steps/rmdir.md) - The path to remove.
+- [`runSql`](docs/steps/runSql.md) - The step identifier.
 - [`runWpCliCommand`](docs/steps/runWpCliCommand.md) - Run a wp-cli command.
+- [`runWpInstallationWizard`](docs/steps/runWpInstallationWizard.md) - Installs WordPress.
 - [`sampleContent`](docs/steps/sampleContent.md) - Inserts sample pages to the site.
 - [`setLandingPage`](docs/steps/setLandingPage.md) - Set the landing page.
 - [`setLanguage`](docs/steps/setLanguage.md) - Set the WordPress site language.
@@ -146,3 +160,6 @@ This library provides **55** total steps (8 built-in enhanced steps + 47 custom 
 - [`setTT4Homepage`](docs/steps/setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
 - [`showAdminNotice`](docs/steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](docs/steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
+- [`unzip`](docs/steps/unzip.md) - The zip file to extract.
+- [`writeFile`](docs/steps/writeFile.md) - The path of the file to write to.
+- [`writeFiles`](docs/steps/writeFiles.md) - The path of the file to write to.

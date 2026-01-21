@@ -245,9 +245,43 @@ export function detectWpEnvJson( text: string ): any {
 }
 
 /**
+ * Converts JavaScript object literal syntax to valid JSON
+ * - Adds double quotes around unquoted property names
+ * - Converts single-quoted strings to double-quoted strings
+ * - Removes trailing commas
+ * @param text - The text to convert
+ * @returns The converted JSON string
+ */
+function jsObjectToJson( text: string ): string {
+	// Add quotes around unquoted property names
+	// Matches: property names at start of line or after { or , that aren't already quoted
+	let result = text.replace(
+		/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g,
+		'$1"$2":'
+	);
+
+	// Convert single-quoted strings to double-quoted strings
+	// This handles simple cases where strings don't contain escaped quotes
+	result = result.replace(
+		/'([^'\\]*(?:\\.[^'\\]*)*)'/g,
+		( match, content ) => {
+			// Escape any unescaped double quotes in the content
+			const escaped = content.replace( /(?<!\\)"/g, '\\"' );
+			return '"' + escaped + '"';
+		}
+	);
+
+	// Remove trailing commas before } or ]
+	result = result.replace( /,(\s*[}\]])/g, '$1' );
+
+	return result;
+}
+
+/**
  * Detects and parses WordPress Playground blueprint JSON strings
  * Validates that the JSON contains at least one blueprint property
  * (steps, landingPage, preferredVersions, features, siteOptions, login, plugins, constants, phpExtensionBundles)
+ * Also handles JavaScript object literal syntax (unquoted keys, trailing commas)
  * @param text - The text to analyze
  * @returns The parsed blueprint object or null if not valid blueprint JSON
  */
@@ -262,20 +296,29 @@ export function detectBlueprintJson(text: string): any {
 		return null;
 	}
 
+	// Try parsing as-is first (valid JSON)
+	let parsed = null;
 	try {
-		const parsed = JSON.parse(trimmed);
-		if (parsed && typeof parsed === 'object') {
-			const blueprintProps = ['steps', 'landingPage', 'preferredVersions', 'features', 'siteOptions', 'login', 'plugins', 'constants', 'phpExtensionBundles'];
-			const hasAnyBlueprintProp = blueprintProps.some(prop => prop in parsed);
-
-			if (hasAnyBlueprintProp) {
-				return parsed;
-			}
-		}
-		return null;
+		parsed = JSON.parse(trimmed);
 	} catch (e) {
-		return null;
+		// If that fails, try converting from JS object literal syntax
+		try {
+			const converted = jsObjectToJson( trimmed );
+			parsed = JSON.parse( converted );
+		} catch (e2) {
+			return null;
+		}
 	}
+
+	if (parsed && typeof parsed === 'object') {
+		const blueprintProps = ['steps', 'landingPage', 'preferredVersions', 'features', 'siteOptions', 'login', 'plugins', 'constants', 'phpExtensionBundles'];
+		const hasAnyBlueprintProp = blueprintProps.some(prop => prop in parsed);
+
+		if (hasAnyBlueprintProp) {
+			return parsed;
+		}
+	}
+	return null;
 }
 
 /**
@@ -357,6 +400,7 @@ export function detectWpCli(text: string): string[] | null {
 /**
  * Detects and parses unwrapped step JSON (single step object)
  * Validates that the JSON contains a "step" property
+ * Also handles JavaScript object literal syntax (unquoted keys, trailing commas)
  * @param text - The text to analyze
  * @returns The parsed step object or null if not valid step JSON
  */
@@ -371,15 +415,24 @@ export function detectStepJson(text: string): any {
 		return null;
 	}
 
+	// Try parsing as-is first (valid JSON)
+	let parsed = null;
 	try {
-		const parsed = JSON.parse(trimmed);
-		if (parsed && typeof parsed === 'object' && 'step' in parsed && typeof parsed.step === 'string') {
-			return parsed;
-		}
-		return null;
+		parsed = JSON.parse(trimmed);
 	} catch (e) {
-		return null;
+		// If that fails, try converting from JS object literal syntax
+		try {
+			const converted = jsObjectToJson( trimmed );
+			parsed = JSON.parse( converted );
+		} catch (e2) {
+			return null;
+		}
 	}
+
+	if (parsed && typeof parsed === 'object' && 'step' in parsed && typeof parsed.step === 'string') {
+		return parsed;
+	}
+	return null;
 }
 
 /**
