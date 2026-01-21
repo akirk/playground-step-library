@@ -436,7 +436,7 @@
 #global-toast {
   position: fixed;
   bottom: 24px;
-  right: 24px;
+  right: 220px;
   background: light-dark(var(--gray-700), var(--gray-700));
   color: white;
   padding: var(--spacing-3) var(--spacing-4);
