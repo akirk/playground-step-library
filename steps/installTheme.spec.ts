@@ -1,5 +1,21 @@
 import { installTheme } from './installTheme.js';
-import type { InstallThemeStep } from './types.js';
+import type { InstallThemeStep, CompilationContext } from './types.js';
+
+function createMockContext(): CompilationContext & { queryParams: Record<string, string> } {
+    const queryParams: Record<string, string> = {};
+    return {
+        queryParams,
+        setQueryParams( params: Record<string, string> ) {
+            Object.assign( queryParams, params );
+        },
+        getSteps() {
+            return [];
+        },
+        hasStep() {
+            return false;
+        }
+    };
+}
 
 describe('installTheme', () => {
     it('should install theme from WordPress.org slug', () => {
@@ -62,6 +78,25 @@ describe('installTheme', () => {
         const result = installTheme(step).toV1();
 
         expect(Array.isArray(result.steps)).toBe(true);
+    });
+
+    it('should handle GitHub repository URLs with prs flag', () => {
+        const step: InstallThemeStep = {
+            step: 'installTheme', vars: {
+            url: 'https://github.com/richtabor/kanso',
+            prs: true
+        } };
+
+        const context = createMockContext();
+        const result = installTheme( step, context ).toV1();
+
+        expect(Array.isArray(result.steps)).toBe(true);
+        expect(result.steps).toHaveLength(1);
+        expect(context.queryParams['gh-ensure-auth']).toBe('yes');
+        expect(context.queryParams['ghexport-repo-url']).toBe('https://github.com/richtabor/kanso');
+        expect(context.queryParams['ghexport-content-type']).toBe('theme');
+        expect(context.queryParams['ghexport-theme']).toBe('kanso');
+        expect(context.queryParams['ghexport-playground-root']).toBe('/wordpress/wp-content/themes/kanso');
     });
 
     it('should install theme from external HTTP URL', () => {
