@@ -30,6 +30,7 @@ export class BlueprintCompilationController {
 		const queries: string[] = [];
 		let useBlueprintURLParam = false;
 		let outputData: any;
+		let extractedQueryParams: Record<string, string> = {};
 		const useV2 = (document.querySelector('input[name="blueprint-version"]:checked') as HTMLInputElement)?.value === 'v2';
 
 		// If in manual edit mode, use the manually edited blueprint directly
@@ -82,7 +83,7 @@ export class BlueprintCompilationController {
 			}
 
 			// Extract query params from the compiler
-			const extractedQueryParams = compiler.getLastQueryParams();
+			extractedQueryParams = compiler.getLastQueryParams();
 			for (const key in extractedQueryParams) {
 				queries.push(key + '=' + encodeURIComponent(extractedQueryParams[key]));
 			}
@@ -188,7 +189,7 @@ export class BlueprintCompilationController {
 		let hash = '#' + (JSON.stringify(outputData).replace(/%/g, '%25'));
 
 		if (encodingFormat === 'auto') {
-			if (hash.length > 2000) {
+			if (hash.length > 2000 || extractedQueryParams['gh-ensure-auth']) {
 				useBlueprintURLParam = true;
 			}
 		} else if (encodingFormat === 'base64') {
