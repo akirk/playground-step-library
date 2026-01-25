@@ -383,7 +383,7 @@ describe('installPlugin', () => {
         expect(installPlugin.description).toBe('Install a plugin via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).');
         expect(installPlugin.builtin).toBe(true);
         expect(Array.isArray(installPlugin.vars)).toBe(true);
-        expect(installPlugin.vars).toHaveLength(2);
+        expect(installPlugin.vars).toHaveLength(3);
 
         const urlVar = installPlugin.vars.find(v => v.name === 'url');
         expect(urlVar).toBeDefined();

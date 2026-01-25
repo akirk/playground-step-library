@@ -164,7 +164,7 @@ describe('installTheme', () => {
         expect(installTheme.description).toBe('Install a theme via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, etc.).');
         expect(installTheme.builtin).toBe(true);
         expect(Array.isArray(installTheme.vars)).toBe(true);
-        expect(installTheme.vars).toHaveLength(2);
+        expect(installTheme.vars).toHaveLength(3);
 
         const urlVar = installTheme.vars.find(v => v.name === 'url');
         expect(urlVar).toBeDefined();

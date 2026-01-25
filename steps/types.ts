@@ -371,6 +371,7 @@ export interface InstallPluginStep extends BlueprintStep {
 	vars?: {
 	    url: string;
 	    prs?: boolean;
+	    pluginSlug?: string;
 	};
 }
 
@@ -378,6 +379,7 @@ export interface InstallThemeStep extends BlueprintStep {
 	vars?: {
 	    url: string;
 	    prs?: boolean;
+	    themeSlug?: string;
 	};
 }
 
@@ -392,6 +394,7 @@ export interface GitPluginStep extends BlueprintStep {
 	vars?: {
 	    url: string;
 	    prs?: boolean;
+	    pluginSlug?: string;
 	};
 }
 
@@ -399,6 +402,7 @@ export interface GitThemeStep extends BlueprintStep {
 	vars?: {
 	    url: string;
 	    prs?: boolean;
+	    themeSlug?: string;
 	};
 }
 

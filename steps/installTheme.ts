@@ -10,7 +10,7 @@ export const installTheme: StepFunction<InstallThemeStep> = ( step: InstallTheme
 	// Check if it's a git provider URL
 	const gitInfo = detectGitProvider(url);
 	if (gitInfo) {
-		return gitTheme({ step: 'gitTheme', vars: { url: url, prs: step.vars?.prs } }, context);
+		return gitTheme({ step: 'gitTheme', vars: { url: url, prs: step.vars?.prs, themeSlug: step.vars?.themeSlug } }, context);
 	}
 
 	// Extract WordPress.org slug
@@ -88,5 +88,14 @@ installTheme.vars = [
 		},
 		type: 'boolean',
 		samples: ['false', 'true'],
+	},
+	{
+		name: 'themeSlug',
+		description: 'Theme slug (folder name in wp-content/themes).',
+		show: function (step: any) {
+			const url = step.querySelector('input[name=url]')?.value;
+			return url && url.match(/^(?:https:\/\/)?(github\.com|gitlab\.com|bitbucket\.org|codeberg\.org)\//i);
+		},
+		samples: ['my-theme'],
 	},
 ];

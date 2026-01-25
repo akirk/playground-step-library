@@ -72,13 +72,24 @@ export const gitPlugin: StepFunction<GitPluginStep> = ( step: GitPluginStep, con
 				pluginData.path = directory;
 			}
 
+			const options: Record<string, any> = {
+				activate: true,
+			};
+
+			// Use explicit pluginSlug, or derive from directory path, or fall back to repo name
+			if ( step.vars?.pluginSlug ) {
+				options.targetFolderName = step.vars.pluginSlug;
+			} else if ( directory ) {
+				options.targetFolderName = directory.split( '/' ).pop();
+			} else {
+				options.targetFolderName = repo;
+			}
+
 			const result: BlueprintV1Declaration = {
 				steps: [ {
 					step: 'installPlugin',
 					pluginData: pluginData as any,
-					options: {
-						activate: true,
-					},
+					options: options,
 					progress: {
 						caption: caption,
 					},
@@ -124,5 +135,10 @@ gitPlugin.vars = [
 		description: 'Add support for submitting Pull Requests (GitHub only).',
 		type: 'boolean',
 		samples: [ 'false', 'true' ],
+	},
+	{
+		name: 'pluginSlug',
+		description: 'Plugin slug (folder name in wp-content/plugins).',
+		samples: [ 'my-plugin' ],
 	},
 ];

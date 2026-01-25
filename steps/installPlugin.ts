@@ -10,7 +10,7 @@ export const installPlugin: StepFunction<InstallPluginStep> = ( step: InstallPlu
 	// Check if it's a git provider URL
 	const gitInfo = detectGitProvider( url );
 	if ( gitInfo ) {
-		return gitPlugin( { step: 'gitPlugin', vars: { url: url, prs: step.vars?.prs } }, context );
+		return gitPlugin( { step: 'gitPlugin', vars: { url: url, prs: step.vars?.prs, pluginSlug: step.vars?.pluginSlug } }, context );
 	}
 
 	// Extract WordPress.org slug
@@ -90,5 +90,14 @@ installPlugin.vars = [
 		},
 		type: 'boolean',
 		samples: [ 'false', 'true' ],
+	},
+	{
+		name: 'pluginSlug',
+		description: 'Plugin slug (folder name in wp-content/plugins).',
+		show: function( step: any ) {
+			const url = step.querySelector( 'input[name=url]' )?.value;
+			return url && url.match( /^(?:https:\/\/)?(github\.com|gitlab\.com|bitbucket\.org|codeberg\.org)\//i );
+		},
+		samples: [ 'my-plugin' ],
 	},
 ];

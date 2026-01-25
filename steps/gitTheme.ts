@@ -40,13 +40,24 @@ export const gitTheme: StepFunction<GitThemeStep> = ( step: GitThemeStep, contex
 
 			const caption = `Installing theme from ${provider.name}: ${org}/${repo}${branch ? ' (' + branch + ')' : ''}`;
 
+			const options: Record<string, any> = {
+				activate: true,
+			};
+
+			// Use explicit themeSlug, or derive from directory path, or fall back to repo name
+			if ( step.vars?.themeSlug ) {
+				options.targetFolderName = step.vars.themeSlug;
+			} else if ( directory ) {
+				options.targetFolderName = directory.split( '/' ).pop();
+			} else {
+				options.targetFolderName = repo;
+			}
+
 			const result: BlueprintV1Declaration = {
 				steps: [ {
 					step: 'installTheme',
 					themeData: themeData as any,
-					options: {
-						activate: true,
-					},
+					options: options,
 					progress: {
 						caption: caption,
 					},
@@ -91,5 +102,10 @@ gitTheme.vars = [
 		description: 'Add support for submitting Pull Requests (GitHub only).',
 		type: 'boolean',
 		samples: [ 'false', 'true' ],
+	},
+	{
+		name: 'themeSlug',
+		description: 'Theme slug (folder name in wp-content/themes).',
+		samples: [ 'my-theme' ],
 	},
 ];
