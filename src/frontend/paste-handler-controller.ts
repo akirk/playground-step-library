@@ -16,7 +16,9 @@ import {
 	detectJs,
 	detectWpCli,
 	detectStepJson,
-	detectStepLibraryRedirectUrl
+	detectStepLibraryRedirectUrl,
+	isSiteHealthContent,
+	parseSiteHealth
 } from './content-detection';
 import { wpEnvToSteps } from './wpenv-importer';
 import { parsePlaygroundQueryApi, shouldUseMuPlugin } from './playground-integration';
@@ -82,7 +84,7 @@ export class PasteHandlerController {
 		const urls = pastedText.split( '\n' ).map( line => line.trim() ).filter( line => line );
 
 		// Detect content type (in priority order)
-		type ContentType = 'playgroundUrl' | 'playgroundQueryApi' | 'stepLibraryRedirect' | 'stepJson' | 'blueprintJson' | 'wpEnvJson' | 'php' | 'html' | 'wpCli' | 'css' | 'js' | 'url' | 'wpAdminUrl';
+		type ContentType = 'playgroundUrl' | 'playgroundQueryApi' | 'stepLibraryRedirect' | 'stepJson' | 'blueprintJson' | 'wpEnvJson' | 'siteHealth' | 'php' | 'html' | 'wpCli' | 'css' | 'js' | 'url' | 'wpAdminUrl';
 		let detectedType: ContentType | null = null;
 		let wpCliCommands: string[] | null = null;
 		let htmlContent = '';
@@ -124,6 +126,8 @@ export class PasteHandlerController {
 				detectedType = 'blueprintJson';
 			} else if ( detectStepJson( pastedText ) ) {
 				detectedType = 'stepJson';
+			} else if ( isSiteHealthContent( pastedText ) ) {
+				detectedType = 'siteHealth';
 			} else if ( detectPhp( pastedText ) ) {
 				detectedType = 'php';
 			} else if ( pastedHtml && detectHtml( pastedHtml ) ) {
@@ -259,6 +263,42 @@ export class PasteHandlerController {
 						for ( const warning of result.warnings ) {
 							toastService.showGlobal( warning, { duration: 5000 } );
 						}
+					}
+				}
+				break;
+			}
+
+			case 'siteHealth': {
+				const siteHealthData = parseSiteHealth( pastedText );
+				if ( siteHealthData ) {
+					const steps: any[] = [];
+
+					if ( siteHealthData.theme ) {
+						steps.push( {
+							step: 'installTheme',
+							vars: { url: siteHealthData.theme }
+						} );
+					}
+
+					for ( const plugin of siteHealthData.plugins ) {
+						steps.push( {
+							step: 'installPlugin',
+							vars: { url: plugin }
+						} );
+					}
+
+					if ( steps.length > 0 ) {
+						this.deps.appendSteps( { steps } );
+						blueprintEventBus.emit( 'blueprint:updated' );
+						const parts: string[] = [];
+						if ( siteHealthData.theme ) {
+							parts.push( '1 theme' );
+						}
+						if ( siteHealthData.plugins.length > 0 ) {
+							parts.push( `${siteHealthData.plugins.length} plugin${siteHealthData.plugins.length === 1 ? '' : 's'}` );
+						}
+						toastService.showGlobal( `Added ${parts.join( ' and ' )} from Site Health info` );
+						addedAny = true;
 					}
 				}
 				break;
