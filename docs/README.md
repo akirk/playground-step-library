@@ -4,9 +4,9 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 📊 Overview
 
-- **Total Steps**: 72
+- **Total Steps**: 73
 - **Built-in Steps**: 8
-- **Custom Steps**: 64
+- **Custom Steps**: 65
 
 ## 🚀 Quick Start
 
@@ -93,6 +93,7 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`showAdminNotice`](steps/showAdminNotice.md) - Show an admin notice in the dashboard.
 - [`skipWooCommerceWizard`](steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 - [`enableIntl`](steps/enableIntl.md) - Enable PHP Intl extension support.
+- [`siteHealthImport`](steps/siteHealthImport.md) - Import site configuration from WordPress Site Health info (Tools → Site Health → Info → Copy site info to clipboard).
 - [`activatePlugin`](steps/activatePlugin.md) - Path to the plugin directory as absolute path.
 - [`activateTheme`](steps/activateTheme.md) - The name of the theme folder inside wp-content/themes/.
 - [`cp`](steps/cp.md) - Source path.

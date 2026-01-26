@@ -1748,6 +1748,7 @@ This document provides detailed information about all available steps, including
 | `siteHealth` | textarea | ✅ Yes | Paste the Site Health info text here. Go to Tools → Site Health → Info tab, then click "Copy site info to clipboard". |
 | `installPlugins` | boolean | ❌ No | Install the plugins listed in the Site Health info. |
 | `installTheme` | boolean | ❌ No | Install and activate the theme listed in the Site Health info. |
+| `installLatest` | boolean | ❌ No | Install the latest versions of plugins and theme instead of the exact versions from Site Health. |
 
 
 ### Example Usage
@@ -1758,7 +1759,8 @@ This document provides detailed information about all available steps, including
           "vars": {
                 "siteHealth": "example-value",
                 "installPlugins": true,
-                "installTheme": true
+                "installTheme": true,
+                "installLatest": false
           }
     }
 ```

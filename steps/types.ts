@@ -627,6 +627,7 @@ export interface SiteHealthImportStep extends BlueprintStep {
 		siteHealth: string;
 		installPlugins?: boolean;
 		installTheme?: boolean;
+		installLatest?: boolean;
 	};
 }
 

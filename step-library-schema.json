@@ -200,6 +200,9 @@
             "$ref": "#/definitions/enableIntl"
           },
           {
+            "$ref": "#/definitions/siteHealthImport"
+          },
+          {
             "$ref": "#/definitions/activatePlugin"
           },
           {
@@ -300,6 +303,10 @@
             "prs": {
               "type": "boolean",
               "description": "Add support for submitting Pull Requests (GitHub only)."
+            },
+            "pluginSlug": {
+              "type": "string",
+              "description": "Plugin slug (folder name in wp-content/plugins)."
             }
           },
           "required": [
@@ -329,6 +336,10 @@
             "prs": {
               "type": "boolean",
               "description": "Add support for submitting Pull Requests (GitHub only)."
+            },
+            "themeSlug": {
+              "type": "string",
+              "description": "Theme slug (folder name in wp-content/themes)."
             }
           },
           "required": [
@@ -1235,6 +1246,10 @@
             "prs": {
               "type": "boolean",
               "description": "Add support for submitting Pull Requests (GitHub only)."
+            },
+            "pluginSlug": {
+              "type": "string",
+              "description": "Plugin slug (folder name in wp-content/plugins)."
             }
           },
           "required": [
@@ -1264,6 +1279,10 @@
             "prs": {
               "type": "boolean",
               "description": "Add support for submitting Pull Requests (GitHub only)."
+            },
+            "themeSlug": {
+              "type": "string",
+              "description": "Theme slug (folder name in wp-content/themes)."
             }
           },
           "required": [
@@ -1854,6 +1873,43 @@
         "step"
       ],
       "description": "Enable PHP Intl extension support."
+    },
+    "siteHealthImport": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "siteHealthImport"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "siteHealth": {
+              "type": "string",
+              "description": "Paste the Site Health info text here. Go to Tools → Site Health → Info tab, then click \"Copy site info to clipboard\"."
+            },
+            "installPlugins": {
+              "type": "boolean",
+              "description": "Install the plugins listed in the Site Health info."
+            },
+            "installTheme": {
+              "type": "boolean",
+              "description": "Install and activate the theme listed in the Site Health info."
+            },
+            "installLatest": {
+              "type": "boolean",
+              "description": "Install the latest versions of plugins and theme instead of the exact versions from Site Health."
+            }
+          },
+          "required": [
+            "siteHealth"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Import site configuration from WordPress Site Health info (Tools → Site Health → Info → Copy site info to clipboard)."
     },
     "activatePlugin": {
       "type": "object",

@@ -17,6 +17,7 @@ Import site configuration from WordPress Site Health info (Tools → Site Health
 | `siteHealth` | textarea | ✅ Yes | Paste the Site Health info text here. Go to Tools → Site Health → Info tab, then click "Copy site info to clipboard". |
 | `installPlugins` | boolean | ❌ No | Install the plugins listed in the Site Health info. |
 | `installTheme` | boolean | ❌ No | Install and activate the theme listed in the Site Health info. |
+| `installLatest` | boolean | ❌ No | Install the latest versions of plugins and theme instead of the exact versions from Site Health. |
 
 
 ## Examples
@@ -38,7 +39,8 @@ Import site configuration from WordPress Site Health info (Tools → Site Health
           "vars": {
                 "siteHealth": "example-value",
                 "installPlugins": false,
-                "installTheme": false
+                "installTheme": false,
+                "installLatest": true
           }
     }
 ```
@@ -58,7 +60,8 @@ const blueprint = {
           "vars": {
                 "siteHealth": "example-value",
                 "installPlugins": true,
-                "installTheme": true
+                "installTheme": true,
+                "installLatest": false
           }
     }
   ]

@@ -3,9 +3,9 @@
 Browse detailed documentation for each WordPress Playground step.
 
 ## 📊 Quick Stats
-- **72** total steps
+- **73** total steps
 - **8** built-in steps  
-- **64** custom steps
+- **65** custom steps
 
 ## 🔧 Built-in Steps
 Enhanced core WordPress Playground steps with additional functionality.
@@ -82,6 +82,7 @@ Extended functionality beyond core WordPress Playground capabilities.
 - [`setSiteName`](./setSiteName.md) - Set the site name and tagline.
 - [`setTT4Homepage`](./setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
 - [`showAdminNotice`](./showAdminNotice.md) - Show an admin notice in the dashboard.
+- [`siteHealthImport`](./siteHealthImport.md) - Import site configuration from WordPress Site Health info (Tools → Site Health → Info → Copy site info to clipboard).
 - [`skipWooCommerceWizard`](./skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 - [`unzip`](./unzip.md) - The zip file to extract.
 - [`writeFile`](./writeFile.md) - The path of the file to write to.

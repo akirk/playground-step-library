@@ -1,5 +1,4 @@
 import type { StepFunction, BlueprintStep, StepResult } from './types.js';
-import { v1ToV2Fallback } from './types.js';
 import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 export interface SiteHealthImportStep extends BlueprintStep {
@@ -7,6 +6,7 @@ export interface SiteHealthImportStep extends BlueprintStep {
 		siteHealth: string;
 		installPlugins?: boolean;
 		installTheme?: boolean;
+		installLatest?: boolean;
 	};
 }
 
@@ -169,7 +169,7 @@ interface SyncParsedData {
  */
 function parseSiteHealthSync(
 	content: string,
-	options: { installTheme: boolean; installPlugins: boolean }
+	options: { installTheme: boolean; installPlugins: boolean; installLatest: boolean }
 ): SyncParsedData {
 	const result: SyncParsedData = { theme: null, plugins: [] };
 
@@ -183,7 +183,12 @@ function parseSiteHealthSync(
 		const themeLines = sections.get('wp-active-theme');
 		if (themeLines) {
 			const themeInfo = parseThemeFromLines(themeLines);
-			result.theme = deriveThemeSlug(themeInfo);
+			const themeSlug = deriveThemeSlug(themeInfo);
+			if (themeSlug) {
+				result.theme = options.installLatest || !themeInfo.version
+					? themeSlug
+					: `${themeSlug}@${themeInfo.version}`;
+			}
 		}
 	}
 
@@ -194,7 +199,10 @@ function parseSiteHealthSync(
 			for (const plugin of pluginInfos) {
 				const slug = deriveSlugFromName(plugin.name);
 				if (slug) {
-					result.plugins.push(slug);
+					const pluginSpec = options.installLatest || !plugin.version
+						? slug
+						: `${slug}@${plugin.version}`;
+					result.plugins.push(pluginSpec);
 				}
 			}
 		}
@@ -403,14 +411,14 @@ export const siteHealthImport: StepFunction<SiteHealthImportStep> = (step: SiteH
 	const siteHealthContent = step.vars?.siteHealth || '';
 	const installPlugins = step.vars?.installPlugins !== false;
 	const installTheme = step.vars?.installTheme !== false;
+	const installLatest = step.vars?.installLatest === true;
 
-	// We need to parse the content asynchronously, but the step functions are synchronous.
-	// Store the content for parsing at runtime via PHP.
 	return {
 		toV1() {
 			const { theme, plugins } = parseSiteHealthSync(siteHealthContent, {
 				installTheme,
 				installPlugins,
+				installLatest,
 			});
 
 			const steps: any[] = [];
@@ -454,6 +462,7 @@ export const siteHealthImport: StepFunction<SiteHealthImportStep> = (step: SiteH
 			const { theme, plugins } = parseSiteHealthSync(siteHealthContent, {
 				installTheme,
 				installPlugins,
+				installLatest,
 			});
 
 			const result: BlueprintV2Declaration = { version: 2 };
@@ -491,6 +500,12 @@ siteHealthImport.vars = [
 		description: 'Install and activate the theme listed in the Site Health info.',
 		type: 'boolean',
 		samples: ['true', 'false'],
+	},
+	{
+		name: 'installLatest',
+		description: 'Install the latest versions of plugins and theme instead of the exact versions from Site Health.',
+		type: 'boolean',
+		samples: ['false', 'true'],
 	},
 ];
 
