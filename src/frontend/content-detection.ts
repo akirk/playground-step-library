@@ -3,6 +3,10 @@
  * Functions for detecting different types of content in pasted text
  */
 
+import { isSiteHealthContent, parseSiteHealth, type ParsedSiteHealth } from '../shared/site-health-parser';
+
+export { isSiteHealthContent, parseSiteHealth, type ParsedSiteHealth };
+
 /**
  * Detects the type of URL (plugin, theme, etc.)
  * @param url - The URL to analyze
