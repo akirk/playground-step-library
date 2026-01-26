@@ -17,6 +17,7 @@ Install a theme from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.
 |----------|------|----------|-------------|
 | `url` | string | ✅ Yes | Git URL of the theme (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts). |
 | `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
+| `themeSlug` | string | ❌ No | Theme slug (folder name in wp-content/themes). |
 
 
 ## Examples
@@ -37,7 +38,8 @@ Install a theme from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.
           "step": "gitTheme",
           "vars": {
                 "url": "https://codeberg.org/cyclotouriste/jednotka",
-                "prs": true
+                "prs": true,
+                "themeSlug": "my-theme"
           }
     }
 ```
@@ -57,7 +59,8 @@ Install a theme from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.
         "ref": "HEAD"
       },
       "options": {
-        "activate": true
+        "activate": true,
+        "targetFolderName": "my-theme"
       },
       "progress": {
         "caption": "Installing theme from GitHub: richtabor/kanso"
@@ -81,7 +84,8 @@ Install a theme from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.
         "ref": "HEAD"
       },
       "options": {
-        "activate": true
+        "activate": true,
+        "targetFolderName": "my-theme"
       },
       "progress": {
         "caption": "Installing theme from GitHub: richtabor/kanso"
@@ -103,7 +107,8 @@ const blueprint = {
           "step": "gitTheme",
           "vars": {
                 "url": "https://github.com/richtabor/kanso",
-                "prs": false
+                "prs": false,
+                "themeSlug": "my-theme"
           }
     }
   ]

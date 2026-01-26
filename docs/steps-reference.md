@@ -919,6 +919,7 @@ This document provides detailed information about all available steps, including
 |----------|------|----------|-------------|
 | `url` | string | ✅ Yes | Git URL of the plugin (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts). |
 | `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
+| `pluginSlug` | string | ❌ No | Plugin slug (folder name in wp-content/plugins). |
 
 
 ### Example Usage
@@ -928,7 +929,8 @@ This document provides detailed information about all available steps, including
           "step": "gitPlugin",
           "vars": {
                 "url": "https://github.com/akirk/blueprint-recorder",
-                "prs": false
+                "prs": false,
+                "pluginSlug": "my-plugin"
           }
     }
 ```
@@ -945,6 +947,7 @@ This document provides detailed information about all available steps, including
 |----------|------|----------|-------------|
 | `url` | string | ✅ Yes | Git URL of the theme (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts). |
 | `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
+| `themeSlug` | string | ❌ No | Theme slug (folder name in wp-content/themes). |
 
 
 ### Example Usage
@@ -954,7 +957,8 @@ This document provides detailed information about all available steps, including
           "step": "gitTheme",
           "vars": {
                 "url": "https://github.com/richtabor/kanso",
-                "prs": false
+                "prs": false,
+                "themeSlug": "my-theme"
           }
     }
 ```
@@ -1147,6 +1151,7 @@ This document provides detailed information about all available steps, including
 |----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of the plugin or WordPress.org slug. |
 | `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
+| `pluginSlug` | string | ❌ No | Plugin slug (folder name in wp-content/plugins). |
 
 
 ### Example Usage
@@ -1156,7 +1161,8 @@ This document provides detailed information about all available steps, including
           "step": "installPlugin",
           "vars": {
                 "url": "hello-dolly",
-                "prs": false
+                "prs": false,
+                "pluginSlug": "my-plugin"
           }
     }
 ```
@@ -1173,6 +1179,7 @@ This document provides detailed information about all available steps, including
 |----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of the theme or WordPress.org slug. |
 | `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
+| `themeSlug` | string | ❌ No | Theme slug (folder name in wp-content/themes). |
 
 
 ### Example Usage
@@ -1182,7 +1189,8 @@ This document provides detailed information about all available steps, including
           "step": "installTheme",
           "vars": {
                 "url": "pendant",
-                "prs": false
+                "prs": false,
+                "themeSlug": "my-theme"
           }
     }
 ```
@@ -1723,6 +1731,36 @@ This document provides detailed information about all available steps, including
                 "text": "Welcome to WordPress Playground!",
                 "type": "success",
                 "dismissible": true
+          }
+    }
+```
+
+
+---
+
+## [`siteHealthImport`](steps/siteHealthImport.md)
+
+**Type**: Custom Step
+**Description**: Import site configuration from WordPress Site Health info (Tools → Site Health → Info → Copy site info to clipboard).
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `siteHealth` | textarea | ✅ Yes | Paste the Site Health info text here. Go to Tools → Site Health → Info tab, then click "Copy site info to clipboard". |
+| `installPlugins` | boolean | ❌ No | Install the plugins listed in the Site Health info. |
+| `installTheme` | boolean | ❌ No | Install and activate the theme listed in the Site Health info. |
+| `installLatest` | boolean | ❌ No | Install the latest versions of plugins and theme instead of the exact versions from Site Health. |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "siteHealthImport",
+          "vars": {
+                "siteHealth": "example-value",
+                "installPlugins": true,
+                "installTheme": true,
+                "installLatest": false
           }
     }
 ```

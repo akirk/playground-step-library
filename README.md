@@ -86,7 +86,7 @@ const result = compiler.transpile(nativeV1Blueprint);
 See the **[Programmatic API Documentation](docs/api.md)** for full details on CLI usage, methods, and examples.
 ## Custom Steps
 
-This library provides **72** total steps (8 built-in enhanced steps + 64 custom steps):
+This library provides **73** total steps (8 built-in enhanced steps + 65 custom steps):
 
 ### Built-in Enhanced Steps
 - [`defineWpConfigConst`](docs/steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
@@ -159,6 +159,7 @@ This library provides **72** total steps (8 built-in enhanced steps + 64 custom 
 - [`setSiteName`](docs/steps/setSiteName.md) - Set the site name and tagline.
 - [`setTT4Homepage`](docs/steps/setTT4Homepage.md) - Set the homepage for the twentytwentyfour theme.
 - [`showAdminNotice`](docs/steps/showAdminNotice.md) - Show an admin notice in the dashboard.
+- [`siteHealthImport`](docs/steps/siteHealthImport.md) - Import site configuration from WordPress Site Health info (Tools → Site Health → Info → Copy site info to clipboard).
 - [`skipWooCommerceWizard`](docs/steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 - [`unzip`](docs/steps/unzip.md) - The zip file to extract.
 - [`writeFile`](docs/steps/writeFile.md) - The path of the file to write to.

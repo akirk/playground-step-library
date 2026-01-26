@@ -17,6 +17,7 @@ Install a theme via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, e
 |----------|------|----------|-------------|
 | `url` | string | ✅ Yes | URL of the theme or WordPress.org slug. |
 | `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
+| `themeSlug` | string | ❌ No | Theme slug (folder name in wp-content/themes). |
 
 
 ## Examples
@@ -37,7 +38,8 @@ Install a theme via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, e
           "step": "installTheme",
           "vars": {
                 "url": "https://github.com/richtabor/kanso",
-                "prs": true
+                "prs": true,
+                "themeSlug": "my-theme"
           }
     }
 ```
@@ -89,7 +91,8 @@ const blueprint = {
           "step": "installTheme",
           "vars": {
                 "url": "pendant",
-                "prs": false
+                "prs": false,
+                "themeSlug": "my-theme"
           }
     }
   ]

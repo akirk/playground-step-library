@@ -561,7 +561,8 @@ export type StepLibraryStepDefinition =
 	GithubImportExportWxrStep |
 	BlockExamplesStep |
 	AddTemplatePartStep |
-	AddTemplateStep;
+	AddTemplateStep |
+	SiteHealthImportStep;
 
 // Extended Blueprint type that supports both builtin and Step Library custom steps
 export interface StepLibraryBlueprintDeclaration extends Omit<WPBlueprintDeclaration, 'steps'> {
@@ -620,4 +621,13 @@ export interface AddTemplateStep extends BlueprintStep {
 	};
 }
 export interface EnableIntlStep extends BlueprintStep {}
+
+export interface SiteHealthImportStep extends BlueprintStep {
+	vars?: {
+		siteHealth: string;
+		installPlugins?: boolean;
+		installTheme?: boolean;
+		installLatest?: boolean;
+	};
+}
 
