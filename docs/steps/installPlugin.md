@@ -39,7 +39,7 @@ Install a plugin via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, 
           "vars": {
                 "url": "https://wordpress.org/plugins/friends",
                 "prs": true,
-                "pluginSlug": "my-plugin"
+                "pluginSlug": "example-value"
           }
     }
 ```
@@ -89,7 +89,7 @@ const blueprint = {
           "vars": {
                 "url": "hello-dolly",
                 "prs": false,
-                "pluginSlug": "my-plugin"
+                "pluginSlug": "example-value"
           }
     }
   ]

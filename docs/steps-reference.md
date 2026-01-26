@@ -930,7 +930,7 @@ This document provides detailed information about all available steps, including
           "vars": {
                 "url": "https://github.com/akirk/blueprint-recorder",
                 "prs": false,
-                "pluginSlug": "my-plugin"
+                "pluginSlug": "example-value"
           }
     }
 ```
@@ -1162,7 +1162,7 @@ This document provides detailed information about all available steps, including
           "vars": {
                 "url": "hello-dolly",
                 "prs": false,
-                "pluginSlug": "my-plugin"
+                "pluginSlug": "example-value"
           }
     }
 ```

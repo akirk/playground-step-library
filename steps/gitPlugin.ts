@@ -139,6 +139,6 @@ gitPlugin.vars = [
 	{
 		name: 'pluginSlug',
 		description: 'Plugin slug (folder name in wp-content/plugins).',
-		samples: [ 'my-plugin' ],
+		samples: [ '' ],
 	},
 ];

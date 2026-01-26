@@ -39,7 +39,7 @@ Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc
           "vars": {
                 "url": "https://github.com/Automattic/wordpress-activitypub/tree/trunk",
                 "prs": true,
-                "pluginSlug": "my-plugin"
+                "pluginSlug": "example-value"
           }
     }
 ```
@@ -60,7 +60,7 @@ Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc
       },
       "options": {
         "activate": true,
-        "targetFolderName": "my-plugin"
+        "targetFolderName": "blueprint-recorder"
       },
       "progress": {
         "caption": "Installing plugin from GitHub: akirk/blueprint-recorder"
@@ -85,7 +85,7 @@ Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc
       },
       "options": {
         "activate": true,
-        "targetFolderName": "my-plugin"
+        "targetFolderName": "blueprint-recorder"
       },
       "progress": {
         "caption": "Installing plugin from GitHub: akirk/blueprint-recorder"
@@ -108,7 +108,7 @@ const blueprint = {
           "vars": {
                 "url": "https://github.com/akirk/blueprint-recorder",
                 "prs": false,
-                "pluginSlug": "my-plugin"
+                "pluginSlug": "example-value"
           }
     }
   ]

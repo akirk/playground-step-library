@@ -98,6 +98,6 @@ installPlugin.vars = [
 			const url = step.querySelector( 'input[name=url]' )?.value;
 			return url && url.match( /^(?:https:\/\/)?(github\.com|gitlab\.com|bitbucket\.org|codeberg\.org)\//i );
 		},
-		samples: [ 'my-plugin' ],
+		samples: [ '' ],
 	},
 ];
