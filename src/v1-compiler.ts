@@ -7,7 +7,7 @@ import type {
     StepResult,
     CompilationContext
 } from '../steps/types.js';
-import type { Blueprint, StepDefinition, BlueprintV1Declaration } from '@wp-playground/blueprints';
+import type { StepDefinition, BlueprintV1Declaration } from '@wp-playground/blueprints';
 
 interface CustomStepDefinition {
     ( step: BlueprintStep, context?: CompilationContext ): StepResult;
@@ -105,7 +105,7 @@ class StepLibraryCompiler {
      * @param options Compilation options
      * @returns Compiled v1 blueprint
      */
-    compile(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}): Blueprint {
+    compile(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}): BlueprintV1Declaration {
         this.lastQueryParams = {};
         return this.compileToV1(blueprint, options);
     }
@@ -122,7 +122,7 @@ class StepLibraryCompiler {
     /**
      * Compile a blueprint by transforming custom steps into native steps (v1 format)
      */
-    private compileToV1(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}): Blueprint {
+    private compileToV1(blueprint: StepLibraryBlueprint | string, options: CompileOptions = {}): BlueprintV1Declaration {
         let inputData: StepLibraryBlueprint;
 
         if (typeof blueprint === 'string') {
@@ -157,7 +157,7 @@ class StepLibraryCompiler {
         const { title, meta, ...inputWithoutTitle } = inputData as any;
 
         // Create output blueprint with proper typing
-        const outputData: Blueprint = {
+        const outputData: BlueprintV1Declaration = {
             ...inputWithoutTitle,
             steps: [],
             meta: title && !meta?.title
