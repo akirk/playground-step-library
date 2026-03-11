@@ -65,9 +65,10 @@ a:any-link:hover {
 
 .arrow {
   margin-top: var(--spacing-20);
-  font-size: var(--font-size-2xl);
-  color: var(--primary-500);
-  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
+  color: var(--text-subtle);
+  opacity: 0.5;
+  font-weight: var(--font-weight-normal);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,7 +82,7 @@ a:any-link:hover {
   width: 280px;
   min-height: 600px;
   border: 1px solid var(--border-color);
-  border-right-width: 0;
+  border-right: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-md);
   border-radius: var(--radius-xl);
   border-top-right-radius: 0;
@@ -95,8 +96,8 @@ a:any-link:hover {
   display: flex;
   flex-direction: row;
   height: auto;
-  padding: var(--spacing-4);
-  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+  gap: var(--spacing-2);
   background: var(--surface-elevated);
   border-bottom: 1px solid var(--border-subtle);
 }
@@ -159,9 +160,11 @@ a:any-link:hover {
   height: auto;
   white-space: nowrap;
   font-weight: var(--font-weight-semibold);
-  color: var(--text-color);
+  color: var(--text-subtle);
   margin-bottom: var(--spacing-4);
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 #title-holder {

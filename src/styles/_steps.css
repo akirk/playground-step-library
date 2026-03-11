@@ -1,13 +1,13 @@
 .step {
-  padding: var(--spacing-4);
-  margin: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  margin: var(--spacing-1) var(--spacing-2);
   border: 1px solid var(--border-color);
   background-color: var(--step-background);
   color: var(--text-color);
   cursor: pointer;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   z-index: 3;
-  transition: all var(--transition-normal) var(--transition-ease);
+  transition: all var(--transition-normal) var(--transition-ease), transform var(--transition-normal) var(--transition-ease);
   position: relative;
   overflow: hidden;
 }
@@ -53,11 +53,19 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2px;
   background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--transition-normal) var(--transition-ease);
+}
+
+#step-library .step.builtin::before {
+  background: linear-gradient(90deg, var(--success-500), var(--success-600));
+}
+
+#step-library .step.mine::before {
+  background: linear-gradient(90deg, var(--warning-500), var(--warning-600));
 }
 
 #step-library .step:hover::before {
@@ -189,6 +197,16 @@
   line-height: var(--line-height-normal);
 }
 
+#step-library-holder .step .info {
+  display: block;
+  font-size: 0.7rem;
+  opacity: 0.7;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .step td > input,
 .step td > label {
   vertical-align: top;
@@ -237,7 +255,6 @@
 }
 
 #step-library-holder .step .examples,
-#step-library-holder .step .info,
 #step-library-holder .step .vars,
 #step-library-holder .step .remove,
 #blueprint-steps .step.collapsed .examples,
@@ -252,15 +269,22 @@
 
 div.header {
   display: flex;
-  gap: 1em;
+  gap: var(--spacing-2);
   line-height: 1.3;
   justify-content: right;
   align-items: center;
-  margin-bottom: .5em;
+  margin-bottom: 0;
+}
+
+#blueprint-steps div.header {
+  margin-bottom: var(--spacing-1);
 }
 
 div.header span.stepname {
   flex-grow: 1;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
 }
 
 div.header button, div.header a {
@@ -384,7 +408,7 @@ a.submit-to-gh,
 }
 
 button {
-  padding: var(--spacing-3) var(--spacing-5);
+  padding: var(--spacing-2) var(--spacing-4);
 }
 
 button:hover,
@@ -475,7 +499,8 @@ select {
   color: white;
   border-color: var(--primary-button-background);
   font-weight: var(--font-weight-semibold);
-  padding: var(--spacing-4) var(--spacing-6);
+  padding: var(--spacing-3) var(--spacing-5);
+  letter-spacing: 0.02em;
 }
 
 #playground-link:hover {
@@ -575,11 +600,28 @@ select {
   color: white;
 }
 
-#playground-link:hover,
+#playground-link:hover {
+  background-color: var(--primary-button-hover);
+  box-shadow: var(--shadow-lg);
+}
+
 .step:hover,
 .step:focus {
   background-color: var(--step-hover-background);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+#step-library .step:hover {
+  transform: translateX(2px);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#step-library .step {
+  animation: fadeInUp 0.15s ease both;
 }
 
 #download-blueprint {

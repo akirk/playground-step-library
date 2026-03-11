@@ -66,12 +66,12 @@
 
 .step.builtin:hover,.step.builtin:focus {
   background-color: var(--builtin-step-hover-background);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-sm);
   border-color: var(--builtin-step-border);
 }
 .step.mine:hover,.step.mine:focus {
   background-color: var(--mine-step-hover-background);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-sm);
   border-color: var(--mine-step-border);
 }
 
@@ -235,14 +235,23 @@
 
 #draghint {
   margin: var(--spacing-8) var(--spacing-6);
-  padding: var(--spacing-8);
+  padding: var(--spacing-6);
   background: var(--surface-elevated);
-  border: 2px dashed var(--border-color);
+  border: 1px dashed var(--border-color);
   border-radius: var(--radius-xl);
   text-align: center;
   color: var(--text-muted);
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   transition: all var(--transition-normal) var(--transition-ease);
+}
+
+#draghint::before {
+  content: '+';
+  display: block;
+  font-size: var(--font-size-2xl);
+  opacity: 0.3;
+  margin-bottom: var(--spacing-2);
 }
 
 #draghint:hover {

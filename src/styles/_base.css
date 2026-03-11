@@ -21,7 +21,7 @@ body {
 }
 
 header {
-  margin-bottom: var(--spacing-6);
+  margin-bottom: var(--spacing-4);
 }
 
 .header-row {
