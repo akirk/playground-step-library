@@ -7,7 +7,7 @@ import { StepLibraryCompiler, type CompileOptions, type StepInfo, type Validatio
 import { StepLibraryCompilerV2 } from './v2-compiler.js';
 import { BlueprintDecompiler, type DecompilerResult } from './decompiler.js';
 import type { StepLibraryBlueprint } from '../steps/types.js';
-import type { Blueprint, BlueprintV2Declaration } from '@wp-playground/blueprints';
+import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
 
 export interface TranspileResult {
     v2Blueprint: BlueprintV2Declaration;
@@ -26,7 +26,7 @@ class PlaygroundStepLibrary {
     /**
      * Compile a blueprint to v1 format
      */
-    compile( blueprint: StepLibraryBlueprint | string, options: CompileOptions = {} ): Blueprint {
+    compile( blueprint: StepLibraryBlueprint | string, options: CompileOptions = {} ): BlueprintV1Declaration {
         return this.v1Compiler.compile( blueprint, options );
     }
 
