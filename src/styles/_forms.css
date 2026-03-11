@@ -1,0 +1,207 @@
+input, select, textarea {
+	padding: var(--spacing-3);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-md);
+	background: var(--surface-elevated);
+	color: var(--text-color);
+	font-size: var(--font-size-sm);
+	transition: all var(--transition-fast) var(--transition-ease);
+
+	&:focus {
+		outline: none;
+		border-color: var(--primary-500);
+		box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+	}
+
+	&:hover {
+		border-color: var(--primary-400);
+	}
+}
+
+h1 {
+	font-family: 'EB Garamond', Georgia, serif;
+	font-optical-sizing: auto;
+	font-weight: var(--font-weight-bold);
+	font-style: normal;
+	font-size: clamp(var(--font-size-xl), 5vw, var(--font-size-3xl));
+	margin: 0;
+	line-height: var(--line-height-tight);
+	background: linear-gradient(
+		135deg,
+		light-dark(var(--primary-600), var(--primary-300)),
+		light-dark(var(--primary-800), var(--primary-400))
+	);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+	letter-spacing: -0.025em;
+
+	&::selection {
+		-webkit-text-fill-color: var(--inverted-text-color);
+		background: var(--primary-600);
+	}
+}
+
+a:any-link {
+	color: var(--link-color);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 2px;
+	transition: all var(--transition-fast) var(--transition-ease);
+
+	&:hover {
+		color: var(--link-hover);
+		text-decoration: none;
+	}
+}
+
+#blueprint-builder {
+	display: flex;
+	margin-top: var(--spacing-8);
+	flex-wrap: wrap;
+	gap: var(--spacing-16) var(--spacing-4);
+	align-items: flex-start;
+
+	& > div {
+		display: flex;
+		flex-direction: column;
+	}
+}
+
+.arrow {
+	margin-top: var(--spacing-20);
+	font-size: var(--font-size-lg);
+	color: var(--text-subtle);
+	opacity: 0.5;
+	font-weight: var(--font-weight-normal);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#steps-group {
+	display: flex;
+}
+
+#step-library-holder {
+	width: 280px;
+	min-height: 600px;
+	border: 1px solid var(--border-color);
+	border-right: 1px solid var(--border-subtle);
+	box-shadow: var(--shadow-md);
+	border-radius: var(--radius-xl);
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	flex: 1;
+	overflow: hidden;
+	background: var(--surface-color);
+}
+
+#filter-holder {
+	display: flex;
+	flex-direction: row;
+	height: auto;
+	padding: var(--spacing-3);
+	gap: var(--spacing-2);
+	background: var(--surface-elevated);
+	border-bottom: 1px solid var(--border-subtle);
+
+	& label {
+		white-space: nowrap;
+		line-height: 2.5;
+	}
+}
+
+#step-library {
+	overflow: auto;
+	min-height: 540px;
+	padding: var(--spacing-2);
+}
+
+#blueprint-steps {
+	width: 500px;
+	min-height: 600px;
+	overflow: auto;
+	border: 1px solid var(--border-color);
+	box-shadow: var(--shadow-md);
+	border-radius: var(--radius-xl);
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	z-index: 1;
+	background-color: var(--surface-color);
+	flex: 2;
+}
+
+#steps-holder {
+	flex: 3 1 0;
+}
+
+#blueprint-holder {
+	flex: 0 0 auto;
+	background: var(--surface-elevated);
+	border-radius: var(--radius-xl);
+	padding: var(--spacing-6);
+	border: 1px solid var(--border-subtle);
+}
+
+#blueprint-compiled-holder {
+	flex: 0 0 auto;
+	background: var(--surface-elevated);
+	border-radius: var(--radius-xl);
+	padding: var(--spacing-6);
+	border: 1px solid var(--border-subtle);
+	height: auto;
+	max-height: fit-content;
+	position: relative;
+}
+
+#blueprint-holder > div:first-child,
+#blueprint-compiled-header {
+	height: auto;
+	white-space: nowrap;
+	font-weight: var(--font-weight-semibold);
+	color: var(--text-subtle);
+	margin-bottom: var(--spacing-4);
+	font-size: var(--font-size-sm);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+#title-holder {
+	height: auto;
+	margin-bottom: var(--spacing-6);
+	padding: var(--spacing-4);
+	background: var(--surface-elevated);
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--border-subtle);
+
+	& input {
+		width: 100%;
+		max-width: 500px;
+		font-size: var(--font-size-lg);
+		font-weight: var(--font-weight-medium);
+		padding: var(--spacing-4);
+	}
+}
+
+textarea#blueprint, textarea#blueprint-compiled {
+	height: 520px;
+	width: 100%;
+	border: 1px solid var(--border-color);
+	padding: var(--spacing-4);
+	font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+	font-size: var(--font-size-sm);
+	line-height: var(--line-height-relaxed);
+	white-space: pre-wrap;
+	box-shadow: var(--shadow-md);
+	border-radius: var(--radius-lg);
+	background: var(--surface-elevated);
+	resize: vertical;
+	transition: all var(--transition-normal) var(--transition-ease);
+	box-sizing: border-box;
+
+	&:focus {
+		border-color: var(--primary-500);
+		box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1), var(--shadow-md);
+	}
+}
