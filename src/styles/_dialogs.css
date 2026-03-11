@@ -1,198 +1,195 @@
 dialog {
-  border: none;
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-lg);
-  padding: var(--spacing-8);
-  background: var(--surface-elevated);
-  color: var(--text-color);
-  backdrop-filter: blur(8px);
-  max-width: 90vw;
-  max-height: 90vh;
-}
+	border: none;
+	border-radius: var(--radius-2xl);
+	box-shadow: var(--shadow-lg);
+	padding: var(--spacing-8);
+	background: var(--surface-elevated);
+	color: var(--text-color);
+	backdrop-filter: blur(8px);
+	max-width: 90vw;
+	max-height: 90vh;
 
-dialog::backdrop {
-  background: var(--overlay-background);
-  backdrop-filter: blur(4px);
-}
+	&::backdrop {
+		background: var(--overlay-background);
+		backdrop-filter: blur(4px);
+	}
 
-dialog h2 {
-  margin-top: 0;
-  color: var(--text-color);
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--spacing-4);
+	& h2 {
+		margin-top: 0;
+		color: var(--text-color);
+		font-weight: var(--font-weight-bold);
+		font-size: var(--font-size-xl);
+		margin-bottom: var(--spacing-4);
+	}
 }
 
 #save-blueprint-dialog {
-  max-width: 500px;
+	max-width: 500px;
+
+	& label {
+		display: block;
+		margin-bottom: var(--spacing-4);
+		color: var(--text-color);
+	}
 }
 
 #save-blueprint-message {
-  color: var(--text-muted);
-  margin-bottom: var(--spacing-4);
-  line-height: var(--line-height-normal);
-}
-
-#save-blueprint-dialog label {
-  display: block;
-  margin-bottom: var(--spacing-4);
-  color: var(--text-color);
+	color: var(--text-muted);
+	margin-bottom: var(--spacing-4);
+	line-height: var(--line-height-normal);
 }
 
 #save-blueprint-name {
-  display: block;
-  width: 100%;
-  margin-top: var(--spacing-2);
-  padding: var(--spacing-2);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--surface);
-  color: var(--text-color);
-  font-size: var(--font-size-base);
+	display: block;
+	width: 100%;
+	margin-top: var(--spacing-2);
+	padding: var(--spacing-2);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-md);
+	background: var(--surface);
+	color: var(--text-color);
+	font-size: var(--font-size-base);
 }
 
 .dialog-buttons {
-  display: flex;
-  gap: var(--spacing-3);
-  justify-content: flex-end;
-  margin-top: var(--spacing-6);
-  flex-wrap: wrap;
-}
+	display: flex;
+	gap: var(--spacing-3);
+	justify-content: flex-end;
+	margin-top: var(--spacing-6);
+	flex-wrap: wrap;
 
-.dialog-buttons button {
-  padding: var(--spacing-2) var(--spacing-4);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-size: var(--font-size-base);
-  transition: all var(--transition-fast) var(--transition-ease);
-}
+	& button {
+		padding: var(--spacing-2) var(--spacing-4);
+		border-radius: var(--radius-md);
+		cursor: pointer;
+		font-size: var(--font-size-base);
+		transition: all var(--transition-fast) var(--transition-ease);
 
-.dialog-buttons button.primary {
-  background: var(--primary-button-background);
-  color: white;
-  border: none;
-}
+		&.primary {
+			background: var(--primary-button-background);
+			color: white;
+			border: none;
 
-.dialog-buttons button.primary:hover {
-  background: var(--primary-button-hover);
-}
+			&:hover {
+				background: var(--primary-button-hover);
+			}
+		}
 
-.dialog-buttons button:not(.primary) {
-  background: var(--surface);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-}
+		&:not(.primary) {
+			background: var(--surface);
+			color: var(--text-color);
+			border: 1px solid var(--border-color);
 
-.dialog-buttons button:not(.primary):hover {
-  background: var(--surface-hover);
+			&:hover {
+				background: var(--surface-hover);
+			}
+		}
+	}
 }
 
 header p {
-  line-height: var(--line-height-normal);
-  color: var(--text-muted);
-  font-size: var(--font-size-sm);
-  margin: var(--spacing-3) 0;
+	line-height: var(--line-height-normal);
+	color: var(--text-muted);
+	font-size: var(--font-size-sm);
+	margin: var(--spacing-3) 0;
 }
 
 summary {
-  cursor: pointer;
-  transition: color var(--transition-fast) var(--transition-ease);
-}
+	cursor: pointer;
+	transition: color var(--transition-fast) var(--transition-ease);
 
-summary:hover {
-  color: var(--primary-600);
+	&:hover {
+		color: var(--primary-600);
+	}
 }
 
 #ai-instructions-dialog {
-  width: 700px;
-  max-width: 90vw;
+	width: 700px;
+	max-width: 90vw;
+
+	& p {
+		color: var(--text-muted);
+		margin-bottom: var(--spacing-4);
+		line-height: var(--line-height-normal);
+	}
+
+	& code {
+		background: var(--surface-hover);
+		padding: 2px 6px;
+		border-radius: var(--radius-sm);
+		font-family: var(--font-mono);
+		font-size: var(--font-size-sm);
+	}
 }
 
 #ai-instructions-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-2);
-}
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: var(--spacing-2);
 
-#ai-instructions-header h2 {
-  margin-bottom: 0;
-}
-
-#ai-instructions-dialog p {
-  color: var(--text-muted);
-  margin-bottom: var(--spacing-4);
-  line-height: var(--line-height-normal);
+	& h2 {
+		margin-bottom: 0;
+	}
 }
 
 #ai-instructions-options {
-  margin-bottom: var(--spacing-4);
-}
+	margin-bottom: var(--spacing-4);
 
-#ai-instructions-options label {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
-  color: var(--text-color);
-  font-size: var(--font-size-sm);
+	& label {
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-2);
+		color: var(--text-color);
+		font-size: var(--font-size-sm);
+	}
 }
 
 #ai-instructions-url-type {
-  padding: var(--spacing-1) var(--spacing-2);
-  padding-right: var(--spacing-6);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--surface);
-  color: var(--text-color);
-  font-size: var(--font-size-sm);
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right var(--spacing-2) center;
-}
+	padding: var(--spacing-1) var(--spacing-2);
+	padding-right: var(--spacing-6);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-md);
+	background: var(--surface);
+	color: var(--text-color);
+	font-size: var(--font-size-sm);
+	cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right var(--spacing-2) center;
 
-@media ( prefers-color-scheme: dark ) {
-  #ai-instructions-url-type {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23aaa' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
-  }
-}
-
-#ai-instructions-dialog code {
-  background: var(--surface-hover);
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
+	@media ( prefers-color-scheme: dark ) {
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23aaa' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+	}
 }
 
 #ai-instructions-content-wrapper {
-  position: relative;
+	position: relative;
 }
 
 #ai-instructions-content {
-  width: 100%;
-  height: 350px;
-  font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
-  padding: var(--spacing-4);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  background: var(--surface);
-  color: var(--text-color);
-  resize: vertical;
-  line-height: var(--line-height-relaxed);
+	width: 100%;
+	height: 350px;
+	font-family: var(--font-mono);
+	font-size: var(--font-size-sm);
+	padding: var(--spacing-4);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-md);
+	background: var(--surface);
+	color: var(--text-color);
+	resize: vertical;
+	line-height: var(--line-height-relaxed);
 }
 
 #ai-instructions-ace {
-  width: 100%;
-  height: 350px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
+	width: 100%;
+	height: 350px;
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-md);
 }
 
 #ai-instructions-status {
-  margin-top: var(--spacing-2);
+	margin-top: var(--spacing-2);
 }
-
