@@ -22,19 +22,18 @@ body {
 
 header {
   margin-bottom: var(--spacing-4);
+
+  h1 {
+    margin: 0;
+    flex-shrink: 0;
+  }
 }
 
 .header-row {
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
-  flex-wrap: nowrap;
-}
-
-header h1 {
-  margin: 0;
-  flex-shrink: 1;
-  min-width: 0;
+  flex-wrap: wrap;
 }
 
 #top-buttons {
@@ -43,4 +42,3 @@ header h1 {
   align-items: center;
   flex-wrap: wrap;
 }
-

@@ -23,7 +23,7 @@ h1 {
   font-optical-sizing: auto;
   font-weight: var(--font-weight-bold);
   font-style: normal;
-  font-size: clamp(var(--font-size-3xl), 5vw, var(--font-size-5xl));
+  font-size: clamp(var(--font-size-xl), 5vw, var(--font-size-3xl));
   margin: 0;
   line-height: var(--line-height-tight);
   background: linear-gradient(

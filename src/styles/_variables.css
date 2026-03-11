@@ -1,12 +1,5 @@
 :root {
   color-scheme: light dark;
-}
-
-body.dialog-open {
-  overflow: hidden;
-}
-
-:root {
 
   /* Modern Color Palette */
   --primary-50: #eff6ff;
@@ -178,4 +171,8 @@ body.dialog-open {
   --transition-normal: 200ms;
   --transition-slow: 300ms;
   --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.dialog-open {
+  overflow: hidden;
 }
