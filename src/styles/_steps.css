@@ -496,11 +496,11 @@ select {
   padding: var(--spacing-3);
   margin-top: var(--spacing-3);
   margin-bottom: var(--spacing-3);
-  background-color: light-dark(#fff3cd, #3a2f1a);
-  border: 1px solid light-dark(#ffc107, #8a7a3a);
-  border-radius: 4px;
-  color: light-dark(#856404, #e8d89e);
-  font-size: 14px;
+  background-color: var(--warning-background-strong);
+  border: 1px solid var(--warning-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--warning-text-strong);
+  font-size: var(--font-size-sm);
 }
 
 .blueprint-warning summary {
@@ -525,7 +525,7 @@ select {
 }
 
 .blueprint-warning .warning-size {
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 
 .blueprint-warning p {

@@ -19,8 +19,8 @@ body.blueprint-drop-active::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
   color: light-dark(var(--primary-700), var(--primary-300));
   pointer-events: none;
   backdrop-filter: blur(4px);
@@ -55,10 +55,10 @@ body.blueprint-drop-active * {
   left: 0;
   right: 0;
   bottom: 24px;
-  border: 1px solid light-dark(#e9ecef, #333333);
+  border: 1px solid var(--border-component);
   border-bottom: none;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  box-shadow: 0 1px 0 light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+  box-shadow: var(--shadow-xs);
   overflow: hidden;
 }
 
@@ -72,9 +72,9 @@ body.blueprint-drop-active * {
   padding: var(--spacing-2);
   border-radius: var(--radius-md);
   cursor: pointer;
-  font-size: 1.125rem;
+  font-size: var(--font-size-lg);
   line-height: 1;
-  transition: all 0.2s;
+  transition: all var(--transition-normal);
   z-index: 10;
 }
 
@@ -96,7 +96,7 @@ body.blueprint-drop-active * {
 
 #manual-edit-banner span {
   color: light-dark(var(--warning-800), var(--warning-200));
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 
 #resume-compilation {
@@ -106,8 +106,8 @@ body.blueprint-drop-active * {
   padding: var(--spacing-2) var(--spacing-4);
   border-radius: var(--radius-md);
   cursor: pointer;
-  font-weight: 500;
-  transition: background 0.2s;
+  font-weight: var(--font-weight-medium);
+  transition: background var(--transition-normal);
 }
 
 #resume-compilation:hover {

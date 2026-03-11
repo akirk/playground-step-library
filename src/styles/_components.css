@@ -98,7 +98,7 @@
 
 #view-source-header h2 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: var(--font-size-2xl);
   color: var(--text-color);
   flex: 1;
 }
@@ -110,8 +110,8 @@
   background: var(--surface-elevated);
   color: var(--text-color);
   cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s;
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-normal);
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
@@ -207,7 +207,7 @@
   margin-left: var(--spacing-1);
   font-size: var(--font-size-sm);
   opacity: 0.8;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal) var(--transition-ease);
   text-decoration: none;
 }
 
@@ -271,10 +271,10 @@
   width: min(60vw, 800px);
   height: min(30vw, 400px);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  border: 1px solid light-dark(#e9ecef, #333333);
+  border: 1px solid var(--border-component);
   border-bottom: none;
   position: relative;
-  box-shadow: 0 1px 0 light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+  box-shadow: var(--shadow-xs);
   overflow: hidden;
 }
 

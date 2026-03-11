@@ -5,16 +5,16 @@
 }
 
 .ace_gutter {
-  background: light-dark(#fafbfc, #1e1e1e) !important;
-  border-right: 1px solid light-dark(#e9ecef, #333333) !important;
+  background: var(--editor-background) !important;
+  border-right: 1px solid var(--border-component) !important;
 }
 
 .ace_gutter-cell {
-  color: light-dark(#6c757d, #858585) !important;
+  color: var(--editor-line-number-color) !important;
 }
 
 .ace_gutter-active-line {
-  background-color: light-dark(#f0f0f0, #2a2a2a) !important;
+  background-color: var(--editor-gutter-background) !important;
 }
 
 .ace_scroller {
@@ -48,10 +48,10 @@
   gap: 16px;
   padding: 4px 12px;
   padding-right: 28px;
-  background: light-dark(#f8f9fa, #252525);
+  background: var(--editor-status-background);
   font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   font-size: 11px;
-  color: light-dark(#6c757d, #858585);
+  color: var(--editor-line-number-color);
   height: 24px;
   box-sizing: border-box;
 }
@@ -63,14 +63,14 @@
 
 .ace-status-bar .status-warning {
   color: light-dark(var(--warning-700), var(--warning-300));
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   font-size: 12px;
   flex-shrink: 0;
   white-space: nowrap;
   cursor: pointer;
   padding: 2px 6px;
   border-radius: 3px;
-  transition: all 0.2s ease;
+  transition: all var(--transition-normal) var(--transition-ease);
 }
 
 .ace-status-bar .status-warning::before {
@@ -88,8 +88,8 @@
 
 .ace-status-bar .status-mode {
   text-transform: uppercase;
-  font-weight: 600;
-  color: light-dark(#495057, #adb5bd);
+  font-weight: var(--font-weight-semibold);
+  color: var(--editor-status-mode-color);
   margin-left: auto;
   flex-shrink: 0;
 }
@@ -98,9 +98,9 @@
   margin-top: 0;
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   overflow: hidden;
-  border: 1px solid light-dark(#e9ecef, #333333);
+  border: 1px solid var(--border-component);
   border-top: none;
-  box-shadow: 0 1px 3px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+  box-shadow: var(--shadow-component);
 }
 
 #blueprint-status {
@@ -112,9 +112,9 @@
   z-index: 10;
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   overflow: hidden;
-  border: 1px solid light-dark(#e9ecef, #333333);
+  border: 1px solid var(--border-component);
   border-top: none;
-  box-shadow: 0 1px 3px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+  box-shadow: var(--shadow-component);
 }
 
 #blueprint-status.active {
