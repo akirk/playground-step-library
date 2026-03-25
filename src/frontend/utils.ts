@@ -7,7 +7,9 @@ export function minimalEncode(str: string): string {
 		.replace(/=/g, '%3D')
 		.replace(/#/g, '%23')
 		.replace(/\?/g, '%3F')
-		.replace(/\s/g, '%20');
+		.replace(/\n/g, '%0A')
+		.replace(/\r/g, '%0D')
+		.replace(/ /g, '%20');
 }
 
 export function shortenUrl(url: string): string {
