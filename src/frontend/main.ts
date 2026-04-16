@@ -21,7 +21,7 @@ import { type StepInserterDependencies } from './step-inserter';
 import { toastService } from './toast-service';
 import { parsePlaygroundQueryApi } from './playground-integration';
 import { getDragAfterElement } from './drag-drop';
-import { parseQueryParamsForBlueprint } from './query-params';
+import { parseQueryParamsForBlueprint, getBlueprintUrlParam } from './query-params';
 import { createStep } from './step-renderer';
 import { generateLabel } from './label-generator';
 import { blueprintEventBus } from './blueprint-event-bus';
@@ -624,6 +624,54 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	} )();
 
+	const blueprintUrlParam = getBlueprintUrlParam();
+	if ( blueprintUrlParam ) {
+		// Fetch external blueprint from URL
+		const newUrl = new URL( window.location.href );
+		newUrl.search = '';
+		history.replaceState( null, '', newUrl.pathname + newUrl.hash );
+		fetch( blueprintUrlParam )
+			.then( response => {
+				if ( !response.ok ) {
+					throw new Error( `HTTP ${response.status}` );
+				}
+				return response.json();
+			} )
+			.then( data => {
+				const decompiler = new BlueprintDecompiler();
+				const hasNativeSteps = ( data.steps || [] ).some( ( s: any ) => !s.vars );
+				if ( hasNativeSteps || data.landingPage ) {
+					const nativeSteps = ( data.steps || [] ).filter( ( s: any ) => !s.vars );
+					const customSteps = ( data.steps || [] ).filter( ( s: any ) => s.vars );
+					const result = decompiler.decompile( { ...data, steps: nativeSteps } );
+					const allSteps = [ ...customSteps, ...result.steps ].map( ( step: any ) => {
+						if ( 'vars' in step && typeof step.vars === 'object' ) {
+							return { step: step.step, vars: step.vars };
+						}
+						const vars: Record<string, any> = {};
+						for ( const key in step ) {
+							if ( key !== 'step' ) {
+								vars[key] = step[key];
+							}
+						}
+						return { step: step.step, vars };
+					} );
+					stateController.restoreState( { steps: allSteps } );
+					if ( result.unmappedSteps.length > 0 ) {
+						const stepTypes = result.unmappedSteps.map( ( s: any ) => s.step || 'unknown' ).filter( ( v: string, i: number, a: string[] ) => a.indexOf( v ) === i );
+						console.warn( 'Unmapped steps from blueprint-url:', stepTypes );
+					}
+				} else {
+					stateController.restoreState( data );
+				}
+				blueprintEventBus.emit( 'blueprint:updated' );
+			} )
+			.catch( error => {
+				console.error( 'Failed to load blueprint from URL:', error );
+				toastService.showGlobal( 'Failed to load blueprint: ' + error.message, { duration: 5000 } );
+				blueprintEventBus.emit( 'blueprint:updated' );
+			} );
+	} else {
 	const queryParamBlueprint = parseQueryParamsForBlueprint();
 	if ( queryParamBlueprint ) {
 		if ( queryParamBlueprint.redir ) {
@@ -644,6 +692,7 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	} else {
 		blueprintEventBus.emit( 'blueprint:updated' );
+	}
 	}
 	Object.keys( examples ).forEach( function ( example ) {
 		const option = document.createElement( 'option' );
