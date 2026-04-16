@@ -14,6 +14,15 @@ export interface BlueprintQueryParams {
 }
 
 /**
+ * Check if the URL has a blueprint-url query parameter
+ * Returns the URL string if present, null otherwise
+ */
+export function getBlueprintUrlParam(): string | null {
+	const urlParams = new URLSearchParams(window.location.search);
+	return urlParams.get('blueprint-url');
+}
+
+/**
  * Parse query parameters into blueprint configuration
  * Supports array-indexed parameters like step[0], step[1], url[0], url[1], etc.
  */
