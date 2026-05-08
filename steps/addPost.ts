@@ -1,5 +1,6 @@
 import type { StepFunction, AddPostStep, StepResult } from './types.js';
 import type { BlueprintV1Declaration, BlueprintV2Declaration } from '@wp-playground/blueprints';
+import { escapePhpSingleQuotedString } from './php.js';
 
 export const addPost: StepFunction<AddPostStep> = (step: AddPostStep): StepResult => {
 	const title = step.vars?.title || step.vars?.postTitle || '';
@@ -11,14 +12,16 @@ export const addPost: StepFunction<AddPostStep> = (step: AddPostStep): StepResul
 
 	return {
 		toV1() {
-			const postTitle = title.replace(/'/g, "\\'");
-			const postContent = content.replace(/'/g, "\\'");
+			const escapedPostType = escapePhpSingleQuotedString(postType);
+			const escapedPostStatus = escapePhpSingleQuotedString(postStatus);
+			const postTitle = escapePhpSingleQuotedString(title);
+			const postContent = escapePhpSingleQuotedString(content);
 
 			let code = `
 <?php require_once '/wordpress/wp-load.php';
 $page_args = array(
-	'post_type'    => '${postType}',
-	'post_status'  => '${postStatus}',
+	'post_type'    => '${escapedPostType}',
+	'post_status'  => '${escapedPostStatus}',
 	'post_title'   => '${postTitle}',
 	'post_content' => '${postContent}',`;
 
@@ -30,7 +33,7 @@ $page_args = array(
 
 			// Add post_date only if provided (skip 'now' since it's the default)
 			if (dateValue && dateValue !== 'now') {
-				const postDate = dateValue.replace(/'/g, "\\'");
+				const postDate = escapePhpSingleQuotedString(dateValue);
 				code += `
 	'post_date'    => date( 'Y-m-d H:i:s', strtotime( '${postDate}' ) ),`;
 			}
@@ -110,8 +113,8 @@ if ( is_wp_error( $page_id ) ) {
 						content: `<?php
 require_once '/wordpress/wp-load.php';
 $pages = get_posts( array(
-	'post_type' => '${postType}',
-	'title' => '${title.replace(/'/g, "\\'")}',
+	'post_type' => '${escapePhpSingleQuotedString(postType)}',
+	'title' => '${escapePhpSingleQuotedString(title)}',
 	'posts_per_page' => 1,
 	'orderby' => 'ID',
 	'order' => 'DESC'
