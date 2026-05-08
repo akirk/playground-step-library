@@ -142,6 +142,53 @@ button.code-editor {
 		padding: var(--spacing-2);
 	}
 
+	#code-editor[open] {
+		display: flex;
+		flex-direction: column;
+		position: fixed;
+		inset: 0;
+		width: 100vw;
+		height: 100vh;
+		height: 100dvh;
+		max-width: none;
+		max-height: none;
+		margin: 0;
+		padding: var(--spacing-4);
+		box-sizing: border-box;
+		border-radius: 0;
+	}
+
+	#code-editor p {
+		flex: 0 0 auto;
+		margin: 0 0 var(--spacing-4);
+		font-size: var(--font-size-base);
+		line-height: var(--line-height-normal);
+	}
+
+	#code-editor-container {
+		flex: 1 1 auto;
+		width: 100%;
+		height: auto;
+		min-height: 0;
+		box-sizing: border-box;
+	}
+
+	#code-editor-status {
+		flex: 0 0 auto;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	#code-editor > br {
+		display: none;
+	}
+
+	#code-editor > button {
+		flex: 0 0 auto;
+		align-self: flex-start;
+		margin-top: var(--spacing-4);
+	}
+
 	header {
 		margin-bottom: var(--spacing-4);
 	}
@@ -234,21 +281,90 @@ button.code-editor {
 		border: 1px solid var(--border-color);
 	}
 
+	#blueprint-steps div.header {
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		align-items: flex-start;
+		gap: var(--spacing-2) var(--spacing-3);
+	}
+
+	#blueprint-steps div.header .remove {
+		margin-left: auto;
+	}
+
+	#blueprint-steps .step.mine button.save-step {
+		display: none;
+	}
+
+	#blueprint-steps table.vars,
+	#blueprint-steps table.vars tbody,
+	#blueprint-steps table.vars tr,
+	#blueprint-steps table.vars td {
+		display: block;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	#blueprint-steps table.vars tr td.label {
+		max-width: none;
+		padding: var(--spacing-3) 0 var(--spacing-1);
+		white-space: normal;
+	}
+
+	#blueprint-steps table.vars tr td.field {
+		padding: 0 0 var(--spacing-3);
+	}
+
+	#blueprint-steps td.field > textarea,
+	#blueprint-steps td.field > input[type="text"],
+	#blueprint-steps td.field > select {
+		width: 100%;
+		max-width: none;
+	}
+
+	#blueprint-steps button.code-editor {
+		display: inline-flex;
+		width: 100%;
+		margin: var(--spacing-2) 0 0;
+		box-sizing: border-box;
+	}
+
+	#blueprint-steps .examples ul {
+		overflow-x: visible;
+		padding-bottom: var(--spacing-1);
+	}
+
+	#blueprint-steps .examples ul li {
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+
+	#blueprint-steps .examples.for-textarea ul li {
+		display: block;
+		max-width: 100%;
+		margin: var(--spacing-2) 0 0;
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
+	}
+
 	#mobile-show-steps {
 		width: 100%;
 		margin-top: var(--spacing-2);
-		padding: var(--spacing-4);
-		background: var(--primary-500);
-		color: white;
-		border: 1px solid var(--primary-500);
+		padding: var(--spacing-3) var(--spacing-4);
+		background: light-dark(var(--primary-50), var(--primary-950));
+		color: light-dark(var(--primary-700), var(--primary-200));
+		border: 1px solid light-dark(var(--primary-200), var(--primary-700));
+		font-size: var(--font-size-sm);
 		font-weight: var(--font-weight-semibold);
-		box-shadow: var(--shadow-md);
+		line-height: var(--line-height-tight);
+		box-shadow: var(--shadow-sm);
 		border-radius: var(--radius-lg);
 	}
 
 	#mobile-show-steps:hover {
-		background: var(--primary-600);
-		border-color: var(--primary-600);
+		background: light-dark(var(--primary-100), var(--primary-900));
+		border-color: light-dark(var(--primary-300), var(--primary-600));
+		box-shadow: var(--shadow-md);
 	}
 
 	#draghint {
@@ -298,6 +414,44 @@ button.code-editor {
 	#blueprint-compiled-holder > div {
 		margin-bottom: var(--spacing-2);
 		font-size: var(--font-size-base);
+	}
+
+	#blueprint-compiled-header {
+		margin-bottom: var(--spacing-2);
+	}
+
+	#toggle-compiled-panel.mobile-only {
+		display: inline-flex !important;
+		padding: var(--spacing-2) var(--spacing-3);
+		font-size: var(--font-size-sm);
+	}
+
+	#blueprint-compiled-holder.mobile-collapsed #blueprint-compiled-header {
+		margin-bottom: 0;
+	}
+
+	#blueprint-compiled-holder.mobile-collapsed #history-button {
+		display: none;
+	}
+
+	#blueprint-compiled-holder.mobile-collapsed #blueprint-collapsed-stats {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: var(--spacing-2) 0;
+		padding: var(--spacing-4);
+		background: var(--surface-color);
+		border: 1px dashed var(--border-color);
+		border-radius: var(--radius-lg);
+		color: var(--text-muted);
+		font-size: var(--font-size-sm);
+		font-weight: var(--font-weight-semibold);
+	}
+
+	#blueprint-compiled-holder.mobile-collapsed #blueprint-compiled-wrapper,
+	#blueprint-compiled-holder.mobile-collapsed #blueprint-version-selector,
+	#blueprint-compiled-holder.mobile-collapsed #blueprint-size-warning {
+		display: none !important;
 	}
 
 	#blueprint-version-selector {

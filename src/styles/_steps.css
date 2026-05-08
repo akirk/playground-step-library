@@ -216,7 +216,7 @@
 				}
 
 				&::after {
-					content: "\u22EE";
+					content: "⋮";
 					display: block;
 				}
 			}
@@ -233,7 +233,7 @@
 					right: var(--spacing-2);
 
 					&::after {
-						content: "\u22EE";
+						content: "⋮";
 					}
 				}
 
@@ -348,7 +348,7 @@
 		}
 
 		& a.view-source,
-		& button.save-step {
+		&.show-save-step button.save-step {
 			display: block;
 		}
 
@@ -379,9 +379,11 @@ div.header {
 
 	& span.stepname {
 		flex-grow: 1;
+		min-width: 0;
 		font-family: var(--font-mono);
 		font-size: var(--font-size-sm);
 		font-weight: var(--font-weight-medium);
+		overflow-wrap: anywhere;
 	}
 
 	& button,
@@ -594,8 +596,7 @@ select {
 }
 
 #blueprint-version-selector {
-	margin-top: var(--spacing-4);
-	margin-bottom: var(--spacing-4);
+	display: none;
 }
 
 .blueprint-warning {

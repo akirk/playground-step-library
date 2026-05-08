@@ -89,22 +89,26 @@ body.split-view-right {
 		}
 	}
 
-	& #mobile-show-steps {
-		display: block;
-		width: 100%;
-		padding: var(--spacing-4);
-		background: var(--primary-500);
-		color: white;
-		border: 1px solid var(--primary-500);
-		font-weight: var(--font-weight-semibold);
-		box-shadow: var(--shadow-md);
-		border-radius: var(--radius-lg);
-		cursor: pointer;
+		& #mobile-show-steps {
+			display: block;
+			width: 100%;
+			padding: var(--spacing-3) var(--spacing-4);
+			background: light-dark(var(--primary-50), var(--primary-950));
+			color: light-dark(var(--primary-700), var(--primary-200));
+			border: 1px solid light-dark(var(--primary-200), var(--primary-700));
+			font-size: var(--font-size-sm);
+			font-weight: var(--font-weight-semibold);
+			line-height: var(--line-height-tight);
+			box-shadow: var(--shadow-sm);
+			border-radius: var(--radius-lg);
+			cursor: pointer;
 
-		&:hover {
-			background: var(--primary-600);
+			&:hover {
+				background: light-dark(var(--primary-100), var(--primary-900));
+				border-color: light-dark(var(--primary-300), var(--primary-600));
+				box-shadow: var(--shadow-md);
+			}
 		}
-	}
 
 	& #blueprint-compiled-holder {
 		width: 100%;
