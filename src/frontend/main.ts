@@ -792,6 +792,23 @@ addEventListener('DOMContentLoaded', function () {
 		downloadBlueprint();
 	} );
 
+	document.getElementById( 'copy-blueprint-menu' )!.addEventListener( 'click', async function ( e ) {
+		if ( window.goatcounter ) {
+			window.goatcounter.count( {
+				path: 'copy-blueprint',
+				title: 'Copy Blueprint',
+				event: true
+			} );
+		}
+
+		const button = e.currentTarget as HTMLElement;
+		const originalContent = button.cloneNode( true );
+		const success = await urlController.copyToClipboard( getBlueprintValue() );
+		if ( success ) {
+			showCopiedFeedback( button, originalContent );
+		}
+	} );
+
 	document.getElementById( 'share-url-menu' )!.addEventListener( 'click', async function ( e ) {
 		if ( window.goatcounter ) {
 			window.goatcounter.count( {
