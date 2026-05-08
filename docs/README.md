@@ -122,6 +122,7 @@ Many steps can reference and use other steps. For example:
 
 - [Complete Steps Reference](steps-reference.md) - Detailed list with all parameters
 - [Individual Step Documentation](steps/) - Comprehensive docs for each step
+- [Examples](examples.md) - Preloadable example blueprints
 - [Built-in Step Usage](builtin-step-usage.md) - See which steps compile to each built-in step
 
 ## 🛠️ Contributing

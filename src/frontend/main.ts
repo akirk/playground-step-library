@@ -34,7 +34,7 @@ import { EventHandlersController, type EventHandlersControllerDependencies } fro
 import { AIInstructionsController, type AIInstructionsControllerDependencies } from './ai-instructions-controller';
 import { SaveDialogController } from './save-dialog-controller';
 import { processSteps } from './step-utils';
-import { examples } from './examples';
+import { examples, examplesBySlug, type ExampleState } from './examples';
 import { FileDropController, type FileDropControllerDependencies } from './file-drop-controller';
 
 declare global {
@@ -700,6 +700,26 @@ addEventListener('DOMContentLoaded', function () {
 		}
 	} )();
 
+	const examplesSelect = document.getElementById( 'examples' ) as HTMLSelectElement;
+	Object.keys( examples ).forEach( function ( example ) {
+		const option = document.createElement( 'option' );
+		option.value = example;
+		option.innerText = example;
+		examplesSelect.appendChild( option );
+	} );
+
+	function restoreExample( example: ExampleState ) {
+		examplesSelect.value = example.title;
+		stateController.restoreState( { extraLibraries: [], ...example } );
+		blueprintEventBus.emit( 'blueprint:updated' );
+	}
+
+	function removeExampleQueryParam() {
+		const newUrl = new URL( window.location.href );
+		newUrl.searchParams.delete( 'example' );
+		history.replaceState( null, '', newUrl.pathname + ( newUrl.search ? newUrl.search : '' ) + newUrl.hash );
+	}
+
 	const blueprintUrlParam = getBlueprintUrlParam();
 	if ( blueprintUrlParam ) {
 		// Fetch external blueprint from URL
@@ -748,41 +768,43 @@ addEventListener('DOMContentLoaded', function () {
 				blueprintEventBus.emit( 'blueprint:updated' );
 			} );
 	} else {
-	const queryParamBlueprint = parseQueryParamsForBlueprint();
-	if ( queryParamBlueprint ) {
-		if ( queryParamBlueprint.redir ) {
-			( document.getElementById( 'encoding-format' ) as HTMLSelectElement ).value = 'base64';
+		const exampleParam = new URLSearchParams( window.location.search ).get( 'example' );
+		const example = exampleParam ? examplesBySlug[exampleParam.trim().toLowerCase()] : null;
+		if ( example ) {
+			restoreExample( example );
+			removeExampleQueryParam();
+		} else {
+			if ( exampleParam ) {
+				toastService.showGlobal( `Example not found: ${exampleParam}`, { duration: 5000 } );
+			}
+			const queryParamBlueprint = parseQueryParamsForBlueprint();
+			if ( queryParamBlueprint ) {
+				if ( queryParamBlueprint.redir ) {
+					( document.getElementById( 'encoding-format' ) as HTMLSelectElement ).value = 'base64';
+				}
+				stateController.restoreState( { steps: queryParamBlueprint.steps } );
+				// Clear step[] and url[] parameters from URL to prevent conflicts with hash state
+				const newUrl = new URL( window.location.href );
+				newUrl.search = '';
+				history.replaceState( null, '', newUrl.pathname + newUrl.hash );
+				if ( queryParamBlueprint.redir && !( document.getElementById( 'preview-mode' ) as HTMLSelectElement ).value && !pageAccessedByReload ) {
+					stateController.autoredirect( queryParamBlueprint.redir );
+				}
+			} else if ( location.hash ) {
+				stateController.restoreState( blueprintCompiler.uncompressState( location.hash.replace( /^#+/, '' ) ) );
+				if ( !( document.getElementById( 'preview-mode' ) as HTMLSelectElement ).value && blueprintSteps.querySelectorAll( '.step' ).length && !pageAccessedByReload ) {
+					stateController.autoredirect();
+				}
+			} else {
+				blueprintEventBus.emit( 'blueprint:updated' );
+			}
 		}
-		stateController.restoreState( { steps: queryParamBlueprint.steps } );
-		// Clear step[] and url[] parameters from URL to prevent conflicts with hash state
-		const newUrl = new URL( window.location.href );
-		newUrl.search = '';
-		history.replaceState( null, '', newUrl.pathname + newUrl.hash );
-		if ( queryParamBlueprint.redir && !( document.getElementById( 'preview-mode' ) as HTMLSelectElement ).value && !pageAccessedByReload ) {
-			stateController.autoredirect( queryParamBlueprint.redir );
-		}
-	} else if ( location.hash ) {
-		stateController.restoreState( blueprintCompiler.uncompressState( location.hash.replace( /^#+/, '' ) ) );
-		if ( !( document.getElementById( 'preview-mode' ) as HTMLSelectElement ).value && blueprintSteps.querySelectorAll( '.step' ).length && !pageAccessedByReload ) {
-			stateController.autoredirect();
-		}
-	} else {
-		blueprintEventBus.emit( 'blueprint:updated' );
 	}
-	}
-	Object.keys( examples ).forEach( function ( example ) {
-		const option = document.createElement( 'option' );
-		option.value = example;
-		option.innerText = example;
-		document.getElementById( 'examples' )!.appendChild( option );
-	} );
-	document.getElementById( 'examples' )!.addEventListener( 'change', function ( this: HTMLSelectElement ) {
+	examplesSelect.addEventListener( 'change', function ( this: HTMLSelectElement ) {
 		if ( 'Examples' === this.value ) {
 			return;
 		}
-		( document.getElementById( 'title' ) as HTMLInputElement ).value = this.value;
-		stateController.restoreState( { extraLibraries: [], ...examples[this.value] } );
-		blueprintEventBus.emit( 'blueprint:updated' );
+		restoreExample( examples[this.value] );
 	} );
 	stepLibraryController.clearFilter();
 
