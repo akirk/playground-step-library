@@ -106,6 +106,13 @@ function generateSchema() {
                 },
                 additionalProperties: false
             },
+            extraLibraries: {
+                type: 'array',
+                items: {
+                    type: 'string',
+                    enum: ['wp-cli']
+                }
+            },
             steps: {
                 type: 'array',
                 items: { oneOf: stepRefs }

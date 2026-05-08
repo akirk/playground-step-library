@@ -18,6 +18,17 @@ function createMockContext(): CompilationContext & { queryParams: Record<string,
 }
 
 describe('installPlugin', () => {
+    it('should return no V1 steps for empty url', () => {
+        const step: InstallPluginStep = {
+            step: 'installPlugin', vars: {
+            url: ''
+        } };
+
+        const result = installPlugin(step).toV1();
+
+        expect(result.steps).toEqual([]);
+    });
+
     it('should install plugin from WordPress.org slug', () => {
         const step: InstallPluginStep = {
             step: 'installPlugin', vars: {
@@ -397,7 +408,7 @@ describe('installPlugin', () => {
         expect(typeof prsVar.show).toBe('function');
     });
 
-    it('should handle empty or malformed URLs gracefully', () => {
+    it('should return empty steps for empty URL', () => {
         const step: InstallPluginStep = {
             step: 'installPlugin', vars: {
             url: ''
@@ -406,7 +417,6 @@ describe('installPlugin', () => {
         const result = installPlugin(step).toV1();
 
         expect(Array.isArray(result.steps)).toBe(true);
-        expect(result.steps).toHaveLength(1);
-        expect(result.steps[0].step).toBe('installPlugin');
+        expect(result.steps).toHaveLength(0);
     });
 });

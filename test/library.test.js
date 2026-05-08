@@ -92,6 +92,28 @@ describe('PlaygroundStepLibrary', () => {
       expect(compiled.steps.length).toBeGreaterThanOrEqual(2);
     });
 
+    it('should treat empty installTheme and installPlugin URLs as no-op custom steps', () => {
+      const blueprint = {
+        steps: [
+          {
+            step: 'installTheme',
+            vars: {
+              url: ''
+            }
+          },
+          {
+            step: 'installPlugin',
+            vars: {
+              url: ''
+            }
+          }
+        ]
+      };
+
+      const compiled = compiler.compile(blueprint);
+      expect(compiled.steps).toBeUndefined();
+    });
+
     it('should handle JSON string input', () => {
       const blueprint = {
         steps: [

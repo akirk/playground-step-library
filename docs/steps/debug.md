@@ -17,6 +17,7 @@ Configure WordPress debug settings and optionally install Query Monitor plugin.
 |----------|------|----------|-------------|
 | `wpDebug` | boolean | ❌ No | Enable WordPress debug mode |
 | `wpDebugDisplay` | boolean | ❌ No | Display errors in HTML output. Only applies when the above is enabled. |
+| `wpDebugLog` | boolean | ❌ No | Write debug messages and PHP errors to wp-content/debug.log. Only applies when debug mode is enabled. |
 | `scriptDebug` | boolean | ❌ No | Use non-minified JavaScript and CSS files. |
 | `queryMonitor` | boolean | ❌ No | Install Query Monitor plugin. |
 
@@ -76,6 +77,7 @@ const blueprint = {
           "vars": {
                 "wpDebug": false,
                 "wpDebugDisplay": false,
+                "wpDebugLog": false,
                 "scriptDebug": false,
                 "queryMonitor": false
           }

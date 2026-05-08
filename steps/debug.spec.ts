@@ -53,6 +53,20 @@ describe( 'debug', () => {
 			expect( configStep?.consts.WP_DEBUG_DISPLAY ).toBe( false );
 		} );
 
+		it( 'should not set WP_DEBUG_LOG by default', () => {
+			const result = debug( { step: 'debug' }, createMockContext() ).toV1();
+
+			const configStep = result.steps?.find( r => r.step === 'defineWpConfigConsts' );
+			expect( configStep?.consts.WP_DEBUG_LOG ).toBeUndefined();
+		} );
+
+		it( 'should set WP_DEBUG_LOG when enabled', () => {
+			const result = debug( { step: 'debug', vars: { wpDebugLog: true } }, createMockContext() ).toV1();
+
+			const configStep = result.steps?.find( r => r.step === 'defineWpConfigConsts' );
+			expect( configStep?.consts.WP_DEBUG_LOG ).toBe( true );
+		} );
+
 		it( 'should set SCRIPT_DEBUG when enabled', () => {
 			const result = debug( { step: 'debug', vars: { scriptDebug: true } }, createMockContext() ).toV1();
 
@@ -97,12 +111,14 @@ describe( 'debug', () => {
 				step: 'debug', vars: {
 				wpDebug: true,
 				wpDebugDisplay: false,
+				wpDebugLog: true,
 				scriptDebug: true
 			} }, createMockContext() ).toV1();
 
 			const configStep = result.steps?.find( r => r.step === 'defineWpConfigConsts' );
 			expect( configStep?.consts.WP_DEBUG ).toBe( true );
 			expect( configStep?.consts.WP_DEBUG_DISPLAY ).toBe( false );
+			expect( configStep?.consts.WP_DEBUG_LOG ).toBe( true );
 			expect( configStep?.consts.SCRIPT_DEBUG ).toBe( true );
 
 			const installStep = result.steps?.find( r => r.step === 'installPlugin' );

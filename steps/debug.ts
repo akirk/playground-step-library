@@ -8,6 +8,7 @@ export const debug: StepFunction<DebugStep> = ( step: DebugStep, context?: Compi
 		toV1() {
 			const wpDebug = step.vars?.wpDebug !== false;
 			const wpDebugDisplay = step.vars?.wpDebugDisplay !== false;
+			const wpDebugLog = step.vars?.wpDebugLog === true;
 			const scriptDebug = step.vars?.scriptDebug === true;
 			const queryMonitor = step.vars?.queryMonitor !== false;
 
@@ -19,6 +20,9 @@ export const debug: StepFunction<DebugStep> = ( step: DebugStep, context?: Compi
 
 			if ( wpDebug ) {
 				consts.WP_DEBUG_DISPLAY = wpDebugDisplay;
+				if ( wpDebugLog ) {
+					consts.WP_DEBUG_LOG = true;
+				}
 			}
 
 			if ( scriptDebug ) {
@@ -58,6 +62,13 @@ debug.vars = [
 	{
 		name: "wpDebugDisplay",
 		description: "Display errors in HTML output. Only applies when the above is enabled.",
+		type: "boolean",
+		required: false,
+		show: (step: DebugStep) => step.vars?.wpDebug !== false
+	},
+	{
+		name: "wpDebugLog",
+		description: "Write debug messages and PHP errors to wp-content/debug.log. Only applies when debug mode is enabled.",
 		type: "boolean",
 		required: false,
 		show: (step: DebugStep) => step.vars?.wpDebug !== false

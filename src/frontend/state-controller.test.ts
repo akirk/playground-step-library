@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { StateController, type StateControllerDependencies } from './state-controller';
 import { blueprintEventBus } from './blueprint-event-bus';
+import { uncompressState } from './blueprint-compiler';
 
 describe('StateController', () => {
 	let controller: StateController;
@@ -25,7 +26,8 @@ describe('StateController', () => {
 			playground: createInputElement('playground', 'text', 'playground.wordpress.net'),
 			mode: createSelectElement('mode', 'browser-full-screen'),
 			previewMode: createInputElement('preview-mode', 'text', ''),
-			excludeMeta: createCheckboxElement('exclude-meta', false)
+			excludeMeta: createCheckboxElement('exclude-meta', false),
+			wpCli: createCheckboxElement('wp-cli', false)
 		};
 
 		Object.values(mockElements).forEach(el => document.body.appendChild(el));
@@ -93,6 +95,14 @@ describe('StateController', () => {
 
 			const result = controller.compressStateFromDOM(steps);
 			expect(result).toBeTruthy();
+		});
+
+		it('should compress state with wp-cli extra library', () => {
+			(mockElements.wpCli as HTMLInputElement).checked = true;
+			const steps = [{ step: 'login' }];
+
+			const result = controller.compressStateFromDOM(steps);
+			expect(uncompressState(result).extraLibraries).toEqual(['wp-cli']);
 		});
 
 		it('should handle missing form elements gracefully', () => {
@@ -205,6 +215,27 @@ describe('StateController', () => {
 
 			controller.restoreState(state);
 			expect((mockElements.excludeMeta as HTMLInputElement).checked).toBe(true);
+		});
+
+		it('should restore wp-cli extra library', () => {
+			const state = {
+				steps: [],
+				extraLibraries: ['wp-cli']
+			};
+
+			controller.restoreState(state);
+			expect((mockElements.wpCli as HTMLInputElement).checked).toBe(true);
+		});
+
+		it('should clear wp-cli when extraLibraries is empty', () => {
+			(mockElements.wpCli as HTMLInputElement).checked = true;
+			const state = {
+				steps: [],
+				extraLibraries: []
+			};
+
+			controller.restoreState(state);
+			expect((mockElements.wpCli as HTMLInputElement).checked).toBe(false);
 		});
 
 		it('should not restore excludeMeta if undefined', () => {

@@ -187,7 +187,7 @@ class StepLibraryCompiler {
             // the step using our custom functions or pass it through as a builtin step.
             // Use discriminated union logic to determine step type
             if (step.step === 'installPlugin') {
-                if (step.vars?.url) {
+                if (step.vars && Object.prototype.hasOwnProperty.call(step.vars, 'url')) {
                     // Custom installPlugin step - transform it
                     customStepResult = this.executeCustomStep(step.step, step, inputData);
                 } else {
@@ -195,7 +195,7 @@ class StepLibraryCompiler {
                     customStepResult = { steps: [step as StepDefinition] };
                 }
             } else if (step.step === 'installTheme') {
-                if (step.vars?.url) {
+                if (step.vars && Object.prototype.hasOwnProperty.call(step.vars, 'url')) {
                     // Custom installTheme step - transform it
                     customStepResult = this.executeCustomStep(step.step, step, inputData);
                 } else {

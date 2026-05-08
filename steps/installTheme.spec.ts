@@ -18,6 +18,17 @@ function createMockContext(): CompilationContext & { queryParams: Record<string,
 }
 
 describe('installTheme', () => {
+    it('should return no V1 steps for empty url', () => {
+        const step: InstallThemeStep = {
+            step: 'installTheme', vars: {
+            url: ''
+        } };
+
+        const result = installTheme(step).toV1();
+
+        expect(result.steps).toEqual([]);
+    });
+
     it('should install theme from WordPress.org slug', () => {
         const step: InstallThemeStep = {
             step: 'installTheme', vars: {
