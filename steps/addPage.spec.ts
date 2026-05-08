@@ -76,6 +76,34 @@ describe('addPage', () => {
       expect(result.steps[0].code).toContain("'post_content' => '<p>Here\\'s some content</p>'");
     });
 
+    it('should escape backslashes and preserve dollars and newlines', () => {
+      const step: AddPageStep = {
+        step: 'addPage', vars: {
+        title: "C:\\Users\\Alex's $page\nSecond line",
+        content: '<p>Path C:\\tmp\\file and $value</p>'
+      } };
+
+      const result = addPage(step).toV1();
+
+      expect(result.steps[0].code).toContain(String.raw`'post_title'   => 'C:\\Users\\Alex\'s $page`);
+      expect(result.steps[0].code).toContain("Second line'");
+      expect(result.steps[0].code).toContain(String.raw`'post_content' => '<p>Path C:\\tmp\\file and $value</p>'`);
+    });
+
+    it('should escape homepage lookup title in v2 fallback PHP', () => {
+      const step: AddPageStep = {
+        step: 'addPage', vars: {
+        title: "C:\\Path\\John's Page",
+        content: '<p>Welcome</p>',
+        homepage: true
+      } };
+
+      const result = addPage(step).toV2();
+      const code = (result.additionalStepsAfterExecution?.[0].code as { content: string }).content;
+
+      expect(code).toContain(String.raw`'title' => 'C:\\Path\\John\'s Page'`);
+    });
+
     it('should prefer new variable names over deprecated ones', () => {
       const step: AddPageStep = {
         step: 'addPage', vars: {

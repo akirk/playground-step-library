@@ -1,5 +1,6 @@
 import type { StepFunction, AddPageStep, StepResult } from './types.js';
 import type { BlueprintV2Declaration } from '@wp-playground/blueprints';
+import { escapePhpSingleQuotedString } from './php.js';
 
 export const addPage: StepFunction<AddPageStep> = (step: AddPageStep): StepResult => {
 	const title = step.vars?.title || step.vars?.postTitle || '';
@@ -7,8 +8,8 @@ export const addPage: StepFunction<AddPageStep> = (step: AddPageStep): StepResul
 
 	return {
 		toV1() {
-			const postTitle = title.replace(/'/g, "\\'");
-			const postContent = content.replace(/'/g, "\\'");
+			const postTitle = escapePhpSingleQuotedString(title);
+			const postContent = escapePhpSingleQuotedString(content);
 			let code = `
 <?php require_once '/wordpress/wp-load.php';
 $page_args = array(
@@ -68,7 +69,7 @@ if ( is_wp_error( $page_id ) ) {
 require_once '/wordpress/wp-load.php';
 $pages = get_posts( array(
 	'post_type' => 'page',
-	'title' => '${title.replace(/'/g, "\\'")}',
+	'title' => '${escapePhpSingleQuotedString(title)}',
 	'posts_per_page' => 1,
 	'orderby' => 'ID',
 	'order' => 'DESC'

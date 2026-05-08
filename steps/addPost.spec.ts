@@ -127,6 +127,37 @@ describe('addPost', () => {
         expect(result.steps[0].code).toContain("'post_content' => '<p>Content with \\'quotes\\' here</p>'");
     });
 
+    it('should escape backslashes and preserve dollars and newlines', () => {
+        const step: AddPostStep = {
+            step: 'addPost', vars: {
+            title: "C:\\Users\\Alex's $post\nSecond line",
+            content: '<p>Path C:\\tmp\\file and $value</p>',
+            type: 'post'
+        } };
+
+        const result = addPost(step).toV1();
+
+        expect(result.steps[0].code).toContain(String.raw`'post_title'   => 'C:\\Users\\Alex\'s $post`);
+        expect(result.steps[0].code).toContain("Second line'");
+        expect(result.steps[0].code).toContain(String.raw`'post_content' => '<p>Path C:\\tmp\\file and $value</p>'`);
+    });
+
+    it('should escape homepage lookup title and post type in v2 fallback PHP', () => {
+        const step: AddPostStep = {
+            step: 'addPost', vars: {
+            title: "C:\\Path\\John's Page",
+            content: '<p>Welcome</p>',
+            type: String.raw`custom\type`,
+            homepage: true
+        } };
+
+        const result = addPost(step).toV2();
+        const code = (result.additionalStepsAfterExecution?.[0].code as { content: string }).content;
+
+        expect(code).toContain(String.raw`'post_type' => 'custom\\type'`);
+        expect(code).toContain(String.raw`'title' => 'C:\\Path\\John\'s Page'`);
+    });
+
     it('should escape single quotes in post date', () => {
         const step: AddPostStep = {
             step: 'addPost', vars: {
