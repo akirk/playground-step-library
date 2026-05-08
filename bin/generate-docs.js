@@ -52,7 +52,8 @@ class StepDocumentationGenerator {
         const docs = {
             readme: this.generateMainReadme(),
             stepsList: this.generateStepsList(),
-            individualDocs: this.generateIndividualStepDocs()
+            individualDocs: this.generateIndividualStepDocs(),
+            examples: this.generateExamplesDoc()
         };
 
         // Ensure docs directories exist
@@ -64,6 +65,9 @@ class StepDocumentationGenerator {
 
         // Write steps list
         this.writeFileIfChanged('docs/steps-reference.md', docs.stepsList);
+
+        // Write examples documentation
+        this.writeFileIfChanged('docs/examples.md', docs.examples);
 
         // Write individual step docs
         Object.entries(docs.individualDocs).forEach(([stepName, content]) => {
@@ -187,6 +191,7 @@ ${customSteps.map(([name, info]) =>
 
 - [← Back to Main Documentation](../README.md)
 - [Complete Steps Reference](../steps-reference.md) - All steps in one page
+- [Examples](../examples.md) - Preloadable example blueprints
 - [Built-in Step Usage](../builtin-step-usage.md) - See which steps compile to each built-in step
 `;
     }
@@ -256,6 +261,7 @@ Many steps can reference and use other steps. For example:
 
 - [Complete Steps Reference](steps-reference.md) - Detailed list with all parameters
 - [Individual Step Documentation](steps/) - Comprehensive docs for each step
+- [Examples](examples.md) - Preloadable example blueprints
 - [Built-in Step Usage](builtin-step-usage.md) - See which steps compile to each built-in step
 
 ## 🛠️ Contributing
@@ -267,6 +273,59 @@ See our [Contributing Guide](../CONTRIBUTING.md) for details on:
 - Testing your changes
 - Submitting pull requests
 `;
+    }
+
+    /**
+     * Read example blueprints from src/examples.
+     */
+    getExamples() {
+        const examplesDir = path.join(process.cwd(), 'src/examples');
+
+        if (!fs.existsSync(examplesDir)) {
+            return [];
+        }
+
+        return fs.readdirSync(examplesDir)
+            .filter(filename => filename.endsWith('.json'))
+            .map(filename => {
+                const filepath = path.join(examplesDir, filename);
+                const example = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+                const slug = filename.replace(/\.json$/, '');
+                return {
+                    slug,
+                    title: example.meta?.title || slug,
+                    steps: Array.isArray(example.steps) ? example.steps : [],
+                    extraLibraries: Array.isArray(example.extraLibraries) ? example.extraLibraries : []
+                };
+            })
+            .sort((a, b) => a.title.localeCompare(b.title));
+    }
+
+    /**
+     * Generate examples documentation.
+     */
+    generateExamplesDoc() {
+        const examples = this.getExamples();
+        const uiUrl = 'https://akirk.github.io/playground-step-library/';
+
+        let content = `# Examples
+
+These links preload the example blueprints in the Step Library Web UI.
+
+| Example | Preload Link | Steps | Extra Libraries |
+|---------|--------------|-------|-----------------|
+`;
+
+        examples.forEach(example => {
+            const preloadUrl = `${uiUrl}?example=${encodeURIComponent(example.slug)}`;
+            const preloadLabel = `?example=${example.slug}`;
+            const steps = example.steps.map(step => `\`${step.step || 'unknown'}\``).join(', ') || 'None';
+            const extraLibraries = example.extraLibraries.map(library => `\`${library}\``).join(', ') || 'None';
+
+            content += `| ${example.title} | [\`${preloadLabel}\`](${preloadUrl}) | ${steps} | ${extraLibraries} |\n`;
+        });
+
+        return content;
     }
 
     /**
