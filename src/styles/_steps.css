@@ -1,3 +1,49 @@
+.step-category {
+	border-bottom: 1px solid var(--border-color);
+
+	&.hidden {
+		display: none;
+	}
+
+	&[open] > .step-category-header::after {
+		transform: rotate(90deg);
+	}
+}
+
+.step-category-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: var(--spacing-2) var(--spacing-3);
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-semibold);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--text-subtle);
+	cursor: pointer;
+	user-select: none;
+	list-style: none;
+
+	&::-webkit-details-marker {
+		display: none;
+	}
+
+	&::after {
+		content: '\25B6';
+		font-size: 8px;
+		transition: transform var(--transition-fast) var(--transition-ease);
+	}
+
+	&:hover {
+		color: var(--text-color);
+		background: var(--surface-elevated);
+	}
+}
+
+.step-category-steps {
+	/* Container for steps inside a category */
+}
+
 .step {
 	padding: var(--spacing-2) var(--spacing-3);
 	margin: var(--spacing-1) var(--spacing-2);

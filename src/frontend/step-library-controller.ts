@@ -7,6 +7,7 @@ import { StepDefinition, ShowCallbacks } from './types';
 import { createStep } from './step-renderer';
 import { fixMouseCursor } from './dom-utils';
 import { getMySteps } from './custom-steps';
+import { STEP_CATEGORIES, STEP_CATEGORY_MAP } from '../step-categories';
 
 export interface StepLibraryControllerDependencies {
 	stepList: HTMLElement;
@@ -16,6 +17,7 @@ export interface StepLibraryControllerDependencies {
 
 export class StepLibraryController {
 	private deps: StepLibraryControllerDependencies;
+	private categoryContainers: Map<string, HTMLElement> = new Map();
 
 	constructor(deps: StepLibraryControllerDependencies) {
 		this.deps = deps;
@@ -26,6 +28,21 @@ export class StepLibraryController {
 	 * Initialize the step library with all available steps
 	 */
 	initializeStepLibrary(): void {
+		// Create "My Steps" category (initially hidden, shown when steps exist)
+		const myStepsDetails = this.createCategoryElement('my-steps', 'My Steps');
+		myStepsDetails.classList.add('hidden');
+		this.deps.stepList.appendChild(myStepsDetails);
+
+		// Create category containers
+		for (const category of STEP_CATEGORIES) {
+			const details = this.createCategoryElement(category.id, category.label);
+			this.deps.stepList.appendChild(details);
+		}
+
+		// Create "Other" category for uncategorized steps
+		const otherDetails = this.createCategoryElement('other', 'Other');
+		this.deps.stepList.appendChild(otherDetails);
+
 		// Populate step library with all custom steps
 		for (const name in this.deps.customSteps) {
 			const data = this.deps.customSteps[name];
@@ -37,8 +54,13 @@ export class StepLibraryController {
 
 			data.step = name;
 			const step = createStep(name, data, this.deps.showCallbacks);
-			this.deps.stepList.appendChild(step);
 			step.querySelectorAll('input,textarea').forEach(fixMouseCursor);
+
+			const categoryId = STEP_CATEGORY_MAP[name] || 'other';
+			const container = this.categoryContainers.get(categoryId);
+			if (container) {
+				container.appendChild(step);
+			}
 		}
 
 		// Load custom steps from localStorage
@@ -47,6 +69,32 @@ export class StepLibraryController {
 			const data = mySteps[name];
 			this.insertMyStep(name, data);
 		}
+
+		// Hide empty categories
+		this.updateCategoryVisibility();
+	}
+
+	/**
+	 * Create a collapsible category element
+	 */
+	private createCategoryElement(id: string, label: string): HTMLDetailsElement {
+		const details = document.createElement('details');
+		details.className = 'step-category';
+		details.dataset.categoryId = id;
+		details.open = true;
+
+		const summary = document.createElement('summary');
+		summary.className = 'step-category-header';
+		summary.textContent = label;
+		details.appendChild(summary);
+
+		const stepsContainer = document.createElement('div');
+		stepsContainer.className = 'step-category-steps';
+		details.appendChild(stepsContainer);
+
+		this.categoryContainers.set(id, stepsContainer);
+
+		return details;
 	}
 
 	/**
@@ -54,22 +102,28 @@ export class StepLibraryController {
 	 */
 	insertMyStep(name: string, data: StepDefinition): void {
 		data.mine = true;
-		let beforeStep: Element | null = null;
 
-		for (const j in this.deps.stepList.children) {
-			const child = this.deps.stepList.children[j] as HTMLElement;
-			if (child.dataset && child.dataset.id && child.dataset.id > name) {
+		const myStepsContainer = this.categoryContainers.get('my-steps');
+		if (!myStepsContainer) return;
+
+		// Show the "My Steps" category
+		const myStepsDetails = myStepsContainer.closest('.step-category') as HTMLElement;
+		if (myStepsDetails) {
+			myStepsDetails.classList.remove('hidden');
+		}
+
+		// Find the correct alphabetical position within "My Steps"
+		let beforeStep: Element | null = null;
+		for (const child of Array.from(myStepsContainer.children)) {
+			const childElement = child as HTMLElement;
+			if (childElement.dataset && childElement.dataset.id && childElement.dataset.id > name) {
 				beforeStep = child;
-				break;
-			}
-			if (child.classList && !child.classList.contains('mine')) {
-				beforeStep = this.deps.stepList.querySelector('.step.builtin');
 				break;
 			}
 		}
 
 		const step = createStep(name, data, this.deps.showCallbacks);
-		this.deps.stepList.insertBefore(step, beforeStep);
+		myStepsContainer.insertBefore(step, beforeStep);
 		step.querySelectorAll('input,textarea').forEach(fixMouseCursor);
 	}
 
@@ -121,6 +175,46 @@ export class StepLibraryController {
 				stepElement.classList.add('hidden');
 			}
 		});
+
+		// Hide categories where all steps are hidden
+		this.updateCategoryVisibilityAfterFilter();
+	}
+
+	/**
+	 * Update category visibility after filtering
+	 */
+	private updateCategoryVisibilityAfterFilter(): void {
+		this.deps.stepList.querySelectorAll('.step-category').forEach((details) => {
+			const stepsContainer = details.querySelector('.step-category-steps');
+			if (!stepsContainer) return;
+
+			const allSteps = stepsContainer.querySelectorAll('.step');
+			const visibleSteps = stepsContainer.querySelectorAll('.step:not(.hidden)');
+
+			if (allSteps.length === 0 || visibleSteps.length === 0) {
+				(details as HTMLElement).classList.add('hidden');
+			} else {
+				(details as HTMLElement).classList.remove('hidden');
+			}
+		});
+	}
+
+	/**
+	 * Hide categories that have no steps
+	 */
+	private updateCategoryVisibility(): void {
+		this.deps.stepList.querySelectorAll('.step-category').forEach((details) => {
+			const stepsContainer = details.querySelector('.step-category-steps');
+			if (!stepsContainer) return;
+
+			const categoryId = (details as HTMLElement).dataset.categoryId;
+			// Don't hide "My Steps" here — it's managed separately
+			if (categoryId === 'my-steps') return;
+
+			if (stepsContainer.children.length === 0) {
+				(details as HTMLElement).classList.add('hidden');
+			}
+		});
 	}
 
 	/**
@@ -164,6 +258,14 @@ export class StepLibraryController {
 			// Show all steps
 			this.deps.stepList.querySelectorAll('.step').forEach((step) => {
 				step.classList.remove('hidden');
+			});
+
+			// Show all categories (except empty ones)
+			this.deps.stepList.querySelectorAll('.step-category').forEach((details) => {
+				const stepsContainer = details.querySelector('.step-category-steps');
+				if (stepsContainer && stepsContainer.children.length > 0) {
+					(details as HTMLElement).classList.remove('hidden');
+				}
 			});
 		}
 	}
