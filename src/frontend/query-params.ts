@@ -19,7 +19,40 @@ export interface BlueprintQueryParams {
  */
 export function getBlueprintUrlParam(): string | null {
 	const urlParams = new URLSearchParams(window.location.search);
-	return urlParams.get('blueprint-url');
+	const blueprintUrl = urlParams.get('blueprint-url');
+	return blueprintUrl ? rewriteGitHubUrlToRaw( blueprintUrl ) : null;
+}
+
+/**
+ * Rewrite GitHub file URLs to raw.githubusercontent.com URLs so they can be fetched directly.
+ */
+export function rewriteGitHubUrlToRaw( url: string ): string {
+	let parsedUrl: URL;
+	try {
+		parsedUrl = new URL( url );
+	} catch ( e ) {
+		return url;
+	}
+
+	if ( parsedUrl.protocol !== 'https:' && parsedUrl.protocol !== 'http:' ) {
+		return url;
+	}
+
+	if ( parsedUrl.hostname !== 'github.com' && parsedUrl.hostname !== 'www.github.com' ) {
+		return url;
+	}
+
+	const pathParts = parsedUrl.pathname.split( '/' ).filter( Boolean );
+	const [ owner, repo, fileUrlType, ref, ...filePath ] = pathParts;
+	if ( !owner || !repo || !ref || filePath.length === 0 ) {
+		return url;
+	}
+
+	if ( fileUrlType !== 'blob' && fileUrlType !== 'raw' ) {
+		return url;
+	}
+
+	return `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/${filePath.join( '/' )}${parsedUrl.search}`;
 }
 
 /**
