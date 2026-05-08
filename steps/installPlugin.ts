@@ -21,6 +21,13 @@ export const installPlugin: StepFunction<InstallPluginStep> = ( step: InstallPlu
 		plugin = slugTest.groups!.slug;
 	}
 
+	if ( !plugin ) {
+		return {
+			toV1() { return { steps: [] }; },
+			toV2() { return { version: 2 }; }
+		};
+	}
+
 	// WordPress.org plugins and direct URLs
 	return {
 		toV1() {

@@ -45,6 +45,7 @@ export interface AppState {
 	mode?: string;
 	previewMode?: string;
 	excludeMeta?: boolean;
+	extraLibraries?: string[];
 }
 
 export interface WizardState {
@@ -88,6 +89,7 @@ export interface StepConfig {
 export interface CombinedExamples {
 	title?: string;
 	landingPage: string;
+	extraLibraries?: string[];
 	steps: any[];
 }
 

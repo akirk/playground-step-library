@@ -594,6 +594,10 @@ addEventListener('DOMContentLoaded', function () {
 			combinedExamples.title = titleEl.value;
 		}
 		const state: StepData[] = [];
+		const wpCliEl = document.getElementById( 'wp-cli' ) as HTMLInputElement | null;
+		if ( wpCliEl?.checked ) {
+			combinedExamples.extraLibraries = [ 'wp-cli' ];
+		}
 
 		blueprintSteps.querySelectorAll( '.step' ).forEach( function ( stepBlock ) {
 			updateVariableVisibility( stepBlock as HTMLElement );
@@ -777,7 +781,7 @@ addEventListener('DOMContentLoaded', function () {
 			return;
 		}
 		( document.getElementById( 'title' ) as HTMLInputElement ).value = this.value;
-		stateController.restoreState( { steps: examples[this.value] } );
+		stateController.restoreState( { extraLibraries: [], ...examples[this.value] } );
 		blueprintEventBus.emit( 'blueprint:updated' );
 	} );
 	stepLibraryController.clearFilter();

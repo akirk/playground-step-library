@@ -597,6 +597,7 @@ export interface DebugStep extends BlueprintStep {
 	vars?: {
 		wpDebug?: boolean;
 		wpDebugDisplay?: boolean;
+		wpDebugLog?: boolean;
 		scriptDebug?: boolean;
 		queryMonitor?: boolean;
 	};
@@ -630,4 +631,3 @@ export interface SiteHealthImportStep extends BlueprintStep {
 		installLatest?: boolean;
 	};
 }
-

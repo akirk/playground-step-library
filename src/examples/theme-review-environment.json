@@ -1,0 +1,58 @@
+{
+	"$schema": "../../step-library-schema.json",
+	"meta": {
+		"title": "Theme Review Environment"
+	},
+	"extraLibraries": [
+		"wp-cli"
+	],
+	"steps": [
+		{
+			"step": "installTheme",
+			"vars": {
+				"url": ""
+			}
+		},
+		{
+			"step": "setSiteOption",
+			"vars": {
+				"name": "blogname",
+				"value": "Theme Review Environment"
+			}
+		},
+		{
+			"step": "debug",
+			"vars": {
+				"wpDebug": true,
+				"wpDebugDisplay": false,
+				"wpDebugLog": true,
+				"queryMonitor": true
+			}
+		},
+		{
+			"step": "installPlugin",
+			"vars": {
+				"url": "theme-check"
+			}
+		},
+		{
+			"step": "installPlugin",
+			"vars": {
+				"url": "log-deprecated-notices"
+			}
+		},
+		{
+			"step": "importWxr",
+			"vars": {
+				"url": "https://raw.githubusercontent.com/WordPress/theme-test-data/master/themeunittestdata.wordpress.xml"
+			}
+		},
+		{
+			"step": "login",
+			"vars": {
+				"username": "admin",
+				"password": "password"
+			}
+		}
+	]
+}

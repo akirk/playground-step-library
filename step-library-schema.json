@@ -30,6 +30,15 @@
       },
       "additionalProperties": false
     },
+    "extraLibraries": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "wp-cli"
+        ]
+      }
+    },
     "steps": {
       "type": "array",
       "items": {
@@ -882,6 +891,10 @@
             "wpDebugDisplay": {
               "type": "boolean",
               "description": "Display errors in HTML output. Only applies when the above is enabled."
+            },
+            "wpDebugLog": {
+              "type": "boolean",
+              "description": "Write debug messages and PHP errors to wp-content/debug.log. Only applies when debug mode is enabled."
             },
             "scriptDebug": {
               "type": "boolean",

@@ -33,6 +33,8 @@ export class StateController {
 		const wpVersionEl = document.getElementById('wp-version') as HTMLSelectElement;
 		const phpVersionEl = document.getElementById('php-version') as HTMLSelectElement;
 		const blueprintVersionEl = document.querySelector('input[name="blueprint-version"]:checked') as HTMLInputElement;
+		const wpCliEl = document.getElementById('wp-cli') as HTMLInputElement;
+		const extraLibraries = wpCliEl?.checked ? ['wp-cli'] : undefined;
 
 		return compressState(steps, {
 			title: titleEl?.value || undefined,
@@ -43,7 +45,8 @@ export class StateController {
 			excludeMeta: excludeMetaEl?.checked || undefined,
 			wpVersion: wpVersionEl?.value || undefined,
 			phpVersion: phpVersionEl?.value || undefined,
-			blueprintVersion: blueprintVersionEl?.value || undefined
+			blueprintVersion: blueprintVersionEl?.value || undefined,
+			extraLibraries
 		});
 	}
 
@@ -74,6 +77,12 @@ export class StateController {
 		}
 		if (state.excludeMeta !== undefined) {
 			(document.getElementById('exclude-meta') as HTMLInputElement).checked = state.excludeMeta;
+		}
+		if (state.extraLibraries !== undefined) {
+			const wpCliEl = document.getElementById('wp-cli') as HTMLInputElement | null;
+			if (wpCliEl) {
+				wpCliEl.checked = Array.isArray(state.extraLibraries) && state.extraLibraries.includes('wp-cli');
+			}
 		}
 		if (state.wpVersion) {
 			(document.getElementById('wp-version') as HTMLSelectElement).value = state.wpVersion;
