@@ -268,6 +268,10 @@
 	display: none;
 }
 
+.mobile-instructions {
+	display: none;
+}
+
 #mobile-show-steps {
 	margin-top: var(--spacing-4);
 }
@@ -278,6 +282,118 @@
 	gap: var(--spacing-3);
 	align-items: center;
 	flex-wrap: wrap;
+}
+
+.header-overflow-dropdown,
+.header-overflow-menu {
+	display: contents;
+}
+
+.header-overflow-button {
+	display: none !important;
+}
+
+.header-overflow-menu > #options-wrapper > #toggle-further-options,
+.header-overflow-menu > #wizard-mode-toggle {
+	display: inline-flex;
+	width: auto;
+	border: 1px solid var(--button-border);
+	background-color: var(--button-background);
+	color: var(--text-color);
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-sm);
+	text-align: center;
+}
+
+@media (min-width: 735px) {
+	.header-overflow-menu {
+		display: contents !important;
+	}
+}
+
+@media (max-width: 734px) {
+	#top-buttons {
+		width: 100%;
+		flex-wrap: nowrap;
+		gap: var(--spacing-2);
+	}
+
+	#top-buttons > button,
+	#top-buttons > select {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	#top-buttons > #examples {
+		flex: 0 0 132px;
+		width: 132px;
+		min-width: 132px;
+	}
+
+	.header-overflow-dropdown {
+		display: inline-block;
+		position: relative;
+		flex: 0 0 auto;
+	}
+
+	.header-overflow-button {
+		display: inline-flex !important;
+		width: 40px;
+		border: 1px solid var(--border-component);
+		background: var(--surface-color);
+		color: var(--text-color);
+	}
+
+	.header-overflow-menu {
+		display: none;
+		bottom: auto;
+		top: calc(100% + var(--spacing-2));
+		width: min(260px, calc(100vw - var(--spacing-4)));
+		min-width: 230px;
+		max-width: calc(100vw - var(--spacing-4));
+		margin-bottom: 0;
+		padding: var(--spacing-2);
+		white-space: normal;
+	}
+
+	.header-overflow-menu > #options-wrapper,
+	.header-overflow-menu > select,
+	.header-overflow-menu > button {
+		display: block;
+		width: 100%;
+		box-sizing: border-box;
+		margin: 0;
+	}
+
+	.header-overflow-menu > *,
+	.header-overflow-menu #preview-mode {
+		min-width: 0;
+		max-width: 100%;
+	}
+
+	.header-overflow-menu > #options-wrapper,
+	.header-overflow-menu > select {
+		margin-bottom: var(--spacing-2);
+	}
+
+	.header-overflow-menu #toggle-further-options,
+	.header-overflow-menu #wizard-mode-toggle {
+		justify-content: flex-start;
+	}
+
+	.header-overflow-menu #toggle-further-options,
+	.header-overflow-menu #preview-mode,
+	.header-overflow-menu #wizard-mode-toggle {
+		width: 100%;
+	}
+
+	.desktop-instructions {
+		display: none;
+	}
+
+	.mobile-instructions {
+		display: inline;
+	}
 }
 
 #code-editor-container {

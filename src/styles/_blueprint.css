@@ -39,6 +39,17 @@ body.blueprint-drop-active {
 	margin-bottom: var(--spacing-2);
 }
 
+.compiled-header-actions {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-2);
+	margin-left: auto;
+}
+
+#blueprint-collapsed-stats {
+	display: none;
+}
+
 /* Blueprint Compiled Wrapper */
 #blueprint-compiled-wrapper {
 	position: relative;

@@ -130,6 +130,73 @@ addEventListener('DOMContentLoaded', function () {
 		myStepNameEl.value = '';
 	}
 
+	function normalizeStepValue(value: unknown): string {
+		return String(value ?? '');
+	}
+
+	function getInputValue(input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement): string {
+		if (input instanceof HTMLInputElement && input.type === 'checkbox') {
+			return normalizeStepValue(input.checked);
+		}
+
+		return normalizeStepValue(input.value);
+	}
+
+	function getDefaultValues(stepDefinition: StepDefinition, fieldName: string): string[] {
+		if (fieldName === 'count') {
+			return [normalizeStepValue(stepDefinition.count)];
+		}
+
+		const variable = stepDefinition.vars?.find((stepVariable) => stepVariable.name === fieldName);
+		if (!variable) {
+			return [''];
+		}
+
+		if (typeof variable.setValue !== 'undefined') {
+			return (Array.isArray(variable.setValue) ? variable.setValue : [variable.setValue]).map(normalizeStepValue);
+		}
+
+		if (variable.type === 'select') {
+			return [normalizeStepValue(variable.samples?.[0] ?? variable.options?.[0] ?? '')];
+		}
+
+		return [normalizeStepValue(variable.samples?.[0] ?? '')];
+	}
+
+	function isStepModifiedFromDefault(stepElement: HTMLElement): boolean {
+		if (stepElement.classList.contains('mine')) {
+			return false;
+		}
+
+		const stepName = stepElement.dataset.step;
+		const stepDefinition = stepName ? customSteps[stepName] : undefined;
+		if (!stepDefinition) {
+			return false;
+		}
+
+		const fields = Array.from(stepElement.querySelectorAll('input,select,textarea')) as (HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement)[];
+		const fieldNames = Array.from(new Set(fields.map((field) => field.name).filter(Boolean)));
+
+		return fieldNames.some((fieldName) => {
+			const currentValues = fields.filter((field) => field.name === fieldName).map(getInputValue);
+			const defaultValues = getDefaultValues(stepDefinition, fieldName);
+
+			if (currentValues.length !== defaultValues.length) {
+				return true;
+			}
+
+			return currentValues.some((currentValue, index) => currentValue !== defaultValues[index]);
+		});
+	}
+
+	function updateSaveStepButtonVisibility() {
+		blueprintSteps.querySelectorAll('.step').forEach((stepElement) => {
+			if (stepElement instanceof HTMLElement) {
+				stepElement.classList.toggle('show-save-step', isStepModifiedFromDefault(stepElement));
+			}
+		});
+	}
+
 	document.addEventListener('dragstart', (event) => {
 		if (!(event.target instanceof Element)) return;
 
@@ -208,9 +275,13 @@ addEventListener('DOMContentLoaded', function () {
 		}
 		// Only handle inputs/textareas in blueprint-steps
 		if (target.closest('#blueprint-steps') && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
+			updateSaveStepButtonVisibility();
 			debouncedBlueprintUpdate();
 		}
 	});
+
+	blueprintSteps.addEventListener('change', updateSaveStepButtonVisibility);
+	new MutationObserver(updateSaveStepButtonVisibility).observe(blueprintSteps, { childList: true, subtree: true });
 
 	document.addEventListener('keyup', (event) => {
 		if (event.ctrlKey || event.altKey || event.metaKey) {
@@ -561,6 +632,7 @@ addEventListener('DOMContentLoaded', function () {
 	blueprintEventBus.on('blueprint:updated', () => {
 		loadCombinedExamples();
 		updateMenuItemVisibility();
+		updateSaveStepButtonVisibility();
 	});
 
 	function updateMenuItemVisibility() {
@@ -773,6 +845,11 @@ addEventListener('DOMContentLoaded', function () {
 	const mainDropdown = document.getElementById('more-options-dropdown');
 	if (mainDropdown) {
 		urlController.initMoreOptionsDropdown(mainDropdown);
+	}
+
+	const headerDropdown = document.getElementById('header-overflow-dropdown');
+	if (headerDropdown) {
+		urlController.initMoreOptionsDropdown(headerDropdown);
 	}
 
 	const moreOptionsMenu = document.getElementById( 'more-options-menu' );

@@ -58,13 +58,20 @@ export class HistoryController {
 			});
 		}
 
-		// Close button
-		const closeBtn = document.getElementById('history-close');
-		if (closeBtn) {
-			closeBtn.addEventListener('click', () => {
-				this.closeHistoryModal();
-			});
-		}
+			// Close button
+			const closeBtn = document.getElementById('history-close');
+			if (closeBtn) {
+				closeBtn.addEventListener('click', () => {
+					this.closeHistoryModal();
+				});
+			}
+
+			const mobileBackBtn = document.getElementById('history-mobile-back-btn');
+			if (mobileBackBtn) {
+				mobileBackBtn.addEventListener('click', () => {
+					this.hideMobileDetailPane();
+				});
+			}
 
 		// Save current button
 		const saveCurrentBtn = document.getElementById('history-save-current-btn');
@@ -114,25 +121,41 @@ export class HistoryController {
 	/**
 	 * Open the My Blueprints modal
 	 */
-	openHistoryModal(): void {
-		const modal = document.getElementById('history-modal') as HTMLDialogElement;
-		if (modal) {
-			modal.showModal();
-			this.renderHistoryList();
-			this.updateHistoryButtonVisibility();
+		openHistoryModal(): void {
+			const modal = document.getElementById('history-modal') as HTMLDialogElement;
+			if (modal) {
+				modal.showModal();
+				this.hideMobileDetailPane();
+				this.renderHistoryList();
+				this.updateHistoryButtonVisibility();
+			}
 		}
-	}
 
 	/**
 	 * Close the My Blueprints modal
 	 */
-	closeHistoryModal(): void {
-		const modal = document.getElementById('history-modal') as HTMLDialogElement;
-		if (modal) {
-			modal.close();
-			cleanupHistoryBlueprintAceEditor();
+		closeHistoryModal(): void {
+			const modal = document.getElementById('history-modal') as HTMLDialogElement;
+			if (modal) {
+				modal.close();
+				this.hideMobileDetailPane();
+				cleanupHistoryBlueprintAceEditor();
+			}
 		}
-	}
+
+		private showMobileDetailPane(): void {
+			const detailColumn = document.getElementById('history-detail-column');
+			if (detailColumn) {
+				detailColumn.classList.add('mobile-visible');
+			}
+		}
+
+		private hideMobileDetailPane(): void {
+			const detailColumn = document.getElementById('history-detail-column');
+			if (detailColumn) {
+				detailColumn.classList.remove('mobile-visible');
+			}
+		}
 
 	/**
 	 * Add current blueprint to history
@@ -383,9 +406,10 @@ export class HistoryController {
 			}
 		}
 
-		// Setup action buttons
-		this.setupDetailActions(entryId);
-	}
+			// Setup action buttons
+			this.setupDetailActions(entryId);
+			this.showMobileDetailPane();
+		}
 
 	/**
 	 * Restore the blueprint detail view structure
@@ -697,13 +721,25 @@ export class HistoryController {
 	/**
 	 * Check if blueprint is already saved
 	 */
-	isBlueprintAlreadySaved(): boolean {
-		return this.deps.isBlueprintAlreadySaved();
-	}
+		isBlueprintAlreadySaved(): boolean {
+			return this.deps.isBlueprintAlreadySaved();
+		}
 
-	/**
-	 * Show personal step detail view
-	 */
+		private formatStoredParameterValue(value: any): string {
+			if (Array.isArray(value)) {
+				return value.map((item) => this.formatStoredParameterValue(item)).join(', ');
+			}
+
+			if (value && typeof value === 'object') {
+				return JSON.stringify(value, null, 2);
+			}
+
+			return String(value ?? '');
+		}
+
+		/**
+		 * Show personal step detail view
+		 */
 	showPersonalStepDetail(stepName: string, stepDefinition: any): void {
 		const detailContent = document.getElementById('history-detail-content');
 		const detailEmpty = document.getElementById('history-detail-empty');
@@ -746,29 +782,33 @@ export class HistoryController {
 			detailContent.appendChild(description);
 		}
 
-		const varsSection = document.createElement('div');
-		varsSection.className = 'history-detail-section';
-		const varsHeader = document.createElement('h4');
-		varsHeader.textContent = 'Variables';
-		varsSection.appendChild(varsHeader);
+			const varsSection = document.createElement('div');
+			varsSection.className = 'history-detail-section';
+			const varsHeader = document.createElement('h4');
+			varsHeader.textContent = 'Stored Parameters';
+			varsSection.appendChild(varsHeader);
 
-		if (stepDefinition.vars && stepDefinition.vars.length > 0) {
-			const varsList = document.createElement('ul');
-			varsList.className = 'personal-step-vars-list';
-			stepDefinition.vars.forEach((v: any) => {
-				const li = document.createElement('li');
-				li.textContent = `${v.name}${v.required ? ' (required)' : ''}`;
-				if (v.default !== undefined && v.default !== '') {
-					li.textContent += ` - default: ${v.default}`;
-				}
-				varsList.appendChild(li);
-			});
-			varsSection.appendChild(varsList);
-		} else {
-			const noVars = document.createElement('p');
-			noVars.textContent = 'No variables';
-			varsSection.appendChild(noVars);
-		}
+			const storedVars = (stepDefinition.vars || []).filter((v: any) => typeof v.setValue !== 'undefined');
+
+			if (storedVars.length > 0) {
+				const varsList = document.createElement('ul');
+				varsList.className = 'personal-step-vars-list';
+				storedVars.forEach((v: any) => {
+					const li = document.createElement('li');
+					const name = document.createElement('strong');
+					name.textContent = v.name;
+					const value = document.createElement('code');
+					value.textContent = this.formatStoredParameterValue(v.setValue);
+					li.appendChild(name);
+					li.appendChild(value);
+					varsList.appendChild(li);
+				});
+				varsSection.appendChild(varsList);
+			} else {
+				const noVars = document.createElement('p');
+				noVars.textContent = 'No stored parameters';
+				varsSection.appendChild(noVars);
+			}
 
 		detailContent.appendChild(varsSection);
 
@@ -785,11 +825,13 @@ export class HistoryController {
 				this.renderHistoryList();
 				detailContent.style.display = 'none';
 				detailEmpty.style.display = 'block';
+				this.hideMobileDetailPane();
 				toastService.showInBlueprintsDialog(`Deleted "${stepName}"`);
 			}
 		});
 
 		actions.appendChild(deleteBtn);
 		detailContent.appendChild(actions);
+		this.showMobileDetailPane();
 	}
 }
