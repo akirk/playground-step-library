@@ -156,7 +156,7 @@ export class EventHandlersController {
 		}
 
 		// Handle step insertion from library
-		if (target.closest('.step') && target.closest('#step-library') && !target.closest('details')) {
+		if (target.closest('.step') && target.closest('#step-library') && !target.closest('.step details')) {
 			this.deps.insertStep(event.target!);
 			return;
 		}
