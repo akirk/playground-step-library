@@ -10,14 +10,13 @@ export const addPost: StepFunction<AddPostStep> = (step: AddPostStep): StepResul
 	const postId = (step.vars?.postId !== undefined && step.vars?.postId !== null && String(step.vars?.postId) !== '') ? Number(step.vars?.postId) : 0;
 	const dateValue = step.vars?.date || step.vars?.postDate;
 
-	return {
-		toV1() {
-			const escapedPostType = escapePhpSingleQuotedString(postType);
-			const escapedPostStatus = escapePhpSingleQuotedString(postStatus);
-			const postTitle = escapePhpSingleQuotedString(title);
-			const postContent = escapePhpSingleQuotedString(content);
+	const buildPhpCode = () => {
+		const escapedPostType = escapePhpSingleQuotedString(postType);
+		const escapedPostStatus = escapePhpSingleQuotedString(postStatus);
+		const postTitle = escapePhpSingleQuotedString(title);
+		const postContent = escapePhpSingleQuotedString(content);
 
-			let code = `
+		let code = `
 <?php require_once '/wordpress/wp-load.php';
 $page_args = array(
 	'post_type'    => '${escapedPostType}',
@@ -25,30 +24,43 @@ $page_args = array(
 	'post_title'   => '${postTitle}',
 	'post_content' => '${postContent}',`;
 
-			// Add import_id only if postId is provided
-			if (postId > 0) {
-				code += `
-	'import_id'    => ${postId},`;
-			}
-
-			// Add post_date only if provided (skip 'now' since it's the default)
-			if (dateValue && dateValue !== 'now') {
-				const postDate = escapePhpSingleQuotedString(dateValue);
-				code += `
-	'post_date'    => date( 'Y-m-d H:i:s', strtotime( '${postDate}' ) ),`;
-			}
-
+		if (postId > 0) {
 			code += `
 );
+if ( get_post( ${postId} ) ) {
+	$page_args['ID'] = ${postId};
+} else {
+	$page_args['import_id'] = ${postId};
+}`;
+		} else {
+			code += `
+);`;
+		}
+
+		// Add post_date only if provided (skip 'now' since it's the default)
+		if (dateValue && dateValue !== 'now') {
+			const postDate = escapePhpSingleQuotedString(dateValue);
+			code += `
+$page_args['post_date'] = date( 'Y-m-d H:i:s', strtotime( '${postDate}' ) );`;
+		}
+
+		code += `
 $page_id = wp_insert_post( $page_args, true );
 if ( is_wp_error( $page_id ) ) {
 	error_log( 'addPost error: ' . $page_id->get_error_message() );
 }`;
 
-			if (step.vars?.homepage) {
-				code += "update_option( 'page_on_front', $page_id );";
-				code += "update_option( 'show_on_front', 'page' );";
-			}
+		if (step.vars?.homepage) {
+			code += "update_option( 'page_on_front', $page_id );";
+			code += "update_option( 'show_on_front', 'page' );";
+		}
+
+		return code;
+	};
+
+	return {
+		toV1() {
+			const code = buildPhpCode();
 
 			const result: BlueprintV1Declaration = {
 				steps: [
@@ -74,6 +86,37 @@ if ( is_wp_error( $page_id ) ) {
 		},
 
 		toV2() {
+			if (postId > 0) {
+				const result: BlueprintV2Declaration = {
+					version: 2,
+					additionalStepsAfterExecution: [{
+						step: 'runPHP',
+						code: {
+							filename: 'add-post.php',
+							content: buildPhpCode()
+						}
+					}]
+				};
+
+				if (step.vars?.landingPage !== false) {
+					result.applicationOptions = {
+						'wordpress-playground': {
+							landingPage: `/wp-admin/post.php?post=${postId}&action=edit`
+						}
+					};
+				}
+
+				if (step.vars?.frontendLandingPage) {
+					result.applicationOptions = {
+						'wordpress-playground': {
+							landingPage: `/?p=${postId}`
+						}
+					};
+				}
+
+				return result;
+			}
+
 			const postData: any = {
 				post_title: title,
 				post_content: content,
@@ -84,11 +127,6 @@ if ( is_wp_error( $page_id ) ) {
 			// Add post_date if provided (skip 'now' since it's the default)
 			if (dateValue && dateValue !== 'now') {
 				postData.post_date = dateValue;
-			}
-
-			// Add import_id if provided (not standard v2, but useful for imports)
-			if (postId > 0) {
-				postData.import_id = postId;
 			}
 
 			const result: BlueprintV2Declaration = {
