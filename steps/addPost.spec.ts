@@ -67,7 +67,7 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(result.steps[0].code).toContain("'post_date'    => date( 'Y-m-d H:i:s', strtotime( '2024-12-25 10:00:00' ) )");
+        expect(result.steps[0].code).toContain("$page_args['post_date'] = date( 'Y-m-d H:i:s', strtotime( '2024-12-25 10:00:00' ) )");
     });
 
     it('should not include post date when not provided', () => {
@@ -169,7 +169,7 @@ describe('addPost', () => {
 
         const result = addPost(step).toV1();
 
-        expect(result.steps[0].code).toContain("'post_date'    => date( 'Y-m-d H:i:s', strtotime( '2024-01-01 12:00:00 O\\'Clock' ) )");
+        expect(result.steps[0].code).toContain("$page_args['post_date'] = date( 'Y-m-d H:i:s', strtotime( '2024-01-01 12:00:00 O\\'Clock' ) )");
     });
 
     it('should handle custom post types', () => {
@@ -207,6 +207,22 @@ describe('addPost', () => {
         expect(result.steps[0].code).toContain("'post_type'    => 'post'");
         expect(result.steps[0].code).toContain("'post_status'  => 'draft'");
         expect(result.steps[0].code).toContain("strtotime( '2024-01-01' )");
+    });
+
+    it('should update an existing post ID or insert with import_id when postId is provided', () => {
+        const step: AddPostStep = {
+            step: 'addPost', vars: {
+            title: 'Fixed ID Post',
+            content: '<p>Fixed content</p>',
+            type: 'post',
+            postId: 1000
+        } };
+
+        const result = addPost(step).toV1();
+
+        expect(result.steps[0].code).toContain('if ( get_post( 1000 ) )');
+        expect(result.steps[0].code).toContain("$page_args['ID'] = 1000;");
+        expect(result.steps[0].code).toContain("$page_args['import_id'] = 1000;");
     });
     });
 
@@ -287,6 +303,12 @@ describe('addPost', () => {
 
             const result = addPost(step).toV2();
 
+            expect(result.content).toBeUndefined();
+            expect(result.additionalStepsAfterExecution).toHaveLength(1);
+            const code = (result.additionalStepsAfterExecution?.[0].code as { content: string }).content;
+            expect(code).toContain('if ( get_post( 1000 ) )');
+            expect(code).toContain("$page_args['ID'] = 1000;");
+            expect(code).toContain("$page_args['import_id'] = 1000;");
             expect(result.applicationOptions).toBeDefined();
             expect(result.applicationOptions['wordpress-playground'].landingPage).toBe('/wp-admin/post.php?post=1000&action=edit');
         });
