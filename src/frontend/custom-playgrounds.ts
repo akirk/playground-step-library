@@ -3,11 +3,20 @@
  * Manage user-created custom playground URLs stored in localStorage
  */
 
+import { expandUrl } from './utils';
+
 const CUSTOM_PLAYGROUNDS_STORAGE_KEY = 'customPlaygrounds';
 
 export interface CustomPlayground {
 	url: string;
 	name: string;
+}
+
+/**
+ * Normalize a custom playground URL for storage and launch-link generation.
+ */
+export function normalizeCustomPlaygroundUrl(url: string): string {
+	return expandUrl(url.trim()).replace(/\/+$/, '');
 }
 
 /**
@@ -26,6 +35,7 @@ export function getCustomPlaygrounds(): CustomPlayground[] {
  * Add a custom playground to localStorage
  */
 export function addCustomPlayground(url: string, name?: string): void {
+	url = normalizeCustomPlaygroundUrl(url);
 	const playgrounds = getCustomPlaygrounds();
 	const displayName = name || url;
 

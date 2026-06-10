@@ -8,6 +8,7 @@ import { isManualEditMode, getBlueprint } from './app-state';
 import { encodeStringAsBase64 } from './utils';
 import { generateLabel } from './label-generator';
 import { updateBlueprintSizeWarning, handleSplitViewMode, type BlueprintUIDependencies } from './blueprint-ui';
+import { normalizeCustomPlaygroundUrl } from './custom-playgrounds';
 
 export interface BlueprintCompilationControllerDependencies {
 	getBlueprintValue: () => string;
@@ -204,7 +205,7 @@ export class BlueprintCompilationController {
 		const query = (queries.length ? '?' + queries.join('&') : '');
 		const playgroundEl = document.getElementById('playground') as HTMLInputElement;
 		const playground = playgroundEl ? playgroundEl.value : 'playground.wordpress.net';
-		const href = (playground.substr(0, 7) === 'http://' ? playground : 'https://' + playground) + '/' + query + hash;
+		const href = normalizeCustomPlaygroundUrl(playground) + '/' + query + hash;
 
 		const playgroundLinkEl = document.getElementById('playground-link') as HTMLAnchorElement;
 		if (playgroundLinkEl) {
