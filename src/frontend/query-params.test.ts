@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { getBlueprintUrlParam, rewriteGitHubUrlToRaw } from './query-params';
+import { getBlueprintUrlParam, parseQueryParamsForBlueprint, rewriteGitHubUrlToRaw } from './query-params';
 
 describe( 'query params', () => {
 	afterEach( () => {
@@ -44,6 +44,44 @@ describe( 'query params', () => {
 			expect( getBlueprintUrlParam() ).toBe(
 				'https://raw.githubusercontent.com/example/repo/main/blueprint.json'
 			);
+		} );
+	} );
+
+	describe( 'parseQueryParamsForBlueprint', () => {
+		it( 'preserves WordPress.org plugin slugs while expanding URL-like values', () => {
+			window.history.pushState(
+				{},
+				'',
+				'/?redir=1&step%5B0%5D=installPlugin&url%5B0%5D=advanced-custom-fields&step%5B1%5D=installPlugin&url%5B1%5D=github.com/akirk/family-wiki/tree/add-gedcom-import-export'
+			);
+
+			expect( parseQueryParamsForBlueprint() ).toEqual( {
+				steps: [
+					{
+						step: 'installPlugin',
+						vars: {
+							url: 'advanced-custom-fields'
+						}
+					},
+					{
+						step: 'installPlugin',
+						vars: {
+							url: 'https://github.com/akirk/family-wiki/tree/add-gedcom-import-export'
+						}
+					}
+				],
+				redir: 1
+			} );
+		} );
+
+		it( 'preserves short-form GitHub repository references', () => {
+			window.history.pushState(
+				{},
+				'',
+				'/?step%5B0%5D=installPlugin&url%5B0%5D=akirk/blueprint-recorder'
+			);
+
+			expect( parseQueryParamsForBlueprint()?.steps[0].vars.url ).toBe( 'akirk/blueprint-recorder' );
 		} );
 	} );
 } );

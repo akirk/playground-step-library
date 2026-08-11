@@ -56,6 +56,23 @@ export function rewriteGitHubUrlToRaw( url: string ): string {
 }
 
 /**
+ * Redirect URLs shorten URL-like values by removing the protocol. Add it back
+ * only for values that still look like a URL host, not for plugin/theme slugs.
+ */
+function expandUrlQueryValue( value: string ): string {
+	if ( value.match( /^https?:\/\// ) ) {
+		return value;
+	}
+
+	const firstPathSegment = value.split( '/' )[0];
+	if ( firstPathSegment.includes( '.' ) ) {
+		return expandUrl( value );
+	}
+
+	return value;
+}
+
+/**
  * Parse query parameters into blueprint configuration
  * Supports array-indexed parameters like step[0], step[1], url[0], url[1], etc.
  */
@@ -93,7 +110,7 @@ export function parseQueryParamsForBlueprint(): BlueprintQueryParams | null {
 				if (paramName !== 'step' && values[parseInt(index)] !== undefined) {
 					let value = values[parseInt(index)];
 					if (paramName === 'url' || paramName.includes('url') || paramName.includes('Url')) {
-						value = expandUrl(value);
+						value = expandUrlQueryValue(value);
 					}
 					stepVars[paramName] = value;
 				}
