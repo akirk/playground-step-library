@@ -137,6 +137,9 @@
             "$ref": "#/definitions/gitPlugin"
           },
           {
+            "$ref": "#/definitions/wpapp"
+          },
+          {
             "$ref": "#/definitions/gitTheme"
           },
           {
@@ -1275,6 +1278,43 @@
         "step"
       ],
       "description": "Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.)."
+    },
+    "wpapp": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "const": "wpapp"
+        },
+        "vars": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "GitHub URL of the app (repository, branch, or pull request)."
+            },
+            "pluginSlug": {
+              "type": "string",
+              "description": "Plugin folder name (defaults to the repository or directory name)."
+            },
+            "pluginFile": {
+              "type": "string",
+              "description": "Plugin entry PHP filename (defaults to the plugin slug plus .php)."
+            },
+            "prs": {
+              "type": "boolean",
+              "description": "Add support for submitting GitHub Pull Requests."
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "step"
+      ],
+      "description": "Install a GitHub app with the akirk/wp-app package and preview autoloader."
     },
     "gitTheme": {
       "type": "object",

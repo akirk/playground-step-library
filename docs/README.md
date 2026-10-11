@@ -4,9 +4,9 @@ This document provides comprehensive documentation for all available WordPress P
 
 ## 📊 Overview
 
-- **Total Steps**: 73
+- **Total Steps**: 74
 - **Built-in Steps**: 8
-- **Custom Steps**: 65
+- **Custom Steps**: 66
 
 ## 🚀 Quick Start
 
@@ -73,6 +73,7 @@ Custom steps provide additional functionality beyond the core WordPress Playgrou
 - [`githubPluginRelease`](steps/githubPluginRelease.md) - Install a specific plugin release from a Github repository.
 - [`githubTheme`](steps/githubTheme.md) - Install a theme from a Github repository.
 - [`gitPlugin`](steps/gitPlugin.md) - Install a plugin from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).
+- [`wpapp`](steps/wpapp.md) - Install a GitHub app with the akirk/wp-app package and preview autoloader.
 - [`gitTheme`](steps/gitTheme.md) - Install a theme from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.).
 - [`generateProducts`](steps/generateProducts.md) - Generate WooCommerce products and other data using the WC Smooth Generator plugin (automatically installs WooCommerce and the generator plugin)
 - [`importFriendFeeds`](steps/importFriendFeeds.md) - Add subscriptions to the Friends plugin.

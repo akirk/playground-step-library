@@ -1814,6 +1814,36 @@ This document provides detailed information about all available steps, including
 
 ---
 
+## [`wpapp`](steps/wpapp.md)
+
+**Type**: Custom Step
+**Description**: Install a GitHub app with the akirk/wp-app package and preview autoloader.
+
+| Variable | Type | Required | Description |
+|----------|------|----------|-------------|
+| `url` | string | ✅ Yes | GitHub URL of the app (repository, branch, or pull request). |
+| `pluginSlug` | string | ❌ No | Plugin folder name (defaults to the repository or directory name). |
+| `pluginFile` | string | ❌ No | Plugin entry PHP filename (defaults to the plugin slug plus .php). |
+| `prs` | boolean | ❌ No | Add support for submitting GitHub Pull Requests. |
+
+
+### Example Usage
+
+```json
+    {
+          "step": "wpapp",
+          "vars": {
+                "url": "https://example.com",
+                "pluginSlug": "example-value",
+                "pluginFile": "example-value",
+                "prs": false
+          }
+    }
+```
+
+
+---
+
 ## [`writeFile`](steps/writeFile.md)
 
 **Type**: Custom Step

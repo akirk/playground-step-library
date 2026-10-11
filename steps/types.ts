@@ -390,6 +390,10 @@ export interface GithubThemeStep extends BlueprintStep {
 	};
 }
 
+export interface WpappStep extends GitPluginStep {
+	vars?: NonNullable<GitPluginStep['vars']> & { pluginFile?: string };
+}
+
 export interface GitPluginStep extends BlueprintStep {
 	vars?: {
 	    url: string;
@@ -545,6 +549,7 @@ export type StepLibraryStepDefinition =
 	InstallThemeStep |
 	GithubThemeStep |
 	GitPluginStep |
+	WpappStep |
 	GitThemeStep |
 	ImportWordPressComExportStep |
 	ImportWxrStep |

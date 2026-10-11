@@ -28,6 +28,7 @@ export const STEP_CATEGORY_MAP: Record<string, string> = {
 	githubPluginRelease: 'plugins-themes',
 	githubTheme: 'plugins-themes',
 	gitPlugin: 'plugins-themes',
+	wpapp: 'plugins-themes',
 	gitTheme: 'plugins-themes',
 
 	// Users & Settings
