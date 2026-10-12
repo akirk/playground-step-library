@@ -74,7 +74,7 @@ Install Adminer with auto login link.
     {
       "step": "writeFile",
       "path": "/wordpress/wp-content/mu-plugins/adminer-link.php",
-      "data": "<?php\nadd_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {\n    $wp_menu->add_node(\n            array(\n                    'id'     => 'adminer',\n                    'title'  => 'Adminer',\n                    'href'   => '/adminer/?sqlite=&username=&db=%2Fwordpress%2Fwp-content%2Fdatabase%2F.ht.sqlite',\n            )\n);\n}, 100 );"
+      "data": "<?php\nadd_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {\n    $wp_menu->add_node(\n            array(\n                    'id'     => 'adminer',\n                    'title'  => 'Adminer',\n                    'href'   => '/adminer/?sqlite=&username=&db=' . rawurlencode( defined( 'DB_PATH' ) ? DB_PATH : FQDB ),\n            )\n);\n}, 100 );"
     },
     {
       "step": "mkdir",

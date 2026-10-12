@@ -43,7 +43,7 @@ Provide phpLiteAdmin. Password: admin
     {
       "step": "writeFile",
       "path": "/wordpress/phpliteadmin.config.php",
-      "data": "<?php\n$databases = array(\narray(\n'path'=> '/wordpress/wp-content/database/...."
+      "data": "<?php\n$wp_env = require '/internal/shared/wp-env.php';\n$databases = array(\n..."
     },
     {
       "step": "writeFile",
@@ -75,7 +75,7 @@ Provide phpLiteAdmin. Password: admin
     {
       "step": "writeFile",
       "path": "/wordpress/phpliteadmin.config.php",
-      "data": "<?php\n\n$databases = array(\n\tarray(\n\t\t'path'=> '/wordpress/wp-content/database/.ht.sqlite',\n\t\t'name'=> 'WordPress'\n\t),\n);\n$directory = false;\n"
+      "data": "<?php\n\n$wp_env = require '/internal/shared/wp-env.php';\n$databases = array(\n\tarray(\n\t\t'path'=> $wp_env['db']['path'],\n\t\t'name'=> 'WordPress'\n\t),\n);\n$directory = false;\n"
     },
     {
       "step": "writeFile",

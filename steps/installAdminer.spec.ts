@@ -57,6 +57,17 @@ describe('installAdminer', () => {
     });
   });
 
+  it.each(['toV1', 'toV2'] as const)('should use the active database path in %s', (version) => {
+    const result = installAdminer({ step: 'installAdminer' });
+    const steps = version === 'toV1' ? result.toV1().steps : result.toV2().additionalStepsAfterExecution;
+
+    expect(steps).toContainEqual({
+      step: 'writeFile',
+      path: '/wordpress/wp-content/mu-plugins/adminer-link.php',
+      data: expect.stringContaining("'/adminer/?sqlite=&username=&db=' . rawurlencode( defined( 'DB_PATH' ) ? DB_PATH : FQDB )")
+    });
+  });
+
   it('should have proper metadata', () => {
     expect(installAdminer.description).toBe('Install Adminer with auto login link.');
     expect(installAdminer.vars).toEqual([]);
