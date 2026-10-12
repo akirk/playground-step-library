@@ -3,9 +3,9 @@
 Browse detailed documentation for each WordPress Playground step.
 
 ## 📊 Quick Stats
-- **73** total steps
+- **74** total steps
 - **8** built-in steps  
-- **65** custom steps
+- **66** custom steps
 
 ## 🔧 Built-in Steps
 Enhanced core WordPress Playground steps with additional functionality.
@@ -85,6 +85,7 @@ Extended functionality beyond core WordPress Playground capabilities.
 - [`siteHealthImport`](./siteHealthImport.md) - Import site configuration from WordPress Site Health info (Tools → Site Health → Info → Copy site info to clipboard).
 - [`skipWooCommerceWizard`](./skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 - [`unzip`](./unzip.md) - The zip file to extract.
+- [`wpapp`](./wpapp.md) - Install a GitHub app with the akirk/wp-app package and preview autoloader.
 - [`writeFile`](./writeFile.md) - The path of the file to write to.
 - [`writeFiles`](./writeFiles.md) - The path of the file to write to.
 

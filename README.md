@@ -86,7 +86,7 @@ const result = compiler.transpile(nativeV1Blueprint);
 See the **[Programmatic API Documentation](docs/api.md)** for full details on CLI usage, methods, and examples.
 ## Custom Steps
 
-This library provides **73** total steps (8 built-in enhanced steps + 65 custom steps):
+This library provides **74** total steps (8 built-in enhanced steps + 66 custom steps):
 
 ### Built-in Enhanced Steps
 - [`defineWpConfigConst`](docs/steps/defineWpConfigConst.md) - Define a wp-config PHP constant.
@@ -162,5 +162,6 @@ This library provides **73** total steps (8 built-in enhanced steps + 65 custom 
 - [`siteHealthImport`](docs/steps/siteHealthImport.md) - Import site configuration from WordPress Site Health info (Tools → Site Health → Info → Copy site info to clipboard).
 - [`skipWooCommerceWizard`](docs/steps/skipWooCommerceWizard.md) - When running WooCommerce, don't show the wizard.
 - [`unzip`](docs/steps/unzip.md) - The zip file to extract.
+- [`wpapp`](docs/steps/wpapp.md) - Install a GitHub app with the akirk/wp-app package and preview autoloader.
 - [`writeFile`](docs/steps/writeFile.md) - The path of the file to write to.
 - [`writeFiles`](docs/steps/writeFiles.md) - The path of the file to write to.
