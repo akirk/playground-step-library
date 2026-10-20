@@ -15,9 +15,10 @@ add_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {
 
 const configCode = `<?php
 
+$wp_env = require '/internal/shared/wp-env.php';
 $databases = array(
 	array(
-		'path'=> '/wordpress/wp-content/database/.ht.sqlite',
+		'path'=> $wp_env['db']['path'],
 		'name'=> 'WordPress'
 	),
 );

@@ -8,7 +8,7 @@ add_action( 'admin_bar_menu', function( WP_Admin_Bar $wp_menu ) {
             array(
                     'id'     => 'adminer',
                     'title'  => 'Adminer',
-                    'href'   => '/adminer/?sqlite=&username=&db=%2Fwordpress%2Fwp-content%2Fdatabase%2F.ht.sqlite',
+                    'href'   => '/adminer/?sqlite=&username=&db=' . rawurlencode( defined( 'DB_PATH' ) ? DB_PATH : FQDB ),
             )
 );
 }, 100 );`;
