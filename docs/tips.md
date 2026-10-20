@@ -40,6 +40,7 @@ Power user tips for getting the most out of the WordPress Playground Step Librar
 
 Paste content anywhere in the UI (outside of text inputs) to automatically create steps. Supported content types:
 
+- **Paths starting with `/`** - Creates a `setLandingPage` step, for example `/.well-known/following.opml`
 - **PHP** - Creates `muPlugin` (for hooks) or `runPHP` step
 - **HTML** - Creates `addPost` step with extracted title
 - **CSS** - Creates `enqueueCSS` step
