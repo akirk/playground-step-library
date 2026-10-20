@@ -1,5 +1,6 @@
 /* Wizard Mode Styles */
-#wizard-mode-toggle {
+#wizard-mode-toggle,
+.header-overflow-menu > #wizard-mode-toggle {
 	background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
 	color: white;
 	border: none;
