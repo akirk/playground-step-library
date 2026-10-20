@@ -84,7 +84,7 @@ export class PasteHandlerController {
 		const urls = pastedText.split( '\n' ).map( line => line.trim() ).filter( line => line );
 
 		// Detect content type (in priority order)
-		type ContentType = 'playgroundUrl' | 'playgroundQueryApi' | 'stepLibraryRedirect' | 'stepJson' | 'blueprintJson' | 'wpEnvJson' | 'siteHealth' | 'php' | 'html' | 'wpCli' | 'css' | 'js' | 'url' | 'wpAdminUrl';
+		type ContentType = 'playgroundUrl' | 'playgroundQueryApi' | 'stepLibraryRedirect' | 'stepJson' | 'blueprintJson' | 'wpEnvJson' | 'siteHealth' | 'php' | 'html' | 'wpCli' | 'css' | 'js' | 'url' | 'landingPage';
 		let detectedType: ContentType | null = null;
 		let wpCliCommands: string[] | null = null;
 		let htmlContent = '';
@@ -108,8 +108,8 @@ export class PasteHandlerController {
 				detectedType = 'stepLibraryRedirect';
 				break;
 			}
-			if ( detectWpAdminUrl( url ) ) {
-				detectedType = 'wpAdminUrl';
+			if ( url.startsWith( '/' ) || detectWpAdminUrl( url ) ) {
+				detectedType = 'landingPage';
 				break;
 			}
 			if ( detectUrlType( url ) ) {
@@ -344,12 +344,12 @@ export class PasteHandlerController {
 				}
 				break;
 
-			case 'wpAdminUrl':
+			case 'landingPage':
 				for (const url of urls) {
-					const wpAdminPath = detectWpAdminUrl(url);
-					if (wpAdminPath) {
-						if (addLandingPageStep(wpAdminPath, this.deps.stepInserterDeps)) {
-							toastService.showGlobal('Set landing page from pasted admin URL');
+					const landingPath = url.startsWith( '/' ) ? url : detectWpAdminUrl( url );
+					if (landingPath) {
+						if (addLandingPageStep(landingPath, this.deps.stepInserterDeps)) {
+							toastService.showGlobal('Set landing page from pasted path or admin URL');
 							addedAny = true;
 						}
 						break;
