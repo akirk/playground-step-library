@@ -15,7 +15,7 @@ Install a theme via WordPress.org or Git (GitHub, GitLab, Bitbucket, Codeberg, e
 
 | Variable | Type | Required | Description |
 |----------|------|----------|-------------|
-| `url` | string | ✅ Yes | URL of the theme or WordPress.org slug. |
+| `url` | string | ✅ Yes | URL of the theme or WordPress.org slug. For Git URLs, use // to separate the branch from the directory: tree/feature/my/branch//src/plugin selects src/plugin on branch feature/my/branch; tree/feature/my/branch// selects the repository root on that branch. |
 | `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
 | `themeSlug` | string | ❌ No | Theme slug (folder name in wp-content/themes). |
 

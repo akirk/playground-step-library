@@ -15,7 +15,7 @@ Install a theme from a Git repository (GitHub, GitLab, Bitbucket, Codeberg, etc.
 
 | Variable | Type | Required | Description |
 |----------|------|----------|-------------|
-| `url` | string | ✅ Yes | Git URL of the theme (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts). |
+| `url` | string | ✅ Yes | Git URL of the theme (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts). For Git URLs, use // to separate the branch from the directory: tree/feature/my/branch//src/plugin selects src/plugin on branch feature/my/branch; tree/feature/my/branch// selects the repository root on that branch. |
 | `prs` | boolean | ❌ No | Add support for submitting Pull Requests (GitHub only). |
 | `themeSlug` | string | ❌ No | Theme slug (folder name in wp-content/themes). |
 
