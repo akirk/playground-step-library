@@ -193,13 +193,13 @@ export function parseGitUrl( url: string ): {
 
 	if ( remainder.startsWith( provider.branchPathPrefix ) ) {
 		let branchAndDir = remainder.slice( provider.branchPathPrefix.length );
-		branchAndDir = branchAndDir.replace( /\/+$/, '' );
 
 		const doubleSlashIndex = branchAndDir.indexOf( '//' );
 		if ( doubleSlashIndex !== -1 ) {
 			branch = branchAndDir.substring( 0, doubleSlashIndex );
-			directory = branchAndDir.substring( doubleSlashIndex + 2 );
+			directory = branchAndDir.substring( doubleSlashIndex + 2 ).replace( /\/+$/, '' );
 		} else {
+			branchAndDir = branchAndDir.replace( /\/+$/, '' );
 			const firstSlashIndex = branchAndDir.indexOf( '/' );
 			if ( firstSlashIndex !== -1 ) {
 				const potentialDir = branchAndDir.substring( firstSlashIndex + 1 );
