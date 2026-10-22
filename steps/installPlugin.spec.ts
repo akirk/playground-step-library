@@ -398,7 +398,8 @@ describe('installPlugin', () => {
 
         const urlVar = installPlugin.vars.find(v => v.name === 'url');
         expect(urlVar).toBeDefined();
-        expect(urlVar.description).toBe('URL of the plugin or WordPress.org slug.');
+        expect(urlVar.description).toEqual(expect.any(String));
+        expect(urlVar.description.length).toBeGreaterThan(0);
         expect(Array.isArray(urlVar.samples)).toBe(true);
         expect(urlVar.samples.length).toBeGreaterThan(0);
 

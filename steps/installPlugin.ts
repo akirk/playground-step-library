@@ -77,7 +77,7 @@ installPlugin.builtin = true;
 installPlugin.vars = [
 	{
 		name: 'url',
-		description: 'URL of the plugin or WordPress.org slug.',
+		description: 'URL of the plugin or WordPress.org slug. For Git URLs, use // to separate the branch from the directory: tree/feature/my/branch//src/plugin selects src/plugin on branch feature/my/branch; tree/feature/my/branch// selects the repository root on that branch.',
 		required: true,
 		samples: [
 			'hello-dolly',

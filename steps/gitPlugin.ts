@@ -121,7 +121,7 @@ gitPlugin.description = 'Install a plugin from a Git repository (GitHub, GitLab,
 gitPlugin.vars = [
 	{
 		name: 'url',
-		description: 'Git URL of the plugin (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts).',
+		description: 'Git URL of the plugin (supports GitHub, GitLab, Bitbucket, Codeberg, and other git hosts). For Git URLs, use // to separate the branch from the directory: tree/feature/my/branch//src/plugin selects src/plugin on branch feature/my/branch; tree/feature/my/branch// selects the repository root on that branch.',
 		required: true,
 		samples: [
 			'https://github.com/akirk/blueprint-recorder',
