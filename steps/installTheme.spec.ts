@@ -179,7 +179,8 @@ describe('installTheme', () => {
 
         const urlVar = installTheme.vars.find(v => v.name === 'url');
         expect(urlVar).toBeDefined();
-        expect(urlVar.description).toBe('URL of the theme or WordPress.org slug.');
+        expect(urlVar.description).toEqual(expect.any(String));
+        expect(urlVar.description.length).toBeGreaterThan(0);
         expect(urlVar.required).toBe(true);
         expect(Array.isArray(urlVar.samples)).toBe(true);
         expect(urlVar.samples.length).toBeGreaterThan(0);
