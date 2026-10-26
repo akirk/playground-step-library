@@ -35,11 +35,13 @@ add_action('wp_ajax_dismiss_custom-admin-notice-${step?.stepIndex}', function() 
 } );
 
 add_action('admin_footer', function() {
-	?>
+	$ajaxurl = wp_json_encode( admin_url( 'admin-ajax.php' ) );
+	$nonce = wp_json_encode( wp_create_nonce( 'custom-admin-notice-${step?.stepIndex}' ) );
+	echo <<<JS
 	<script type="text/javascript">
 	jQuery(document).ready( function($) {
-		var ajaxurl = '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>';
-		var nonce = '<?php echo esc_html( wp_create_nonce( 'custom-admin-notice-${step?.stepIndex}' ) ); ?>';
+		var ajaxurl = {$ajaxurl};
+		var nonce = {$nonce};
 
 		$( '#custom-admin-notice-${step?.stepIndex}' ).on( 'click', '.notice-dismiss', function() {
 			$.ajax({
@@ -53,7 +55,7 @@ add_action('admin_footer', function() {
 		});
 	});
 	</script>
-	<?php
+JS;
 } );
 `;
 	}
