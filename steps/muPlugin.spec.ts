@@ -21,7 +21,7 @@ describe.each(['toV1', 'toV2'] as const)('muPlugin %s', (version) => {
 		expect(compile(code)).toBe(code);
 	});
 
-	it('preserves PHP tags in dismissible admin notices', () => {
+	it('generates dismissible admin notices without switching out of PHP', () => {
 		const result = showAdminNotice({
 			step: 'showAdminNotice',
 			stepIndex: 0,
@@ -30,8 +30,11 @@ describe.each(['toV1', 'toV2'] as const)('muPlugin %s', (version) => {
 		const code = version === 'toV1'
 			? result.toV1().steps[1].data
 			: result.toV2().muPlugins![0].content;
-		expect(code).toContain("<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>");
-		expect(code).toContain("<?php echo esc_html( wp_create_nonce( 'custom-admin-notice-0' ) ); ?>");
-		expect(code).toContain('</script>\n\t<?php\n} );');
+		expect(code.match(/<\?php/g)).toHaveLength(1);
+		expect(code).not.toContain('?>');
+		expect(code).toContain("wp_json_encode( admin_url( 'admin-ajax.php' ) )");
+		expect(code).toContain("wp_json_encode( wp_create_nonce( 'custom-admin-notice-0' ) )");
+		expect(code).toContain('var ajaxurl = {$ajaxurl};');
+		expect(code).toContain('var nonce = {$nonce};');
 	});
 });
