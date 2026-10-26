@@ -152,6 +152,7 @@ function initializeAceEditor(
 		blueprintAceEditor.session.setUseSoftTabs(true);
 		blueprintAceEditor.setValue(currentValue, -1);
 		blueprintAceEditor.setOptions({
+			textInputAriaLabel: textarea.getAttribute('aria-label') || 'Transformed blueprint JSON',
 			highlightActiveLine: true,
 			highlightGutterLine: true
 		});
