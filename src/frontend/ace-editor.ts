@@ -2,6 +2,7 @@ import { AceEditorInstance } from './types';
 
 let aceLoaded = false;
 let aceLoading: Promise<void> | null = null;
+let suppressNextBlueprintFocusInit = false;
 
 export let blueprintAceEditor: AceEditorInstance = null;
 export let historyBlueprintAceEditor: AceEditorInstance = null;
@@ -12,6 +13,23 @@ export let aiInstructionsAceEditor: AceEditorInstance = null;
 export function getAceTheme(): string {
 	const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 	return isDark ? 'ace/theme/tomorrow_night_bright' : 'ace/theme/textmate';
+}
+
+function getTextareaAccessibleName(textarea: HTMLTextAreaElement | null, fallback: string): string {
+	if (!textarea) {
+		return fallback;
+	}
+	const labelText = textarea.labels?.[0]?.textContent?.replace(/\s+/g, ' ').trim();
+	return labelText || textarea.getAttribute('aria-label') || fallback;
+}
+
+function setAceAriaLabel(editor: AceEditorInstance, label: string): void {
+	editor.setOption('textInputAriaLabel', label);
+	if (typeof editor.textInput?.setAriaLabel === 'function') {
+		editor.textInput.setAriaLabel();
+	} else {
+		editor.textInput?.getElement?.()?.setAttribute('aria-label', label);
+	}
 }
 
 export async function loadAceEditor(): Promise<void> {
@@ -103,11 +121,24 @@ export function updateAceStatusBar(
 	statusElement.appendChild(modeSpan);
 }
 
+function restoreBlueprintTextareaFocus(textarea: HTMLTextAreaElement): void {
+	suppressNextBlueprintFocusInit = true;
+	textarea.focus();
+	queueMicrotask(() => {
+		suppressNextBlueprintFocusInit = false;
+	});
+}
+
 export function initBlueprintAceEditor(
 	getBlueprintValue: () => string,
 	isManualEditMode: { value: boolean },
 	transformJson: () => void
 ): void {
+	if (suppressNextBlueprintFocusInit) {
+		suppressNextBlueprintFocusInit = false;
+		return;
+	}
+
 	if (blueprintAceEditor) {
 		blueprintAceEditor.focus();
 		return;
@@ -150,9 +181,9 @@ function initializeAceEditor(
 		blueprintAceEditor.session.setUseWrapMode(true);
 		blueprintAceEditor.session.setTabSize(2);
 		blueprintAceEditor.session.setUseSoftTabs(true);
+		setAceAriaLabel(blueprintAceEditor, getTextareaAccessibleName(textarea, 'Blueprint JSON'));
 		blueprintAceEditor.setValue(currentValue, -1);
 		blueprintAceEditor.setOptions({
-			textInputAriaLabel: textarea.getAttribute('aria-label') || 'Transformed blueprint JSON',
 			highlightActiveLine: true,
 			highlightGutterLine: true
 		});
@@ -196,6 +227,7 @@ function initializeAceEditor(
 					blueprintTextarea.style.removeProperty('display');
 					// Force a reflow to ensure the textarea is rendered
 					blueprintTextarea.offsetHeight;
+					restoreBlueprintTextareaFocus(blueprintTextarea);
 				}
 
 				document.getElementById('blueprint-status')!.classList.remove('active');
@@ -230,6 +262,7 @@ function initializeAceEditor(
 					blueprintTextarea.style.removeProperty('display');
 					// Force a reflow to ensure the textarea is rendered
 					blueprintTextarea.offsetHeight;
+					restoreBlueprintTextareaFocus(blueprintTextarea);
 				}
 
 				blueprintStatus.classList.remove('active');
@@ -308,6 +341,7 @@ export function initHistoryBlueprintAceEditor(): void {
 		historyBlueprintAceEditor.session.setUseWrapMode(true);
 		historyBlueprintAceEditor.session.setTabSize(2);
 		historyBlueprintAceEditor.session.setUseSoftTabs(true);
+		setAceAriaLabel(historyBlueprintAceEditor, getTextareaAccessibleName(textarea, 'Saved blueprint JSON'));
 		historyBlueprintAceEditor.setValue(currentValue, -1);
 		historyBlueprintAceEditor.setReadOnly(true);
 		historyBlueprintAceEditor.setOptions({
@@ -372,6 +406,16 @@ export function initCodeEditorAce(
 			aceEditor.destroy();
 		}
 
+		const modeDisplayName: Record<string, string> = {
+			'php': 'PHP',
+			'html': 'HTML',
+			'xml': 'XML',
+			'css': 'CSS',
+			'javascript': 'JavaScript',
+			'text': 'Plain Text'
+		};
+		const displayName = modeDisplayName[aceMode] || aceMode.toUpperCase();
+
 		aceEditor = (window as any).ace.edit(editorContainer, {
 			mode: `ace/mode/${aceMode}`,
 			theme: getAceTheme(),
@@ -382,6 +426,7 @@ export function initCodeEditorAce(
 			highlightActiveLine: true,
 			highlightGutterLine: true
 		});
+		setAceAriaLabel(aceEditor, getTextareaAccessibleName(linkedTextarea, `${displayName} code editor`));
 
 		aceEditor.getSession().on('change', () => {
 			linkedTextarea.value = aceEditor.getValue();
@@ -389,15 +434,6 @@ export function initCodeEditorAce(
 		});
 
 		const codeEditorStatus = document.getElementById('code-editor-status') as HTMLElement;
-		const modeDisplayName: Record<string, string> = {
-			'php': 'PHP',
-			'html': 'HTML',
-			'xml': 'XML',
-			'css': 'CSS',
-			'javascript': 'JavaScript',
-			'text': 'Plain Text'
-		};
-		const displayName = modeDisplayName[aceMode] || aceMode.toUpperCase();
 
 		const updateCodeEditorStatus = () => {
 			updateAceStatusBar(aceEditor, codeEditorStatus, displayName);
@@ -456,6 +492,7 @@ export function initViewSourceAceEditor(sourceUrl: string): void {
 				viewSourceAceEditor.getSession().selection.on('changeSelection', updateViewSourceStatus);
 			}
 
+			setAceAriaLabel(viewSourceAceEditor, `${fileName} source code`);
 			viewSourceAceEditor.setValue(sourceCode, -1);
 
 			const viewSourceStatus = document.getElementById('view-source-status') as HTMLElement;
@@ -511,6 +548,7 @@ export function initAIInstructionsAceEditor(content: string): void {
 		aiInstructionsAceEditor.session.setUseWrapMode(true);
 		aiInstructionsAceEditor.session.setTabSize(2);
 		aiInstructionsAceEditor.session.setUseSoftTabs(true);
+		setAceAriaLabel(aiInstructionsAceEditor, getTextareaAccessibleName(textarea, 'AI instructions snippet'));
 		aiInstructionsAceEditor.setValue(content, -1);
 		aiInstructionsAceEditor.setOptions({
 			highlightActiveLine: true,
