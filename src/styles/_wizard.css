@@ -477,7 +477,7 @@
 		height: auto;
 	}
 
-	#filter-holder label {
+	#filter-holder label:not(.visually-hidden) {
 		display: none;
 	}
 
