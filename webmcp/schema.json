@@ -1,0 +1,390 @@
+{
+  "tools": [
+    {
+      "name": "search_steps",
+      "description": "Searches the catalog of WordPress Playground steps and returns their descriptions and configurable fields. Use when discovering which steps to add to a blueprint or checking the variable names a step accepts.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Keywords matching a step name, description, or variable"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "content",
+              "plugins-themes",
+              "users-settings",
+              "theme-dev",
+              "code",
+              "import-export",
+              "admin-debug",
+              "advanced"
+            ],
+            "description": "Optional step category filter"
+          },
+          "include_builtin": {
+            "type": "boolean",
+            "description": "Whether to include native built-in WordPress Playground steps (defaults to true)"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Page number starting at 1"
+          },
+          "page_size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "description": "Number of steps per page (up to 12)"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "list_examples",
+      "description": "Lists starter blueprint templates with their titles, slugs, and step counts. Use when the user wants inspiration or a pre-built starting blueprint to load.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Optional keyword to filter example titles or slugs"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Page number starting at 1"
+          },
+          "page_size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "description": "Number of examples per page (up to 12)"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true
+      }
+    },
+    {
+      "name": "get_blueprint_state",
+      "description": "Reads the active blueprint workspace including its title, ordered steps with indices and values, active settings, and manual-edit status. Use before editing, reordering, or removing existing steps.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Page number for the steps list starting at 1"
+          },
+          "page_size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "description": "Number of steps per page (up to 12)"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "untrustedContentHint": true
+      }
+    },
+    {
+      "name": "update_blueprint_steps",
+      "description": "Adds, updates, removes, or reorders one or more steps in the active blueprint workspace and recompiles it. Use when building or modifying a blueprint's step sequence in a single batch.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "operations": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Ordered list of step changes to apply",
+            "items": {
+              "type": "object",
+              "properties": {
+                "action": {
+                  "type": "string",
+                  "enum": ["add", "update", "remove", "move"],
+                  "description": "Change to perform on a step"
+                },
+                "step": {
+                  "type": "string",
+                  "description": "Step name from search_steps (required for add)"
+                },
+                "index": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Zero-based position of an existing step (for update, remove, move, or insert position)"
+                },
+                "to_index": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Target zero-based position (required for move)"
+                },
+                "vars": {
+                  "type": "object",
+                  "description": "Step variable values keyed by variable name"
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Repeat count for steps that support multiple executions"
+                }
+              },
+              "required": ["action"]
+            }
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Set true only after user confirmation to exit manual JSON edit mode"
+          }
+        },
+        "required": ["operations"]
+      }
+    },
+    {
+      "name": "update_blueprint_settings",
+      "description": "Updates runtime and compilation settings for the active blueprint and recompiles it. Use when changing WordPress or PHP versions, blueprint title, v1 or v2 format, display mode, storage, or WP-CLI preloading.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Human-readable title for the blueprint"
+          },
+          "wp_version": {
+            "type": "string",
+            "enum": ["latest", "6.4", "6.5", "6.6", "beta", "nightly"],
+            "description": "WordPress version to run"
+          },
+          "php_version": {
+            "type": "string",
+            "enum": ["latest", "7.4", "8.0", "8.1", "8.2", "8.3"],
+            "description": "PHP version to run"
+          },
+          "blueprint_version": {
+            "type": "string",
+            "enum": ["v1", "v2"],
+            "description": "Compiled blueprint schema format"
+          },
+          "display_mode": {
+            "type": "string",
+            "enum": ["browser-full-screen", "browser", "seamless"],
+            "description": "Playground browser wrapper style"
+          },
+          "storage": {
+            "type": "string",
+            "enum": ["none", "browser", "device"],
+            "description": "Persistence mode for site changes"
+          },
+          "networking": {
+            "type": "boolean",
+            "description": "Enable outbound networking for plugin and theme installs"
+          },
+          "preload_wp_cli": {
+            "type": "boolean",
+            "description": "Preload the WP-CLI extra library"
+          },
+          "encoding_format": {
+            "type": "string",
+            "enum": ["auto", "hash", "base64"],
+            "description": "How the blueprint is encoded into Playground URLs"
+          },
+          "site_slug": {
+            "type": "string",
+            "description": "Lowercase alphanumeric slug with hyphens for saving the site in Playground"
+          },
+          "exclude_meta": {
+            "type": "boolean",
+            "description": "Omit metadata headers from the compiled blueprint"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Set true only after user confirmation to exit manual JSON edit mode"
+          }
+        }
+      }
+    },
+    {
+      "name": "load_example_blueprint",
+      "description": "Loads a pre-built example blueprint into the active workspace and recompiles it. Use when the user picks a starter template from the examples list.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "example": {
+            "type": "string",
+            "description": "Example slug or exact title from list_examples"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Set true only after user confirmation to replace existing workspace steps"
+          }
+        },
+        "required": ["example"]
+      }
+    },
+    {
+      "name": "clear_blueprint",
+      "description": "Removes all steps and clears the title from the active blueprint workspace. Use only when the user explicitly asks to wipe or start over from an empty blueprint.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "annotations": {
+        "consequentialHint": true
+      }
+    },
+    {
+      "name": "set_preview_mode",
+      "description": "Toggles or repositions the embedded WordPress Playground live preview pane. Use when the user asks to show, move, or hide the live preview.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "position": {
+            "type": "string",
+            "enum": ["off", "bottom", "right"],
+            "description": "Where to place the live preview pane"
+          }
+        },
+        "required": ["position"]
+      }
+    },
+    {
+      "name": "get_blueprint_output",
+      "description": "Retrieves the compiled WordPress Playground blueprint JSON, shareable launch and redirect URLs, or a branch-testing AI instructions snippet. Use when the user wants to inspect, copy, or share the compiled result.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": ["json", "urls", "ai_instructions"],
+            "description": "Output representation to retrieve"
+          },
+          "url_type": {
+            "type": "string",
+            "enum": ["step-library", "playground-hash", "playground-data"],
+            "description": "Link style when generating AI instructions (defaults to step-library)"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Character offset for reading long JSON or snippet output"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 1200,
+            "description": "Maximum characters to return per chunk (up to 1200)"
+          }
+        },
+        "required": ["format"]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "untrustedContentHint": true
+      }
+    },
+    {
+      "name": "list_saved_blueprints",
+      "description": "Searches and lists blueprints saved in My Blueprints, optionally including saved personal steps. Use when looking up previously saved work to restore, rename, or delete.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Optional keyword matching saved blueprint titles"
+          },
+          "include_personal_steps": {
+            "type": "boolean",
+            "description": "Also summarize saved personal steps"
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Page number starting at 1"
+          },
+          "page_size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "description": "Number of saved blueprints per page (up to 12)"
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "untrustedContentHint": true
+      }
+    },
+    {
+      "name": "save_blueprint",
+      "description": "Saves the active blueprint into My Blueprints or renames an existing saved blueprint. Use when the user wants to bookmark their current setup or change a saved blueprint's title.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title to save under (defaults to the current blueprint title or an auto-generated name)"
+          },
+          "overwrite": {
+            "type": "boolean",
+            "description": "Set true only after user confirmation to replace an existing entry with the same title"
+          },
+          "rename_from_id": {
+            "type": "integer",
+            "description": "Existing saved blueprint ID to rename instead of creating a new entry"
+          }
+        }
+      }
+    },
+    {
+      "name": "restore_saved_blueprint",
+      "description": "Loads a saved blueprint from My Blueprints back into the active workspace. Use when the user wants to resume working on a previously saved blueprint.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Saved blueprint ID from list_saved_blueprints"
+          },
+          "title": {
+            "type": "string",
+            "description": "Saved blueprint title when ID is not yet known"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Set true only after user confirmation to discard unsaved steps in the workspace"
+          }
+        }
+      }
+    },
+    {
+      "name": "delete_saved_blueprints",
+      "description": "Permanently deletes one or more saved blueprints from My Blueprints. Use only after identifying the target saved blueprint IDs and receiving explicit user confirmation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "integer"
+            },
+            "description": "One or more saved blueprint IDs from list_saved_blueprints to delete"
+          }
+        },
+        "required": ["ids"]
+      },
+      "annotations": {
+        "consequentialHint": true
+      }
+    }
+  ]
+}

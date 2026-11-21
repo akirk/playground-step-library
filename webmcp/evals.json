@@ -1,0 +1,269 @@
+[
+  {
+    "name": "Goal 1: Search steps and compose a configured WordPress Playground blueprint",
+    "messages": [
+      {
+        "role": "user",
+        "type": "message",
+        "content": "Build a WordPress 6.6 Playground running PHP 8.2 with WooCommerce installed and WP-CLI preloaded."
+      }
+    ],
+    "expectedCall": [
+      {
+        "functionName": "search_steps",
+        "arguments": {
+          "query": { "$pattern": "plugin|woocommerce" }
+        },
+        "mockOutput": {
+          "page": 1,
+          "page_size": 12,
+          "total_count": 1,
+          "total_pages": 1,
+          "items": [
+            {
+              "step": "installPlugin",
+              "category": "plugins-themes",
+              "description": "Install a plugin from wordpress.org or a URL.",
+              "vars": [{ "name": "url", "required": true }]
+            }
+          ]
+        }
+      },
+      {
+        "unordered": [
+          {
+            "functionName": "update_blueprint_steps",
+            "arguments": {
+              "operations": {
+                "$contains": {
+                  "action": "add",
+                  "step": "installPlugin",
+                  "vars": { "url": { "$pattern": "woocommerce" } }
+                }
+              }
+            }
+          },
+          {
+            "functionName": "update_blueprint_settings",
+            "arguments": {
+              "wp_version": "6.6",
+              "php_version": "8.2",
+              "preload_wp_cli": true
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Goal 1: List starter examples and load one into an empty workspace",
+    "messages": [
+      {
+        "role": "user",
+        "type": "message",
+        "content": "Show me available blueprint examples and load the first WooCommerce or starter one."
+      }
+    ],
+    "expectedCall": [
+      {
+        "functionName": "list_examples",
+        "arguments": {},
+        "mockOutput": {
+          "page": 1,
+          "page_size": 12,
+          "total_count": 2,
+          "total_pages": 1,
+          "items": [
+            { "slug": "woocommerce", "title": "WooCommerce Store", "step_count": 3 },
+            { "slug": "friends", "title": "Friends Plugin", "step_count": 2 }
+          ]
+        }
+      },
+      {
+        "functionName": "load_example_blueprint",
+        "arguments": {
+          "example": { "$pattern": "woocommerce|WooCommerce Store" }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Goal 1: Inspect workspace before removing the second step by coreference",
+    "messages": [
+      {
+        "role": "user",
+        "type": "message",
+        "content": "Remove the second step in my current blueprint."
+      }
+    ],
+    "expectedCall": [
+      {
+        "functionName": "get_blueprint_state",
+        "arguments": {},
+        "mockOutput": {
+          "title": "Demo Site",
+          "step_count": 3,
+          "manual_edit_mode": false,
+          "steps": [
+            { "index": 0, "step": "installPlugin", "vars": { "url": "woocommerce" } },
+            { "index": 1, "step": "addPage", "vars": { "postTitle": "Welcome" } },
+            { "index": 2, "step": "setSiteName", "vars": { "sitename": "Shop" } }
+          ]
+        }
+      },
+      {
+        "functionName": "update_blueprint_steps",
+        "arguments": {
+          "operations": [
+            { "action": "remove", "index": 1 }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Goal 2: Enable right-side live preview and retrieve shareable URLs",
+    "messages": [
+      {
+        "role": "user",
+        "type": "message",
+        "content": "Open the live preview on the right and give me the shareable Playground URL."
+      }
+    ],
+    "expectedCall": [
+      {
+        "unordered": [
+          {
+            "functionName": "set_preview_mode",
+            "arguments": { "position": "right" }
+          },
+          {
+            "functionName": "get_blueprint_output",
+            "arguments": { "format": "urls" }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Goal 2: Mid-chain failure recovery when AI instructions lacks GitHub URL",
+    "messages": [
+      {
+        "role": "user",
+        "type": "message",
+        "content": "Generate AI instructions for testing branches on my current blueprint."
+      },
+      {
+        "role": "model",
+        "type": "functioncall",
+        "name": "get_blueprint_output",
+        "arguments": { "format": "ai_instructions", "url_type": "step-library" }
+      },
+      {
+        "role": "user",
+        "type": "functionresponse",
+        "name": "get_blueprint_output",
+        "response": {
+          "result": {
+            "error": "No GitHub plugin or theme URLs were found in the current blueprint.",
+            "code": "MISSING_GITHUB_URL",
+            "retryable": false,
+            "suggestion": "Search for gitPlugin, gitTheme, or installPlugin steps and ask the user which GitHub repository URL to add."
+          }
+        }
+      }
+    ],
+    "expectedCall": [
+      {
+        "functionName": "search_steps",
+        "arguments": {
+          "query": { "$pattern": "github" }
+        }
+      }
+    ]
+  },
+  {
+    "name": "Goal 3: Search saved blueprints and restore the matching entry",
+    "messages": [
+      {
+        "role": "user",
+        "type": "message",
+        "content": "Restore my saved WooCommerce Demo blueprint."
+      }
+    ],
+    "expectedCall": [
+      {
+        "functionName": "list_saved_blueprints",
+        "arguments": {
+          "query": { "$pattern": "WooCommerce" }
+        },
+        "mockOutput": {
+          "page": 1,
+          "page_size": 12,
+          "total_count": 1,
+          "total_pages": 1,
+          "items": [
+            { "id": 1700000001000, "title": "WooCommerce Demo", "date": "2026-10-20T10:00:00.000Z", "step_count": 4 }
+          ]
+        }
+      },
+      {
+        "functionName": "restore_saved_blueprint",
+        "arguments": {
+          "id": 1700000001000
+        }
+      }
+    ]
+  },
+  {
+    "name": "Goal 3: Delete a specific saved blueprint after explicit user confirmation",
+    "messages": [
+      {
+        "role": "user",
+        "type": "message",
+        "content": "Yes, permanently delete my saved blueprint titled Old Test."
+      }
+    ],
+    "expectedCall": [
+      {
+        "functionName": "list_saved_blueprints",
+        "arguments": {
+          "query": { "$pattern": "Old Test" }
+        },
+        "mockOutput": {
+          "page": 1,
+          "page_size": 12,
+          "total_count": 1,
+          "total_pages": 1,
+          "items": [
+            { "id": 1700000002000, "title": "Old Test", "date": "2026-10-01T08:00:00.000Z", "step_count": 1 }
+          ]
+        }
+      },
+      {
+        "functionName": "delete_saved_blueprints",
+        "arguments": {
+          "ids": [1700000002000]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Goal 3: Save current blueprint under a new name",
+    "messages": [
+      {
+        "role": "user",
+        "type": "message",
+        "content": "Save this blueprint as Agency Starter."
+      }
+    ],
+    "expectedCall": [
+      {
+        "functionName": "save_blueprint",
+        "arguments": {
+          "title": "Agency Starter"
+        }
+      }
+    ]
+  }
+]

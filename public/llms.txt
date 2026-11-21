@@ -1,0 +1,25 @@
+# WordPress Playground Step Library
+
+> Interactive web builder and TypeScript compiler that transforms high-level custom steps into native WordPress Playground blueprints (v1 and v2).
+
+## Key Capabilities
+
+- **Step Catalog**: Browse and search ~74 high-level and native WordPress Playground steps across Content, Plugins & Themes, Users & Settings, Theme Development, Code & Scripting, Import & Export, Admin & Debug, and Advanced categories.
+- **Blueprint Composer**: Combine steps, configure variables, select WordPress and PHP versions, toggle networking or WP-CLI preloading, and switch between Blueprint v1 and v2 formats.
+- **Live Preview & Sharing**: Run an embedded WordPress Playground split-view preview, export compiled Blueprint JSON, copy Playground or redirect URLs, or generate branch-testing AI instructions for GitHub-hosted plugins and themes.
+- **My Blueprints**: Save, search, rename, restore, and delete blueprints stored locally in the browser.
+
+## WebMCP Tools
+
+When WebMCP (`document.modelContext`) is enabled in the browser, this page exposes client-side tools directly for in-browser AI agents:
+
+- Discovery: `search_steps`, `list_examples`, `get_blueprint_state`, `list_saved_blueprints`
+- Composition: `update_blueprint_steps`, `update_blueprint_settings`, `load_example_blueprint`, `clear_blueprint`
+- Preview & Export: `set_preview_mode`, `get_blueprint_output`
+- Saved Blueprints: `save_blueprint`, `restore_saved_blueprint`, `delete_saved_blueprints`
+
+## Links
+
+- [Main Builder UI](/): Interactive blueprint builder
+- [WebMCP Tool Schema](https://github.com/akirk/playground-step-library/blob/main/webmcp/schema.json): JSON Schema manifest for registered WebMCP tools
+- [Repository & Step Docs](https://github.com/akirk/playground-step-library): Source code and step documentation

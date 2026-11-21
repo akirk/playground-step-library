@@ -36,6 +36,7 @@ import { SaveDialogController } from './save-dialog-controller';
 import { processSteps } from './step-utils';
 import { examples, examplesBySlug, type ExampleState } from './examples';
 import { FileDropController, type FileDropControllerDependencies } from './file-drop-controller';
+import { registerWebMcpTools } from './webmcp-controller';
 
 declare global {
 	interface Window {
@@ -1385,4 +1386,20 @@ addEventListener('DOMContentLoaded', function () {
 	if (blueprintSteps.querySelectorAll('.step').length === 0) {
 		setBlueprintValue(JSON.stringify({}, null, 2));
 	}
+
+	// Register WebMCP tools when document.modelContext is available
+	registerWebMcpTools({
+		blueprintSteps,
+		customSteps,
+		getBlueprintValue,
+		transformJson,
+		captureCurrentSteps,
+		restoreSteps,
+		restoreExample,
+		isBlueprintAlreadySaved,
+		onHistoryChanged: () => {
+			historyController.renderHistoryList();
+			historyController.updateHistoryButtonVisibility();
+		}
+	});
 });
